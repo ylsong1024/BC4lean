@@ -20,7 +20,7 @@
 
 title: Baum-Connes Conjecture
 #email: your-email@example.com
-description: by ylsong1024
+description: An ongoing open source project to formalize Baum-Connes conjecture
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://ylsong1024.github.io/BC4lean" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username:
