@@ -148,7 +148,7 @@ pip install -U leanblueprint
 To set up the blueprint for your project, run:
 
 ```bash
-leanblueprint new
+n
 ```
 
 Then, follow the prompts and answer the questions as you like, except for a few specific
