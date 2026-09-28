@@ -1,0 +1,41 @@
+\section{The reduced group $C^*$-algebra}
+
+\subsection{The complex group algebra}
+\begin{definition}\label{def:group-algebra}
+\notready
+Construct $\mathbb C[\Gamma]$ from finitely supported functions, with
+\[
+ (a*b)(h)=\sum_g a(g)b(g^{-1}h),\qquad a^*(h)=\overline{a(h^{-1})}.
+\]
+Prove the unital complex $*$-algebra laws in separate supporting lemmas.
+\end{definition}
+
+\subsection{The Hilbert space and left translations}
+\begin{definition}\label{def:l2-group}
+\notready
+Define $\ell^2(\Gamma)$, its inner product, and delta vectors $\delta_g$.
+\end{definition}
+
+\begin{definition}\label{def:left-regular-representation}
+\uses{def:l2-group}
+\notready
+Construct $g\mapsto\lambda_g$, where $(\lambda_g\xi)(h)=\xi(g^{-1}h)$.
+Supporting lemmas establish square summability, linearity, norm preservation,
+multiplication, and $\lambda_g^*=\lambda_{g^{-1}}$.
+\end{definition}
+
+\subsection{The integrated representation}
+\begin{definition}\label{def:integrated-representation}
+\uses{def:group-algebra,def:left-regular-representation}
+\notready
+Define $\rho(a)=\sum_g a(g)\lambda_g$. Prove that it is a unital
+$*$-homomorphism and is injective, using $(\rho(a)\delta_e)(h)=a(h)$.
+\end{definition}
+
+\subsection{Operator-norm closure}
+\begin{definition}\label{def:reduced-group-cstar}
+\uses{def:integrated-representation}
+\notready
+Define $C_r^*(\Gamma)=\overline{\rho(\mathbb C[\Gamma])}^{\|\cdot\|}$.
+Establish its $C^*$-algebra structure and the density of the group algebra.
+\end{definition}

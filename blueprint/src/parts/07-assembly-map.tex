@@ -1,0 +1,56 @@
+\section{Construction of the assembly map}
+
+\subsection{Reduced crossed products and descent}
+\begin{definition}\label{def:reduced-descent}
+\uses{def:equivariant-kk,def:reduced-group-cstar}
+\notready
+Construct reduced crossed products and Kasparov descent
+\[
+ j_r^\Gamma:KK_i^\Gamma(A,B)\longrightarrow
+ KK_i(A\rtimes_r\Gamma,B\rtimes_r\Gamma).
+\]
+Prove product compatibility and identify
+$\mathbb C\rtimes_r\Gamma\cong C_r^*(\Gamma)$.
+\end{definition}
+
+\subsection{Cutoff projections}
+\begin{definition}\label{def:cutoff-projection}
+\uses{def:cocompact-pieces,def:reduced-descent,def:operator-k-theory}
+\notready
+Choose $c\in C_c(X,[0,\infty))$ with $\sum_g c(g^{-1}x)^2=1$ and set
+$p_c(g)(x)=c(x)c(g^{-1}x)$. Prove existence, the projection identities
+in $C_0(X)\rtimes_r\Gamma$, and independence of its K-class from $c$.
+\end{definition}
+
+\subsection{Assembly on a piece}
+\begin{definition}\label{def:assembly-piece}
+\uses{def:piece-k-homology,def:cutoff-projection,prop:kasparov-product,prop:kk-k-theory,def:analytic-side}
+\notready
+Define
+\[
+ \mu_{X,i}(x)=[p_c]\otimes_{C_0(X)\rtimes_r\Gamma}j_r^\Gamma(x)
+ \in K_i(C_r^*(\Gamma)).
+\]
+\end{definition}
+
+\subsection{Compatibility and passage to the colimit}
+\begin{proposition}\label{prop:assembly-compatibility}
+\uses{def:assembly-piece,prop:topological-transition}
+\notready
+Prove that the piecewise homomorphisms commute with transition maps and
+are compatible with changes of auxiliary choices and universal proper model.
+\end{proposition}
+
+\begin{definition}\label{def:assembly-map}
+\uses{prop:assembly-compatibility,def:topological-side,def:analytic-side}
+\notready
+The induced homomorphism is
+\[
+ \mu_{\Gamma,i}:K_i^\Gamma(\underline E\Gamma)
+ \longrightarrow K_i(C_r^*(\Gamma)),\qquad i=0,1.
+\]
+\end{definition}
+
+Reference for this route: S.~Echterhoff, \emph{Bivariant KK-Theory and the
+Baum--Connes conjecture}, Section 4.2,
+\url{https://arxiv.org/abs/1703.10912}.
