@@ -43,12 +43,15 @@ jobs:
           destination: ./_site
       - name: Include blueprint
         run: |
-          mkdir -p _site/blueprint
-          cp -R blueprint/web/. _site/blueprint/
-          touch _site/.nojekyll
+          # Jekyll runs in Docker; assemble the site in a runner-owned directory.
+          mkdir -p "$RUNNER_TEMP/pages"
+          cp -R _site/. "$RUNNER_TEMP/pages/"
+          mkdir -p "$RUNNER_TEMP/pages/blueprint"
+          cp -R blueprint/web/. "$RUNNER_TEMP/pages/blueprint/"
+          touch "$RUNNER_TEMP/pages/.nojekyll"
       - uses: actions/upload-pages-artifact@v4
         with:
-          path: _site
+          path: ${{ runner.temp }}/pages
 
   deploy:
     runs-on: ubuntu-latest
