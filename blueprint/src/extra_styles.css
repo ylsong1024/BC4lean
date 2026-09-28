@@ -23,3 +23,8 @@ div.corollary_thmcontent {
 div.proof_content {
 	border-left: .08rem solid grey;
 }
+
+/* Larger chapter index, matching the reference blueprint layout. */
+nav.local_toc ul {
+    font-size: 1.2rem;
+}

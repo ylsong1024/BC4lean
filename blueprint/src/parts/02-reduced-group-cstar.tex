@@ -1,4 +1,5 @@
-\section{The reduced group $C^*$-algebra}
+\chapter{The reduced group $C^*$-algebra}
+\label{ch:reduced-group-cstar}
 
 Throughout this section, $\Gamma$ is an arbitrary discrete group with
 identity $e$. Countability is needed only for the separability statement.
@@ -7,7 +8,7 @@ variable and linear in the second. The first three nodes (group algebra operatio
 and unital star-algebra laws) are verified in Lean. The remaining nodes
 are mathematical statements and paper proofs without Lean verification.
 
-\subsection{The complex group algebra}
+\section{The complex group algebra}
 
 \begin{definition}[Group algebra operations]\label{def:group-algebra}
 \lean{BC4lean.GroupAlgebra,BC4lean.GroupAlgebra.delta,BC4lean.GroupAlgebra.l1Norm,BC4lean.GroupAlgebra.coeff_convolution,BC4lean.GroupAlgebra.coeff_star}
@@ -69,7 +70,7 @@ and reversal under involution reduces to $(gk)^{-1}=k^{-1}g^{-1}$.
 Inversion twice and complex conjugation twice give $(a^*)^*=a$.
 \end{proof}
 
-\subsection{The Hilbert space and left translations}
+\section{The Hilbert space and left translations}
 
 \begin{definition}[Square-summable functions]\label{def:l2-group}
 For a nonnegative family, define its sum as the supremum of its finite
@@ -164,7 +165,7 @@ where $U(H)$ denotes the unitary operators on $H$.
 It is distinct from the linear extension defined below.
 \end{definition}
 
-\subsection{The integrated representation}
+\section{The integrated representation}
 
 We use the standard functional-analysis theorem that the bounded
 complex-linear operators $\mathcal B(H)$ on a complex Hilbert space form
@@ -238,7 +239,7 @@ The coordinate bound gives the last inequality.
 If $\rho(a)=0$, all coefficients of $a$ vanish.
 \end{proof}
 
-\subsection{The reduced norm and operator-norm closure}
+\section{The reduced norm and operator-norm closure}
 
 \begin{definition}[Reduced norm]\label{def:reduced-norm}
 \uses{def:integrated-representation}
@@ -322,7 +323,7 @@ Any closed $*$-subalgebra containing them contains this span and its
 closure. Conversely, $C_r^*(\Gamma)$ is such a subalgebra.
 \end{proof}
 
-\subsection{Countability and a first calibration}
+\section{Countability and a first calibration}
 
 \begin{proposition}[Separability]\label{prop:reduced-group-cstar-separable}
 \uses{prop:reduced-group-cstar-completion,lem:integrated-action-bound}
@@ -347,7 +348,7 @@ Then $\rho(z\delta_e)=zI$ and $\|zI\|=|z|$.
 The image is complete and hence closed, so taking its closure adds nothing.
 \end{proof}
 
-\subsection{Interface for subsequent parts}
+\section{Interface for subsequent parts}
 Subsequent sections may use the unital complex $C^*$-algebra structure,
 the dense isometric group-algebra embedding, and separability when
 $\Gamma$ is countable. This construction alone proves no assertion
