@@ -1,41 +1,351 @@
 \section{The reduced group $C^*$-algebra}
 
+Throughout this section, $\Gamma$ is an arbitrary discrete group with
+identity $e$. Countability is needed only for the separability statement.
+Scalars are complex; inner products are conjugate-linear in the first
+variable and linear in the second. These are mathematical statements and
+paper proofs, with no claim of Lean verification.
+
 \subsection{The complex group algebra}
-\begin{definition}\label{def:group-algebra}
-\notready
-Construct $\mathbb C[\Gamma]$ from finitely supported functions, with
+
+\begin{definition}[Group algebra operations]\label{def:group-algebra}
+The complex vector space $\mathbb C[\Gamma]$ consists of finitely supported
+functions $a:\Gamma\to\mathbb C$, with pointwise vector operations.
+Write $\operatorname{supp}(a)=\{g:a(g)\ne0\}$ and let $\delta_g$ be $1$
+at $g$ and $0$ elsewhere. Define
 \[
- (a*b)(h)=\sum_g a(g)b(g^{-1}h),\qquad a^*(h)=\overline{a(h^{-1})}.
+ (a*b)(h)=\sum_g a(g)b(g^{-1}h),\qquad
+ a^*(h)=\overline{a(h^{-1})},\qquad
+ \|a\|_1=\sum_g|a(g)|.
 \]
-Prove the unital complex $*$-algebra laws in separate supporting lemmas.
+These sums are finite. The proposed multiplicative identity is $\delta_e$.
 \end{definition}
+
+\begin{lemma}[Support and delta identities]\label{lem:group-algebra-support}
+\uses{def:group-algebra}
+Convolution and involution preserve finite support, with
+\[
+ \operatorname{supp}(a*b)\subseteq
+ \operatorname{supp}(a)\operatorname{supp}(b),\qquad
+ \operatorname{supp}(a^*)=\operatorname{supp}(a)^{-1}.
+\]
+Moreover,
+\[
+ a=\sum_g a(g)\delta_g,\qquad
+ \delta_g*\delta_k=\delta_{gk},\qquad
+ \delta_g^*=\delta_{g^{-1}}.
+\]
+\end{lemma}
+\begin{proof}
+If $(a*b)(h)\ne0$, some summand is nonzero, so $g$ belongs to
+$\operatorname{supp}(a)$ and $g^{-1}h$ belongs to $\operatorname{supp}(b)$.
+Thus $h$ lies in the indicated finite product set.
+The other assertions follow by evaluating at each group element.
+\end{proof}
+
+\begin{proposition}[Unital star-algebra laws]\label{prop:group-algebra-star-laws}
+\uses{lem:group-algebra-support}
+The operations make $\mathbb C[\Gamma]$ a unital complex $*$-algebra:
+convolution is associative and bilinear, its identity is $\delta_e$, and
+\[
+ (a*b)^*=b^**a^*,\qquad (a^*)^*=a,\qquad
+ (za+wb)^*=\overline z\,a^*+\overline w\,b^*.
+\]
+\end{proposition}
+\begin{proof}
+Bilinearity and conjugate-linearity follow from the defining formulas.
+Using the finite delta expansion, associativity reduces to
+$\delta_{(gk)l}=\delta_{g(kl)}$, the identity laws reduce to $eg=g=ge$,
+and reversal under involution reduces to $(gk)^{-1}=k^{-1}g^{-1}$.
+Inversion twice and complex conjugation twice give $(a^*)^*=a$.
+\end{proof}
 
 \subsection{The Hilbert space and left translations}
-\begin{definition}\label{def:l2-group}
-\notready
-Define $\ell^2(\Gamma)$, its inner product, and delta vectors $\delta_g$.
+
+\begin{definition}[Square-summable functions]\label{def:l2-group}
+For a nonnegative family, define its sum as the supremum of its finite
+partial sums. Put
+\[
+ \ell^2(\Gamma)=\left\{\xi:\Gamma\to\mathbb C:
+                  \sum_h|\xi(h)|^2<\infty\right\},\qquad
+ \|\xi\|_2^2=\sum_h|\xi(h)|^2,
+\]
+with pointwise vector operations and
+$\langle\xi,\eta\rangle=\sum_h\overline{\xi(h)}\eta(h)$.
+The notation $\delta_g$ also denotes the corresponding vector in
+$\ell^2(\Gamma)$; the ambient space determines its meaning.
 \end{definition}
 
-\begin{definition}\label{def:left-regular-representation}
+\begin{proposition}[Hilbert space and delta basis]\label{prop:l2-hilbert-basis}
 \uses{def:l2-group}
-\notready
-Construct $g\mapsto\lambda_g$, where $(\lambda_g\xi)(h)=\xi(g^{-1}h)$.
-Supporting lemmas establish square summability, linearity, norm preservation,
-multiplication, and $\lambda_g^*=\lambda_{g^{-1}}$.
+The inner product is well defined, and $\ell^2(\Gamma)$ is a complex
+Hilbert space. The delta vectors are orthonormal and have dense finite
+linear span. For every $h$,
+$|\xi(h)|\leq\|\xi\|_2$ and $\langle\delta_h,\xi\rangle=\xi(h)$.
+\end{proposition}
+\begin{proof}
+Finite-sum Cauchy--Schwarz, followed by a supremum over finite sets,
+gives $\sum_h|\overline{\xi(h)}\eta(h)|\leq\|\xi\|_2\|\eta\|_2$.
+Thus the inner-product sum is absolutely convergent.
+The inequality $|z+w|^2\leq2|z|^2+2|w|^2$ ensures closure under addition;
+the inner-product identities follow coordinatewise.
+
+For completeness, a Cauchy sequence $(\xi_n)$ is Cauchy in each
+coordinate. Define $\xi(h)=\lim_n\xi_n(h)$. If
+$\|\xi_n-\xi_m\|_2\leq\varepsilon$ for $n,m\geq N$, taking $m\to\infty$
+on any finite set $F$ gives
+$\sum_{h\in F}|\xi_n(h)-\xi(h)|^2\leq\varepsilon^2$.
+Taking the supremum proves $\xi-\xi_n\in\ell^2(\Gamma)$ and
+$\|\xi-\xi_n\|_2\leq\varepsilon$, hence $\xi\in\ell^2(\Gamma)$ and norm
+convergence.
+
+The delta formulas are immediate from the inner product.
+For $\varepsilon>0$, choose a finite $F$ whose complement has
+$\sum_{h\notin F}|\xi(h)|^2<\varepsilon^2$.
+Then $\sum_{h\in F}\xi(h)\delta_h$ approximates $\xi$ within $\varepsilon$.
+This argument does not require an enumeration of $\Gamma$.
+\end{proof}
+
+\begin{definition}[Left translation]\label{def:left-translation}
+\uses{def:l2-group}
+For $g\in\Gamma$, prescribe
+\[
+ (\lambda_g\xi)(h)=\xi(g^{-1}h).
+\]
+The next lemma verifies that this defines an operator on $\ell^2(\Gamma)$.
+\end{definition}
+
+\begin{lemma}[Boundedness and representation identities]\label{lem:left-translation-laws}
+\uses{def:left-translation,prop:l2-hilbert-basis}
+Each $\lambda_g$ is a complex-linear isometry, and
+\[
+ \lambda_e=I,\qquad \lambda_g\lambda_k=\lambda_{gk},\qquad
+ \lambda_g\delta_h=\delta_{gh},\qquad \|\lambda_g\|=1,
+\]
+where the final norm is the operator norm.
+\end{lemma}
+\begin{proof}
+The bijection $h\mapsto g^{-1}h$ preserves finite subsets and their
+supremum, so $\sum_h|\xi(g^{-1}h)|^2=\sum_h|\xi(h)|^2$.
+This proves well-definedness and norm preservation; linearity is
+coordinatewise. Also
+$(\lambda_g\lambda_k\xi)(h)=\xi(k^{-1}g^{-1}h)=\xi((gk)^{-1}h)$.
+The identity and delta formulas follow by evaluation.
+Norm preservation gives $\|\lambda_g\|\leq1$, and the unit vector
+$\delta_e$ gives the reverse inequality.
+\end{proof}
+
+\begin{proposition}[Unitarity and adjoint]\label{prop:left-translation-unitary}
+\uses{lem:left-translation-laws}
+Each $\lambda_g$ is unitary, with
+$\lambda_g^{-1}=\lambda_{g^{-1}}=\lambda_g^*$.
+\end{proposition}
+\begin{proof}
+The multiplication identities give the two-sided inverse
+$\lambda_{g^{-1}}$. Reindexing the absolutely convergent inner product
+gives $\langle\lambda_g\xi,\eta\rangle
+=\langle\xi,\lambda_{g^{-1}}\eta\rangle$, which identifies the adjoint.
+\end{proof}
+
+\begin{definition}[Left regular representation]\label{def:left-regular-representation}
+\uses{prop:left-translation-unitary}
+The left regular representation is the group homomorphism
+$\lambda:\Gamma\to U(\ell^2(\Gamma))$, $g\mapsto\lambda_g$,
+where $U(H)$ denotes the unitary operators on $H$.
+It is distinct from the linear extension defined below.
 \end{definition}
 
 \subsection{The integrated representation}
-\begin{definition}\label{def:integrated-representation}
+
+We use the standard functional-analysis theorem that the bounded
+complex-linear operators $\mathcal B(H)$ on a complex Hilbert space form
+a unital $C^*$-algebra. Multiplication is composition, involution is
+the adjoint, the operator norm is complete, and $\|T^*T\|=\|T\|^2$.
+This is an explicit background prerequisite.
+
+\begin{definition}[Integrated regular representation]\label{def:integrated-representation}
 \uses{def:group-algebra,def:left-regular-representation}
-\notready
-Define $\rho(a)=\sum_g a(g)\lambda_g$. Prove that it is a unital
-$*$-homomorphism and is injective, using $(\rho(a)\delta_e)(h)=a(h)$.
+Define the complex-linear map
+\[
+ \rho:\mathbb C[\Gamma]\longrightarrow\mathcal B(\ell^2(\Gamma)),
+ \qquad \rho(a)=\sum_{g\in\operatorname{supp}(a)}a(g)\lambda_g.
+\]
+This is a finite sum of bounded operators, and $\rho(\delta_g)=\lambda_g$.
 \end{definition}
 
-\subsection{Operator-norm closure}
-\begin{definition}\label{def:reduced-group-cstar}
+\begin{lemma}[Action formula and norm bound]\label{lem:integrated-action-bound}
+\uses{def:integrated-representation,lem:left-translation-laws}
+For $a\in\mathbb C[\Gamma]$, $\xi\in\ell^2(\Gamma)$ and $h\in\Gamma$,
+\[
+ (\rho(a)\xi)(h)=\sum_g a(g)\xi(g^{-1}h),\qquad
+ \|\rho(a)\|\leq\|a\|_1.
+\]
+\end{lemma}
+\begin{proof}
+Apply the finite operator sum to $\xi$ and evaluate at $h$.
+The operator-norm triangle inequality gives
+$\|\rho(a)\|\leq\sum_g|a(g)|\|\lambda_g\|=\|a\|_1$.
+\end{proof}
+
+\begin{proposition}[Star-homomorphism]\label{prop:integrated-star-hom}
+\uses{def:integrated-representation,prop:group-algebra-star-laws,prop:left-translation-unitary}
+The map $\rho$ is a unital complex $*$-algebra homomorphism:
+\[
+ \rho(a*b)=\rho(a)\rho(b),\qquad
+ \rho(a^*)=\rho(a)^*,\qquad \rho(\delta_e)=I.
+\]
+\end{proposition}
+\begin{proof}
+Distribute finite sums and group terms with $gk=h$:
+\[
+ \rho(a)\rho(b)=\sum_{g,k}a(g)b(k)\lambda_{gk}
+ =\sum_h\left(\sum_g a(g)b(g^{-1}h)\right)\lambda_h
+ =\rho(a*b).
+\]
+Conjugate-linearity of adjoints and $\lambda_g^*=\lambda_{g^{-1}}$ give
+\[
+ \rho(a)^*=\sum_g\overline{a(g)}\lambda_{g^{-1}}
+ =\sum_h\overline{a(h^{-1})}\lambda_h=\rho(a^*).
+\]
+Linearity is built into the definition; $\lambda_e=I$ gives unitality.
+\end{proof}
+
+\begin{proposition}[Coefficient recovery and faithfulness]\label{prop:integrated-faithful}
+\uses{lem:integrated-action-bound,prop:l2-hilbert-basis}
+Regard $a\in\mathbb C[\Gamma]$ also as a finitely supported $\ell^2$-vector.
+Then
+\[
+ \rho(a)\delta_e=a,\qquad
+ \|a\|_2\leq\|\rho(a)\|,\qquad
+ |a(h)|\leq\|\rho(a)\|\quad(h\in\Gamma).
+\]
+In particular, $\rho$ is injective.
+\end{proposition}
+\begin{proof}
+In $(\rho(a)\delta_e)(h)=\sum_g a(g)\delta_e(g^{-1}h)$, only $g=h$
+contributes, giving $a(h)$. Since $\|\delta_e\|_2=1$,
+$\|a\|_2=\|\rho(a)\delta_e\|_2\leq\|\rho(a)\|$.
+The coordinate bound gives the last inequality.
+If $\rho(a)=0$, all coefficients of $a$ vanish.
+\end{proof}
+
+\subsection{The reduced norm and operator-norm closure}
+
+\begin{definition}[Reduced norm]\label{def:reduced-norm}
 \uses{def:integrated-representation}
-\notready
-Define $C_r^*(\Gamma)=\overline{\rho(\mathbb C[\Gamma])}^{\|\cdot\|}$.
-Establish its $C^*$-algebra structure and the density of the group algebra.
+For $a\in\mathbb C[\Gamma]$, put $\|a\|_r=\|\rho(a)\|$.
 \end{definition}
+
+\begin{proposition}[Normed star-algebra]\label{prop:reduced-norm-laws}
+\uses{def:reduced-norm,prop:integrated-faithful,prop:integrated-star-hom,lem:integrated-action-bound}
+The reduced norm is a norm, with
+\[
+ \|a*b\|_r\leq\|a\|_r\|b\|_r,\qquad
+ \|a^*\|_r=\|a\|_r,\qquad \|a^**a\|_r=\|a\|_r^2,
+\]
+\[
+ \|\delta_e\|_r=1,\qquad \|a\|_2\leq\|a\|_r\leq\|a\|_1.
+\]
+Completeness of $\mathbb C[\Gamma]$ in this norm is not asserted.
+\end{proposition}
+\begin{proof}
+Homogeneity and the triangle inequality come from the operator norm;
+faithfulness gives positive definiteness. The homomorphism identities
+transfer submultiplicativity, isometry of the involution, and the
+$C^*$-identity from bounded operators. The remaining bounds were proved above.
+\end{proof}
+
+\begin{definition}[Reduced group C-star algebra]\label{def:reduced-group-cstar}
+\uses{prop:integrated-star-hom,def:reduced-norm}
+Define
+\[
+ C_r^*(\Gamma)=\overline{\rho(\mathbb C[\Gamma])}^{\|\cdot\|}
+ \subseteq\mathcal B(\ell^2(\Gamma)),
+\]
+with inherited operations and norm. The closure is in the operator norm,
+not the weak or strong operator topology.
+\end{definition}
+
+\begin{proposition}[C-star structure]\label{prop:reduced-group-cstar-structure}
+\uses{def:reduced-group-cstar}
+The inherited operations make $C_r^*(\Gamma)$ a unital complex
+$C^*$-algebra with identity $I=\lambda_e$.
+\end{proposition}
+\begin{proof}
+The image of $\rho$ is a unital $*$-subalgebra. Its closure is closed under
+linear combinations and adjoints by continuity.
+If $A_n\to A$ and $B_n\to B$ in the image, $(\|A_n\|)$ is bounded and
+\[
+ \|A_nB_n-AB\|\leq\|A_n\|\|B_n-B\|+\|A_n-A\|\|B\|\longrightarrow0.
+\]
+This proves closure under multiplication; $I$ already lies in the image.
+The closure is complete as a closed subspace of the Banach space of
+bounded operators. The $C^*$-identity is inherited from that algebra.
+\end{proof}
+
+\begin{proposition}[Dense embedding and completion]\label{prop:reduced-group-cstar-completion}
+\uses{prop:reduced-group-cstar-structure,prop:reduced-norm-laws}
+With codomain restricted to $C_r^*(\Gamma)$, $\rho$ is an isometric
+unital $*$-homomorphism for $\|\cdot\|_r$ and has dense range.
+It extends uniquely to an isometric $*$-isomorphism from the norm
+completion of $(\mathbb C[\Gamma],\|\cdot\|_r)$ onto $C_r^*(\Gamma)$.
+\end{proposition}
+\begin{proof}
+Isometry follows from the reduced norm and density from the definition
+of the closure. Completeness gives a unique isometric linear extension
+to the completion. Its range is closed by completeness and dense because
+it contains $\rho(\mathbb C[\Gamma])$, hence is the whole target.
+Submultiplicativity and isometry of involution extend the algebra
+operations to the completion. Passing to limits shows that the extension
+preserves multiplication, involution, and the unit.
+\end{proof}
+
+\begin{proposition}[Generated algebra]\label{prop:reduced-group-cstar-generated}
+\uses{def:integrated-representation,prop:reduced-group-cstar-structure}
+The algebra $C_r^*(\Gamma)$ is the norm closure of
+$\operatorname{span}_{\mathbb C}\{\lambda_g:g\in\Gamma\}$.
+It is the smallest norm-closed $*$-subalgebra of
+$\mathcal B(\ell^2(\Gamma))$ containing every $\lambda_g$.
+\end{proposition}
+\begin{proof}
+The image of $\rho$ is exactly the finite linear span of the generators.
+Any closed $*$-subalgebra containing them contains this span and its
+closure. Conversely, $C_r^*(\Gamma)$ is such a subalgebra.
+\end{proof}
+
+\subsection{Countability and a first calibration}
+
+\begin{proposition}[Separability]\label{prop:reduced-group-cstar-separable}
+\uses{prop:reduced-group-cstar-completion,lem:integrated-action-bound}
+If $\Gamma$ is countable, then $C_r^*(\Gamma)$ is separable.
+\end{proposition}
+\begin{proof}
+The finite sums $\sum_g q_g\lambda_g$ with $q_g\in\mathbb Q+i\mathbb Q$
+form a countable set. Approximate coefficients on any fixed finite support
+by such rationals. The bound
+$\|\rho(a)-\rho(b)\|\leq\|a-b\|_1$ proves density in
+$\rho(\mathbb C[\Gamma])$, hence in its closure.
+\end{proof}
+
+\begin{proposition}[Trivial group]\label{prop:reduced-group-cstar-trivial}
+\uses{prop:reduced-group-cstar-completion}
+For the one-element group, $z\mapsto zI$ is an isometric unital
+$*$-isomorphism $\mathbb C\to C_r^*(\{e\})$.
+\end{proposition}
+\begin{proof}
+Evaluation at $e$ identifies $\ell^2(\{e\})$ with $\mathbb C$.
+Then $\rho(z\delta_e)=zI$ and $\|zI\|=|z|$.
+The image is complete and hence closed, so taking its closure adds nothing.
+\end{proof}
+
+\subsection{Interface for subsequent parts}
+Subsequent sections may use the unital complex $C^*$-algebra structure,
+the dense isometric group-algebra embedding, and separability when
+$\Gamma$ is countable. This construction alone proves no assertion
+about the Baum--Connes assembly map.
+
+For a standard reference and the relation with reduced crossed products,
+see \href{https://www.math.uni-sb.de/ag/speicher/weber/ISem24/ISem24LectureNotes.pdf}
+{ISem24, C-star-algebras and dynamics, Section 9.6}.
+The proofs here construct the discrete-group algebra directly; crossed
+products are not a prerequisite for this section.
