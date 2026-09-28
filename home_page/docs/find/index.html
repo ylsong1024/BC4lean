@@ -1,0 +1,148 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BC4lean — Lean 源码</title><style>body{max-width:1100px;margin:36px auto;padding:0 20px;font:16px/1.6 system-ui;color:#172033}pre{overflow:auto;background:#f4f6fa;padding:20px;font:14px/1.6 monospace}pre span{display:block}span:target{background:#ffedab;scroll-margin-top:60px}.line{color:#707b88;text-decoration:none}code{overflow-wrap:anywhere}</style></head><body><a href="../../blueprint/">返回 blueprint</a><h1>GroupAlgebra.lean</h1><p>此页用于定位 blueprint 引用的 Lean 声明，展示本次验证的源码快照，并非完整的 API 文档。</p><p>Lean 4.33.1；源码 SHA-256：<code>1c6c0899fe9bc9f7860f291ba7c5573353d18a3c5809258769d689bc39da8ad4</code></p><pre><span><a class="line" href="#L1" id="L1">  1</a> import Mathlib.Algebra.MonoidAlgebra.Basic</span>
+<span><a class="line" href="#L2" id="L2">  2</a> import Mathlib.Algebra.MonoidAlgebra.Support</span>
+<span><a class="line" href="#L3" id="L3">  3</a> import Mathlib.Analysis.Complex.Basic</span>
+<span><a class="line" href="#L4" id="L4">  4</a> </span>
+<span><a class="line" href="#L5" id="L5">  5</a> /-!</span>
+<span><a class="line" href="#L6" id="L6">  6</a> # The complex group algebra of an arbitrary group</span>
+<span><a class="line" href="#L7" id="L7">  7</a> </span>
+<span><a class="line" href="#L8" id="L8">  8</a> This file verifies the algebraic starting point for the reduced group C*-algebra.</span>
+<span><a class="line" href="#L9" id="L9">  9</a> Multiplication is Mathlib&#x27;s convolution product, not pointwise multiplication.</span>
+<span><a class="line" href="#L10" id="L10"> 10</a> The involution conjugates coefficients and reverses group elements.</span>
+<span><a class="line" href="#L11" id="L11"> 11</a> No topology, countability, regular representation, or completion is assumed here.</span>
+<span><a class="line" href="#L12" id="L12"> 12</a> -/</span>
+<span><a class="line" href="#L13" id="L13"> 13</a> </span>
+<span><a class="line" href="#L14" id="L14"> 14</a> noncomputable section</span>
+<span><a class="line" href="#L15" id="L15"> 15</a> </span>
+<span><a class="line" href="#L16" id="L16"> 16</a> namespace BC4lean</span>
+<span><a class="line" href="#L17" id="L17"> 17</a> </span>
+<span><a class="line" href="#L18" id="L18"> 18</a> /-- Finitely supported complex coefficients with convolution multiplication. -/</span>
+<span id="doc/BC4lean.GroupAlgebra"><a class="line" href="#L19" id="L19"> 19</a> abbrev GroupAlgebra (Γ : Type*) := MonoidAlgebra ℂ Γ</span>
+<span><a class="line" href="#L20" id="L20"> 20</a> </span>
+<span><a class="line" href="#L21" id="L21"> 21</a> namespace GroupAlgebra</span>
+<span><a class="line" href="#L22" id="L22"> 22</a> </span>
+<span><a class="line" href="#L23" id="L23"> 23</a> variable {Γ : Type*} [Group Γ]</span>
+<span><a class="line" href="#L24" id="L24"> 24</a> </span>
+<span><a class="line" href="#L25" id="L25"> 25</a> /-- The basis vector at a group element. -/</span>
+<span id="doc/BC4lean.GroupAlgebra.delta"><a class="line" href="#L26" id="L26"> 26</a> def delta (g : Γ) : GroupAlgebra Γ := MonoidAlgebra.single g 1</span>
+<span><a class="line" href="#L27" id="L27"> 27</a> </span>
+<span><a class="line" href="#L28" id="L28"> 28</a> /-- The finite coefficient ℓ¹-norm; no normed-algebra instance is claimed. -/</span>
+<span id="doc/BC4lean.GroupAlgebra.l1Norm"><a class="line" href="#L29" id="L29"> 29</a> def l1Norm (a : GroupAlgebra Γ) : ℝ := ∑ g ∈ a.coeff.support, ‖a.coeff g‖</span>
+<span><a class="line" href="#L30" id="L30"> 30</a> </span>
+<span><a class="line" href="#L31" id="L31"> 31</a> /-- Conjugation of coefficients followed by inversion of the group index. -/</span>
+<span id="doc/BC4lean.GroupAlgebra.involution"><a class="line" href="#L32" id="L32"> 32</a> def involution (a : GroupAlgebra Γ) : GroupAlgebra Γ :=</span>
+<span><a class="line" href="#L33" id="L33"> 33</a>   .ofCoeff (Finsupp.equivMapDomain (Equiv.inv Γ)</span>
+<span><a class="line" href="#L34" id="L34"> 34</a>     (a.coeff.mapRange star (star_zero ℂ)))</span>
+<span><a class="line" href="#L35" id="L35"> 35</a> </span>
+<span><a class="line" href="#L36" id="L36"> 36</a> @[simp]</span>
+<span id="doc/BC4lean.GroupAlgebra.coeff_involution"><a class="line" href="#L37" id="L37"> 37</a> theorem coeff_involution (a : GroupAlgebra Γ) (g : Γ) :</span>
+<span><a class="line" href="#L38" id="L38"> 38</a>     (involution a).coeff g = star (a.coeff g⁻¹) := rfl</span>
+<span><a class="line" href="#L39" id="L39"> 39</a> </span>
+<span><a class="line" href="#L40" id="L40"> 40</a> @[simp]</span>
+<span id="doc/BC4lean.GroupAlgebra.involution_zero"><a class="line" href="#L41" id="L41"> 41</a> theorem involution_zero : involution (0 : GroupAlgebra Γ) = 0 := by</span>
+<span><a class="line" href="#L42" id="L42"> 42</a>   ext g</span>
+<span><a class="line" href="#L43" id="L43"> 43</a>   simp</span>
+<span><a class="line" href="#L44" id="L44"> 44</a> </span>
+<span id="doc/BC4lean.GroupAlgebra.involution_add"><a class="line" href="#L45" id="L45"> 45</a> theorem involution_add (a b : GroupAlgebra Γ) :</span>
+<span><a class="line" href="#L46" id="L46"> 46</a>     involution (a + b) = involution a + involution b := by</span>
+<span><a class="line" href="#L47" id="L47"> 47</a>   ext g</span>
+<span><a class="line" href="#L48" id="L48"> 48</a>   simp</span>
+<span><a class="line" href="#L49" id="L49"> 49</a> </span>
+<span id="doc/BC4lean.GroupAlgebra.involution_smul"><a class="line" href="#L50" id="L50"> 50</a> theorem involution_smul (z : ℂ) (a : GroupAlgebra Γ) :</span>
+<span><a class="line" href="#L51" id="L51"> 51</a>     involution (z • a) = star z • involution a := by</span>
+<span><a class="line" href="#L52" id="L52"> 52</a>   ext g</span>
+<span><a class="line" href="#L53" id="L53"> 53</a>   simp</span>
+<span><a class="line" href="#L54" id="L54"> 54</a> </span>
+<span><a class="line" href="#L55" id="L55"> 55</a> @[simp]</span>
+<span id="doc/BC4lean.GroupAlgebra.involution_involution"><a class="line" href="#L56" id="L56"> 56</a> theorem involution_involution (a : GroupAlgebra Γ) :</span>
+<span><a class="line" href="#L57" id="L57"> 57</a>     involution (involution a) = a := by</span>
+<span><a class="line" href="#L58" id="L58"> 58</a>   ext g</span>
+<span><a class="line" href="#L59" id="L59"> 59</a>   simp</span>
+<span><a class="line" href="#L60" id="L60"> 60</a> </span>
+<span><a class="line" href="#L61" id="L61"> 61</a> @[simp]</span>
+<span id="doc/BC4lean.GroupAlgebra.involution_single"><a class="line" href="#L62" id="L62"> 62</a> theorem involution_single (g : Γ) (z : ℂ) :</span>
+<span><a class="line" href="#L63" id="L63"> 63</a>     involution (MonoidAlgebra.single g z) = MonoidAlgebra.single g⁻¹ (star z) := by</span>
+<span><a class="line" href="#L64" id="L64"> 64</a>   simp only [involution, MonoidAlgebra.coeff_single, Finsupp.mapRange_single,</span>
+<span><a class="line" href="#L65" id="L65"> 65</a>     Finsupp.equivMapDomain_single, Equiv.inv_apply, MonoidAlgebra.ofCoeff_single]</span>
+<span><a class="line" href="#L66" id="L66"> 66</a> </span>
+<span id="doc/BC4lean.GroupAlgebra.involution_mul"><a class="line" href="#L67" id="L67"> 67</a> theorem involution_mul (a b : GroupAlgebra Γ) :</span>
+<span><a class="line" href="#L68" id="L68"> 68</a>     involution (a * b) = involution b * involution a := by</span>
+<span><a class="line" href="#L69" id="L69"> 69</a>   induction a using MonoidAlgebra.induction_linear with</span>
+<span><a class="line" href="#L70" id="L70"> 70</a>   | zero =&gt; simp</span>
+<span><a class="line" href="#L71" id="L71"> 71</a>   | add a c ha hc =&gt; simp only [add_mul, involution_add, ha, hc, mul_add]</span>
+<span><a class="line" href="#L72" id="L72"> 72</a>   | single g z =&gt;</span>
+<span><a class="line" href="#L73" id="L73"> 73</a>     induction b using MonoidAlgebra.induction_linear with</span>
+<span><a class="line" href="#L74" id="L74"> 74</a>     | zero =&gt; simp</span>
+<span><a class="line" href="#L75" id="L75"> 75</a>     | add b c hb hc =&gt; simp only [mul_add, involution_add, hb, hc, add_mul]</span>
+<span><a class="line" href="#L76" id="L76"> 76</a>     | single h w =&gt; simp [MonoidAlgebra.single_mul_single, mul_inv_rev, mul_comm]</span>
+<span><a class="line" href="#L77" id="L77"> 77</a> </span>
+<span><a class="line" href="#L78" id="L78"> 78</a> /-- The group-algebra star is conjugation combined with inversion. -/</span>
+<span id="doc/BC4lean.GroupAlgebra.instStar"><a class="line" href="#L79" id="L79"> 79</a> instance instStar : Star (GroupAlgebra Γ) := ⟨involution⟩</span>
+<span><a class="line" href="#L80" id="L80"> 80</a> </span>
+<span><a class="line" href="#L81" id="L81"> 81</a> /-- Convolution and the group-algebra involution form a star ring. -/</span>
+<span id="doc/BC4lean.GroupAlgebra.instStarRing"><a class="line" href="#L82" id="L82"> 82</a> instance instStarRing : StarRing (GroupAlgebra Γ) where</span>
+<span><a class="line" href="#L83" id="L83"> 83</a>   star_involutive := involution_involution</span>
+<span><a class="line" href="#L84" id="L84"> 84</a>   star_mul := involution_mul</span>
+<span><a class="line" href="#L85" id="L85"> 85</a>   star_add := involution_add</span>
+<span><a class="line" href="#L86" id="L86"> 86</a> </span>
+<span><a class="line" href="#L87" id="L87"> 87</a> /-- The involution is conjugate-linear over the complex scalars. -/</span>
+<span id="doc/BC4lean.GroupAlgebra.instStarModule"><a class="line" href="#L88" id="L88"> 88</a> instance instStarModule : StarModule ℂ (GroupAlgebra Γ) where</span>
+<span><a class="line" href="#L89" id="L89"> 89</a>   star_smul := involution_smul</span>
+<span><a class="line" href="#L90" id="L90"> 90</a> </span>
+<span><a class="line" href="#L91" id="L91"> 91</a> @[simp]</span>
+<span id="doc/BC4lean.GroupAlgebra.coeff_star"><a class="line" href="#L92" id="L92"> 92</a> theorem coeff_star (a : GroupAlgebra Γ) (g : Γ) :</span>
+<span><a class="line" href="#L93" id="L93"> 93</a>     (star a).coeff g = star (a.coeff g⁻¹) := coeff_involution a g</span>
+<span><a class="line" href="#L94" id="L94"> 94</a> </span>
+<span><a class="line" href="#L95" id="L95"> 95</a> /-- The multiplication agrees with the blueprint&#x27;s convolution formula. -/</span>
+<span id="doc/BC4lean.GroupAlgebra.coeff_convolution"><a class="line" href="#L96" id="L96"> 96</a> theorem coeff_convolution (a b : GroupAlgebra Γ) (h : Γ) :</span>
+<span><a class="line" href="#L97" id="L97"> 97</a>     (a * b).coeff h = ∑ g ∈ a.coeff.support, a.coeff g * b.coeff (g⁻¹ * h) :=</span>
+<span><a class="line" href="#L98" id="L98"> 98</a>   MonoidAlgebra.coeff_mul_apply_left a b h</span>
+<span><a class="line" href="#L99" id="L99"> 99</a> </span>
+<span><a class="line" href="#L100" id="L100">100</a> @[simp]</span>
+<span id="doc/BC4lean.GroupAlgebra.delta_one"><a class="line" href="#L101" id="L101">101</a> theorem delta_one : delta (1 : Γ) = 1 := rfl</span>
+<span><a class="line" href="#L102" id="L102">102</a> </span>
+<span><a class="line" href="#L103" id="L103">103</a> @[simp]</span>
+<span id="doc/BC4lean.GroupAlgebra.delta_mul"><a class="line" href="#L104" id="L104">104</a> theorem delta_mul (g h : Γ) : delta g * delta h = delta (g * h) := by</span>
+<span><a class="line" href="#L105" id="L105">105</a>   simp [delta, MonoidAlgebra.single_mul_single]</span>
+<span><a class="line" href="#L106" id="L106">106</a> </span>
+<span><a class="line" href="#L107" id="L107">107</a> @[simp]</span>
+<span id="doc/BC4lean.GroupAlgebra.delta_star"><a class="line" href="#L108" id="L108">108</a> theorem delta_star (g : Γ) : star (delta g) = delta g⁻¹ := by</span>
+<span><a class="line" href="#L109" id="L109">109</a>   change involution (MonoidAlgebra.single g 1) = _</span>
+<span><a class="line" href="#L110" id="L110">110</a>   simp [delta]</span>
+<span><a class="line" href="#L111" id="L111">111</a> </span>
+<span id="doc/BC4lean.GroupAlgebra.delta_expansion"><a class="line" href="#L112" id="L112">112</a> theorem delta_expansion (a : GroupAlgebra Γ) :</span>
+<span><a class="line" href="#L113" id="L113">113</a>     ∑ g ∈ a.coeff.support, a.coeff g • delta g = a := by</span>
+<span><a class="line" href="#L114" id="L114">114</a>   simpa [delta, MonoidAlgebra.smul_single, Finsupp.sum] using a.sum_coeff_single</span>
+<span><a class="line" href="#L115" id="L115">115</a> </span>
+<span><a class="line" href="#L116" id="L116">116</a> open scoped Pointwise in</span>
+<span id="doc/BC4lean.GroupAlgebra.support_convolution"><a class="line" href="#L117" id="L117">117</a> theorem support_convolution [DecidableEq Γ] (a b : GroupAlgebra Γ) :</span>
+<span><a class="line" href="#L118" id="L118">118</a>     (a * b).coeff.support ⊆ a.coeff.support * b.coeff.support :=</span>
+<span><a class="line" href="#L119" id="L119">119</a>   MonoidAlgebra.support_coeff_mul_subset a b</span>
+<span><a class="line" href="#L120" id="L120">120</a> </span>
+<span id="doc/BC4lean.GroupAlgebra.support_star"><a class="line" href="#L121" id="L121">121</a> theorem support_star (a : GroupAlgebra Γ) :</span>
+<span><a class="line" href="#L122" id="L122">122</a>     (star a).coeff.support = a.coeff.support.map (Equiv.inv Γ).toEmbedding := by</span>
+<span><a class="line" href="#L123" id="L123">123</a>   classical</span>
+<span><a class="line" href="#L124" id="L124">124</a>   ext g</span>
+<span><a class="line" href="#L125" id="L125">125</a>   simp only [Finsupp.mem_support_iff, coeff_star, star_ne_zero, Finset.mem_map,</span>
+<span><a class="line" href="#L126" id="L126">126</a>     Equiv.toEmbedding_apply, Equiv.inv_apply]</span>
+<span><a class="line" href="#L127" id="L127">127</a>   constructor</span>
+<span><a class="line" href="#L128" id="L128">128</a>   · intro h</span>
+<span><a class="line" href="#L129" id="L129">129</a>     exact ⟨g⁻¹, h, inv_inv g⟩</span>
+<span><a class="line" href="#L130" id="L130">130</a>   · rintro ⟨h, hh, rfl⟩</span>
+<span><a class="line" href="#L131" id="L131">131</a>     simpa using hh</span>
+<span><a class="line" href="#L132" id="L132">132</a> </span>
+<span id="doc/BC4lean.GroupAlgebra.convolution_bilinear"><a class="line" href="#L133" id="L133">133</a> theorem convolution_bilinear (a b c : GroupAlgebra Γ) (z : ℂ) :</span>
+<span><a class="line" href="#L134" id="L134">134</a>     (a + b) * c = a * c + b * c ∧ a * (b + c) = a * b + a * c ∧</span>
+<span><a class="line" href="#L135" id="L135">135</a>     (z • a) * b = z • (a * b) ∧ a * (z • b) = z • (a * b) :=</span>
+<span><a class="line" href="#L136" id="L136">136</a>   ⟨add_mul a b c, mul_add a b c, smul_mul_assoc z a b, mul_smul_comm z a b⟩</span>
+<span><a class="line" href="#L137" id="L137">137</a> </span>
+<span><a class="line" href="#L138" id="L138">138</a> /-- The laws appearing together in the blueprint&#x27;s algebraic proposition. -/</span>
+<span id="doc/BC4lean.GroupAlgebra.star_algebra_laws"><a class="line" href="#L139" id="L139">139</a> theorem star_algebra_laws (a b c : GroupAlgebra Γ) (z w : ℂ) :</span>
+<span><a class="line" href="#L140" id="L140">140</a>     (a * b) * c = a * (b * c) ∧</span>
+<span><a class="line" href="#L141" id="L141">141</a>     (delta 1) * a = a ∧ a * (delta 1) = a ∧</span>
+<span><a class="line" href="#L142" id="L142">142</a>     star (a * b) = star b * star a ∧ star (star a) = a ∧</span>
+<span><a class="line" href="#L143" id="L143">143</a>     star (z • a + w • b) = star z • star a + star w • star b := by</span>
+<span><a class="line" href="#L144" id="L144">144</a>   simp only [mul_assoc, delta_one, one_mul, mul_one, star_mul, star_star,</span>
+<span><a class="line" href="#L145" id="L145">145</a>     star_add, star_smul, and_self]</span>
+<span><a class="line" href="#L146" id="L146">146</a> </span>
+<span><a class="line" href="#L147" id="L147">147</a> end GroupAlgebra</span>
+<span><a class="line" href="#L148" id="L148">148</a> end BC4lean</span></pre></body></html>

@@ -3,12 +3,15 @@
 Throughout this section, $\Gamma$ is an arbitrary discrete group with
 identity $e$. Countability is needed only for the separability statement.
 Scalars are complex; inner products are conjugate-linear in the first
-variable and linear in the second. These are mathematical statements and
-paper proofs, with no claim of Lean verification.
+variable and linear in the second. The first three nodes (group algebra operations, support and delta identities,
+and unital star-algebra laws) are verified in Lean. The remaining nodes
+are mathematical statements and paper proofs without Lean verification.
 
 \subsection{The complex group algebra}
 
 \begin{definition}[Group algebra operations]\label{def:group-algebra}
+\lean{BC4lean.GroupAlgebra,BC4lean.GroupAlgebra.delta,BC4lean.GroupAlgebra.l1Norm,BC4lean.GroupAlgebra.coeff_convolution,BC4lean.GroupAlgebra.coeff_star}
+\leanok
 The complex vector space $\mathbb C[\Gamma]$ consists of finitely supported
 functions $a:\Gamma\to\mathbb C$, with pointwise vector operations.
 Write $\operatorname{supp}(a)=\{g:a(g)\ne0\}$ and let $\delta_g$ be $1$
@@ -22,6 +25,8 @@ These sums are finite. The proposed multiplicative identity is $\delta_e$.
 \end{definition}
 
 \begin{lemma}[Support and delta identities]\label{lem:group-algebra-support}
+\lean{BC4lean.GroupAlgebra.support_convolution,BC4lean.GroupAlgebra.support_star,BC4lean.GroupAlgebra.delta_expansion,BC4lean.GroupAlgebra.delta_mul,BC4lean.GroupAlgebra.delta_star}
+\leanok
 \uses{def:group-algebra}
 Convolution and involution preserve finite support, with
 \[
@@ -37,6 +42,7 @@ Moreover,
 \]
 \end{lemma}
 \begin{proof}
+\leanok
 If $(a*b)(h)\ne0$, some summand is nonzero, so $g$ belongs to
 $\operatorname{supp}(a)$ and $g^{-1}h$ belongs to $\operatorname{supp}(b)$.
 Thus $h$ lies in the indicated finite product set.
@@ -44,6 +50,8 @@ The other assertions follow by evaluating at each group element.
 \end{proof}
 
 \begin{proposition}[Unital star-algebra laws]\label{prop:group-algebra-star-laws}
+\lean{BC4lean.GroupAlgebra.instStarRing,BC4lean.GroupAlgebra.instStarModule,BC4lean.GroupAlgebra.convolution_bilinear,BC4lean.GroupAlgebra.star_algebra_laws}
+\leanok
 \uses{lem:group-algebra-support}
 The operations make $\mathbb C[\Gamma]$ a unital complex $*$-algebra:
 convolution is associative and bilinear, its identity is $\delta_e$, and
@@ -53,6 +61,7 @@ convolution is associative and bilinear, its identity is $\delta_e$, and
 \]
 \end{proposition}
 \begin{proof}
+\leanok
 Bilinearity and conjugate-linearity follow from the defining formulas.
 Using the finite delta expansion, associativity reduces to
 $\delta_{(gk)l}=\delta_{g(kl)}$, the identity laws reduce to $eg=g=ge$,
