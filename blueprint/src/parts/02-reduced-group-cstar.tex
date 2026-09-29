@@ -4,9 +4,9 @@
 Throughout this section, $\Gamma$ is an arbitrary discrete group with
 identity $e$. Countability is needed only for the separability statement.
 Scalars are complex; inner products are conjugate-linear in the first
-variable and linear in the second. The first three nodes (group algebra operations, support and delta identities,
-and unital star-algebra laws) are verified in Lean. The remaining nodes
-are mathematical statements and paper proofs without Lean verification.
+variable and linear in the second. The first nine nodes, from the group-algebra operations through the left
+regular representation, are verified in Lean. The remaining nodes are
+mathematical statements and paper proofs without Lean verification.
 
 \section{The complex group algebra}
 
@@ -73,6 +73,8 @@ Inversion twice and complex conjugation twice give $(a^*)^*=a$.
 \section{The Hilbert space and left translations}
 
 \begin{definition}[Square-summable functions]\label{def:l2-group}
+\lean{BC4lean.L2Group,BC4lean.L2Group.mem_iff,BC4lean.L2Group.norm_sq,BC4lean.L2Group.inner_eq_tsum,BC4lean.L2Group.delta}
+\leanok
 For a nonnegative family, define its sum as the supremum of its finite
 partial sums. Put
 \[
@@ -87,6 +89,8 @@ $\ell^2(\Gamma)$; the ambient space determines its meaning.
 \end{definition}
 
 \begin{proposition}[Hilbert space and delta basis]\label{prop:l2-hilbert-basis}
+\lean{BC4lean.L2Group.completeSpace,BC4lean.L2Group.summable_inner,BC4lean.L2Group.deltaBasis,BC4lean.L2Group.delta_orthonormal,BC4lean.L2Group.delta_dense_span,BC4lean.L2Group.hasSum_delta,BC4lean.L2Group.norm_apply_le,BC4lean.L2Group.inner_delta}
+\leanok
 \uses{def:l2-group}
 The inner product is well defined, and $\ell^2(\Gamma)$ is a complex
 Hilbert space. The delta vectors are orthonormal and have dense finite
@@ -94,6 +98,7 @@ linear span. For every $h$,
 $|\xi(h)|\leq\|\xi\|_2$ and $\langle\delta_h,\xi\rangle=\xi(h)$.
 \end{proposition}
 \begin{proof}
+\leanok
 Finite-sum Cauchy--Schwarz, followed by a supremum over finite sets,
 gives $\sum_h|\overline{\xi(h)}\eta(h)|\leq\|\xi\|_2\|\eta\|_2$.
 Thus the inner-product sum is absolutely convergent.
@@ -117,6 +122,8 @@ This argument does not require an enumeration of $\Gamma$.
 \end{proof}
 
 \begin{definition}[Left translation]\label{def:left-translation}
+\lean{BC4lean.memLp_leftTranslate,BC4lean.leftTranslate,BC4lean.leftTranslate_apply}
+\leanok
 \uses{def:l2-group}
 For $g\in\Gamma$, prescribe
 \[
@@ -126,6 +133,8 @@ The next lemma verifies that this defines an operator on $\ell^2(\Gamma)$.
 \end{definition}
 
 \begin{lemma}[Boundedness and representation identities]\label{lem:left-translation-laws}
+\lean{BC4lean.leftRegular,BC4lean.norm_leftTranslate,BC4lean.regularOperator_one,BC4lean.regularOperator_mul,BC4lean.regularOperator_delta,BC4lean.norm_regularOperator}
+\leanok
 \uses{def:left-translation,prop:l2-hilbert-basis}
 Each $\lambda_g$ is a complex-linear isometry, and
 \[
@@ -135,6 +144,7 @@ Each $\lambda_g$ is a complex-linear isometry, and
 where the final norm is the operator norm.
 \end{lemma}
 \begin{proof}
+\leanok
 The bijection $h\mapsto g^{-1}h$ preserves finite subsets and their
 supremum, so $\sum_h|\xi(g^{-1}h)|^2=\sum_h|\xi(h)|^2$.
 This proves well-definedness and norm preservation; linearity is
@@ -146,11 +156,14 @@ $\delta_e$ gives the reverse inequality.
 \end{proof}
 
 \begin{proposition}[Unitarity and adjoint]\label{prop:left-translation-unitary}
+\lean{BC4lean.leftTranslate_inv_left,BC4lean.leftTranslate_inv_right,BC4lean.regularOperator_star,BC4lean.regularOperator_unitary}
+\leanok
 \uses{lem:left-translation-laws}
 Each $\lambda_g$ is unitary, with
 $\lambda_g^{-1}=\lambda_{g^{-1}}=\lambda_g^*$.
 \end{proposition}
 \begin{proof}
+\leanok
 The multiplication identities give the two-sided inverse
 $\lambda_{g^{-1}}$. Reindexing the absolutely convergent inner product
 gives $\langle\lambda_g\xi,\eta\rangle
@@ -158,6 +171,8 @@ gives $\langle\lambda_g\xi,\eta\rangle
 \end{proof}
 
 \begin{definition}[Left regular representation]\label{def:left-regular-representation}
+\lean{BC4lean.regularRepresentation,BC4lean.regularRepresentation_coe,BC4lean.regularRepresentation_apply}
+\leanok
 \uses{prop:left-translation-unitary}
 The left regular representation is the group homomorphism
 $\lambda:\Gamma\to U(\ell^2(\Gamma))$, $g\mapsto\lambda_g$,

@@ -1,4 +1,18 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BC4lean — Lean 源码</title><style>body{max-width:1100px;margin:36px auto;padding:0 20px;font:16px/1.6 system-ui;color:#172033}pre{overflow:auto;background:#f4f6fa;padding:20px;font:14px/1.6 monospace}pre span{display:block}span:target{background:#ffedab;scroll-margin-top:60px}.line{color:#707b88;text-decoration:none}code{overflow-wrap:anywhere}</style></head><body><a href="../../blueprint/">返回 blueprint</a><h1>GroupAlgebra.lean</h1><p>此页用于定位 blueprint 引用的 Lean 声明，展示本次验证的源码快照，并非完整的 API 文档。</p><p>Lean 4.33.1；源码 SHA-256：<code>1c6c0899fe9bc9f7860f291ba7c5573353d18a3c5809258769d689bc39da8ad4</code></p><pre><span><a class="line" href="#L1" id="L1">  1</a> import Mathlib.Algebra.MonoidAlgebra.Basic</span>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Baum-Connes Conjecture — Lean 源码</title>
+<style>body{max-width:1100px;margin:36px auto;padding:0 20px;font:16px/1.6 system-ui;color:#172033}
+pre{overflow:auto;background:#f4f6fa;padding:20px;font:14px/1.6 monospace}pre span{display:block}
+span:target{background:#ffedab;scroll-margin-top:60px}.line{color:#707b88;text-decoration:none}
+code{overflow-wrap:anywhere}</style></head><body><a href="../../blueprint/">返回 blueprint</a>
+<h1>Lean 源码</h1><p>此页定位 blueprint 引用的 Lean 声明，展示已验证的源码快照，并非完整的 API 文档。Lean 4.33.1。</p>
+<nav><ul>
+<li><a href="#GroupAlgebra">GroupAlgebra.lean</a></li>
+<li><a href="#L2Group">L2Group.lean</a></li>
+<li><a href="#LeftRegularRepresentation">LeftRegularRepresentation.lean</a></li>
+</ul></nav>
+<h2 id="GroupAlgebra">GroupAlgebra.lean</h2><p>源码 SHA-256：<code>1c6c0899fe9bc9f7860f291ba7c5573353d18a3c5809258769d689bc39da8ad4</code></p><pre>
+<span><a class="line" href="#L1" id="L1">  1</a> import Mathlib.Algebra.MonoidAlgebra.Basic</span>
 <span><a class="line" href="#L2" id="L2">  2</a> import Mathlib.Algebra.MonoidAlgebra.Support</span>
 <span><a class="line" href="#L3" id="L3">  3</a> import Mathlib.Analysis.Complex.Basic</span>
 <span><a class="line" href="#L4" id="L4">  4</a> </span>
@@ -145,4 +159,242 @@
 <span><a class="line" href="#L145" id="L145">145</a>     star_add, star_smul, and_self]</span>
 <span><a class="line" href="#L146" id="L146">146</a> </span>
 <span><a class="line" href="#L147" id="L147">147</a> end GroupAlgebra</span>
-<span><a class="line" href="#L148" id="L148">148</a> end BC4lean</span></pre></body></html>
+<span><a class="line" href="#L148" id="L148">148</a> end BC4lean</span>
+</pre>
+<h2 id="L2Group">L2Group.lean</h2><p>源码 SHA-256：<code>c29e90c17d29b0a55f4ca3e568c275b8246603e15b0f7ebb6b41b43d62d410d4</code></p><pre>
+<span><a class="line" href="#L2Group-L1" id="L2Group-L1">  1</a> import Mathlib.Analysis.InnerProductSpace.l2Space</span>
+<span><a class="line" href="#L2Group-L2" id="L2Group-L2">  2</a> </span>
+<span><a class="line" href="#L2Group-L3" id="L2Group-L3">  3</a> /-!</span>
+<span><a class="line" href="#L2Group-L4" id="L2Group-L4">  4</a> # Square-summable functions and the delta Hilbert basis</span>
+<span><a class="line" href="#L2Group-L5" id="L2Group-L5">  5</a> </span>
+<span><a class="line" href="#L2Group-L6" id="L2Group-L6">  6</a> The index type need not be countable or carry a group structure.</span>
+<span><a class="line" href="#L2Group-L7" id="L2Group-L7">  7</a> Mathlib supplies the complete complex inner product space structure on `lp`.</span>
+<span><a class="line" href="#L2Group-L8" id="L2Group-L8">  8</a> Sums are unordered sums over finite subsets, not a chosen enumeration.</span>
+<span><a class="line" href="#L2Group-L9" id="L2Group-L9">  9</a> -/</span>
+<span><a class="line" href="#L2Group-L10" id="L2Group-L10"> 10</a> </span>
+<span><a class="line" href="#L2Group-L11" id="L2Group-L11"> 11</a> noncomputable section</span>
+<span><a class="line" href="#L2Group-L12" id="L2Group-L12"> 12</a> </span>
+<span><a class="line" href="#L2Group-L13" id="L2Group-L13"> 13</a> namespace BC4lean</span>
+<span><a class="line" href="#L2Group-L14" id="L2Group-L14"> 14</a> </span>
+<span><a class="line" href="#L2Group-L15" id="L2Group-L15"> 15</a> open scoped ENNReal</span>
+<span><a class="line" href="#L2Group-L16" id="L2Group-L16"> 16</a> </span>
+<span><a class="line" href="#L2Group-L17" id="L2Group-L17"> 17</a> /-- Square-summable complex-valued functions, with their Hilbert space structure. -/</span>
+<span id="doc/BC4lean.L2Group"><a class="line" href="#L2Group-L18" id="L2Group-L18"> 18</a> abbrev L2Group (Γ : Type*) := lp (fun _ : Γ =&gt; ℂ) 2</span>
+<span><a class="line" href="#L2Group-L19" id="L2Group-L19"> 19</a> </span>
+<span><a class="line" href="#L2Group-L20" id="L2Group-L20"> 20</a> namespace L2Group</span>
+<span><a class="line" href="#L2Group-L21" id="L2Group-L21"> 21</a> </span>
+<span><a class="line" href="#L2Group-L22" id="L2Group-L22"> 22</a> variable {Γ : Type*}</span>
+<span><a class="line" href="#L2Group-L23" id="L2Group-L23"> 23</a> </span>
+<span><a class="line" href="#L2Group-L24" id="L2Group-L24"> 24</a> /-- Membership is exactly summability of the squared coefficient norms. -/</span>
+<span id="doc/BC4lean.L2Group.mem_iff"><a class="line" href="#L2Group-L25" id="L2Group-L25"> 25</a> theorem mem_iff (f : Γ → ℂ) :</span>
+<span><a class="line" href="#L2Group-L26" id="L2Group-L26"> 26</a>     Memℓp f 2 ↔ Summable (fun g =&gt; ‖f g‖ ^ (2 : ℕ)) := by</span>
+<span><a class="line" href="#L2Group-L27" id="L2Group-L27"> 27</a>   simpa using (memℓp_gen_iff (by norm_num : 0 &lt; (2 : ℝ≥0∞).toReal) (f := f))</span>
+<span><a class="line" href="#L2Group-L28" id="L2Group-L28"> 28</a> </span>
+<span><a class="line" href="#L2Group-L29" id="L2Group-L29"> 29</a> /-- Completeness is inherited from Mathlib&#x27;s `lp` construction. -/</span>
+<span id="doc/BC4lean.L2Group.completeSpace"><a class="line" href="#L2Group-L30" id="L2Group-L30"> 30</a> theorem completeSpace : CompleteSpace (L2Group Γ) := inferInstance</span>
+<span><a class="line" href="#L2Group-L31" id="L2Group-L31"> 31</a> </span>
+<span id="doc/BC4lean.L2Group.summable_norm_sq"><a class="line" href="#L2Group-L32" id="L2Group-L32"> 32</a> theorem summable_norm_sq (ξ : L2Group Γ) : Summable (fun g =&gt; ‖ξ g‖ ^ (2 : ℕ)) :=</span>
+<span><a class="line" href="#L2Group-L33" id="L2Group-L33"> 33</a>   (mem_iff ξ).mp (lp.memℓp ξ)</span>
+<span><a class="line" href="#L2Group-L34" id="L2Group-L34"> 34</a> </span>
+<span id="doc/BC4lean.L2Group.norm_sq"><a class="line" href="#L2Group-L35" id="L2Group-L35"> 35</a> theorem norm_sq (ξ : L2Group Γ) : ‖ξ‖ ^ (2 : ℕ) = ∑&#x27; g, ‖ξ g‖ ^ (2 : ℕ) := by</span>
+<span><a class="line" href="#L2Group-L36" id="L2Group-L36"> 36</a>   simpa using lp.norm_rpow_eq_tsum (by norm_num : 0 &lt; (2 : ℝ≥0∞).toReal) ξ</span>
+<span><a class="line" href="#L2Group-L37" id="L2Group-L37"> 37</a> </span>
+<span id="doc/BC4lean.L2Group.inner_eq_tsum"><a class="line" href="#L2Group-L38" id="L2Group-L38"> 38</a> theorem inner_eq_tsum (ξ η : L2Group Γ) :</span>
+<span><a class="line" href="#L2Group-L39" id="L2Group-L39"> 39</a>     inner ℂ ξ η = ∑&#x27; g, star (ξ g) * η g := by</span>
+<span><a class="line" href="#L2Group-L40" id="L2Group-L40"> 40</a>   simpa [RCLike.inner_apply, mul_comm] using lp.inner_eq_tsum (𝕜 := ℂ) ξ η</span>
+<span><a class="line" href="#L2Group-L41" id="L2Group-L41"> 41</a> </span>
+<span id="doc/BC4lean.L2Group.summable_inner"><a class="line" href="#L2Group-L42" id="L2Group-L42"> 42</a> theorem summable_inner (ξ η : L2Group Γ) :</span>
+<span><a class="line" href="#L2Group-L43" id="L2Group-L43"> 43</a>     Summable (fun g =&gt; star (ξ g) * η g) := by</span>
+<span><a class="line" href="#L2Group-L44" id="L2Group-L44"> 44</a>   simpa [RCLike.inner_apply, mul_comm] using lp.summable_inner (𝕜 := ℂ) ξ η</span>
+<span><a class="line" href="#L2Group-L45" id="L2Group-L45"> 45</a> </span>
+<span><a class="line" href="#L2Group-L46" id="L2Group-L46"> 46</a> /-- The delta vector at `g`. -/</span>
+<span id="doc/BC4lean.L2Group.delta"><a class="line" href="#L2Group-L47" id="L2Group-L47"> 47</a> def delta (g : Γ) : L2Group Γ := by</span>
+<span><a class="line" href="#L2Group-L48" id="L2Group-L48"> 48</a>   classical</span>
+<span><a class="line" href="#L2Group-L49" id="L2Group-L49"> 49</a>   exact lp.single 2 g 1</span>
+<span><a class="line" href="#L2Group-L50" id="L2Group-L50"> 50</a> </span>
+<span><a class="line" href="#L2Group-L51" id="L2Group-L51"> 51</a> open scoped Classical in</span>
+<span id="doc/BC4lean.L2Group.delta_apply"><a class="line" href="#L2Group-L52" id="L2Group-L52"> 52</a> theorem delta_apply (g h : Γ) : delta g h = if h = g then 1 else 0 := by</span>
+<span><a class="line" href="#L2Group-L53" id="L2Group-L53"> 53</a>   classical</span>
+<span><a class="line" href="#L2Group-L54" id="L2Group-L54"> 54</a>   simp [delta, lp.single_apply, Pi.single_apply]</span>
+<span><a class="line" href="#L2Group-L55" id="L2Group-L55"> 55</a> </span>
+<span id="doc/BC4lean.L2Group.delta_apply_self"><a class="line" href="#L2Group-L56" id="L2Group-L56"> 56</a> @[simp] theorem delta_apply_self (g : Γ) : delta g g = 1 := by</span>
+<span><a class="line" href="#L2Group-L57" id="L2Group-L57"> 57</a>   classical</span>
+<span><a class="line" href="#L2Group-L58" id="L2Group-L58"> 58</a>   simp [delta_apply]</span>
+<span><a class="line" href="#L2Group-L59" id="L2Group-L59"> 59</a> </span>
+<span id="doc/BC4lean.L2Group.norm_delta"><a class="line" href="#L2Group-L60" id="L2Group-L60"> 60</a> @[simp] theorem norm_delta (g : Γ) : ‖delta g‖ = 1 := by</span>
+<span><a class="line" href="#L2Group-L61" id="L2Group-L61"> 61</a>   classical</span>
+<span><a class="line" href="#L2Group-L62" id="L2Group-L62"> 62</a>   simp only [delta, lp.norm_single (by norm_num : (0 : ℝ≥0∞) &lt; 2), norm_one]</span>
+<span><a class="line" href="#L2Group-L63" id="L2Group-L63"> 63</a> </span>
+<span><a class="line" href="#L2Group-L64" id="L2Group-L64"> 64</a> /-- The identity coordinate representation gives the canonical Hilbert basis. -/</span>
+<span id="doc/BC4lean.L2Group.deltaBasis"><a class="line" href="#L2Group-L65" id="L2Group-L65"> 65</a> def deltaBasis : HilbertBasis Γ ℂ (L2Group Γ) :=</span>
+<span><a class="line" href="#L2Group-L66" id="L2Group-L66"> 66</a>   HilbertBasis.ofRepr (LinearIsometryEquiv.refl ℂ _)</span>
+<span><a class="line" href="#L2Group-L67" id="L2Group-L67"> 67</a> </span>
+<span id="doc/BC4lean.L2Group.deltaBasis_apply"><a class="line" href="#L2Group-L68" id="L2Group-L68"> 68</a> @[simp] theorem deltaBasis_apply (g : Γ) : deltaBasis g = delta g := rfl</span>
+<span><a class="line" href="#L2Group-L69" id="L2Group-L69"> 69</a> </span>
+<span id="doc/BC4lean.L2Group.delta_orthonormal"><a class="line" href="#L2Group-L70" id="L2Group-L70"> 70</a> theorem delta_orthonormal : Orthonormal ℂ (delta : Γ → L2Group Γ) :=</span>
+<span><a class="line" href="#L2Group-L71" id="L2Group-L71"> 71</a>   deltaBasis.orthonormal</span>
+<span><a class="line" href="#L2Group-L72" id="L2Group-L72"> 72</a> </span>
+<span id="doc/BC4lean.L2Group.delta_dense_span"><a class="line" href="#L2Group-L73" id="L2Group-L73"> 73</a> theorem delta_dense_span :</span>
+<span><a class="line" href="#L2Group-L74" id="L2Group-L74"> 74</a>     (Submodule.span ℂ (Set.range (delta : Γ → L2Group Γ))).topologicalClosure = ⊤ :=</span>
+<span><a class="line" href="#L2Group-L75" id="L2Group-L75"> 75</a>   deltaBasis.dense_span</span>
+<span><a class="line" href="#L2Group-L76" id="L2Group-L76"> 76</a> </span>
+<span id="doc/BC4lean.L2Group.hasSum_delta"><a class="line" href="#L2Group-L77" id="L2Group-L77"> 77</a> theorem hasSum_delta (ξ : L2Group Γ) : HasSum (fun g =&gt; ξ g • delta g) ξ :=</span>
+<span><a class="line" href="#L2Group-L78" id="L2Group-L78"> 78</a>   deltaBasis.hasSum_repr ξ</span>
+<span><a class="line" href="#L2Group-L79" id="L2Group-L79"> 79</a> </span>
+<span id="doc/BC4lean.L2Group.inner_delta"><a class="line" href="#L2Group-L80" id="L2Group-L80"> 80</a> @[simp] theorem inner_delta (g : Γ) (ξ : L2Group Γ) : inner ℂ (delta g) ξ = ξ g :=</span>
+<span><a class="line" href="#L2Group-L81" id="L2Group-L81"> 81</a>   (deltaBasis.repr_apply_apply ξ g).symm</span>
+<span><a class="line" href="#L2Group-L82" id="L2Group-L82"> 82</a> </span>
+<span id="doc/BC4lean.L2Group.norm_apply_le"><a class="line" href="#L2Group-L83" id="L2Group-L83"> 83</a> theorem norm_apply_le (ξ : L2Group Γ) (g : Γ) : ‖ξ g‖ ≤ ‖ξ‖ :=</span>
+<span><a class="line" href="#L2Group-L84" id="L2Group-L84"> 84</a>   lp.norm_apply_le_norm (by norm_num : (2 : ℝ≥0∞) ≠ 0) ξ g</span>
+<span><a class="line" href="#L2Group-L85" id="L2Group-L85"> 85</a> </span>
+<span><a class="line" href="#L2Group-L86" id="L2Group-L86"> 86</a> end L2Group</span>
+<span><a class="line" href="#L2Group-L87" id="L2Group-L87"> 87</a> end BC4lean</span>
+</pre>
+<h2 id="LeftRegularRepresentation">LeftRegularRepresentation.lean</h2><p>源码 SHA-256：<code>400a9225e55f140dcdca8e494397443be99304852e0d69a4cee8c43e9fd6d0f9</code></p><pre>
+<span><a class="line" href="#LeftRegularRepresentation-L1" id="LeftRegularRepresentation-L1">  1</a> import BC4lean.L2Group</span>
+<span><a class="line" href="#LeftRegularRepresentation-L2" id="LeftRegularRepresentation-L2">  2</a> import Mathlib.Algebra.Star.Unitary</span>
+<span><a class="line" href="#LeftRegularRepresentation-L3" id="LeftRegularRepresentation-L3">  3</a> import Mathlib.Analysis.InnerProductSpace.Adjoint</span>
+<span><a class="line" href="#LeftRegularRepresentation-L4" id="LeftRegularRepresentation-L4">  4</a> </span>
+<span><a class="line" href="#LeftRegularRepresentation-L5" id="LeftRegularRepresentation-L5">  5</a> /-!</span>
+<span><a class="line" href="#LeftRegularRepresentation-L6" id="LeftRegularRepresentation-L6">  6</a> # First milestone: the left regular representation</span>
+<span><a class="line" href="#LeftRegularRepresentation-L7" id="LeftRegularRepresentation-L7">  7</a> </span>
+<span><a class="line" href="#LeftRegularRepresentation-L8" id="LeftRegularRepresentation-L8">  8</a> We construct translations directly on square-summable functions. No countability</span>
+<span><a class="line" href="#LeftRegularRepresentation-L9" id="LeftRegularRepresentation-L9">  9</a> assumption is required. All groups in this module are regarded as discrete.</span>
+<span><a class="line" href="#LeftRegularRepresentation-L10" id="LeftRegularRepresentation-L10"> 10</a> -/</span>
+<span><a class="line" href="#LeftRegularRepresentation-L11" id="LeftRegularRepresentation-L11"> 11</a> </span>
+<span><a class="line" href="#LeftRegularRepresentation-L12" id="LeftRegularRepresentation-L12"> 12</a> noncomputable section</span>
+<span><a class="line" href="#LeftRegularRepresentation-L13" id="LeftRegularRepresentation-L13"> 13</a> </span>
+<span><a class="line" href="#LeftRegularRepresentation-L14" id="LeftRegularRepresentation-L14"> 14</a> namespace BC4lean</span>
+<span><a class="line" href="#LeftRegularRepresentation-L15" id="LeftRegularRepresentation-L15"> 15</a> </span>
+<span><a class="line" href="#LeftRegularRepresentation-L16" id="LeftRegularRepresentation-L16"> 16</a> open scoped ENNReal</span>
+<span><a class="line" href="#LeftRegularRepresentation-L17" id="LeftRegularRepresentation-L17"> 17</a> </span>
+<span><a class="line" href="#LeftRegularRepresentation-L18" id="LeftRegularRepresentation-L18"> 18</a> universe u</span>
+<span><a class="line" href="#LeftRegularRepresentation-L19" id="LeftRegularRepresentation-L19"> 19</a> </span>
+<span><a class="line" href="#LeftRegularRepresentation-L20" id="LeftRegularRepresentation-L20"> 20</a> variable {Γ : Type u} [Group Γ]</span>
+<span><a class="line" href="#LeftRegularRepresentation-L21" id="LeftRegularRepresentation-L21"> 21</a> </span>
+<span><a class="line" href="#LeftRegularRepresentation-L22" id="LeftRegularRepresentation-L22"> 22</a> /-- Left translation preserves square summability by reindexing the sum. -/</span>
+<span id="doc/BC4lean.memLp_leftTranslate"><a class="line" href="#LeftRegularRepresentation-L23" id="LeftRegularRepresentation-L23"> 23</a> theorem memLp_leftTranslate (g : Γ) (ξ : L2Group Γ) :</span>
+<span><a class="line" href="#LeftRegularRepresentation-L24" id="LeftRegularRepresentation-L24"> 24</a>     Memℓp (fun h =&gt; ξ (g⁻¹ * h)) 2 := by</span>
+<span><a class="line" href="#LeftRegularRepresentation-L25" id="LeftRegularRepresentation-L25"> 25</a>   apply memℓp_gen</span>
+<span><a class="line" href="#LeftRegularRepresentation-L26" id="LeftRegularRepresentation-L26"> 26</a>   exact (Equiv.mulLeft g⁻¹).summable_iff.mpr</span>
+<span><a class="line" href="#LeftRegularRepresentation-L27" id="LeftRegularRepresentation-L27"> 27</a>     ((lp.memℓp ξ).summable (by norm_num))</span>
+<span><a class="line" href="#LeftRegularRepresentation-L28" id="LeftRegularRepresentation-L28"> 28</a> </span>
+<span><a class="line" href="#LeftRegularRepresentation-L29" id="LeftRegularRepresentation-L29"> 29</a> /-- Left translation, before packaging it as a linear isometry. -/</span>
+<span id="doc/BC4lean.leftTranslate"><a class="line" href="#LeftRegularRepresentation-L30" id="LeftRegularRepresentation-L30"> 30</a> def leftTranslate (g : Γ) (ξ : L2Group Γ) : L2Group Γ :=</span>
+<span><a class="line" href="#LeftRegularRepresentation-L31" id="LeftRegularRepresentation-L31"> 31</a>   ⟨fun h =&gt; ξ (g⁻¹ * h), memLp_leftTranslate g ξ⟩</span>
+<span><a class="line" href="#LeftRegularRepresentation-L32" id="LeftRegularRepresentation-L32"> 32</a> </span>
+<span id="doc/BC4lean.leftTranslate_apply"><a class="line" href="#LeftRegularRepresentation-L33" id="LeftRegularRepresentation-L33"> 33</a> @[simp] theorem leftTranslate_apply (g h : Γ) (ξ : L2Group Γ) :</span>
+<span><a class="line" href="#LeftRegularRepresentation-L34" id="LeftRegularRepresentation-L34"> 34</a>     leftTranslate g ξ h = ξ (g⁻¹ * h) := rfl</span>
+<span><a class="line" href="#LeftRegularRepresentation-L35" id="LeftRegularRepresentation-L35"> 35</a> </span>
+<span id="doc/BC4lean.leftTranslate_one"><a class="line" href="#LeftRegularRepresentation-L36" id="LeftRegularRepresentation-L36"> 36</a> @[simp] theorem leftTranslate_one (ξ : L2Group Γ) : leftTranslate 1 ξ = ξ := by</span>
+<span><a class="line" href="#LeftRegularRepresentation-L37" id="LeftRegularRepresentation-L37"> 37</a>   apply lp.ext</span>
+<span><a class="line" href="#LeftRegularRepresentation-L38" id="LeftRegularRepresentation-L38"> 38</a>   funext h</span>
+<span><a class="line" href="#LeftRegularRepresentation-L39" id="LeftRegularRepresentation-L39"> 39</a>   simp</span>
+<span><a class="line" href="#LeftRegularRepresentation-L40" id="LeftRegularRepresentation-L40"> 40</a> </span>
+<span id="doc/BC4lean.leftTranslate_mul"><a class="line" href="#LeftRegularRepresentation-L41" id="LeftRegularRepresentation-L41"> 41</a> theorem leftTranslate_mul (g h : Γ) (ξ : L2Group Γ) :</span>
+<span><a class="line" href="#LeftRegularRepresentation-L42" id="LeftRegularRepresentation-L42"> 42</a>     leftTranslate (g * h) ξ = leftTranslate g (leftTranslate h ξ) := by</span>
+<span><a class="line" href="#LeftRegularRepresentation-L43" id="LeftRegularRepresentation-L43"> 43</a>   apply lp.ext</span>
+<span><a class="line" href="#LeftRegularRepresentation-L44" id="LeftRegularRepresentation-L44"> 44</a>   funext k</span>
+<span><a class="line" href="#LeftRegularRepresentation-L45" id="LeftRegularRepresentation-L45"> 45</a>   simp [mul_assoc]</span>
+<span><a class="line" href="#LeftRegularRepresentation-L46" id="LeftRegularRepresentation-L46"> 46</a> </span>
+<span id="doc/BC4lean.leftTranslate_inv_left"><a class="line" href="#LeftRegularRepresentation-L47" id="LeftRegularRepresentation-L47"> 47</a> @[simp] theorem leftTranslate_inv_left (g : Γ) (ξ : L2Group Γ) :</span>
+<span><a class="line" href="#LeftRegularRepresentation-L48" id="LeftRegularRepresentation-L48"> 48</a>     leftTranslate g⁻¹ (leftTranslate g ξ) = ξ := by</span>
+<span><a class="line" href="#LeftRegularRepresentation-L49" id="LeftRegularRepresentation-L49"> 49</a>   rw [← leftTranslate_mul, inv_mul_cancel, leftTranslate_one]</span>
+<span><a class="line" href="#LeftRegularRepresentation-L50" id="LeftRegularRepresentation-L50"> 50</a> </span>
+<span id="doc/BC4lean.leftTranslate_inv_right"><a class="line" href="#LeftRegularRepresentation-L51" id="LeftRegularRepresentation-L51"> 51</a> @[simp] theorem leftTranslate_inv_right (g : Γ) (ξ : L2Group Γ) :</span>
+<span><a class="line" href="#LeftRegularRepresentation-L52" id="LeftRegularRepresentation-L52"> 52</a>     leftTranslate g (leftTranslate g⁻¹ ξ) = ξ := by</span>
+<span><a class="line" href="#LeftRegularRepresentation-L53" id="LeftRegularRepresentation-L53"> 53</a>   rw [← leftTranslate_mul, mul_inv_cancel, leftTranslate_one]</span>
+<span><a class="line" href="#LeftRegularRepresentation-L54" id="LeftRegularRepresentation-L54"> 54</a> </span>
+<span><a class="line" href="#LeftRegularRepresentation-L55" id="LeftRegularRepresentation-L55"> 55</a> /-- Translations preserve the norm, by invariance of a sum under a bijection. -/</span>
+<span id="doc/BC4lean.norm_leftTranslate"><a class="line" href="#LeftRegularRepresentation-L56" id="LeftRegularRepresentation-L56"> 56</a> @[simp] theorem norm_leftTranslate (g : Γ) (ξ : L2Group Γ) :</span>
+<span><a class="line" href="#LeftRegularRepresentation-L57" id="LeftRegularRepresentation-L57"> 57</a>     ‖leftTranslate g ξ‖ = ‖ξ‖ := by</span>
+<span><a class="line" href="#LeftRegularRepresentation-L58" id="LeftRegularRepresentation-L58"> 58</a>   rw [lp.norm_eq_tsum_rpow (by norm_num), lp.norm_eq_tsum_rpow (by norm_num)]</span>
+<span><a class="line" href="#LeftRegularRepresentation-L59" id="LeftRegularRepresentation-L59"> 59</a>   congr 1</span>
+<span><a class="line" href="#LeftRegularRepresentation-L60" id="LeftRegularRepresentation-L60"> 60</a>   exact (Equiv.mulLeft g⁻¹).tsum_eq (fun h =&gt; ‖ξ h‖ ^ (2 : ℝ≥0∞).toReal)</span>
+<span><a class="line" href="#LeftRegularRepresentation-L61" id="LeftRegularRepresentation-L61"> 61</a> </span>
+<span><a class="line" href="#LeftRegularRepresentation-L62" id="LeftRegularRepresentation-L62"> 62</a> /-- A unitary expressed as a complex-linear isometric equivalence. -/</span>
+<span id="doc/BC4lean.leftRegular"><a class="line" href="#LeftRegularRepresentation-L63" id="LeftRegularRepresentation-L63"> 63</a> def leftRegular (g : Γ) : L2Group Γ ≃ₗᵢ[ℂ] L2Group Γ where</span>
+<span><a class="line" href="#LeftRegularRepresentation-L64" id="LeftRegularRepresentation-L64"> 64</a>   toFun := leftTranslate g</span>
+<span><a class="line" href="#LeftRegularRepresentation-L65" id="LeftRegularRepresentation-L65"> 65</a>   invFun := leftTranslate g⁻¹</span>
+<span><a class="line" href="#LeftRegularRepresentation-L66" id="LeftRegularRepresentation-L66"> 66</a>   left_inv := leftTranslate_inv_left g</span>
+<span><a class="line" href="#LeftRegularRepresentation-L67" id="LeftRegularRepresentation-L67"> 67</a>   right_inv := leftTranslate_inv_right g</span>
+<span><a class="line" href="#LeftRegularRepresentation-L68" id="LeftRegularRepresentation-L68"> 68</a>   map_add&#x27; ξ η := by</span>
+<span><a class="line" href="#LeftRegularRepresentation-L69" id="LeftRegularRepresentation-L69"> 69</a>     apply lp.ext</span>
+<span><a class="line" href="#LeftRegularRepresentation-L70" id="LeftRegularRepresentation-L70"> 70</a>     rfl</span>
+<span><a class="line" href="#LeftRegularRepresentation-L71" id="LeftRegularRepresentation-L71"> 71</a>   map_smul&#x27; c ξ := by</span>
+<span><a class="line" href="#LeftRegularRepresentation-L72" id="LeftRegularRepresentation-L72"> 72</a>     apply lp.ext</span>
+<span><a class="line" href="#LeftRegularRepresentation-L73" id="LeftRegularRepresentation-L73"> 73</a>     rfl</span>
+<span><a class="line" href="#LeftRegularRepresentation-L74" id="LeftRegularRepresentation-L74"> 74</a>   norm_map&#x27; := norm_leftTranslate g</span>
+<span><a class="line" href="#LeftRegularRepresentation-L75" id="LeftRegularRepresentation-L75"> 75</a> </span>
+<span id="doc/BC4lean.leftRegular_apply"><a class="line" href="#LeftRegularRepresentation-L76" id="LeftRegularRepresentation-L76"> 76</a> @[simp] theorem leftRegular_apply (g h : Γ) (ξ : L2Group Γ) :</span>
+<span><a class="line" href="#LeftRegularRepresentation-L77" id="LeftRegularRepresentation-L77"> 77</a>     leftRegular g ξ h = ξ (g⁻¹ * h) := rfl</span>
+<span><a class="line" href="#LeftRegularRepresentation-L78" id="LeftRegularRepresentation-L78"> 78</a> </span>
+<span id="doc/BC4lean.leftRegular_inner"><a class="line" href="#LeftRegularRepresentation-L79" id="LeftRegularRepresentation-L79"> 79</a> theorem leftRegular_inner (g : Γ) (ξ η : L2Group Γ) :</span>
+<span><a class="line" href="#LeftRegularRepresentation-L80" id="LeftRegularRepresentation-L80"> 80</a>     inner ℂ (leftRegular g ξ) (leftRegular g η) = inner ℂ ξ η :=</span>
+<span><a class="line" href="#LeftRegularRepresentation-L81" id="LeftRegularRepresentation-L81"> 81</a>   (leftRegular g).inner_map_map ξ η</span>
+<span><a class="line" href="#LeftRegularRepresentation-L82" id="LeftRegularRepresentation-L82"> 82</a> </span>
+<span><a class="line" href="#LeftRegularRepresentation-L83" id="LeftRegularRepresentation-L83"> 83</a> /-- The regular operator in the algebra of bounded complex-linear operators. -/</span>
+<span id="doc/BC4lean.regularOperator"><a class="line" href="#LeftRegularRepresentation-L84" id="LeftRegularRepresentation-L84"> 84</a> def regularOperator (g : Γ) : L2Group Γ →L[ℂ] L2Group Γ :=</span>
+<span><a class="line" href="#LeftRegularRepresentation-L85" id="LeftRegularRepresentation-L85"> 85</a>   (leftRegular g : L2Group Γ →L[ℂ] L2Group Γ)</span>
+<span><a class="line" href="#LeftRegularRepresentation-L86" id="LeftRegularRepresentation-L86"> 86</a> </span>
+<span id="doc/BC4lean.regularOperator_apply"><a class="line" href="#LeftRegularRepresentation-L87" id="LeftRegularRepresentation-L87"> 87</a> @[simp] theorem regularOperator_apply (g h : Γ) (ξ : L2Group Γ) :</span>
+<span><a class="line" href="#LeftRegularRepresentation-L88" id="LeftRegularRepresentation-L88"> 88</a>     regularOperator g ξ h = ξ (g⁻¹ * h) := rfl</span>
+<span><a class="line" href="#LeftRegularRepresentation-L89" id="LeftRegularRepresentation-L89"> 89</a> </span>
+<span id="doc/BC4lean.regularOperator_one"><a class="line" href="#LeftRegularRepresentation-L90" id="LeftRegularRepresentation-L90"> 90</a> @[simp] theorem regularOperator_one : regularOperator (1 : Γ) = 1 := by</span>
+<span><a class="line" href="#LeftRegularRepresentation-L91" id="LeftRegularRepresentation-L91"> 91</a>   ext ξ h</span>
+<span><a class="line" href="#LeftRegularRepresentation-L92" id="LeftRegularRepresentation-L92"> 92</a>   simp [regularOperator]</span>
+<span><a class="line" href="#LeftRegularRepresentation-L93" id="LeftRegularRepresentation-L93"> 93</a> </span>
+<span id="doc/BC4lean.regularOperator_mul"><a class="line" href="#LeftRegularRepresentation-L94" id="LeftRegularRepresentation-L94"> 94</a> @[simp] theorem regularOperator_mul (g h : Γ) :</span>
+<span><a class="line" href="#LeftRegularRepresentation-L95" id="LeftRegularRepresentation-L95"> 95</a>     regularOperator (g * h) = regularOperator g * regularOperator h := by</span>
+<span><a class="line" href="#LeftRegularRepresentation-L96" id="LeftRegularRepresentation-L96"> 96</a>   ext ξ k</span>
+<span><a class="line" href="#LeftRegularRepresentation-L97" id="LeftRegularRepresentation-L97"> 97</a>   simp [regularOperator, mul_assoc]</span>
+<span><a class="line" href="#LeftRegularRepresentation-L98" id="LeftRegularRepresentation-L98"> 98</a> </span>
+<span id="doc/BC4lean.regularOperator_star"><a class="line" href="#LeftRegularRepresentation-L99" id="LeftRegularRepresentation-L99"> 99</a> @[simp] theorem regularOperator_star (g : Γ) :</span>
+<span><a class="line" href="#LeftRegularRepresentation-L100" id="LeftRegularRepresentation-L100">100</a>     star (regularOperator g) = regularOperator g⁻¹ := by</span>
+<span><a class="line" href="#LeftRegularRepresentation-L101" id="LeftRegularRepresentation-L101">101</a>   change star (leftRegular g : L2Group Γ →L[ℂ] L2Group Γ) = _</span>
+<span><a class="line" href="#LeftRegularRepresentation-L102" id="LeftRegularRepresentation-L102">102</a>   rw [LinearIsometryEquiv.star_eq_symm]</span>
+<span><a class="line" href="#LeftRegularRepresentation-L103" id="LeftRegularRepresentation-L103">103</a>   rfl</span>
+<span><a class="line" href="#LeftRegularRepresentation-L104" id="LeftRegularRepresentation-L104">104</a> </span>
+<span><a class="line" href="#LeftRegularRepresentation-L105" id="LeftRegularRepresentation-L105">105</a> /-- Both unitary identities hold in the bounded-operator algebra. -/</span>
+<span id="doc/BC4lean.regularOperator_unitary"><a class="line" href="#LeftRegularRepresentation-L106" id="LeftRegularRepresentation-L106">106</a> theorem regularOperator_unitary (g : Γ) :</span>
+<span><a class="line" href="#LeftRegularRepresentation-L107" id="LeftRegularRepresentation-L107">107</a>     star (regularOperator g) * regularOperator g = 1 ∧</span>
+<span><a class="line" href="#LeftRegularRepresentation-L108" id="LeftRegularRepresentation-L108">108</a>       regularOperator g * star (regularOperator g) = 1 := by</span>
+<span><a class="line" href="#LeftRegularRepresentation-L109" id="LeftRegularRepresentation-L109">109</a>   constructor &lt;;&gt; simp [← regularOperator_mul]</span>
+<span><a class="line" href="#LeftRegularRepresentation-L110" id="LeftRegularRepresentation-L110">110</a> </span>
+<span><a class="line" href="#LeftRegularRepresentation-L111" id="LeftRegularRepresentation-L111">111</a> /-- The left regular representation, packaged as a multiplicative map. -/</span>
+<span id="doc/BC4lean.operatorRepresentation"><a class="line" href="#LeftRegularRepresentation-L112" id="LeftRegularRepresentation-L112">112</a> def operatorRepresentation : Γ →* (L2Group Γ →L[ℂ] L2Group Γ) where</span>
+<span><a class="line" href="#LeftRegularRepresentation-L113" id="LeftRegularRepresentation-L113">113</a>   toFun := regularOperator</span>
+<span><a class="line" href="#LeftRegularRepresentation-L114" id="LeftRegularRepresentation-L114">114</a>   map_one&#x27; := regularOperator_one</span>
+<span><a class="line" href="#LeftRegularRepresentation-L115" id="LeftRegularRepresentation-L115">115</a>   map_mul&#x27; := regularOperator_mul</span>
+<span><a class="line" href="#LeftRegularRepresentation-L116" id="LeftRegularRepresentation-L116">116</a> </span>
+<span><a class="line" href="#LeftRegularRepresentation-L117" id="LeftRegularRepresentation-L117">117</a> /-- Translation carries the delta vector at `h` to the delta vector at `g * h`. -/</span>
+<span id="doc/BC4lean.regularOperator_delta"><a class="line" href="#LeftRegularRepresentation-L118" id="LeftRegularRepresentation-L118">118</a> @[simp] theorem regularOperator_delta (g h : Γ) :</span>
+<span><a class="line" href="#LeftRegularRepresentation-L119" id="LeftRegularRepresentation-L119">119</a>     regularOperator g (L2Group.delta h) = L2Group.delta (g * h) := by</span>
+<span><a class="line" href="#LeftRegularRepresentation-L120" id="LeftRegularRepresentation-L120">120</a>   classical</span>
+<span><a class="line" href="#LeftRegularRepresentation-L121" id="LeftRegularRepresentation-L121">121</a>   ext k</span>
+<span><a class="line" href="#LeftRegularRepresentation-L122" id="LeftRegularRepresentation-L122">122</a>   simp only [regularOperator_apply, L2Group.delta_apply, inv_mul_eq_iff_eq_mul]</span>
+<span><a class="line" href="#LeftRegularRepresentation-L123" id="LeftRegularRepresentation-L123">123</a> </span>
+<span id="doc/BC4lean.norm_regularOperator"><a class="line" href="#LeftRegularRepresentation-L124" id="LeftRegularRepresentation-L124">124</a> @[simp] theorem norm_regularOperator (g : Γ) : ‖regularOperator g‖ = 1 := by</span>
+<span><a class="line" href="#LeftRegularRepresentation-L125" id="LeftRegularRepresentation-L125">125</a>   apply le_antisymm</span>
+<span><a class="line" href="#LeftRegularRepresentation-L126" id="LeftRegularRepresentation-L126">126</a>   · apply ContinuousLinearMap.opNorm_le_bound _ zero_le_one</span>
+<span><a class="line" href="#LeftRegularRepresentation-L127" id="LeftRegularRepresentation-L127">127</a>     intro ξ</span>
+<span><a class="line" href="#LeftRegularRepresentation-L128" id="LeftRegularRepresentation-L128">128</a>     change ‖leftTranslate g ξ‖ ≤ 1 * ‖ξ‖</span>
+<span><a class="line" href="#LeftRegularRepresentation-L129" id="LeftRegularRepresentation-L129">129</a>     simp only [norm_leftTranslate, one_mul, le_refl]</span>
+<span><a class="line" href="#LeftRegularRepresentation-L130" id="LeftRegularRepresentation-L130">130</a>   · have h := (regularOperator g).le_opNorm (L2Group.delta (1 : Γ))</span>
+<span><a class="line" href="#LeftRegularRepresentation-L131" id="LeftRegularRepresentation-L131">131</a>     simpa only [regularOperator_delta, L2Group.norm_delta, mul_one] using h</span>
+<span><a class="line" href="#LeftRegularRepresentation-L132" id="LeftRegularRepresentation-L132">132</a> </span>
+<span><a class="line" href="#LeftRegularRepresentation-L133" id="LeftRegularRepresentation-L133">133</a> /-- The left regular representation with values in the unitary group. -/</span>
+<span id="doc/BC4lean.regularRepresentation"><a class="line" href="#LeftRegularRepresentation-L134" id="LeftRegularRepresentation-L134">134</a> def regularRepresentation : Γ →* unitary (L2Group Γ →L[ℂ] L2Group Γ) where</span>
+<span><a class="line" href="#LeftRegularRepresentation-L135" id="LeftRegularRepresentation-L135">135</a>   toFun g := ⟨regularOperator g, Unitary.mem_iff.mpr (regularOperator_unitary g)⟩</span>
+<span><a class="line" href="#LeftRegularRepresentation-L136" id="LeftRegularRepresentation-L136">136</a>   map_one&#x27; := Subtype.ext regularOperator_one</span>
+<span><a class="line" href="#LeftRegularRepresentation-L137" id="LeftRegularRepresentation-L137">137</a>   map_mul&#x27; g h := Subtype.ext (regularOperator_mul g h)</span>
+<span><a class="line" href="#LeftRegularRepresentation-L138" id="LeftRegularRepresentation-L138">138</a> </span>
+<span id="doc/BC4lean.regularRepresentation_coe"><a class="line" href="#LeftRegularRepresentation-L139" id="LeftRegularRepresentation-L139">139</a> @[simp] theorem regularRepresentation_coe (g : Γ) :</span>
+<span><a class="line" href="#LeftRegularRepresentation-L140" id="LeftRegularRepresentation-L140">140</a>     (regularRepresentation g : L2Group Γ →L[ℂ] L2Group Γ) = regularOperator g := rfl</span>
+<span><a class="line" href="#LeftRegularRepresentation-L141" id="LeftRegularRepresentation-L141">141</a> </span>
+<span id="doc/BC4lean.regularRepresentation_apply"><a class="line" href="#LeftRegularRepresentation-L142" id="LeftRegularRepresentation-L142">142</a> @[simp] theorem regularRepresentation_apply (g h : Γ) (ξ : L2Group Γ) :</span>
+<span><a class="line" href="#LeftRegularRepresentation-L143" id="LeftRegularRepresentation-L143">143</a>     (regularRepresentation g : L2Group Γ →L[ℂ] L2Group Γ) ξ h = ξ (g⁻¹ * h) := rfl</span>
+<span><a class="line" href="#LeftRegularRepresentation-L144" id="LeftRegularRepresentation-L144">144</a> </span>
+<span><a class="line" href="#LeftRegularRepresentation-L145" id="LeftRegularRepresentation-L145">145</a> end BC4lean</span>
+</pre>
+</body></html>
