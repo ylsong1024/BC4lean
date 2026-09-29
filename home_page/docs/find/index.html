@@ -44,6 +44,9 @@ code{overflow-wrap:anywhere}</style></head><body><a href="../../blueprint/">返�
 <li><a href="#OperatorKHomotopy">OperatorKHomotopy.lean</a></li>
 <li><a href="#ProperActions">ProperActions.lean</a></li>
 <li><a href="#ProperFixedPoints">ProperFixedPoints.lean</a></li>
+<li><a href="#EquivariantMaps">EquivariantMaps.lean</a></li>
+<li><a href="#EquivariantHomotopy">EquivariantHomotopy.lean</a></li>
+<li><a href="#EquivariantHomotopyEquiv">EquivariantHomotopyEquiv.lean</a></li>
 </ul></nav>
 <h2 id="GroupAlgebra">GroupAlgebra.lean</h2><p>源码 SHA-256：<code>1c6c0899fe9bc9f7860f291ba7c5573353d18a3c5809258769d689bc39da8ad4</code></p><pre>
 <span><a class="line" href="#L1" id="L1">  1</a> import Mathlib.Algebra.MonoidAlgebra.Basic</span>
@@ -3941,5 +3944,282 @@ code{overflow-wrap:anywhere}</style></head><body><a href="../../blueprint/">返�
 <span><a class="line" href="#ProperFixedPoints-L75" id="ProperFixedPoints-L75"> 75</a> end Proper</span>
 <span><a class="line" href="#ProperFixedPoints-L76" id="ProperFixedPoints-L76"> 76</a> </span>
 <span><a class="line" href="#ProperFixedPoints-L77" id="ProperFixedPoints-L77"> 77</a> end BC4lean.ProperActions</span>
+</pre>
+<h2 id="EquivariantMaps">EquivariantMaps.lean</h2><p>源码 SHA-256：<code>454abee2c148ae393bbf0ef5f8f10bf3364a68646718c2b005227eff4b091989</code></p><pre>
+<span><a class="line" href="#EquivariantMaps-L1" id="EquivariantMaps-L1">  1</a> import BC4lean.ProperFixedPoints</span>
+<span><a class="line" href="#EquivariantMaps-L2" id="EquivariantMaps-L2">  2</a> import Mathlib.GroupTheory.GroupAction.Hom</span>
+<span><a class="line" href="#EquivariantMaps-L3" id="EquivariantMaps-L3">  3</a> </span>
+<span><a class="line" href="#EquivariantMaps-L4" id="EquivariantMaps-L4">  4</a> /-! # Continuous equivariant maps and their restrictions to fixed points -/</span>
+<span><a class="line" href="#EquivariantMaps-L5" id="EquivariantMaps-L5">  5</a> namespace BC4lean.ProperActions</span>
+<span><a class="line" href="#EquivariantMaps-L6" id="EquivariantMaps-L6">  6</a> </span>
+<span><a class="line" href="#EquivariantMaps-L7" id="EquivariantMaps-L7">  7</a> /-- A continuous map commuting with the action of the same group on source and target. -/</span>
+<span id="doc/BC4lean.ProperActions.EquivariantMap"><a class="line" href="#EquivariantMaps-L8" id="EquivariantMaps-L8">  8</a> structure EquivariantMap (Γ X Y : Type*) [Group Γ] [TopologicalSpace X]</span>
+<span><a class="line" href="#EquivariantMaps-L9" id="EquivariantMaps-L9">  9</a>     [TopologicalSpace Y] [MulAction Γ X] [MulAction Γ Y] extends C(X, Y) where</span>
+<span><a class="line" href="#EquivariantMaps-L10" id="EquivariantMaps-L10"> 10</a>   map_smul&#x27; : ∀ (g : Γ) (x : X), toFun (g • x) = g • toFun x</span>
+<span><a class="line" href="#EquivariantMaps-L11" id="EquivariantMaps-L11"> 11</a> </span>
+<span><a class="line" href="#EquivariantMaps-L12" id="EquivariantMaps-L12"> 12</a> namespace EquivariantMap</span>
+<span><a class="line" href="#EquivariantMaps-L13" id="EquivariantMaps-L13"> 13</a> variable {Γ X Y Z W : Type*} [Group Γ]</span>
+<span><a class="line" href="#EquivariantMaps-L14" id="EquivariantMaps-L14"> 14</a> variable [TopologicalSpace X] [TopologicalSpace Y] [TopologicalSpace Z] [TopologicalSpace W]</span>
+<span><a class="line" href="#EquivariantMaps-L15" id="EquivariantMaps-L15"> 15</a> variable [MulAction Γ X] [MulAction Γ Y] [MulAction Γ Z] [MulAction Γ W]</span>
+<span><a class="line" href="#EquivariantMaps-L16" id="EquivariantMaps-L16"> 16</a> </span>
+<span id="doc/BC4lean.ProperActions.EquivariantMap.instFunLike"><a class="line" href="#EquivariantMaps-L17" id="EquivariantMaps-L17"> 17</a> instance instFunLike : FunLike (EquivariantMap Γ X Y) X Y where</span>
+<span><a class="line" href="#EquivariantMaps-L18" id="EquivariantMaps-L18"> 18</a>   coe f := f.toContinuousMap</span>
+<span><a class="line" href="#EquivariantMaps-L19" id="EquivariantMaps-L19"> 19</a>   coe_injective f g h := by</span>
+<span><a class="line" href="#EquivariantMaps-L20" id="EquivariantMaps-L20"> 20</a>     cases f with</span>
+<span><a class="line" href="#EquivariantMaps-L21" id="EquivariantMaps-L21"> 21</a>     | mk f hf =&gt;</span>
+<span><a class="line" href="#EquivariantMaps-L22" id="EquivariantMaps-L22"> 22</a>       cases g with</span>
+<span><a class="line" href="#EquivariantMaps-L23" id="EquivariantMaps-L23"> 23</a>       | mk g hg =&gt;</span>
+<span><a class="line" href="#EquivariantMaps-L24" id="EquivariantMaps-L24"> 24</a>         have hfg : f = g := ContinuousMap.ext (congrFun h)</span>
+<span><a class="line" href="#EquivariantMaps-L25" id="EquivariantMaps-L25"> 25</a>         cases hfg</span>
+<span><a class="line" href="#EquivariantMaps-L26" id="EquivariantMaps-L26"> 26</a>         rfl</span>
+<span><a class="line" href="#EquivariantMaps-L27" id="EquivariantMaps-L27"> 27</a> </span>
+<span id="doc/BC4lean.ProperActions.EquivariantMap.ext"><a class="line" href="#EquivariantMaps-L28" id="EquivariantMaps-L28"> 28</a> @[ext] theorem ext {f g : EquivariantMap Γ X Y} (h : ∀ x, f x = g x) : f = g :=</span>
+<span><a class="line" href="#EquivariantMaps-L29" id="EquivariantMaps-L29"> 29</a>   DFunLike.ext _ _ h</span>
+<span><a class="line" href="#EquivariantMaps-L30" id="EquivariantMaps-L30"> 30</a> </span>
+<span id="doc/BC4lean.ProperActions.EquivariantMap.map_smul"><a class="line" href="#EquivariantMaps-L31" id="EquivariantMaps-L31"> 31</a> @[simp] theorem map_smul (f : EquivariantMap Γ X Y) (g : Γ) (x : X) :</span>
+<span><a class="line" href="#EquivariantMaps-L32" id="EquivariantMaps-L32"> 32</a>     f (g • x) = g • f x := f.map_smul&#x27; g x</span>
+<span><a class="line" href="#EquivariantMaps-L33" id="EquivariantMaps-L33"> 33</a> </span>
+<span id="doc/BC4lean.ProperActions.EquivariantMap.continuous"><a class="line" href="#EquivariantMaps-L34" id="EquivariantMaps-L34"> 34</a> theorem continuous (f : EquivariantMap Γ X Y) : Continuous f := f.toContinuousMap.continuous</span>
+<span><a class="line" href="#EquivariantMaps-L35" id="EquivariantMaps-L35"> 35</a> </span>
+<span><a class="line" href="#EquivariantMaps-L36" id="EquivariantMaps-L36"> 36</a> /-- Forget topology, retaining Mathlib&#x27;s existing equivariant-map structure. -/</span>
+<span id="doc/BC4lean.ProperActions.EquivariantMap.toMulActionHom"><a class="line" href="#EquivariantMaps-L37" id="EquivariantMaps-L37"> 37</a> def toMulActionHom (f : EquivariantMap Γ X Y) : X →[Γ] Y where</span>
+<span><a class="line" href="#EquivariantMaps-L38" id="EquivariantMaps-L38"> 38</a>   toFun := f</span>
+<span><a class="line" href="#EquivariantMaps-L39" id="EquivariantMaps-L39"> 39</a>   map_smul&#x27; := f.map_smul</span>
+<span><a class="line" href="#EquivariantMaps-L40" id="EquivariantMaps-L40"> 40</a> </span>
+<span><a class="line" href="#EquivariantMaps-L41" id="EquivariantMaps-L41"> 41</a> /-- The equivariant identity map. -/</span>
+<span id="doc/BC4lean.ProperActions.EquivariantMap.id"><a class="line" href="#EquivariantMaps-L42" id="EquivariantMaps-L42"> 42</a> def id : EquivariantMap Γ X X where</span>
+<span><a class="line" href="#EquivariantMaps-L43" id="EquivariantMaps-L43"> 43</a>   toContinuousMap := ContinuousMap.id X</span>
+<span><a class="line" href="#EquivariantMaps-L44" id="EquivariantMaps-L44"> 44</a>   map_smul&#x27; _ _ := rfl</span>
+<span><a class="line" href="#EquivariantMaps-L45" id="EquivariantMaps-L45"> 45</a> </span>
+<span><a class="line" href="#EquivariantMaps-L46" id="EquivariantMaps-L46"> 46</a> /-- Composition of continuous equivariant maps. -/</span>
+<span id="doc/BC4lean.ProperActions.EquivariantMap.comp"><a class="line" href="#EquivariantMaps-L47" id="EquivariantMaps-L47"> 47</a> def comp (g : EquivariantMap Γ Y Z) (f : EquivariantMap Γ X Y) : EquivariantMap Γ X Z where</span>
+<span><a class="line" href="#EquivariantMaps-L48" id="EquivariantMaps-L48"> 48</a>   toContinuousMap := g.toContinuousMap.comp f.toContinuousMap</span>
+<span><a class="line" href="#EquivariantMaps-L49" id="EquivariantMaps-L49"> 49</a>   map_smul&#x27; a x := by</span>
+<span><a class="line" href="#EquivariantMaps-L50" id="EquivariantMaps-L50"> 50</a>     change g (f (a • x)) = a • g (f x)</span>
+<span><a class="line" href="#EquivariantMaps-L51" id="EquivariantMaps-L51"> 51</a>     rw [f.map_smul, g.map_smul]</span>
+<span><a class="line" href="#EquivariantMaps-L52" id="EquivariantMaps-L52"> 52</a> </span>
+<span id="doc/BC4lean.ProperActions.EquivariantMap.id_apply"><a class="line" href="#EquivariantMaps-L53" id="EquivariantMaps-L53"> 53</a> @[simp] theorem id_apply (x : X) : id (Γ := Γ) x = x := rfl</span>
+<span id="doc/BC4lean.ProperActions.EquivariantMap.comp_apply"><a class="line" href="#EquivariantMaps-L54" id="EquivariantMaps-L54"> 54</a> @[simp] theorem comp_apply (g : EquivariantMap Γ Y Z) (f : EquivariantMap Γ X Y) (x : X) :</span>
+<span><a class="line" href="#EquivariantMaps-L55" id="EquivariantMaps-L55"> 55</a>     g.comp f x = g (f x) := rfl</span>
+<span id="doc/BC4lean.ProperActions.EquivariantMap.id_comp"><a class="line" href="#EquivariantMaps-L56" id="EquivariantMaps-L56"> 56</a> @[simp] theorem id_comp (f : EquivariantMap Γ X Y) : id.comp f = f := by ext; rfl</span>
+<span id="doc/BC4lean.ProperActions.EquivariantMap.comp_id"><a class="line" href="#EquivariantMaps-L57" id="EquivariantMaps-L57"> 57</a> @[simp] theorem comp_id (f : EquivariantMap Γ X Y) : f.comp id = f := by ext; rfl</span>
+<span id="doc/BC4lean.ProperActions.EquivariantMap.comp_assoc"><a class="line" href="#EquivariantMaps-L58" id="EquivariantMaps-L58"> 58</a> theorem comp_assoc (h : EquivariantMap Γ Z W) (g : EquivariantMap Γ Y Z)</span>
+<span><a class="line" href="#EquivariantMaps-L59" id="EquivariantMaps-L59"> 59</a>     (f : EquivariantMap Γ X Y) : (h.comp g).comp f = h.comp (g.comp f) := by ext; rfl</span>
+<span><a class="line" href="#EquivariantMaps-L60" id="EquivariantMaps-L60"> 60</a> </span>
+<span><a class="line" href="#EquivariantMaps-L61" id="EquivariantMaps-L61"> 61</a> /-- An equivariant map sends subgroup fixed points to subgroup fixed points. -/</span>
+<span id="doc/BC4lean.ProperActions.EquivariantMap.map_fixedPoint"><a class="line" href="#EquivariantMaps-L62" id="EquivariantMaps-L62"> 62</a> theorem map_fixedPoint (f : EquivariantMap Γ X Y) (H : Subgroup Γ) {x : X}</span>
+<span><a class="line" href="#EquivariantMaps-L63" id="EquivariantMaps-L63"> 63</a>     (hx : x ∈ MulAction.fixedPoints H X) : f x ∈ MulAction.fixedPoints H Y := by</span>
+<span><a class="line" href="#EquivariantMaps-L64" id="EquivariantMaps-L64"> 64</a>   intro h</span>
+<span><a class="line" href="#EquivariantMaps-L65" id="EquivariantMaps-L65"> 65</a>   change (h : Γ) • f x = f x</span>
+<span><a class="line" href="#EquivariantMaps-L66" id="EquivariantMaps-L66"> 66</a>   rw [← f.map_smul]</span>
+<span><a class="line" href="#EquivariantMaps-L67" id="EquivariantMaps-L67"> 67</a>   exact congrArg f (hx h)</span>
+<span><a class="line" href="#EquivariantMaps-L68" id="EquivariantMaps-L68"> 68</a> </span>
+<span><a class="line" href="#EquivariantMaps-L69" id="EquivariantMaps-L69"> 69</a> /-- Restrict an equivariant map to the H-fixed-point subspaces. -/</span>
+<span id="doc/BC4lean.ProperActions.EquivariantMap.fixedPointsMap"><a class="line" href="#EquivariantMaps-L70" id="EquivariantMaps-L70"> 70</a> def fixedPointsMap (f : EquivariantMap Γ X Y) (H : Subgroup Γ) :</span>
+<span><a class="line" href="#EquivariantMaps-L71" id="EquivariantMaps-L71"> 71</a>     C(FixedPointSpace H X, FixedPointSpace H Y) where</span>
+<span><a class="line" href="#EquivariantMaps-L72" id="EquivariantMaps-L72"> 72</a>   toFun x := ⟨f x, f.map_fixedPoint H x.property⟩</span>
+<span><a class="line" href="#EquivariantMaps-L73" id="EquivariantMaps-L73"> 73</a>   continuous_toFun := (f.continuous.comp continuous_subtype_val).subtype_mk _</span>
+<span><a class="line" href="#EquivariantMaps-L74" id="EquivariantMaps-L74"> 74</a> </span>
+<span id="doc/BC4lean.ProperActions.EquivariantMap.fixedPointsMap_apply"><a class="line" href="#EquivariantMaps-L75" id="EquivariantMaps-L75"> 75</a> @[simp] theorem fixedPointsMap_apply (f : EquivariantMap Γ X Y) (H : Subgroup Γ)</span>
+<span><a class="line" href="#EquivariantMaps-L76" id="EquivariantMaps-L76"> 76</a>     (x : FixedPointSpace H X) : (f.fixedPointsMap H x : Y) = f x := rfl</span>
+<span><a class="line" href="#EquivariantMaps-L77" id="EquivariantMaps-L77"> 77</a> </span>
+<span id="doc/BC4lean.ProperActions.EquivariantMap.fixedPointsMap_id"><a class="line" href="#EquivariantMaps-L78" id="EquivariantMaps-L78"> 78</a> @[simp] theorem fixedPointsMap_id (H : Subgroup Γ) :</span>
+<span><a class="line" href="#EquivariantMaps-L79" id="EquivariantMaps-L79"> 79</a>     (id (Γ := Γ) (X := X)).fixedPointsMap H = ContinuousMap.id (FixedPointSpace H X) := by</span>
+<span><a class="line" href="#EquivariantMaps-L80" id="EquivariantMaps-L80"> 80</a>   ext; rfl</span>
+<span><a class="line" href="#EquivariantMaps-L81" id="EquivariantMaps-L81"> 81</a> </span>
+<span id="doc/BC4lean.ProperActions.EquivariantMap.fixedPointsMap_comp"><a class="line" href="#EquivariantMaps-L82" id="EquivariantMaps-L82"> 82</a> @[simp] theorem fixedPointsMap_comp (g : EquivariantMap Γ Y Z) (f : EquivariantMap Γ X Y)</span>
+<span><a class="line" href="#EquivariantMaps-L83" id="EquivariantMaps-L83"> 83</a>     (H : Subgroup Γ) :</span>
+<span><a class="line" href="#EquivariantMaps-L84" id="EquivariantMaps-L84"> 84</a>     (g.comp f).fixedPointsMap H = (g.fixedPointsMap H).comp (f.fixedPointsMap H) := by</span>
+<span><a class="line" href="#EquivariantMaps-L85" id="EquivariantMaps-L85"> 85</a>   ext; rfl</span>
+<span><a class="line" href="#EquivariantMaps-L86" id="EquivariantMaps-L86"> 86</a> </span>
+<span><a class="line" href="#EquivariantMaps-L87" id="EquivariantMaps-L87"> 87</a> end EquivariantMap</span>
+<span><a class="line" href="#EquivariantMaps-L88" id="EquivariantMaps-L88"> 88</a> end BC4lean.ProperActions</span>
+</pre>
+<h2 id="EquivariantHomotopy">EquivariantHomotopy.lean</h2><p>源码 SHA-256：<code>41fbf68c613d5372a733d5d9520bb8c925df4356c5403bc79e20259e446c7a79</code></p><pre>
+<span><a class="line" href="#EquivariantHomotopy-L1" id="EquivariantHomotopy-L1">  1</a> import BC4lean.EquivariantMaps</span>
+<span><a class="line" href="#EquivariantHomotopy-L2" id="EquivariantHomotopy-L2">  2</a> import Mathlib.Topology.Homotopy.Basic</span>
+<span><a class="line" href="#EquivariantHomotopy-L3" id="EquivariantHomotopy-L3">  3</a> </span>
+<span><a class="line" href="#EquivariantHomotopy-L4" id="EquivariantHomotopy-L4">  4</a> /-! # Jointly continuous equivariant homotopies and fixed-point restriction -/</span>
+<span><a class="line" href="#EquivariantHomotopy-L5" id="EquivariantHomotopy-L5">  5</a> noncomputable section</span>
+<span><a class="line" href="#EquivariantHomotopy-L6" id="EquivariantHomotopy-L6">  6</a> namespace BC4lean.ProperActions</span>
+<span><a class="line" href="#EquivariantHomotopy-L7" id="EquivariantHomotopy-L7">  7</a> variable {Γ X Y Z : Type*} [Group Γ]</span>
+<span><a class="line" href="#EquivariantHomotopy-L8" id="EquivariantHomotopy-L8">  8</a> variable [TopologicalSpace X] [TopologicalSpace Y] [TopologicalSpace Z]</span>
+<span><a class="line" href="#EquivariantHomotopy-L9" id="EquivariantHomotopy-L9">  9</a> variable [MulAction Γ X] [MulAction Γ Y] [MulAction Γ Z]</span>
+<span><a class="line" href="#EquivariantHomotopy-L10" id="EquivariantHomotopy-L10"> 10</a> </span>
+<span><a class="line" href="#EquivariantHomotopy-L11" id="EquivariantHomotopy-L11"> 11</a> /-- A jointly continuous homotopy all of whose time slices are equivariant. -/</span>
+<span id="doc/BC4lean.ProperActions.EquivariantHomotopy"><a class="line" href="#EquivariantHomotopy-L12" id="EquivariantHomotopy-L12"> 12</a> abbrev EquivariantHomotopy (f g : EquivariantMap Γ X Y) :=</span>
+<span><a class="line" href="#EquivariantHomotopy-L13" id="EquivariantHomotopy-L13"> 13</a>   ContinuousMap.HomotopyWith f.toContinuousMap g.toContinuousMap</span>
+<span><a class="line" href="#EquivariantHomotopy-L14" id="EquivariantHomotopy-L14"> 14</a>     (fun k =&gt; ∀ (a : Γ) (x : X), k (a • x) = a • k x)</span>
+<span><a class="line" href="#EquivariantHomotopy-L15" id="EquivariantHomotopy-L15"> 15</a> </span>
+<span><a class="line" href="#EquivariantHomotopy-L16" id="EquivariantHomotopy-L16"> 16</a> namespace EquivariantHomotopy</span>
+<span><a class="line" href="#EquivariantHomotopy-L17" id="EquivariantHomotopy-L17"> 17</a> variable {f₀ f₁ f₂ : EquivariantMap Γ X Y}</span>
+<span><a class="line" href="#EquivariantHomotopy-L18" id="EquivariantHomotopy-L18"> 18</a> </span>
+<span><a class="line" href="#EquivariantHomotopy-L19" id="EquivariantHomotopy-L19"> 19</a> /-- The constant equivariant homotopy. -/</span>
+<span id="doc/BC4lean.ProperActions.EquivariantHomotopy.refl"><a class="line" href="#EquivariantHomotopy-L20" id="EquivariantHomotopy-L20"> 20</a> def refl (f : EquivariantMap Γ X Y) : EquivariantHomotopy f f :=</span>
+<span><a class="line" href="#EquivariantHomotopy-L21" id="EquivariantHomotopy-L21"> 21</a>   ContinuousMap.HomotopyWith.refl f.toContinuousMap f.map_smul</span>
+<span><a class="line" href="#EquivariantHomotopy-L22" id="EquivariantHomotopy-L22"> 22</a> </span>
+<span><a class="line" href="#EquivariantHomotopy-L23" id="EquivariantHomotopy-L23"> 23</a> /-- Reverse an equivariant homotopy. -/</span>
+<span id="doc/BC4lean.ProperActions.EquivariantHomotopy.symm"><a class="line" href="#EquivariantHomotopy-L24" id="EquivariantHomotopy-L24"> 24</a> def symm (F : EquivariantHomotopy f₀ f₁) : EquivariantHomotopy f₁ f₀ :=</span>
+<span><a class="line" href="#EquivariantHomotopy-L25" id="EquivariantHomotopy-L25"> 25</a>   ContinuousMap.HomotopyWith.symm F</span>
+<span><a class="line" href="#EquivariantHomotopy-L26" id="EquivariantHomotopy-L26"> 26</a> </span>
+<span><a class="line" href="#EquivariantHomotopy-L27" id="EquivariantHomotopy-L27"> 27</a> /-- Concatenate equivariant homotopies using the usual half-interval parametrization. -/</span>
+<span id="doc/BC4lean.ProperActions.EquivariantHomotopy.trans"><a class="line" href="#EquivariantHomotopy-L28" id="EquivariantHomotopy-L28"> 28</a> def trans (F : EquivariantHomotopy f₀ f₁) (G : EquivariantHomotopy f₁ f₂) :</span>
+<span><a class="line" href="#EquivariantHomotopy-L29" id="EquivariantHomotopy-L29"> 29</a>     EquivariantHomotopy f₀ f₂ := ContinuousMap.HomotopyWith.trans F G</span>
+<span><a class="line" href="#EquivariantHomotopy-L30" id="EquivariantHomotopy-L30"> 30</a> </span>
+<span><a class="line" href="#EquivariantHomotopy-L31" id="EquivariantHomotopy-L31"> 31</a> /-- Compose two equivariant homotopies at the same time parameter. -/</span>
+<span id="doc/BC4lean.ProperActions.EquivariantHomotopy.comp"><a class="line" href="#EquivariantHomotopy-L32" id="EquivariantHomotopy-L32"> 32</a> def comp {g₀ g₁ : EquivariantMap Γ Y Z} (G : EquivariantHomotopy g₀ g₁)</span>
+<span><a class="line" href="#EquivariantHomotopy-L33" id="EquivariantHomotopy-L33"> 33</a>     (F : EquivariantHomotopy f₀ f₁) : EquivariantHomotopy (g₀.comp f₀) (g₁.comp f₁) where</span>
+<span><a class="line" href="#EquivariantHomotopy-L34" id="EquivariantHomotopy-L34"> 34</a>   toHomotopy := G.toHomotopy.comp F.toHomotopy</span>
+<span><a class="line" href="#EquivariantHomotopy-L35" id="EquivariantHomotopy-L35"> 35</a>   prop&#x27; t a x := by</span>
+<span><a class="line" href="#EquivariantHomotopy-L36" id="EquivariantHomotopy-L36"> 36</a>     change G (t, F (t, a • x)) = a • G (t, F (t, x))</span>
+<span><a class="line" href="#EquivariantHomotopy-L37" id="EquivariantHomotopy-L37"> 37</a>     have hF : F (t, a • x) = a • F (t, x) := F.prop t a x</span>
+<span><a class="line" href="#EquivariantHomotopy-L38" id="EquivariantHomotopy-L38"> 38</a>     rw [hF]</span>
+<span><a class="line" href="#EquivariantHomotopy-L39" id="EquivariantHomotopy-L39"> 39</a>     exact G.prop t a (F (t, x))</span>
+<span><a class="line" href="#EquivariantHomotopy-L40" id="EquivariantHomotopy-L40"> 40</a> </span>
+<span><a class="line" href="#EquivariantHomotopy-L41" id="EquivariantHomotopy-L41"> 41</a> /-- Each time slice is itself a continuous equivariant map. -/</span>
+<span id="doc/BC4lean.ProperActions.EquivariantHomotopy.atTime"><a class="line" href="#EquivariantHomotopy-L42" id="EquivariantHomotopy-L42"> 42</a> def atTime (F : EquivariantHomotopy f₀ f₁) (t : unitInterval) : EquivariantMap Γ X Y where</span>
+<span><a class="line" href="#EquivariantHomotopy-L43" id="EquivariantHomotopy-L43"> 43</a>   toContinuousMap := F.toHomotopy.curry t</span>
+<span><a class="line" href="#EquivariantHomotopy-L44" id="EquivariantHomotopy-L44"> 44</a>   map_smul&#x27; := F.prop t</span>
+<span><a class="line" href="#EquivariantHomotopy-L45" id="EquivariantHomotopy-L45"> 45</a> </span>
+<span id="doc/BC4lean.ProperActions.EquivariantHomotopy.at_apply"><a class="line" href="#EquivariantHomotopy-L46" id="EquivariantHomotopy-L46"> 46</a> @[simp] theorem at_apply (F : EquivariantHomotopy f₀ f₁) (t : unitInterval) (x : X) :</span>
+<span><a class="line" href="#EquivariantHomotopy-L47" id="EquivariantHomotopy-L47"> 47</a>     F.atTime t x = F (t, x) := rfl</span>
+<span id="doc/BC4lean.ProperActions.EquivariantHomotopy.at_zero"><a class="line" href="#EquivariantHomotopy-L48" id="EquivariantHomotopy-L48"> 48</a> @[simp] theorem at_zero (F : EquivariantHomotopy f₀ f₁) : F.atTime 0 = f₀ := by</span>
+<span><a class="line" href="#EquivariantHomotopy-L49" id="EquivariantHomotopy-L49"> 49</a>   ext x</span>
+<span><a class="line" href="#EquivariantHomotopy-L50" id="EquivariantHomotopy-L50"> 50</a>   exact F.apply_zero x</span>
+<span id="doc/BC4lean.ProperActions.EquivariantHomotopy.at_one"><a class="line" href="#EquivariantHomotopy-L51" id="EquivariantHomotopy-L51"> 51</a> @[simp] theorem at_one (F : EquivariantHomotopy f₀ f₁) : F.atTime 1 = f₁ := by</span>
+<span><a class="line" href="#EquivariantHomotopy-L52" id="EquivariantHomotopy-L52"> 52</a>   ext x</span>
+<span><a class="line" href="#EquivariantHomotopy-L53" id="EquivariantHomotopy-L53"> 53</a>   exact F.apply_one x</span>
+<span><a class="line" href="#EquivariantHomotopy-L54" id="EquivariantHomotopy-L54"> 54</a> </span>
+<span><a class="line" href="#EquivariantHomotopy-L55" id="EquivariantHomotopy-L55"> 55</a> /-- Restrict the whole jointly continuous homotopy to subgroup fixed-point spaces. -/</span>
+<span id="doc/BC4lean.ProperActions.EquivariantHomotopy.onFixedPoints"><a class="line" href="#EquivariantHomotopy-L56" id="EquivariantHomotopy-L56"> 56</a> def onFixedPoints (F : EquivariantHomotopy f₀ f₁) (H : Subgroup Γ) :</span>
+<span><a class="line" href="#EquivariantHomotopy-L57" id="EquivariantHomotopy-L57"> 57</a>     ContinuousMap.Homotopy (f₀.fixedPointsMap H) (f₁.fixedPointsMap H) where</span>
+<span><a class="line" href="#EquivariantHomotopy-L58" id="EquivariantHomotopy-L58"> 58</a>   toFun p := (F.atTime p.1).fixedPointsMap H p.2</span>
+<span><a class="line" href="#EquivariantHomotopy-L59" id="EquivariantHomotopy-L59"> 59</a>   continuous_toFun := (F.continuous.comp</span>
+<span><a class="line" href="#EquivariantHomotopy-L60" id="EquivariantHomotopy-L60"> 60</a>     (continuous_fst.prodMk (continuous_subtype_val.comp continuous_snd))).subtype_mk _</span>
+<span><a class="line" href="#EquivariantHomotopy-L61" id="EquivariantHomotopy-L61"> 61</a>   map_zero_left x := Subtype.ext (F.apply_zero x.val)</span>
+<span><a class="line" href="#EquivariantHomotopy-L62" id="EquivariantHomotopy-L62"> 62</a>   map_one_left x := Subtype.ext (F.apply_one x.val)</span>
+<span><a class="line" href="#EquivariantHomotopy-L63" id="EquivariantHomotopy-L63"> 63</a> </span>
+<span id="doc/BC4lean.ProperActions.EquivariantHomotopy.onFixedPoints_apply"><a class="line" href="#EquivariantHomotopy-L64" id="EquivariantHomotopy-L64"> 64</a> @[simp] theorem onFixedPoints_apply (F : EquivariantHomotopy f₀ f₁) (H : Subgroup Γ)</span>
+<span><a class="line" href="#EquivariantHomotopy-L65" id="EquivariantHomotopy-L65"> 65</a>     (t : unitInterval) (x : FixedPointSpace H X) :</span>
+<span><a class="line" href="#EquivariantHomotopy-L66" id="EquivariantHomotopy-L66"> 66</a>     (F.onFixedPoints H (t, x) : Y) = F (t, x.val) := rfl</span>
+<span><a class="line" href="#EquivariantHomotopy-L67" id="EquivariantHomotopy-L67"> 67</a> </span>
+<span id="doc/BC4lean.ProperActions.EquivariantHomotopy.onFixedPoints_refl"><a class="line" href="#EquivariantHomotopy-L68" id="EquivariantHomotopy-L68"> 68</a> @[simp] theorem onFixedPoints_refl (f : EquivariantMap Γ X Y) (H : Subgroup Γ) :</span>
+<span><a class="line" href="#EquivariantHomotopy-L69" id="EquivariantHomotopy-L69"> 69</a>     (refl f).onFixedPoints H = ContinuousMap.Homotopy.refl (f.fixedPointsMap H) := by</span>
+<span><a class="line" href="#EquivariantHomotopy-L70" id="EquivariantHomotopy-L70"> 70</a>   ext p; rfl</span>
+<span><a class="line" href="#EquivariantHomotopy-L71" id="EquivariantHomotopy-L71"> 71</a> </span>
+<span id="doc/BC4lean.ProperActions.EquivariantHomotopy.onFixedPoints_symm"><a class="line" href="#EquivariantHomotopy-L72" id="EquivariantHomotopy-L72"> 72</a> @[simp] theorem onFixedPoints_symm (F : EquivariantHomotopy f₀ f₁) (H : Subgroup Γ) :</span>
+<span><a class="line" href="#EquivariantHomotopy-L73" id="EquivariantHomotopy-L73"> 73</a>     (symm F).onFixedPoints H = (F.onFixedPoints H).symm := by</span>
+<span><a class="line" href="#EquivariantHomotopy-L74" id="EquivariantHomotopy-L74"> 74</a>   ext p; rfl</span>
+<span><a class="line" href="#EquivariantHomotopy-L75" id="EquivariantHomotopy-L75"> 75</a> </span>
+<span id="doc/BC4lean.ProperActions.EquivariantHomotopy.onFixedPoints_trans"><a class="line" href="#EquivariantHomotopy-L76" id="EquivariantHomotopy-L76"> 76</a> theorem onFixedPoints_trans (F : EquivariantHomotopy f₀ f₁) (G : EquivariantHomotopy f₁ f₂)</span>
+<span><a class="line" href="#EquivariantHomotopy-L77" id="EquivariantHomotopy-L77"> 77</a>     (H : Subgroup Γ) : (trans F G).onFixedPoints H =</span>
+<span><a class="line" href="#EquivariantHomotopy-L78" id="EquivariantHomotopy-L78"> 78</a>       (F.onFixedPoints H).trans (G.onFixedPoints H) := by</span>
+<span><a class="line" href="#EquivariantHomotopy-L79" id="EquivariantHomotopy-L79"> 79</a>   ext ⟨t, x⟩</span>
+<span><a class="line" href="#EquivariantHomotopy-L80" id="EquivariantHomotopy-L80"> 80</a>   simp only [onFixedPoints_apply, trans, ContinuousMap.HomotopyWith.trans_apply,</span>
+<span><a class="line" href="#EquivariantHomotopy-L81" id="EquivariantHomotopy-L81"> 81</a>     ContinuousMap.Homotopy.trans_apply]</span>
+<span><a class="line" href="#EquivariantHomotopy-L82" id="EquivariantHomotopy-L82"> 82</a>   split_ifs &lt;;&gt; rfl</span>
+<span><a class="line" href="#EquivariantHomotopy-L83" id="EquivariantHomotopy-L83"> 83</a> </span>
+<span id="doc/BC4lean.ProperActions.EquivariantHomotopy.onFixedPoints_comp"><a class="line" href="#EquivariantHomotopy-L84" id="EquivariantHomotopy-L84"> 84</a> theorem onFixedPoints_comp {g₀ g₁ : EquivariantMap Γ Y Z}</span>
+<span><a class="line" href="#EquivariantHomotopy-L85" id="EquivariantHomotopy-L85"> 85</a>     (G : EquivariantHomotopy g₀ g₁) (F : EquivariantHomotopy f₀ f₁) (H : Subgroup Γ) :</span>
+<span><a class="line" href="#EquivariantHomotopy-L86" id="EquivariantHomotopy-L86"> 86</a>     (comp G F).onFixedPoints H = (G.onFixedPoints H).comp (F.onFixedPoints H) := by</span>
+<span><a class="line" href="#EquivariantHomotopy-L87" id="EquivariantHomotopy-L87"> 87</a>   ext p; rfl</span>
+<span><a class="line" href="#EquivariantHomotopy-L88" id="EquivariantHomotopy-L88"> 88</a> end EquivariantHomotopy</span>
+<span><a class="line" href="#EquivariantHomotopy-L89" id="EquivariantHomotopy-L89"> 89</a> </span>
+<span><a class="line" href="#EquivariantHomotopy-L90" id="EquivariantHomotopy-L90"> 90</a> /-- Existence of a jointly continuous equivariant homotopy. -/</span>
+<span id="doc/BC4lean.ProperActions.EquivariantlyHomotopic"><a class="line" href="#EquivariantHomotopy-L91" id="EquivariantHomotopy-L91"> 91</a> def EquivariantlyHomotopic (f g : EquivariantMap Γ X Y) : Prop :=</span>
+<span><a class="line" href="#EquivariantHomotopy-L92" id="EquivariantHomotopy-L92"> 92</a>   Nonempty (EquivariantHomotopy f g)</span>
+<span><a class="line" href="#EquivariantHomotopy-L93" id="EquivariantHomotopy-L93"> 93</a> </span>
+<span><a class="line" href="#EquivariantHomotopy-L94" id="EquivariantHomotopy-L94"> 94</a> namespace EquivariantlyHomotopic</span>
+<span><a class="line" href="#EquivariantHomotopy-L95" id="EquivariantHomotopy-L95"> 95</a> variable {f₀ f₁ f₂ : EquivariantMap Γ X Y}</span>
+<span><a class="line" href="#EquivariantHomotopy-L96" id="EquivariantHomotopy-L96"> 96</a> </span>
+<span id="doc/BC4lean.ProperActions.EquivariantlyHomotopic.refl"><a class="line" href="#EquivariantHomotopy-L97" id="EquivariantHomotopy-L97"> 97</a> theorem refl (f : EquivariantMap Γ X Y) : EquivariantlyHomotopic f f :=</span>
+<span><a class="line" href="#EquivariantHomotopy-L98" id="EquivariantHomotopy-L98"> 98</a>   ⟨EquivariantHomotopy.refl f⟩</span>
+<span id="doc/BC4lean.ProperActions.EquivariantlyHomotopic.symm"><a class="line" href="#EquivariantHomotopy-L99" id="EquivariantHomotopy-L99"> 99</a> theorem symm (h : EquivariantlyHomotopic f₀ f₁) : EquivariantlyHomotopic f₁ f₀ :=</span>
+<span><a class="line" href="#EquivariantHomotopy-L100" id="EquivariantHomotopy-L100">100</a>   h.elim (fun F =&gt; ⟨EquivariantHomotopy.symm F⟩)</span>
+<span id="doc/BC4lean.ProperActions.EquivariantlyHomotopic.trans"><a class="line" href="#EquivariantHomotopy-L101" id="EquivariantHomotopy-L101">101</a> theorem trans (h : EquivariantlyHomotopic f₀ f₁) (k : EquivariantlyHomotopic f₁ f₂) :</span>
+<span><a class="line" href="#EquivariantHomotopy-L102" id="EquivariantHomotopy-L102">102</a>     EquivariantlyHomotopic f₀ f₂ :=</span>
+<span><a class="line" href="#EquivariantHomotopy-L103" id="EquivariantHomotopy-L103">103</a>   h.elim (fun F =&gt; k.elim (fun G =&gt; ⟨EquivariantHomotopy.trans F G⟩))</span>
+<span id="doc/BC4lean.ProperActions.EquivariantlyHomotopic.comp"><a class="line" href="#EquivariantHomotopy-L104" id="EquivariantHomotopy-L104">104</a> theorem comp {g₀ g₁ : EquivariantMap Γ Y Z} (h : EquivariantlyHomotopic g₀ g₁)</span>
+<span><a class="line" href="#EquivariantHomotopy-L105" id="EquivariantHomotopy-L105">105</a>     (k : EquivariantlyHomotopic f₀ f₁) : EquivariantlyHomotopic (g₀.comp f₀) (g₁.comp f₁) :=</span>
+<span><a class="line" href="#EquivariantHomotopy-L106" id="EquivariantHomotopy-L106">106</a>   h.elim (fun G =&gt; k.elim (fun F =&gt; ⟨EquivariantHomotopy.comp G F⟩))</span>
+<span><a class="line" href="#EquivariantHomotopy-L107" id="EquivariantHomotopy-L107">107</a> </span>
+<span><a class="line" href="#EquivariantHomotopy-L108" id="EquivariantHomotopy-L108">108</a> /-- Fixed-point restriction sends equivariant homotopy to ordinary homotopy. -/</span>
+<span id="doc/BC4lean.ProperActions.EquivariantlyHomotopic.onFixedPoints"><a class="line" href="#EquivariantHomotopy-L109" id="EquivariantHomotopy-L109">109</a> theorem onFixedPoints (h : EquivariantlyHomotopic f₀ f₁) (H : Subgroup Γ) :</span>
+<span><a class="line" href="#EquivariantHomotopy-L110" id="EquivariantHomotopy-L110">110</a>     ContinuousMap.Homotopic (f₀.fixedPointsMap H) (f₁.fixedPointsMap H) :=</span>
+<span><a class="line" href="#EquivariantHomotopy-L111" id="EquivariantHomotopy-L111">111</a>   h.elim (fun F =&gt; ⟨F.onFixedPoints H⟩)</span>
+<span><a class="line" href="#EquivariantHomotopy-L112" id="EquivariantHomotopy-L112">112</a> end EquivariantlyHomotopic</span>
+<span><a class="line" href="#EquivariantHomotopy-L113" id="EquivariantHomotopy-L113">113</a> end BC4lean.ProperActions</span>
+</pre>
+<h2 id="EquivariantHomotopyEquiv">EquivariantHomotopyEquiv.lean</h2><p>源码 SHA-256：<code>7994a431988bbe1f489665e11f76bac2d711bc726de2bc079e102cb13a567a96</code></p><pre>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L1" id="EquivariantHomotopyEquiv-L1">  1</a> import BC4lean.EquivariantHomotopy</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L2" id="EquivariantHomotopyEquiv-L2">  2</a> import Mathlib.Topology.Homotopy.Equiv</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L3" id="EquivariantHomotopyEquiv-L3">  3</a> </span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L4" id="EquivariantHomotopyEquiv-L4">  4</a> /-! # Equivariant homotopy equivalences induce equivalences on fixed-point spaces -/</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L5" id="EquivariantHomotopyEquiv-L5">  5</a> noncomputable section</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L6" id="EquivariantHomotopyEquiv-L6">  6</a> namespace BC4lean.ProperActions</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L7" id="EquivariantHomotopyEquiv-L7">  7</a> </span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L8" id="EquivariantHomotopyEquiv-L8">  8</a> /-- Equivariant maps inverse up to jointly continuous equivariant homotopy. -/</span>
+<span id="doc/BC4lean.ProperActions.EquivariantHomotopyEquiv"><a class="line" href="#EquivariantHomotopyEquiv-L9" id="EquivariantHomotopyEquiv-L9">  9</a> structure EquivariantHomotopyEquiv (Γ X Y : Type*) [Group Γ]</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L10" id="EquivariantHomotopyEquiv-L10"> 10</a>     [TopologicalSpace X] [TopologicalSpace Y] [MulAction Γ X] [MulAction Γ Y] where</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L11" id="EquivariantHomotopyEquiv-L11"> 11</a>   toMap : EquivariantMap Γ X Y</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L12" id="EquivariantHomotopyEquiv-L12"> 12</a>   invMap : EquivariantMap Γ Y X</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L13" id="EquivariantHomotopyEquiv-L13"> 13</a>   left_inv : EquivariantlyHomotopic (invMap.comp toMap) EquivariantMap.id</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L14" id="EquivariantHomotopyEquiv-L14"> 14</a>   right_inv : EquivariantlyHomotopic (toMap.comp invMap) EquivariantMap.id</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L15" id="EquivariantHomotopyEquiv-L15"> 15</a> </span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L16" id="EquivariantHomotopyEquiv-L16"> 16</a> namespace EquivariantHomotopyEquiv</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L17" id="EquivariantHomotopyEquiv-L17"> 17</a> variable {Γ X Y Z : Type*} [Group Γ]</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L18" id="EquivariantHomotopyEquiv-L18"> 18</a> variable [TopologicalSpace X] [TopologicalSpace Y] [TopologicalSpace Z]</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L19" id="EquivariantHomotopyEquiv-L19"> 19</a> variable [MulAction Γ X] [MulAction Γ Y] [MulAction Γ Z]</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L20" id="EquivariantHomotopyEquiv-L20"> 20</a> </span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L21" id="EquivariantHomotopyEquiv-L21"> 21</a> /-- The identity equivariant homotopy equivalence. -/</span>
+<span id="doc/BC4lean.ProperActions.EquivariantHomotopyEquiv.refl"><a class="line" href="#EquivariantHomotopyEquiv-L22" id="EquivariantHomotopyEquiv-L22"> 22</a> def refl : EquivariantHomotopyEquiv Γ X X where</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L23" id="EquivariantHomotopyEquiv-L23"> 23</a>   toMap := EquivariantMap.id</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L24" id="EquivariantHomotopyEquiv-L24"> 24</a>   invMap := EquivariantMap.id</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L25" id="EquivariantHomotopyEquiv-L25"> 25</a>   left_inv := EquivariantlyHomotopic.refl _</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L26" id="EquivariantHomotopyEquiv-L26"> 26</a>   right_inv := EquivariantlyHomotopic.refl _</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L27" id="EquivariantHomotopyEquiv-L27"> 27</a> </span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L28" id="EquivariantHomotopyEquiv-L28"> 28</a> /-- Reverse an equivariant homotopy equivalence. -/</span>
+<span id="doc/BC4lean.ProperActions.EquivariantHomotopyEquiv.symm"><a class="line" href="#EquivariantHomotopyEquiv-L29" id="EquivariantHomotopyEquiv-L29"> 29</a> def symm (e : EquivariantHomotopyEquiv Γ X Y) : EquivariantHomotopyEquiv Γ Y X where</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L30" id="EquivariantHomotopyEquiv-L30"> 30</a>   toMap := e.invMap</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L31" id="EquivariantHomotopyEquiv-L31"> 31</a>   invMap := e.toMap</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L32" id="EquivariantHomotopyEquiv-L32"> 32</a>   left_inv := e.right_inv</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L33" id="EquivariantHomotopyEquiv-L33"> 33</a>   right_inv := e.left_inv</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L34" id="EquivariantHomotopyEquiv-L34"> 34</a> </span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L35" id="EquivariantHomotopyEquiv-L35"> 35</a> /-- Compose equivariant homotopy equivalences. -/</span>
+<span id="doc/BC4lean.ProperActions.EquivariantHomotopyEquiv.trans"><a class="line" href="#EquivariantHomotopyEquiv-L36" id="EquivariantHomotopyEquiv-L36"> 36</a> def trans (e : EquivariantHomotopyEquiv Γ X Y) (d : EquivariantHomotopyEquiv Γ Y Z) :</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L37" id="EquivariantHomotopyEquiv-L37"> 37</a>     EquivariantHomotopyEquiv Γ X Z where</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L38" id="EquivariantHomotopyEquiv-L38"> 38</a>   toMap := d.toMap.comp e.toMap</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L39" id="EquivariantHomotopyEquiv-L39"> 39</a>   invMap := e.invMap.comp d.invMap</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L40" id="EquivariantHomotopyEquiv-L40"> 40</a>   left_inv := by</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L41" id="EquivariantHomotopyEquiv-L41"> 41</a>     have h := (EquivariantlyHomotopic.refl e.invMap).comp</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L42" id="EquivariantHomotopyEquiv-L42"> 42</a>       (d.left_inv.comp (EquivariantlyHomotopic.refl e.toMap))</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L43" id="EquivariantHomotopyEquiv-L43"> 43</a>     simp only [EquivariantMap.comp_assoc, EquivariantMap.id_comp] at h</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L44" id="EquivariantHomotopyEquiv-L44"> 44</a>     exact h.trans e.left_inv</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L45" id="EquivariantHomotopyEquiv-L45"> 45</a>   right_inv := by</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L46" id="EquivariantHomotopyEquiv-L46"> 46</a>     have h := (EquivariantlyHomotopic.refl d.toMap).comp</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L47" id="EquivariantHomotopyEquiv-L47"> 47</a>       (e.right_inv.comp (EquivariantlyHomotopic.refl d.invMap))</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L48" id="EquivariantHomotopyEquiv-L48"> 48</a>     simp only [EquivariantMap.comp_assoc, EquivariantMap.id_comp] at h</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L49" id="EquivariantHomotopyEquiv-L49"> 49</a>     exact h.trans d.right_inv</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L50" id="EquivariantHomotopyEquiv-L50"> 50</a> </span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L51" id="EquivariantHomotopyEquiv-L51"> 51</a> /-- Taking H-fixed points preserves equivariant homotopy equivalences. -/</span>
+<span id="doc/BC4lean.ProperActions.EquivariantHomotopyEquiv.fixedPoints"><a class="line" href="#EquivariantHomotopyEquiv-L52" id="EquivariantHomotopyEquiv-L52"> 52</a> def fixedPoints (e : EquivariantHomotopyEquiv Γ X Y) (H : Subgroup Γ) :</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L53" id="EquivariantHomotopyEquiv-L53"> 53</a>     ContinuousMap.HomotopyEquiv (FixedPointSpace H X) (FixedPointSpace H Y) where</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L54" id="EquivariantHomotopyEquiv-L54"> 54</a>   toFun := e.toMap.fixedPointsMap H</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L55" id="EquivariantHomotopyEquiv-L55"> 55</a>   invFun := e.invMap.fixedPointsMap H</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L56" id="EquivariantHomotopyEquiv-L56"> 56</a>   left_inv := by</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L57" id="EquivariantHomotopyEquiv-L57"> 57</a>     simpa only [EquivariantMap.fixedPointsMap_comp, EquivariantMap.fixedPointsMap_id]</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L58" id="EquivariantHomotopyEquiv-L58"> 58</a>       using e.left_inv.onFixedPoints H</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L59" id="EquivariantHomotopyEquiv-L59"> 59</a>   right_inv := by</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L60" id="EquivariantHomotopyEquiv-L60"> 60</a>     simpa only [EquivariantMap.fixedPointsMap_comp, EquivariantMap.fixedPointsMap_id]</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L61" id="EquivariantHomotopyEquiv-L61"> 61</a>       using e.right_inv.onFixedPoints H</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L62" id="EquivariantHomotopyEquiv-L62"> 62</a> </span>
+<span id="doc/BC4lean.ProperActions.EquivariantHomotopyEquiv.fixedPoints_toFun_apply"><a class="line" href="#EquivariantHomotopyEquiv-L63" id="EquivariantHomotopyEquiv-L63"> 63</a> @[simp] theorem fixedPoints_toFun_apply (e : EquivariantHomotopyEquiv Γ X Y) (H : Subgroup Γ)</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L64" id="EquivariantHomotopyEquiv-L64"> 64</a>     (x : FixedPointSpace H X) : ((e.fixedPoints H).toFun x : Y) = e.toMap x := rfl</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L65" id="EquivariantHomotopyEquiv-L65"> 65</a> </span>
+<span id="doc/BC4lean.ProperActions.EquivariantHomotopyEquiv.fixedPoints_invFun_apply"><a class="line" href="#EquivariantHomotopyEquiv-L66" id="EquivariantHomotopyEquiv-L66"> 66</a> @[simp] theorem fixedPoints_invFun_apply (e : EquivariantHomotopyEquiv Γ X Y) (H : Subgroup Γ)</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L67" id="EquivariantHomotopyEquiv-L67"> 67</a>     (y : FixedPointSpace H Y) : ((e.fixedPoints H).invFun y : X) = e.invMap y := rfl</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L68" id="EquivariantHomotopyEquiv-L68"> 68</a> </span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L69" id="EquivariantHomotopyEquiv-L69"> 69</a> end EquivariantHomotopyEquiv</span>
+<span><a class="line" href="#EquivariantHomotopyEquiv-L70" id="EquivariantHomotopyEquiv-L70"> 70</a> end BC4lean.ProperActions</span>
 </pre>
 </body></html>

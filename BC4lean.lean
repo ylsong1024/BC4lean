@@ -36,3 +36,6 @@ import BC4lean.StarHomotopy
 import BC4lean.OperatorKHomotopy
 import BC4lean.ProperActions
 import BC4lean.ProperFixedPoints
+import BC4lean.EquivariantMaps
+import BC4lean.EquivariantHomotopy
+import BC4lean.EquivariantHomotopyEquiv

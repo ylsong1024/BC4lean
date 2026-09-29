@@ -2,7 +2,8 @@
 \label{ch:proper-actions}
 
 This chapter begins with the verified topology of proper discrete-group
-actions and their subgroup fixed-point spaces. Equivariant CW structures,
+actions and their subgroup fixed-point spaces. Continuous equivariant maps,
+homotopies, and their fixed-point restrictions are also verified. Equivariant CW structures,
 the existence and universal property of $\underline E\Gamma$, and the
 directed system of cocompact pieces remain formalization targets.
 
@@ -154,13 +155,117 @@ If $x\in X^H$, then $H$ is a subgroup of the finite group $\Gamma_x$.
 Properness does not imply contractibility of fixed-point spaces for finite
 subgroups. That is additional structure required of a universal proper model.
 
+\section{Equivariant maps and homotopies}
+
+\begin{definition}\label{def:equivariant-map}
+\lean{BC4lean.ProperActions.EquivariantMap,BC4lean.ProperActions.EquivariantMap.toMulActionHom}
+\leanok
+For topological spaces $X,Y$ with $\Gamma$-actions, a continuous equivariant
+map $f:X\to Y$ is a continuous map satisfying $f(gx)=gf(x)$.
+The underlying equivariant function uses Mathlib's \texttt{MulActionHom}.
+The constructions in this section do not require properness, a discrete
+group topology, local compactness, or Hausdorffness.
+\end{definition}
+
+\begin{proposition}\label{prop:equivariant-map-laws}
+\uses{def:equivariant-map}
+\lean{BC4lean.ProperActions.EquivariantMap.ext,BC4lean.ProperActions.EquivariantMap.map_smul,BC4lean.ProperActions.EquivariantMap.continuous,BC4lean.ProperActions.EquivariantMap.id,BC4lean.ProperActions.EquivariantMap.comp,BC4lean.ProperActions.EquivariantMap.id_apply,BC4lean.ProperActions.EquivariantMap.comp_apply,BC4lean.ProperActions.EquivariantMap.id_comp,BC4lean.ProperActions.EquivariantMap.comp_id,BC4lean.ProperActions.EquivariantMap.comp_assoc}
+Continuous equivariant maps have identity and associative composition, with
+both identity laws. Equality of maps is determined pointwise.
+\end{proposition}
+\begin{proof}
+\leanok
+Use the identity and composition of continuous maps. Equivariance is
+preserved because $g(f(ax))=g(af(x))=ag(f(x))$. The laws follow pointwise.
+\end{proof}
+
+\begin{proposition}\label{prop:fixed-point-map-functoriality}
+\uses{prop:equivariant-map-laws,def:subgroup-fixed-point-space}
+\lean{BC4lean.ProperActions.EquivariantMap.map_fixedPoint,BC4lean.ProperActions.EquivariantMap.fixedPointsMap,BC4lean.ProperActions.EquivariantMap.fixedPointsMap_apply,BC4lean.ProperActions.EquivariantMap.fixedPointsMap_id,BC4lean.ProperActions.EquivariantMap.fixedPointsMap_comp}
+For every subgroup $H\leq\Gamma$, an equivariant map $f:X\to Y$ restricts
+to a continuous map $f^H:X^H\to Y^H$. Restriction preserves identity and
+composition. The subgroup need not be normal.
+\end{proposition}
+\begin{proof}
+\leanok
+For $h\in H$ and $x\in X^H$, one has $hf(x)=f(hx)=f(x)$.
+Continuity follows from the subspace topology; the laws follow pointwise.
+\end{proof}
+
+\begin{definition}\label{def:equivariant-homotopy}
+\uses{def:equivariant-map}
+\lean{BC4lean.ProperActions.EquivariantHomotopy,BC4lean.ProperActions.EquivariantlyHomotopic}
+\leanok
+An equivariant homotopy from $f_0$ to $f_1$ is a jointly continuous map
+$F:[0,1]\times X\to Y$ with $F(0,x)=f_0(x)$, $F(1,x)=f_1(x)$, and
+$F(t,gx)=gF(t,x)$. The interval has trivial action.
+Write $f_0\simeq_\Gamma f_1$ when such a homotopy exists.
+The Lean definition specializes Mathlib's \texttt{ContinuousMap.HomotopyWith}.
+\end{definition}
+
+\begin{proposition}\label{prop:equivariant-homotopy-operations}
+\uses{def:equivariant-homotopy,prop:equivariant-map-laws}
+\lean{BC4lean.ProperActions.EquivariantHomotopy.refl,BC4lean.ProperActions.EquivariantHomotopy.symm,BC4lean.ProperActions.EquivariantHomotopy.trans,BC4lean.ProperActions.EquivariantHomotopy.comp,BC4lean.ProperActions.EquivariantHomotopy.atTime,BC4lean.ProperActions.EquivariantHomotopy.at_apply,BC4lean.ProperActions.EquivariantHomotopy.at_zero,BC4lean.ProperActions.EquivariantHomotopy.at_one,BC4lean.ProperActions.EquivariantlyHomotopic.refl,BC4lean.ProperActions.EquivariantlyHomotopic.symm,BC4lean.ProperActions.EquivariantlyHomotopic.trans,BC4lean.ProperActions.EquivariantlyHomotopic.comp}
+Equivariant homotopy is reflexive, symmetric, transitive, and compatible
+with composition. Every time slice of an equivariant homotopy is a
+continuous equivariant map, with the specified maps at times zero and one.
+\end{proposition}
+\begin{proof}
+\leanok
+Use constant homotopies, time reversal, and concatenation on the two half
+intervals. Composition is $(G\circ F)(t,x)=G(t,F(t,x))$.
+Joint continuity follows from Mathlib's homotopy operations; equivariance
+holds at each time. Restriction to a time slice is continuous.
+\end{proof}
+
+\begin{proposition}\label{prop:fixed-point-homotopy-restriction}
+\uses{prop:equivariant-homotopy-operations,prop:fixed-point-map-functoriality}
+\lean{BC4lean.ProperActions.EquivariantHomotopy.onFixedPoints,BC4lean.ProperActions.EquivariantHomotopy.onFixedPoints_apply,BC4lean.ProperActions.EquivariantHomotopy.onFixedPoints_refl,BC4lean.ProperActions.EquivariantHomotopy.onFixedPoints_symm,BC4lean.ProperActions.EquivariantHomotopy.onFixedPoints_trans,BC4lean.ProperActions.EquivariantHomotopy.onFixedPoints_comp,BC4lean.ProperActions.EquivariantlyHomotopic.onFixedPoints}
+An equivariant homotopy $F:f_0\simeq_\Gamma f_1$ restricts to an ordinary
+continuous homotopy $F^H:f_0^H\simeq f_1^H$ for every subgroup $H$.
+Restriction preserves constant homotopies, reversal, concatenation with
+the chosen half-interval parametrization, and composition of homotopies.
+\end{proposition}
+\begin{proof}
+\leanok
+At each time equivariance ensures $F(t,X^H)\subseteq Y^H$.
+The map into $Y^H$ is jointly continuous by the subspace topology, and the
+endpoint identities hold as equalities of subtype elements. The operation
+laws follow from their formulas, splitting the two time intervals for
+concatenation.
+\end{proof}
+
+\begin{definition}\label{def:equivariant-homotopy-equivalence}
+\uses{def:equivariant-homotopy,prop:equivariant-map-laws}
+\lean{BC4lean.ProperActions.EquivariantHomotopyEquiv}
+\leanok
+An equivariant homotopy equivalence between $X$ and $Y$ consists of
+continuous equivariant maps $f:X\to Y$ and $g:Y\to X$ with
+$gf\simeq_\Gamma\operatorname{id}_X$ and
+$fg\simeq_\Gamma\operatorname{id}_Y$.
+\end{definition}
+
+\begin{proposition}\label{prop:fixed-point-homotopy-equivalence}
+\uses{def:equivariant-homotopy-equivalence,prop:fixed-point-homotopy-restriction}
+\lean{BC4lean.ProperActions.EquivariantHomotopyEquiv.refl,BC4lean.ProperActions.EquivariantHomotopyEquiv.symm,BC4lean.ProperActions.EquivariantHomotopyEquiv.trans,BC4lean.ProperActions.EquivariantHomotopyEquiv.fixedPoints,BC4lean.ProperActions.EquivariantHomotopyEquiv.fixedPoints_toFun_apply,BC4lean.ProperActions.EquivariantHomotopyEquiv.fixedPoints_invFun_apply}
+Equivariant homotopy equivalences have identity, reversal, and composition.
+Every equivariant homotopy equivalence $X\simeq_\Gamma Y$ induces an
+ordinary homotopy equivalence $X^H\simeq Y^H$ for every subgroup $H$.
+\end{proposition}
+\begin{proof}
+\leanok
+Compose the equivariant maps and their inverse homotopies to obtain the
+three operations. Restrict both maps and both inverse homotopies to the
+fixed-point spaces, using the proved identity and composition laws.
+\end{proof}
+
 \section{Equivariant CW complexes and a model for $\underline E\Gamma$}
 
 \begin{definition}\label{def:equivariant-cw-complex}
-\uses{def:proper-action}
+\uses{def:proper-action,def:equivariant-map,def:equivariant-homotopy}
 \notready
-Develop $\Gamma$-CW complexes by equivariant cell attachment, with cells
-$\Gamma/H\times D^n$, together with equivariant maps and homotopies.
+Using the preceding maps and homotopies, develop $\Gamma$-CW complexes by
+equivariant cell attachment, with cells $\Gamma/H\times D^n$.
 For the proper theory the cell stabilizers $H$ are finite. Establish the
 connection between this cellular condition and topological properness.
 \end{definition}
