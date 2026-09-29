@@ -7,3 +7,6 @@ import BC4lean.ReducedGroupCStar
 import BC4lean.ReducedGroupCStarTrivial
 import BC4lean.ReducedNormGroupAlgebra
 import BC4lean.ReducedCompletion
+import BC4lean.OperatorProjections
+import BC4lean.MatrixStabilization
+import BC4lean.UnitaryHomotopy

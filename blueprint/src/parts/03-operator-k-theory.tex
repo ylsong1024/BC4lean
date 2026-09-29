@@ -1,34 +1,214 @@
 \chapter{Operator K-theory and the analytic side}
 \label{ch:operator-k-theory}
 
-\section{Projections, stabilization, and $K_0$}
+Unless stated otherwise, $A$ is a unital complex $C^*$-algebra.
+The present Lean milestone constructs projections, fixed-size equivalence
+classes, matrix block sums, and norm homotopies of matrix unitaries.
+The stable quotients and the groups $K_0$ and $K_1$ remain separate targets.
+
+\section{Projections and Murray--von Neumann equivalence}
+
+\begin{definition}\label{def:operator-projection}
+\lean{BC4lean.OperatorKTheory.Projection,BC4lean.OperatorKTheory.Projection.zero,BC4lean.OperatorKTheory.Projection.one,BC4lean.OperatorKTheory.Projection.complement}
+\leanok
+A projection in $A$ is an element $p$ satisfying $p^*=p$ and $p^2=p$.
+Write $\operatorname{Proj}(A)$ for these projections. The elements $0$, $1$,
+and $1-p$ are projections.
+\end{definition}
+
+\begin{proposition}\label{prop:partial-isometry-support}
+\uses{def:operator-projection}
+\lean{BC4lean.OperatorKTheory.Projection.right_support}
+If $p\in\operatorname{Proj}(A)$ and $v^*v=p$, then $vp=v$.
+\end{proposition}
+\begin{proof}
+\leanok
+For $x=vp-v$, expansion using $p^*=p$, $p^2=p$, and $v^*v=p$
+gives $x^*x=0$. The $C^*$-identity implies $x=0$.
+\end{proof}
+
+\begin{definition}\label{def:projection-equivalence}
+\uses{def:operator-projection}
+\lean{BC4lean.OperatorKTheory.Projection.Equivalent}
+\leanok
+Projections $p,q\in A$ are Murray--von Neumann equivalent, written $p\sim q$,
+if some $v\in A$ satisfies $v^*v=p$ and $vv^*=q$.
+\end{definition}
+
+\begin{proposition}\label{prop:projection-equivalence}
+\uses{def:projection-equivalence,prop:partial-isometry-support}
+\lean{BC4lean.OperatorKTheory.Projection.equivalent_refl,BC4lean.OperatorKTheory.Projection.equivalent_symm,BC4lean.OperatorKTheory.Projection.equivalent_trans,BC4lean.OperatorKTheory.Projection.equivalenceSetoid,BC4lean.OperatorKTheory.Projection.Classes}
+The relation $\sim$ is an equivalence relation, so its quotient is defined.
+\end{proposition}
+\begin{proof}
+\leanok
+Reflexivity uses $v=p$ and symmetry uses $v^*$. If $v$ implements $p\sim q$
+and $w$ implements $q\sim r$, then $wv$ implements $p\sim r$.
+The support identities $vp=v$, $qv=v$, and $wq=w$ give the two required equations.
+These quotients concern one algebra at a time; they are not yet stable classes.
+\end{proof}
+
+\begin{proposition}\label{prop:projection-map}
+\uses{prop:projection-equivalence}
+\lean{BC4lean.OperatorKTheory.Projection.map,BC4lean.OperatorKTheory.Projection.equivalent_map,BC4lean.OperatorKTheory.Projection.mapClasses}
+A unital complex star homomorphism $\phi:A\to B$ sends projections to
+projections and preserves Murray--von Neumann equivalence. It therefore
+induces a map on the preceding quotients.
+\end{proposition}
+\begin{proof}
+\leanok
+Apply $\phi$ to the projection equations and, for equivalence, to the
+witness $v$ and its two defining equations.
+\end{proof}
+
+\section{Matrix stabilization and the construction of $K_0$}
+
+\begin{definition}\label{def:cstar-matrix-projection}
+\uses{def:operator-projection}
+\lean{BC4lean.OperatorKTheory.MatrixProjection,BC4lean.OperatorKTheory.matrixBlockSum,BC4lean.OperatorKTheory.projectionBlockSum,BC4lean.OperatorKTheory.stabilizeProjection}
+\leanok
+Use the $C^*$-norm on $M_n(A)$, and let $P_n(A)=\operatorname{Proj}(M_n(A))$.
+For $p\in P_n(A)$ and $q\in P_m(A)$, their block sum is
+\[
+ p\oplus q=\begin{pmatrix}p&0\\0&q\end{pmatrix}\in P_{n+m}(A).
+\]
+Projection stabilization is $p\mapsto p\oplus 0_m$.
+The Lean implementation initially uses arbitrary finite index types and their
+disjoint sums. Mathlib's matrix norm requires a compatible star order on $A$;
+the matrix declarations retain this explicit implementation assumption.
+\end{definition}
+
+\begin{proposition}\label{prop:projection-block-sum}
+\uses{def:cstar-matrix-projection,prop:projection-equivalence}
+\lean{BC4lean.OperatorKTheory.equivalent_blockSum,BC4lean.OperatorKTheory.equivalent_stabilize,BC4lean.OperatorKTheory.blockSumClasses}
+If $p\sim p'$ and $q\sim q'$, then $p\oplus q\sim p'\oplus q'$.
+Thus block sum and stabilization descend to equivalence classes at the
+indicated matrix sizes.
+\end{proposition}
+\begin{proof}
+\leanok
+If $v$ and $w$ are the respective witnesses, use $v\oplus w$.
+Block multiplication and adjoints give both defining equations.
+\end{proof}
+
+\begin{definition}\label{def:stable-projection-monoid}
+\uses{prop:projection-block-sum}
+\notready
+On the disjoint union of the $P_n(A)$, identify $p\in P_n(A)$ and
+$q\in P_m(A)$ when, for some $N\geq n,m$,
+\[
+ p\oplus 0_{N-n}\sim q\oplus 0_{N-m}\quad\text{in }M_N(A).
+\]
+Construct this stable quotient $V(A)$ and prove that block sum gives a
+commutative monoid, independently of representatives and finite-index
+identifications. Its zero is the class of a zero projection.
+\end{definition}
+
 \begin{definition}\label{def:operator-k0}
+\uses{def:stable-projection-monoid}
 \notready
-For unital $A$, construct $K_0(A)$ as the Grothendieck group of stable
-Murray--von Neumann classes of matrix projections, with block-sum addition.
+Define $K_0(A)$ as the Grothendieck group of $V(A)$, with its canonical map
+$V(A)\to K_0(A)$. Prove its universal property for monoid maps from $V(A)$
+to abelian groups. Do not assume that the canonical map is injective:
+cancellation in $V(A)$ is not a standing hypothesis.
 \end{definition}
 
-\section{Unitaries, homotopy, and $K_1$}
+\section{Unitaries, norm homotopy, and $K_1$}
+
+\begin{definition}\label{def:matrix-unitary}
+\lean{BC4lean.OperatorKTheory.MatrixUnitary,BC4lean.OperatorKTheory.unitaryBlockSum,BC4lean.OperatorKTheory.stabilizeUnitary}
+\leanok
+Let $U_n(A)=\{u\in M_n(A):u^*u=uu^*=1\}$, with the subspace topology
+from the matrix $C^*$-norm. Block sums of unitaries are unitary.
+Unitary stabilization is $u\mapsto u\oplus 1_m$.
+\end{definition}
+
+\begin{definition}\label{def:unitary-norm-homotopy}
+\uses{def:matrix-unitary}
+\lean{BC4lean.OperatorKTheory.UnitaryHomotopic,BC4lean.OperatorKTheory.UnitaryHomotopyClasses}
+\leanok
+Two elements of $U_n(A)$ are norm homotopic if they are endpoints of a
+continuous path $[0,1]\to U_n(A)$. Form the quotient by this equivalence
+relation at each fixed size.
+\end{definition}
+
+\begin{proposition}\label{prop:unitary-homotopy-operations}
+\uses{def:unitary-norm-homotopy}
+\lean{BC4lean.OperatorKTheory.unitaryHomotopic_refl,BC4lean.OperatorKTheory.unitaryHomotopic_symm,BC4lean.OperatorKTheory.unitaryHomotopic_trans,BC4lean.OperatorKTheory.unitaryHomotopic_mul,BC4lean.OperatorKTheory.unitaryHomotopic_inv}
+Norm homotopy is an equivalence relation and is preserved by multiplication
+of pairs of unitaries and by inversion.
+\end{proposition}
+\begin{proof}
+\leanok
+Use constant paths, reversal, concatenation, pointwise multiplication,
+and pointwise inversion in the topological unitary group.
+\end{proof}
+
+\begin{proposition}\label{prop:unitary-homotopy-stabilization}
+\uses{prop:unitary-homotopy-operations,def:matrix-unitary}
+\lean{BC4lean.OperatorKTheory.continuous_matrixBlockSum,BC4lean.OperatorKTheory.continuous_unitaryBlockSum,BC4lean.OperatorKTheory.unitaryHomotopic_blockSum,BC4lean.OperatorKTheory.unitaryHomotopic_stabilize,BC4lean.OperatorKTheory.stabilizeUnitaryClasses}
+Block sum is continuous and preserves norm homotopies. Consequently,
+stabilization induces maps on the fixed-size norm-path components.
+\end{proposition}
+\begin{proof}
+\leanok
+The finite matrix topology agrees with the entrywise product topology,
+in which block sum is continuous. Apply block sum to a pair of paths;
+for stabilization, use a constant identity path in the second factor.
+\end{proof}
+
 \begin{definition}\label{def:operator-k1}
+\uses{prop:unitary-homotopy-stabilization}
 \notready
-Construct $K_1(A)$ from stable norm-homotopy classes of matrix unitaries,
-using $u\mapsto\operatorname{diag}(u,1)$ for stabilization.
+Take the stable quotient of matrix unitaries by norm homotopy after adjoining
+identity blocks. Define $K_1(A)$ to be this quotient and prove that block sum
+gives an abelian group. This requires the stabilization and reindexing
+coherence, block-switching homotopies, and an inverse represented by $u^*$.
+The fixed-size quotients above do not yet establish these assertions.
 \end{definition}
 
-\section{Nonunital algebras and functoriality}
+\section{Nonunital algebras and structural properties}
+
 \begin{definition}\label{def:operator-k-theory}
 \uses{def:operator-k0,def:operator-k1}
 \notready
-Extend $K_i$ using unitization and the kernel of
-$K_i(A^+)\to K_i(\mathbb C)$. Construct the induced maps for
-$*$-homomorphisms and establish homotopy invariance. Organize exact
-sequences and Bott periodicity as separate theorems, recording which are
-needed for the chosen grading convention and the comparison with KK-theory.
+For a possibly nonunital complex $C^*$-algebra $A$, use the forced unitization
+$A^+$ and its scalar quotient $\epsilon:A^+\to\mathbb C$ to define
+\[
+ K_i(A)=\ker\bigl(K_i(\epsilon):K_i(A^+)\to K_i(\mathbb C)\bigr),
+ \qquad i=0,1.
+\]
+Construct the induced homomorphisms needed here and prove agreement with
+the preceding definitions when $A$ is unital.
 \end{definition}
 
+\begin{proposition}\label{prop:operator-k-functoriality}
+\uses{def:operator-k-theory,prop:projection-map}
+\notready
+Complex star homomorphisms, including nonunital ones, induce homomorphisms
+on $K_i$ that preserve identities and composition.
+\end{proposition}
+
+\begin{proposition}\label{prop:operator-k-homotopy-invariance}
+\uses{prop:operator-k-functoriality}
+\notready
+Point-norm homotopic star homomorphisms induce the same maps on $K_i$.
+\end{proposition}
+
+The six-term exact sequence and Bott periodicity require separate future
+nodes and proofs. They are not consequences of the formalized foundations
+merely by being part of the usual theory.
+
 \section{The analytic target}
+
 \begin{definition}\label{def:analytic-side}
 \uses{def:reduced-group-cstar,def:operator-k-theory}
 \notready
-The analytic side is $K_i(C_r^*(\Gamma))$, for $i=0,1$.
+For a countable discrete group $\Gamma$, the analytic target of the
+coefficient-free reduced Baum--Connes assembly map is
+\[
+ K_i(C_r^*(\Gamma)),\qquad i=0,1.
+\]
+The reduced algebra has already been constructed. Instantiating the
+$K$-theory functors and connecting them to the assembly map remain to be done.
 \end{definition}

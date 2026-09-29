@@ -15,6 +15,9 @@ code{overflow-wrap:anywhere}</style></head><body><a href="../../blueprint/">返�
 <li><a href="#ReducedGroupCStarTrivial">ReducedGroupCStarTrivial.lean</a></li>
 <li><a href="#ReducedNormGroupAlgebra">ReducedNormGroupAlgebra.lean</a></li>
 <li><a href="#ReducedCompletion">ReducedCompletion.lean</a></li>
+<li><a href="#OperatorProjections">OperatorProjections.lean</a></li>
+<li><a href="#MatrixStabilization">MatrixStabilization.lean</a></li>
+<li><a href="#UnitaryHomotopy">UnitaryHomotopy.lean</a></li>
 </ul></nav>
 <h2 id="GroupAlgebra">GroupAlgebra.lean</h2><p>源码 SHA-256：<code>1c6c0899fe9bc9f7860f291ba7c5573353d18a3c5809258769d689bc39da8ad4</code></p><pre>
 <span><a class="line" href="#L1" id="L1">  1</a> import Mathlib.Algebra.MonoidAlgebra.Basic</span>
@@ -923,5 +926,308 @@ code{overflow-wrap:anywhere}</style></head><body><a href="../../blueprint/">返�
 <span><a class="line" href="#ReducedCompletion-L143" id="ReducedCompletion-L143">143</a>   exact reducedCompletionEquiv_unique Γ e he.continuous h</span>
 <span><a class="line" href="#ReducedCompletion-L144" id="ReducedCompletion-L144">144</a> </span>
 <span><a class="line" href="#ReducedCompletion-L145" id="ReducedCompletion-L145">145</a> end BC4lean</span>
+</pre>
+<h2 id="OperatorProjections">OperatorProjections.lean</h2><p>源码 SHA-256：<code>ebd907953cb61d6852bdec4eab229baa97b554af4c4010f998f3febb913ce0c3</code></p><pre>
+<span><a class="line" href="#OperatorProjections-L1" id="OperatorProjections-L1">  1</a> import Mathlib.Analysis.CStarAlgebra.Classes</span>
+<span><a class="line" href="#OperatorProjections-L2" id="OperatorProjections-L2">  2</a> import Mathlib.Algebra.Star.StarProjection</span>
+<span><a class="line" href="#OperatorProjections-L3" id="OperatorProjections-L3">  3</a> </span>
+<span><a class="line" href="#OperatorProjections-L4" id="OperatorProjections-L4">  4</a> /-! # Projections and Murray–von Neumann equivalence</span>
+<span><a class="line" href="#OperatorProjections-L5" id="OperatorProjections-L5">  5</a> </span>
+<span><a class="line" href="#OperatorProjections-L6" id="OperatorProjections-L6">  6</a> Projection-level foundations for operator K₀. The two support equations for</span>
+<span><a class="line" href="#OperatorProjections-L7" id="OperatorProjections-L7">  7</a> partial isometries are consequences of the C⋆-identity, not extra assumptions.</span>
+<span><a class="line" href="#OperatorProjections-L8" id="OperatorProjections-L8">  8</a> -/</span>
+<span><a class="line" href="#OperatorProjections-L9" id="OperatorProjections-L9">  9</a> </span>
+<span><a class="line" href="#OperatorProjections-L10" id="OperatorProjections-L10"> 10</a> noncomputable section</span>
+<span><a class="line" href="#OperatorProjections-L11" id="OperatorProjections-L11"> 11</a> namespace BC4lean.OperatorKTheory</span>
+<span><a class="line" href="#OperatorProjections-L12" id="OperatorProjections-L12"> 12</a> </span>
+<span><a class="line" href="#OperatorProjections-L13" id="OperatorProjections-L13"> 13</a> variable {A B C : Type*} [CStarAlgebra A] [CStarAlgebra B] [CStarAlgebra C]</span>
+<span><a class="line" href="#OperatorProjections-L14" id="OperatorProjections-L14"> 14</a> </span>
+<span><a class="line" href="#OperatorProjections-L15" id="OperatorProjections-L15"> 15</a> /-- A projection in a unital complex C⋆-algebra. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.Projection"><a class="line" href="#OperatorProjections-L16" id="OperatorProjections-L16"> 16</a> abbrev Projection (A : Type*) [CStarAlgebra A] := {p : A // IsStarProjection p}</span>
+<span><a class="line" href="#OperatorProjections-L17" id="OperatorProjections-L17"> 17</a> </span>
+<span><a class="line" href="#OperatorProjections-L18" id="OperatorProjections-L18"> 18</a> namespace Projection</span>
+<span><a class="line" href="#OperatorProjections-L19" id="OperatorProjections-L19"> 19</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.Projection.star_coe"><a class="line" href="#OperatorProjections-L20" id="OperatorProjections-L20"> 20</a> @[simp] theorem star_coe (p : Projection A) : star (p : A) = p :=</span>
+<span><a class="line" href="#OperatorProjections-L21" id="OperatorProjections-L21"> 21</a>   p.property.isSelfAdjoint.star_eq</span>
+<span><a class="line" href="#OperatorProjections-L22" id="OperatorProjections-L22"> 22</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.Projection.mul_self"><a class="line" href="#OperatorProjections-L23" id="OperatorProjections-L23"> 23</a> @[simp] theorem mul_self (p : Projection A) : (p : A) * p = p :=</span>
+<span><a class="line" href="#OperatorProjections-L24" id="OperatorProjections-L24"> 24</a>   p.property.isIdempotentElem.eq</span>
+<span><a class="line" href="#OperatorProjections-L25" id="OperatorProjections-L25"> 25</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.Projection.zero"><a class="line" href="#OperatorProjections-L26" id="OperatorProjections-L26"> 26</a> def zero : Projection A := ⟨0, IsStarProjection.zero A⟩</span>
+<span id="doc/BC4lean.OperatorKTheory.Projection.one"><a class="line" href="#OperatorProjections-L27" id="OperatorProjections-L27"> 27</a> def one : Projection A := ⟨1, IsStarProjection.one A⟩</span>
+<span id="doc/BC4lean.OperatorKTheory.Projection.complement"><a class="line" href="#OperatorProjections-L28" id="OperatorProjections-L28"> 28</a> def complement (p : Projection A) : Projection A := ⟨1 - p, p.property.one_sub⟩</span>
+<span><a class="line" href="#OperatorProjections-L29" id="OperatorProjections-L29"> 29</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.Projection.map"><a class="line" href="#OperatorProjections-L30" id="OperatorProjections-L30"> 30</a> def map (φ : A →⋆ₐ[ℂ] B) (p : Projection A) : Projection B :=</span>
+<span><a class="line" href="#OperatorProjections-L31" id="OperatorProjections-L31"> 31</a>   ⟨φ p, p.property.map φ⟩</span>
+<span><a class="line" href="#OperatorProjections-L32" id="OperatorProjections-L32"> 32</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.Projection.map_coe"><a class="line" href="#OperatorProjections-L33" id="OperatorProjections-L33"> 33</a> @[simp] theorem map_coe (φ : A →⋆ₐ[ℂ] B) (p : Projection A) :</span>
+<span><a class="line" href="#OperatorProjections-L34" id="OperatorProjections-L34"> 34</a>     (map φ p : B) = φ p := rfl</span>
+<span><a class="line" href="#OperatorProjections-L35" id="OperatorProjections-L35"> 35</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.Projection.map_id"><a class="line" href="#OperatorProjections-L36" id="OperatorProjections-L36"> 36</a> @[simp] theorem map_id (p : Projection A) : map (StarAlgHom.id ℂ A) p = p := rfl</span>
+<span><a class="line" href="#OperatorProjections-L37" id="OperatorProjections-L37"> 37</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.Projection.map_comp"><a class="line" href="#OperatorProjections-L38" id="OperatorProjections-L38"> 38</a> @[simp] theorem map_comp (ψ : B →⋆ₐ[ℂ] C) (φ : A →⋆ₐ[ℂ] B) (p : Projection A) :</span>
+<span><a class="line" href="#OperatorProjections-L39" id="OperatorProjections-L39"> 39</a>     map (ψ.comp φ) p = map ψ (map φ p) := rfl</span>
+<span><a class="line" href="#OperatorProjections-L40" id="OperatorProjections-L40"> 40</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.Projection.map_zero"><a class="line" href="#OperatorProjections-L41" id="OperatorProjections-L41"> 41</a> @[simp] theorem map_zero (φ : A →⋆ₐ[ℂ] B) : map φ zero = zero :=</span>
+<span><a class="line" href="#OperatorProjections-L42" id="OperatorProjections-L42"> 42</a>   Subtype.ext (_root_.map_zero φ)</span>
+<span><a class="line" href="#OperatorProjections-L43" id="OperatorProjections-L43"> 43</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.Projection.map_one"><a class="line" href="#OperatorProjections-L44" id="OperatorProjections-L44"> 44</a> @[simp] theorem map_one (φ : A →⋆ₐ[ℂ] B) : map φ one = one :=</span>
+<span><a class="line" href="#OperatorProjections-L45" id="OperatorProjections-L45"> 45</a>   Subtype.ext (_root_.map_one φ)</span>
+<span><a class="line" href="#OperatorProjections-L46" id="OperatorProjections-L46"> 46</a> </span>
+<span><a class="line" href="#OperatorProjections-L47" id="OperatorProjections-L47"> 47</a> /-- The initial projection acts as the right support of a partial isometry. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.Projection.right_support"><a class="line" href="#OperatorProjections-L48" id="OperatorProjections-L48"> 48</a> theorem right_support (p : Projection A) (v : A) (hv : star v * v = p) : v * p = v := by</span>
+<span><a class="line" href="#OperatorProjections-L49" id="OperatorProjections-L49"> 49</a>   apply sub_eq_zero.mp</span>
+<span><a class="line" href="#OperatorProjections-L50" id="OperatorProjections-L50"> 50</a>   apply (CStarRing.star_mul_self_eq_zero_iff (v * p - v)).mp</span>
+<span><a class="line" href="#OperatorProjections-L51" id="OperatorProjections-L51"> 51</a>   have h₁ : star v * (v * p) = p := by rw [← mul_assoc, hv, mul_self]</span>
+<span><a class="line" href="#OperatorProjections-L52" id="OperatorProjections-L52"> 52</a>   simp only [star_sub, star_mul, star_coe, sub_mul, mul_sub, mul_assoc, h₁, hv,</span>
+<span><a class="line" href="#OperatorProjections-L53" id="OperatorProjections-L53"> 53</a>     mul_self, sub_self]</span>
+<span><a class="line" href="#OperatorProjections-L54" id="OperatorProjections-L54"> 54</a> </span>
+<span><a class="line" href="#OperatorProjections-L55" id="OperatorProjections-L55"> 55</a> /-- Equivalence implemented by the usual two partial-isometry equations. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.Projection.Equivalent"><a class="line" href="#OperatorProjections-L56" id="OperatorProjections-L56"> 56</a> def Equivalent (p q : Projection A) : Prop :=</span>
+<span><a class="line" href="#OperatorProjections-L57" id="OperatorProjections-L57"> 57</a>   ∃ v : A, star v * v = p ∧ v * star v = q</span>
+<span><a class="line" href="#OperatorProjections-L58" id="OperatorProjections-L58"> 58</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.Projection.equivalent_refl"><a class="line" href="#OperatorProjections-L59" id="OperatorProjections-L59"> 59</a> theorem equivalent_refl (p : Projection A) : Equivalent p p :=</span>
+<span><a class="line" href="#OperatorProjections-L60" id="OperatorProjections-L60"> 60</a>   ⟨p, by simp, by simp⟩</span>
+<span><a class="line" href="#OperatorProjections-L61" id="OperatorProjections-L61"> 61</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.Projection.equivalent_symm"><a class="line" href="#OperatorProjections-L62" id="OperatorProjections-L62"> 62</a> theorem equivalent_symm {p q : Projection A} (h : Equivalent p q) : Equivalent q p := by</span>
+<span><a class="line" href="#OperatorProjections-L63" id="OperatorProjections-L63"> 63</a>   obtain ⟨v, hv, hv&#x27;⟩ := h</span>
+<span><a class="line" href="#OperatorProjections-L64" id="OperatorProjections-L64"> 64</a>   exact ⟨star v, by simpa using hv&#x27;, by simpa using hv⟩</span>
+<span><a class="line" href="#OperatorProjections-L65" id="OperatorProjections-L65"> 65</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.Projection.equivalent_trans"><a class="line" href="#OperatorProjections-L66" id="OperatorProjections-L66"> 66</a> theorem equivalent_trans {p q r : Projection A}</span>
+<span><a class="line" href="#OperatorProjections-L67" id="OperatorProjections-L67"> 67</a>     (hpq : Equivalent p q) (hqr : Equivalent q r) : Equivalent p r := by</span>
+<span><a class="line" href="#OperatorProjections-L68" id="OperatorProjections-L68"> 68</a>   obtain ⟨v, hv, hv&#x27;⟩ := hpq</span>
+<span><a class="line" href="#OperatorProjections-L69" id="OperatorProjections-L69"> 69</a>   obtain ⟨w, hw, hw&#x27;⟩ := hqr</span>
+<span><a class="line" href="#OperatorProjections-L70" id="OperatorProjections-L70"> 70</a>   have hvp := right_support p v hv</span>
+<span><a class="line" href="#OperatorProjections-L71" id="OperatorProjections-L71"> 71</a>   have hqv : (q : A) * v = v := by rw [← hv&#x27;, mul_assoc, hv, hvp]</span>
+<span><a class="line" href="#OperatorProjections-L72" id="OperatorProjections-L72"> 72</a>   have hwq := right_support q w hw</span>
+<span><a class="line" href="#OperatorProjections-L73" id="OperatorProjections-L73"> 73</a>   refine ⟨w * v, ?_, ?_⟩</span>
+<span><a class="line" href="#OperatorProjections-L74" id="OperatorProjections-L74"> 74</a>   · calc</span>
+<span><a class="line" href="#OperatorProjections-L75" id="OperatorProjections-L75"> 75</a>       star (w * v) * (w * v) = star v * (star w * w) * v := by simp only [star_mul, mul_assoc]</span>
+<span><a class="line" href="#OperatorProjections-L76" id="OperatorProjections-L76"> 76</a>       _ = star v * q * v := by rw [hw]</span>
+<span><a class="line" href="#OperatorProjections-L77" id="OperatorProjections-L77"> 77</a>       _ = p := by rw [mul_assoc, hqv, hv]</span>
+<span><a class="line" href="#OperatorProjections-L78" id="OperatorProjections-L78"> 78</a>   · calc</span>
+<span><a class="line" href="#OperatorProjections-L79" id="OperatorProjections-L79"> 79</a>       (w * v) * star (w * v) = w * (v * star v) * star w := by simp only [star_mul, mul_assoc]</span>
+<span><a class="line" href="#OperatorProjections-L80" id="OperatorProjections-L80"> 80</a>       _ = w * q * star w := by rw [hv&#x27;]</span>
+<span><a class="line" href="#OperatorProjections-L81" id="OperatorProjections-L81"> 81</a>       _ = r := by rw [hwq, hw&#x27;]</span>
+<span><a class="line" href="#OperatorProjections-L82" id="OperatorProjections-L82"> 82</a> </span>
+<span><a class="line" href="#OperatorProjections-L83" id="OperatorProjections-L83"> 83</a> /-- Equivalence classes at a fixed algebra, in particular a fixed matrix size. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.Projection.equivalenceSetoid"><a class="line" href="#OperatorProjections-L84" id="OperatorProjections-L84"> 84</a> def equivalenceSetoid : Setoid (Projection A) where</span>
+<span><a class="line" href="#OperatorProjections-L85" id="OperatorProjections-L85"> 85</a>   r := Equivalent</span>
+<span><a class="line" href="#OperatorProjections-L86" id="OperatorProjections-L86"> 86</a>   iseqv := ⟨equivalent_refl, equivalent_symm, equivalent_trans⟩</span>
+<span><a class="line" href="#OperatorProjections-L87" id="OperatorProjections-L87"> 87</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.Projection.Classes"><a class="line" href="#OperatorProjections-L88" id="OperatorProjections-L88"> 88</a> abbrev Classes (A : Type*) [CStarAlgebra A] := Quotient (equivalenceSetoid (A := A))</span>
+<span><a class="line" href="#OperatorProjections-L89" id="OperatorProjections-L89"> 89</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.Projection.equivalent_map"><a class="line" href="#OperatorProjections-L90" id="OperatorProjections-L90"> 90</a> theorem equivalent_map (φ : A →⋆ₐ[ℂ] B) {p q : Projection A}</span>
+<span><a class="line" href="#OperatorProjections-L91" id="OperatorProjections-L91"> 91</a>     (h : Equivalent p q) : Equivalent (map φ p) (map φ q) := by</span>
+<span><a class="line" href="#OperatorProjections-L92" id="OperatorProjections-L92"> 92</a>   obtain ⟨v, hv, hv&#x27;⟩ := h</span>
+<span><a class="line" href="#OperatorProjections-L93" id="OperatorProjections-L93"> 93</a>   refine ⟨φ v, ?_, ?_⟩</span>
+<span><a class="line" href="#OperatorProjections-L94" id="OperatorProjections-L94"> 94</a>   · simpa only [map_mul, map_star, map_coe] using congrArg φ hv</span>
+<span><a class="line" href="#OperatorProjections-L95" id="OperatorProjections-L95"> 95</a>   · simpa only [map_mul, map_star, map_coe] using congrArg φ hv&#x27;</span>
+<span><a class="line" href="#OperatorProjections-L96" id="OperatorProjections-L96"> 96</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.Projection.mapClasses"><a class="line" href="#OperatorProjections-L97" id="OperatorProjections-L97"> 97</a> def mapClasses (φ : A →⋆ₐ[ℂ] B) : Classes A → Classes B :=</span>
+<span><a class="line" href="#OperatorProjections-L98" id="OperatorProjections-L98"> 98</a>   Quotient.map (map φ) (fun _ _ h =&gt; equivalent_map φ h)</span>
+<span><a class="line" href="#OperatorProjections-L99" id="OperatorProjections-L99"> 99</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.Projection.mapClasses_mk"><a class="line" href="#OperatorProjections-L100" id="OperatorProjections-L100">100</a> @[simp] theorem mapClasses_mk (φ : A →⋆ₐ[ℂ] B) (p : Projection A) :</span>
+<span><a class="line" href="#OperatorProjections-L101" id="OperatorProjections-L101">101</a>     mapClasses φ (Quotient.mk _ p) = Quotient.mk _ (map φ p) := rfl</span>
+<span><a class="line" href="#OperatorProjections-L102" id="OperatorProjections-L102">102</a> </span>
+<span><a class="line" href="#OperatorProjections-L103" id="OperatorProjections-L103">103</a> end Projection</span>
+<span><a class="line" href="#OperatorProjections-L104" id="OperatorProjections-L104">104</a> end BC4lean.OperatorKTheory</span>
+</pre>
+<h2 id="MatrixStabilization">MatrixStabilization.lean</h2><p>源码 SHA-256：<code>ed088f2a4c275e44cb052d1304c855e6e966b5ecdbad4881ddbdd38bfd4c59e1</code></p><pre>
+<span><a class="line" href="#MatrixStabilization-L1" id="MatrixStabilization-L1">  1</a> import BC4lean.OperatorProjections</span>
+<span><a class="line" href="#MatrixStabilization-L2" id="MatrixStabilization-L2">  2</a> import Mathlib.Analysis.CStarAlgebra.CStarMatrix</span>
+<span><a class="line" href="#MatrixStabilization-L3" id="MatrixStabilization-L3">  3</a> import Mathlib.Data.Matrix.Block</span>
+<span><a class="line" href="#MatrixStabilization-L4" id="MatrixStabilization-L4">  4</a> import Mathlib.Algebra.Star.Unitary</span>
+<span><a class="line" href="#MatrixStabilization-L5" id="MatrixStabilization-L5">  5</a> </span>
+<span><a class="line" href="#MatrixStabilization-L6" id="MatrixStabilization-L6">  6</a> /-! # Matrix projections, unitaries, and stabilization</span>
+<span><a class="line" href="#MatrixStabilization-L7" id="MatrixStabilization-L7">  7</a> </span>
+<span><a class="line" href="#MatrixStabilization-L8" id="MatrixStabilization-L8">  8</a> We use Mathlib&#x27;s C⋆-matrix norm, not the entrywise supremum norm. The order</span>
+<span><a class="line" href="#MatrixStabilization-L9" id="MatrixStabilization-L9">  9</a> assumptions are the standard compatible C⋆-order required by that API.</span>
+<span><a class="line" href="#MatrixStabilization-L10" id="MatrixStabilization-L10"> 10</a> Block sums first use sum-indexed matrices, avoiding arbitrary index choices.</span>
+<span><a class="line" href="#MatrixStabilization-L11" id="MatrixStabilization-L11"> 11</a> -/</span>
+<span><a class="line" href="#MatrixStabilization-L12" id="MatrixStabilization-L12"> 12</a> </span>
+<span><a class="line" href="#MatrixStabilization-L13" id="MatrixStabilization-L13"> 13</a> noncomputable section</span>
+<span><a class="line" href="#MatrixStabilization-L14" id="MatrixStabilization-L14"> 14</a> namespace BC4lean.OperatorKTheory</span>
+<span><a class="line" href="#MatrixStabilization-L15" id="MatrixStabilization-L15"> 15</a> </span>
+<span><a class="line" href="#MatrixStabilization-L16" id="MatrixStabilization-L16"> 16</a> open scoped Matrix</span>
+<span><a class="line" href="#MatrixStabilization-L17" id="MatrixStabilization-L17"> 17</a> </span>
+<span><a class="line" href="#MatrixStabilization-L18" id="MatrixStabilization-L18"> 18</a> variable {A : Type*} [CStarAlgebra A]</span>
+<span><a class="line" href="#MatrixStabilization-L19" id="MatrixStabilization-L19"> 19</a> variable {ι κ : Type*}</span>
+<span><a class="line" href="#MatrixStabilization-L20" id="MatrixStabilization-L20"> 20</a> </span>
+<span><a class="line" href="#MatrixStabilization-L21" id="MatrixStabilization-L21"> 21</a> /-- Block diagonal sum of C⋆-matrices. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.matrixBlockSum"><a class="line" href="#MatrixStabilization-L22" id="MatrixStabilization-L22"> 22</a> def matrixBlockSum (p : CStarMatrix ι ι A) (q : CStarMatrix κ κ A) :</span>
+<span><a class="line" href="#MatrixStabilization-L23" id="MatrixStabilization-L23"> 23</a>     CStarMatrix (ι ⊕ κ) (ι ⊕ κ) A :=</span>
+<span><a class="line" href="#MatrixStabilization-L24" id="MatrixStabilization-L24"> 24</a>   CStarMatrix.ofMatrix (Matrix.fromBlocks (CStarMatrix.ofMatrix.symm p) 0 0</span>
+<span><a class="line" href="#MatrixStabilization-L25" id="MatrixStabilization-L25"> 25</a>     (CStarMatrix.ofMatrix.symm q))</span>
+<span><a class="line" href="#MatrixStabilization-L26" id="MatrixStabilization-L26"> 26</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.matrixBlockSum_star"><a class="line" href="#MatrixStabilization-L27" id="MatrixStabilization-L27"> 27</a> @[simp] theorem matrixBlockSum_star (p : CStarMatrix ι ι A) (q : CStarMatrix κ κ A) :</span>
+<span><a class="line" href="#MatrixStabilization-L28" id="MatrixStabilization-L28"> 28</a>     star (matrixBlockSum p q) = matrixBlockSum (star p) (star q) := by</span>
+<span><a class="line" href="#MatrixStabilization-L29" id="MatrixStabilization-L29"> 29</a>   change (Matrix.fromBlocks (CStarMatrix.ofMatrix.symm p) (0 : Matrix ι κ A)</span>
+<span><a class="line" href="#MatrixStabilization-L30" id="MatrixStabilization-L30"> 30</a>     (0 : Matrix κ ι A) (CStarMatrix.ofMatrix.symm q))ᴴ = _</span>
+<span><a class="line" href="#MatrixStabilization-L31" id="MatrixStabilization-L31"> 31</a>   simp only [Matrix.fromBlocks_conjTranspose, Matrix.conjTranspose_zero]</span>
+<span><a class="line" href="#MatrixStabilization-L32" id="MatrixStabilization-L32"> 32</a>   rfl</span>
+<span><a class="line" href="#MatrixStabilization-L33" id="MatrixStabilization-L33"> 33</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.matrixBlockSum_mul"><a class="line" href="#MatrixStabilization-L34" id="MatrixStabilization-L34"> 34</a> theorem matrixBlockSum_mul [Fintype ι] [Fintype κ] (p r : CStarMatrix ι ι A) (q s : CStarMatrix κ κ A) :</span>
+<span><a class="line" href="#MatrixStabilization-L35" id="MatrixStabilization-L35"> 35</a>     matrixBlockSum p q * matrixBlockSum r s = matrixBlockSum (p * r) (q * s) := by</span>
+<span><a class="line" href="#MatrixStabilization-L36" id="MatrixStabilization-L36"> 36</a>   change Matrix.fromBlocks (CStarMatrix.ofMatrix.symm p) (0 : Matrix ι κ A)</span>
+<span><a class="line" href="#MatrixStabilization-L37" id="MatrixStabilization-L37"> 37</a>     (0 : Matrix κ ι A) (CStarMatrix.ofMatrix.symm q) *</span>
+<span><a class="line" href="#MatrixStabilization-L38" id="MatrixStabilization-L38"> 38</a>     Matrix.fromBlocks (CStarMatrix.ofMatrix.symm r) (0 : Matrix ι κ A)</span>
+<span><a class="line" href="#MatrixStabilization-L39" id="MatrixStabilization-L39"> 39</a>     (0 : Matrix κ ι A) (CStarMatrix.ofMatrix.symm s) =</span>
+<span><a class="line" href="#MatrixStabilization-L40" id="MatrixStabilization-L40"> 40</a>     Matrix.fromBlocks (CStarMatrix.ofMatrix.symm p * CStarMatrix.ofMatrix.symm r)</span>
+<span><a class="line" href="#MatrixStabilization-L41" id="MatrixStabilization-L41"> 41</a>       (0 : Matrix ι κ A) (0 : Matrix κ ι A)</span>
+<span><a class="line" href="#MatrixStabilization-L42" id="MatrixStabilization-L42"> 42</a>       (CStarMatrix.ofMatrix.symm q * CStarMatrix.ofMatrix.symm s)</span>
+<span><a class="line" href="#MatrixStabilization-L43" id="MatrixStabilization-L43"> 43</a>   simp only [Matrix.fromBlocks_multiply, Matrix.mul_zero, Matrix.zero_mul, add_zero, zero_add]</span>
+<span><a class="line" href="#MatrixStabilization-L44" id="MatrixStabilization-L44"> 44</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.matrixBlockSum_one"><a class="line" href="#MatrixStabilization-L45" id="MatrixStabilization-L45"> 45</a> @[simp] theorem matrixBlockSum_one [DecidableEq ι] [DecidableEq κ] :</span>
+<span><a class="line" href="#MatrixStabilization-L46" id="MatrixStabilization-L46"> 46</a>     matrixBlockSum (1 : CStarMatrix ι ι A) (1 : CStarMatrix κ κ A) = 1 :=</span>
+<span><a class="line" href="#MatrixStabilization-L47" id="MatrixStabilization-L47"> 47</a>   Matrix.fromBlocks_one</span>
+<span><a class="line" href="#MatrixStabilization-L48" id="MatrixStabilization-L48"> 48</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.matrixBlockSum_zero"><a class="line" href="#MatrixStabilization-L49" id="MatrixStabilization-L49"> 49</a> @[simp] theorem matrixBlockSum_zero :</span>
+<span><a class="line" href="#MatrixStabilization-L50" id="MatrixStabilization-L50"> 50</a>     matrixBlockSum (0 : CStarMatrix ι ι A) (0 : CStarMatrix κ κ A) = 0 :=</span>
+<span><a class="line" href="#MatrixStabilization-L51" id="MatrixStabilization-L51"> 51</a>   Matrix.fromBlocks_zero</span>
+<span><a class="line" href="#MatrixStabilization-L52" id="MatrixStabilization-L52"> 52</a> </span>
+<span><a class="line" href="#MatrixStabilization-L53" id="MatrixStabilization-L53"> 53</a> variable [PartialOrder A] [StarOrderedRing A]</span>
+<span><a class="line" href="#MatrixStabilization-L54" id="MatrixStabilization-L54"> 54</a> variable [Fintype ι] [Fintype κ] [DecidableEq ι] [DecidableEq κ]</span>
+<span><a class="line" href="#MatrixStabilization-L55" id="MatrixStabilization-L55"> 55</a> </span>
+<span><a class="line" href="#MatrixStabilization-L56" id="MatrixStabilization-L56"> 56</a> /-- A matrix projection with the C⋆-matrix norm. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.MatrixProjection"><a class="line" href="#MatrixStabilization-L57" id="MatrixStabilization-L57"> 57</a> abbrev MatrixProjection (A : Type*) [CStarAlgebra A] [PartialOrder A] [StarOrderedRing A]</span>
+<span><a class="line" href="#MatrixStabilization-L58" id="MatrixStabilization-L58"> 58</a>     (ι : Type*) [Fintype ι] [DecidableEq ι] := Projection (CStarMatrix ι ι A)</span>
+<span><a class="line" href="#MatrixStabilization-L59" id="MatrixStabilization-L59"> 59</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.projectionBlockSum"><a class="line" href="#MatrixStabilization-L60" id="MatrixStabilization-L60"> 60</a> def projectionBlockSum (p : MatrixProjection A ι) (q : MatrixProjection A κ) :</span>
+<span><a class="line" href="#MatrixStabilization-L61" id="MatrixStabilization-L61"> 61</a>     MatrixProjection A (ι ⊕ κ) :=</span>
+<span><a class="line" href="#MatrixStabilization-L62" id="MatrixStabilization-L62"> 62</a>   ⟨matrixBlockSum p q, ⟨by</span>
+<span><a class="line" href="#MatrixStabilization-L63" id="MatrixStabilization-L63"> 63</a>     change matrixBlockSum p.val q.val * matrixBlockSum p.val q.val = matrixBlockSum p.val q.val</span>
+<span><a class="line" href="#MatrixStabilization-L64" id="MatrixStabilization-L64"> 64</a>     rw [matrixBlockSum_mul]; simp, by</span>
+<span><a class="line" href="#MatrixStabilization-L65" id="MatrixStabilization-L65"> 65</a>     change star (matrixBlockSum p.val q.val) = matrixBlockSum p.val q.val</span>
+<span><a class="line" href="#MatrixStabilization-L66" id="MatrixStabilization-L66"> 66</a>     rw [matrixBlockSum_star]; simp⟩⟩</span>
+<span><a class="line" href="#MatrixStabilization-L67" id="MatrixStabilization-L67"> 67</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.projectionBlockSum_coe"><a class="line" href="#MatrixStabilization-L68" id="MatrixStabilization-L68"> 68</a> @[simp] theorem projectionBlockSum_coe (p : MatrixProjection A ι) (q : MatrixProjection A κ) :</span>
+<span><a class="line" href="#MatrixStabilization-L69" id="MatrixStabilization-L69"> 69</a>     (projectionBlockSum p q : CStarMatrix (ι ⊕ κ) (ι ⊕ κ) A) = matrixBlockSum p q := rfl</span>
+<span><a class="line" href="#MatrixStabilization-L70" id="MatrixStabilization-L70"> 70</a> </span>
+<span><a class="line" href="#MatrixStabilization-L71" id="MatrixStabilization-L71"> 71</a> /-- Projection stabilization adds a zero block. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.stabilizeProjection"><a class="line" href="#MatrixStabilization-L72" id="MatrixStabilization-L72"> 72</a> def stabilizeProjection (p : MatrixProjection A ι) : MatrixProjection A (ι ⊕ κ) :=</span>
+<span><a class="line" href="#MatrixStabilization-L73" id="MatrixStabilization-L73"> 73</a>   projectionBlockSum p Projection.zero</span>
+<span><a class="line" href="#MatrixStabilization-L74" id="MatrixStabilization-L74"> 74</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.equivalent_blockSum"><a class="line" href="#MatrixStabilization-L75" id="MatrixStabilization-L75"> 75</a> theorem equivalent_blockSum {p r : MatrixProjection A ι} {q s : MatrixProjection A κ}</span>
+<span><a class="line" href="#MatrixStabilization-L76" id="MatrixStabilization-L76"> 76</a>     (h : Projection.Equivalent p r) (k : Projection.Equivalent q s) :</span>
+<span><a class="line" href="#MatrixStabilization-L77" id="MatrixStabilization-L77"> 77</a>     Projection.Equivalent (projectionBlockSum p q) (projectionBlockSum r s) := by</span>
+<span><a class="line" href="#MatrixStabilization-L78" id="MatrixStabilization-L78"> 78</a>   obtain ⟨v, hv, hv&#x27;⟩ := h</span>
+<span><a class="line" href="#MatrixStabilization-L79" id="MatrixStabilization-L79"> 79</a>   obtain ⟨w, hw, hw&#x27;⟩ := k</span>
+<span><a class="line" href="#MatrixStabilization-L80" id="MatrixStabilization-L80"> 80</a>   refine ⟨matrixBlockSum v w, ?_, ?_⟩</span>
+<span><a class="line" href="#MatrixStabilization-L81" id="MatrixStabilization-L81"> 81</a>   · simp only [matrixBlockSum_star, matrixBlockSum_mul, hv, hw, projectionBlockSum_coe]</span>
+<span><a class="line" href="#MatrixStabilization-L82" id="MatrixStabilization-L82"> 82</a>   · simp only [matrixBlockSum_star, matrixBlockSum_mul, hv&#x27;, hw&#x27;, projectionBlockSum_coe]</span>
+<span><a class="line" href="#MatrixStabilization-L83" id="MatrixStabilization-L83"> 83</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.equivalent_stabilize"><a class="line" href="#MatrixStabilization-L84" id="MatrixStabilization-L84"> 84</a> theorem equivalent_stabilize {p q : MatrixProjection A ι} (h : Projection.Equivalent p q) :</span>
+<span><a class="line" href="#MatrixStabilization-L85" id="MatrixStabilization-L85"> 85</a>     Projection.Equivalent (stabilizeProjection (κ := κ) p) (stabilizeProjection q) :=</span>
+<span><a class="line" href="#MatrixStabilization-L86" id="MatrixStabilization-L86"> 86</a>   equivalent_blockSum h (Projection.equivalent_refl Projection.zero)</span>
+<span><a class="line" href="#MatrixStabilization-L87" id="MatrixStabilization-L87"> 87</a> </span>
+<span><a class="line" href="#MatrixStabilization-L88" id="MatrixStabilization-L88"> 88</a> /-- Block sum descends to Murray–von Neumann classes at the indicated matrix sizes. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.blockSumClasses"><a class="line" href="#MatrixStabilization-L89" id="MatrixStabilization-L89"> 89</a> def blockSumClasses : Projection.Classes (CStarMatrix ι ι A) →</span>
+<span><a class="line" href="#MatrixStabilization-L90" id="MatrixStabilization-L90"> 90</a>     Projection.Classes (CStarMatrix κ κ A) →</span>
+<span><a class="line" href="#MatrixStabilization-L91" id="MatrixStabilization-L91"> 91</a>     Projection.Classes (CStarMatrix (ι ⊕ κ) (ι ⊕ κ) A) :=</span>
+<span><a class="line" href="#MatrixStabilization-L92" id="MatrixStabilization-L92"> 92</a>   Quotient.map₂ projectionBlockSum (fun _ _ h _ _ k =&gt; equivalent_blockSum h k)</span>
+<span><a class="line" href="#MatrixStabilization-L93" id="MatrixStabilization-L93"> 93</a> </span>
+<span><a class="line" href="#MatrixStabilization-L94" id="MatrixStabilization-L94"> 94</a> /-- A matrix unitary with the operator-norm topology. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.MatrixUnitary"><a class="line" href="#MatrixStabilization-L95" id="MatrixStabilization-L95"> 95</a> abbrev MatrixUnitary (A : Type*) [CStarAlgebra A] [PartialOrder A] [StarOrderedRing A]</span>
+<span><a class="line" href="#MatrixStabilization-L96" id="MatrixStabilization-L96"> 96</a>     (ι : Type*) [Fintype ι] [DecidableEq ι] := unitary (CStarMatrix ι ι A)</span>
+<span><a class="line" href="#MatrixStabilization-L97" id="MatrixStabilization-L97"> 97</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.unitaryBlockSum"><a class="line" href="#MatrixStabilization-L98" id="MatrixStabilization-L98"> 98</a> def unitaryBlockSum (u : MatrixUnitary A ι) (v : MatrixUnitary A κ) :</span>
+<span><a class="line" href="#MatrixStabilization-L99" id="MatrixStabilization-L99"> 99</a>     MatrixUnitary A (ι ⊕ κ) :=</span>
+<span><a class="line" href="#MatrixStabilization-L100" id="MatrixStabilization-L100">100</a>   ⟨matrixBlockSum u v, by</span>
+<span><a class="line" href="#MatrixStabilization-L101" id="MatrixStabilization-L101">101</a>     rw [Unitary.mem_iff]</span>
+<span><a class="line" href="#MatrixStabilization-L102" id="MatrixStabilization-L102">102</a>     constructor</span>
+<span><a class="line" href="#MatrixStabilization-L103" id="MatrixStabilization-L103">103</a>     · rw [matrixBlockSum_star, matrixBlockSum_mul,</span>
+<span><a class="line" href="#MatrixStabilization-L104" id="MatrixStabilization-L104">104</a>         Unitary.star_mul_self_of_mem u.property, Unitary.star_mul_self_of_mem v.property,</span>
+<span><a class="line" href="#MatrixStabilization-L105" id="MatrixStabilization-L105">105</a>         matrixBlockSum_one]</span>
+<span><a class="line" href="#MatrixStabilization-L106" id="MatrixStabilization-L106">106</a>     · rw [matrixBlockSum_star, matrixBlockSum_mul,</span>
+<span><a class="line" href="#MatrixStabilization-L107" id="MatrixStabilization-L107">107</a>         Unitary.mul_star_self_of_mem u.property, Unitary.mul_star_self_of_mem v.property,</span>
+<span><a class="line" href="#MatrixStabilization-L108" id="MatrixStabilization-L108">108</a>         matrixBlockSum_one]⟩</span>
+<span><a class="line" href="#MatrixStabilization-L109" id="MatrixStabilization-L109">109</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.unitaryBlockSum_coe"><a class="line" href="#MatrixStabilization-L110" id="MatrixStabilization-L110">110</a> @[simp] theorem unitaryBlockSum_coe (u : MatrixUnitary A ι) (v : MatrixUnitary A κ) :</span>
+<span><a class="line" href="#MatrixStabilization-L111" id="MatrixStabilization-L111">111</a>     (unitaryBlockSum u v : CStarMatrix (ι ⊕ κ) (ι ⊕ κ) A) = matrixBlockSum u v := rfl</span>
+<span><a class="line" href="#MatrixStabilization-L112" id="MatrixStabilization-L112">112</a> </span>
+<span><a class="line" href="#MatrixStabilization-L113" id="MatrixStabilization-L113">113</a> /-- Unitary stabilization adds an identity block, unlike projection stabilization. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.stabilizeUnitary"><a class="line" href="#MatrixStabilization-L114" id="MatrixStabilization-L114">114</a> def stabilizeUnitary (u : MatrixUnitary A ι) : MatrixUnitary A (ι ⊕ κ) :=</span>
+<span><a class="line" href="#MatrixStabilization-L115" id="MatrixStabilization-L115">115</a>   unitaryBlockSum u 1</span>
+<span><a class="line" href="#MatrixStabilization-L116" id="MatrixStabilization-L116">116</a> </span>
+<span><a class="line" href="#MatrixStabilization-L117" id="MatrixStabilization-L117">117</a> end BC4lean.OperatorKTheory</span>
+</pre>
+<h2 id="UnitaryHomotopy">UnitaryHomotopy.lean</h2><p>源码 SHA-256：<code>bf4d4b1221bbfc6f46f53faf1e26975d55901455326576a207c7b5ee1ce7e23e</code></p><pre>
+<span><a class="line" href="#UnitaryHomotopy-L1" id="UnitaryHomotopy-L1">  1</a> import BC4lean.MatrixStabilization</span>
+<span><a class="line" href="#UnitaryHomotopy-L2" id="UnitaryHomotopy-L2">  2</a> import Mathlib.Topology.Algebra.Star.Unitary</span>
+<span><a class="line" href="#UnitaryHomotopy-L3" id="UnitaryHomotopy-L3">  3</a> import Mathlib.Topology.Connected.PathConnected</span>
+<span><a class="line" href="#UnitaryHomotopy-L4" id="UnitaryHomotopy-L4">  4</a> </span>
+<span><a class="line" href="#UnitaryHomotopy-L5" id="UnitaryHomotopy-L5">  5</a> /-! # Norm homotopy of matrix unitaries</span>
+<span><a class="line" href="#UnitaryHomotopy-L6" id="UnitaryHomotopy-L6">  6</a> </span>
+<span><a class="line" href="#UnitaryHomotopy-L7" id="UnitaryHomotopy-L7">  7</a> These are path components at a fixed matrix size, not yet the stable group K₁.</span>
+<span><a class="line" href="#UnitaryHomotopy-L8" id="UnitaryHomotopy-L8">  8</a> The topology is the subspace topology of Mathlib&#x27;s operator-norm C⋆-matrices.</span>
+<span><a class="line" href="#UnitaryHomotopy-L9" id="UnitaryHomotopy-L9">  9</a> -/</span>
+<span><a class="line" href="#UnitaryHomotopy-L10" id="UnitaryHomotopy-L10"> 10</a> </span>
+<span><a class="line" href="#UnitaryHomotopy-L11" id="UnitaryHomotopy-L11"> 11</a> noncomputable section</span>
+<span><a class="line" href="#UnitaryHomotopy-L12" id="UnitaryHomotopy-L12"> 12</a> namespace BC4lean.OperatorKTheory</span>
+<span><a class="line" href="#UnitaryHomotopy-L13" id="UnitaryHomotopy-L13"> 13</a> </span>
+<span><a class="line" href="#UnitaryHomotopy-L14" id="UnitaryHomotopy-L14"> 14</a> variable {A : Type*} [CStarAlgebra A] [PartialOrder A] [StarOrderedRing A]</span>
+<span><a class="line" href="#UnitaryHomotopy-L15" id="UnitaryHomotopy-L15"> 15</a> variable {ι κ : Type*} [Fintype ι] [Fintype κ] [DecidableEq ι] [DecidableEq κ]</span>
+<span><a class="line" href="#UnitaryHomotopy-L16" id="UnitaryHomotopy-L16"> 16</a> </span>
+<span><a class="line" href="#UnitaryHomotopy-L17" id="UnitaryHomotopy-L17"> 17</a> /-- A norm-continuous path of matrix unitaries joins the two endpoints. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.UnitaryHomotopic"><a class="line" href="#UnitaryHomotopy-L18" id="UnitaryHomotopy-L18"> 18</a> def UnitaryHomotopic (u v : MatrixUnitary A ι) : Prop := Joined u v</span>
+<span><a class="line" href="#UnitaryHomotopy-L19" id="UnitaryHomotopy-L19"> 19</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.unitaryHomotopic_refl"><a class="line" href="#UnitaryHomotopy-L20" id="UnitaryHomotopy-L20"> 20</a> theorem unitaryHomotopic_refl (u : MatrixUnitary A ι) : UnitaryHomotopic u u :=</span>
+<span><a class="line" href="#UnitaryHomotopy-L21" id="UnitaryHomotopy-L21"> 21</a>   Joined.refl u</span>
+<span><a class="line" href="#UnitaryHomotopy-L22" id="UnitaryHomotopy-L22"> 22</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.unitaryHomotopic_symm"><a class="line" href="#UnitaryHomotopy-L23" id="UnitaryHomotopy-L23"> 23</a> theorem unitaryHomotopic_symm {u v : MatrixUnitary A ι} (h : UnitaryHomotopic u v) :</span>
+<span><a class="line" href="#UnitaryHomotopy-L24" id="UnitaryHomotopy-L24"> 24</a>     UnitaryHomotopic v u := Joined.symm h</span>
+<span><a class="line" href="#UnitaryHomotopy-L25" id="UnitaryHomotopy-L25"> 25</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.unitaryHomotopic_trans"><a class="line" href="#UnitaryHomotopy-L26" id="UnitaryHomotopy-L26"> 26</a> theorem unitaryHomotopic_trans {u v w : MatrixUnitary A ι}</span>
+<span><a class="line" href="#UnitaryHomotopy-L27" id="UnitaryHomotopy-L27"> 27</a>     (h : UnitaryHomotopic u v) (k : UnitaryHomotopic v w) : UnitaryHomotopic u w :=</span>
+<span><a class="line" href="#UnitaryHomotopy-L28" id="UnitaryHomotopy-L28"> 28</a>   Joined.trans h k</span>
+<span><a class="line" href="#UnitaryHomotopy-L29" id="UnitaryHomotopy-L29"> 29</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.unitaryHomotopic_mul"><a class="line" href="#UnitaryHomotopy-L30" id="UnitaryHomotopy-L30"> 30</a> theorem unitaryHomotopic_mul {u v w z : MatrixUnitary A ι}</span>
+<span><a class="line" href="#UnitaryHomotopy-L31" id="UnitaryHomotopy-L31"> 31</a>     (h : UnitaryHomotopic u v) (k : UnitaryHomotopic w z) :</span>
+<span><a class="line" href="#UnitaryHomotopy-L32" id="UnitaryHomotopy-L32"> 32</a>     UnitaryHomotopic (u * w) (v * z) := Joined.mul h k</span>
+<span><a class="line" href="#UnitaryHomotopy-L33" id="UnitaryHomotopy-L33"> 33</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.unitaryHomotopic_inv"><a class="line" href="#UnitaryHomotopy-L34" id="UnitaryHomotopy-L34"> 34</a> theorem unitaryHomotopic_inv {u v : MatrixUnitary A ι} (h : UnitaryHomotopic u v) :</span>
+<span><a class="line" href="#UnitaryHomotopy-L35" id="UnitaryHomotopy-L35"> 35</a>     UnitaryHomotopic u⁻¹ v⁻¹ := Joined.inv h</span>
+<span><a class="line" href="#UnitaryHomotopy-L36" id="UnitaryHomotopy-L36"> 36</a> </span>
+<span><a class="line" href="#UnitaryHomotopy-L37" id="UnitaryHomotopy-L37"> 37</a> /-- Fixed-size norm-path components of the unitary group. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.UnitaryHomotopyClasses"><a class="line" href="#UnitaryHomotopy-L38" id="UnitaryHomotopy-L38"> 38</a> abbrev UnitaryHomotopyClasses (A : Type*) [CStarAlgebra A]</span>
+<span><a class="line" href="#UnitaryHomotopy-L39" id="UnitaryHomotopy-L39"> 39</a>     [PartialOrder A] [StarOrderedRing A] (ι : Type*) [Fintype ι] [DecidableEq ι] :=</span>
+<span><a class="line" href="#UnitaryHomotopy-L40" id="UnitaryHomotopy-L40"> 40</a>   Quotient (pathSetoid (MatrixUnitary A ι))</span>
+<span><a class="line" href="#UnitaryHomotopy-L41" id="UnitaryHomotopy-L41"> 41</a> </span>
+<span><a class="line" href="#UnitaryHomotopy-L42" id="UnitaryHomotopy-L42"> 42</a> omit [PartialOrder A] [StarOrderedRing A] [Fintype ι] [Fintype κ]</span>
+<span><a class="line" href="#UnitaryHomotopy-L43" id="UnitaryHomotopy-L43"> 43</a>     [DecidableEq ι] [DecidableEq κ] in</span>
+<span id="doc/BC4lean.OperatorKTheory.continuous_matrixBlockSum"><a class="line" href="#UnitaryHomotopy-L44" id="UnitaryHomotopy-L44"> 44</a> theorem continuous_matrixBlockSum :</span>
+<span><a class="line" href="#UnitaryHomotopy-L45" id="UnitaryHomotopy-L45"> 45</a>     Continuous (fun x : CStarMatrix ι ι A × CStarMatrix κ κ A =&gt;</span>
+<span><a class="line" href="#UnitaryHomotopy-L46" id="UnitaryHomotopy-L46"> 46</a>       matrixBlockSum x.1 x.2) := by</span>
+<span><a class="line" href="#UnitaryHomotopy-L47" id="UnitaryHomotopy-L47"> 47</a>   exact CStarMatrix.ofMatrixL.continuous.comp</span>
+<span><a class="line" href="#UnitaryHomotopy-L48" id="UnitaryHomotopy-L48"> 48</a>     ((CStarMatrix.ofMatrixL.symm.continuous.comp continuous_fst).matrix_fromBlocks</span>
+<span><a class="line" href="#UnitaryHomotopy-L49" id="UnitaryHomotopy-L49"> 49</a>       continuous_const continuous_const</span>
+<span><a class="line" href="#UnitaryHomotopy-L50" id="UnitaryHomotopy-L50"> 50</a>       (CStarMatrix.ofMatrixL.symm.continuous.comp continuous_snd))</span>
+<span><a class="line" href="#UnitaryHomotopy-L51" id="UnitaryHomotopy-L51"> 51</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.continuous_unitaryBlockSum"><a class="line" href="#UnitaryHomotopy-L52" id="UnitaryHomotopy-L52"> 52</a> theorem continuous_unitaryBlockSum :</span>
+<span><a class="line" href="#UnitaryHomotopy-L53" id="UnitaryHomotopy-L53"> 53</a>     Continuous (fun x : MatrixUnitary A ι × MatrixUnitary A κ =&gt;</span>
+<span><a class="line" href="#UnitaryHomotopy-L54" id="UnitaryHomotopy-L54"> 54</a>       unitaryBlockSum x.1 x.2) := by</span>
+<span><a class="line" href="#UnitaryHomotopy-L55" id="UnitaryHomotopy-L55"> 55</a>   apply Continuous.subtype_mk</span>
+<span><a class="line" href="#UnitaryHomotopy-L56" id="UnitaryHomotopy-L56"> 56</a>   exact continuous_matrixBlockSum.comp</span>
+<span><a class="line" href="#UnitaryHomotopy-L57" id="UnitaryHomotopy-L57"> 57</a>     ((continuous_subtype_val.comp continuous_fst).prodMk</span>
+<span><a class="line" href="#UnitaryHomotopy-L58" id="UnitaryHomotopy-L58"> 58</a>       (continuous_subtype_val.comp continuous_snd))</span>
+<span><a class="line" href="#UnitaryHomotopy-L59" id="UnitaryHomotopy-L59"> 59</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.unitaryHomotopic_blockSum"><a class="line" href="#UnitaryHomotopy-L60" id="UnitaryHomotopy-L60"> 60</a> theorem unitaryHomotopic_blockSum {u v : MatrixUnitary A ι} {w z : MatrixUnitary A κ}</span>
+<span><a class="line" href="#UnitaryHomotopy-L61" id="UnitaryHomotopy-L61"> 61</a>     (h : UnitaryHomotopic u v) (k : UnitaryHomotopic w z) :</span>
+<span><a class="line" href="#UnitaryHomotopy-L62" id="UnitaryHomotopy-L62"> 62</a>     UnitaryHomotopic (unitaryBlockSum u w) (unitaryBlockSum v z) := by</span>
+<span><a class="line" href="#UnitaryHomotopy-L63" id="UnitaryHomotopy-L63"> 63</a>   exact (Joined.prod h k).map</span>
+<span><a class="line" href="#UnitaryHomotopy-L64" id="UnitaryHomotopy-L64"> 64</a>     continuous_unitaryBlockSum</span>
+<span><a class="line" href="#UnitaryHomotopy-L65" id="UnitaryHomotopy-L65"> 65</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.unitaryHomotopic_stabilize"><a class="line" href="#UnitaryHomotopy-L66" id="UnitaryHomotopy-L66"> 66</a> theorem unitaryHomotopic_stabilize {u v : MatrixUnitary A ι}</span>
+<span><a class="line" href="#UnitaryHomotopy-L67" id="UnitaryHomotopy-L67"> 67</a>     (h : UnitaryHomotopic u v) :</span>
+<span><a class="line" href="#UnitaryHomotopy-L68" id="UnitaryHomotopy-L68"> 68</a>     UnitaryHomotopic (stabilizeUnitary (κ := κ) u) (stabilizeUnitary v) :=</span>
+<span><a class="line" href="#UnitaryHomotopy-L69" id="UnitaryHomotopy-L69"> 69</a>   unitaryHomotopic_blockSum h (unitaryHomotopic_refl 1)</span>
+<span><a class="line" href="#UnitaryHomotopy-L70" id="UnitaryHomotopy-L70"> 70</a> </span>
+<span><a class="line" href="#UnitaryHomotopy-L71" id="UnitaryHomotopy-L71"> 71</a> /-- Stabilization is well-defined on norm-path components at each size. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.stabilizeUnitaryClasses"><a class="line" href="#UnitaryHomotopy-L72" id="UnitaryHomotopy-L72"> 72</a> def stabilizeUnitaryClasses : UnitaryHomotopyClasses A ι →</span>
+<span><a class="line" href="#UnitaryHomotopy-L73" id="UnitaryHomotopy-L73"> 73</a>     UnitaryHomotopyClasses A (ι ⊕ κ) :=</span>
+<span><a class="line" href="#UnitaryHomotopy-L74" id="UnitaryHomotopy-L74"> 74</a>   Quotient.map stabilizeUnitary (fun _ _ h =&gt; unitaryHomotopic_stabilize h)</span>
+<span><a class="line" href="#UnitaryHomotopy-L75" id="UnitaryHomotopy-L75"> 75</a> </span>
+<span><a class="line" href="#UnitaryHomotopy-L76" id="UnitaryHomotopy-L76"> 76</a> end BC4lean.OperatorKTheory</span>
 </pre>
 </body></html>
