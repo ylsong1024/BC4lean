@@ -27,6 +27,18 @@ code{overflow-wrap:anywhere}</style></head><body><a href="../../blueprint/">返�
 <li><a href="#OperatorK0Equivalence">OperatorK0Equivalence.lean</a></li>
 <li><a href="#ReducedCompletionK0">ReducedCompletionK0.lean</a></li>
 <li><a href="#UnitaryRotation">UnitaryRotation.lean</a></li>
+<li><a href="#StableUnitary">StableUnitary.lean</a></li>
+<li><a href="#OperatorK1Functoriality">OperatorK1Functoriality.lean</a></li>
+<li><a href="#NonunitalOperatorK">NonunitalOperatorK.lean</a></li>
+<li><a href="#UnitizationSplitting">UnitizationSplitting.lean</a></li>
+<li><a href="#NonUnitalK0Map">NonUnitalK0Map.lean</a></li>
+<li><a href="#OperatorK0Product">OperatorK0Product.lean</a></li>
+<li><a href="#OperatorK1Product">OperatorK1Product.lean</a></li>
+<li><a href="#KernelProductEquiv">KernelProductEquiv.lean</a></li>
+<li><a href="#OperatorK1Equivalence">OperatorK1Equivalence.lean</a></li>
+<li><a href="#OperatorKUnitalAgreement">OperatorKUnitalAgreement.lean</a></li>
+<li><a href="#ReducedOperatorK1">ReducedOperatorK1.lean</a></li>
+<li><a href="#UnitaryStableConjugation">UnitaryStableConjugation.lean</a></li>
 </ul></nav>
 <h2 id="GroupAlgebra">GroupAlgebra.lean</h2><p>源码 SHA-256：<code>1c6c0899fe9bc9f7860f291ba7c5573353d18a3c5809258769d689bc39da8ad4</code></p><pre>
 <span><a class="line" href="#L1" id="L1">  1</a> import Mathlib.Algebra.MonoidAlgebra.Basic</span>
@@ -2273,5 +2285,1206 @@ code{overflow-wrap:anywhere}</style></head><body><a href="../../blueprint/">返�
 <span><a class="line" href="#UnitaryRotation-L129" id="UnitaryRotation-L129">129</a>   simpa using unitaryHomotopic_blockSum_star (star u)</span>
 <span><a class="line" href="#UnitaryRotation-L130" id="UnitaryRotation-L130">130</a> </span>
 <span><a class="line" href="#UnitaryRotation-L131" id="UnitaryRotation-L131">131</a> end BC4lean.OperatorKTheory</span>
+</pre>
+<h2 id="StableUnitary">StableUnitary.lean</h2><p>源码 SHA-256：<code>9e3fbfdfcf96bcc88a2345931487a93224ccd8636020ecd7f12c590ed279fe17</code></p><pre>
+<span><a class="line" href="#StableUnitary-L1" id="StableUnitary-L1">  1</a> import BC4lean.UnitaryRotation</span>
+<span><a class="line" href="#StableUnitary-L2" id="StableUnitary-L2">  2</a> import BC4lean.MatrixProjectionMap</span>
+<span><a class="line" href="#StableUnitary-L3" id="StableUnitary-L3">  3</a> import Mathlib.Logic.Relation</span>
+<span><a class="line" href="#StableUnitary-L4" id="StableUnitary-L4">  4</a> </span>
+<span><a class="line" href="#StableUnitary-L5" id="StableUnitary-L5">  5</a> /-! # Stable norm-homotopy of finite matrix unitaries</span>
+<span><a class="line" href="#StableUnitary-L6" id="StableUnitary-L6">  6</a> </span>
+<span><a class="line" href="#StableUnitary-L7" id="StableUnitary-L7">  7</a> The generators are actual norm homotopies (after a change of finite coordinates)</span>
+<span><a class="line" href="#StableUnitary-L8" id="StableUnitary-L8">  8</a> and adjoining identity blocks. No additive or inverse relations are imposed.</span>
+<span><a class="line" href="#StableUnitary-L9" id="StableUnitary-L9">  9</a> -/</span>
+<span><a class="line" href="#StableUnitary-L10" id="StableUnitary-L10"> 10</a> noncomputable section</span>
+<span><a class="line" href="#StableUnitary-L11" id="StableUnitary-L11"> 11</a> namespace BC4lean.OperatorKTheory</span>
+<span><a class="line" href="#StableUnitary-L12" id="StableUnitary-L12"> 12</a> universe u</span>
+<span><a class="line" href="#StableUnitary-L13" id="StableUnitary-L13"> 13</a> variable {A : Type u} [CStarAlgebra A] [PartialOrder A] [StarOrderedRing A]</span>
+<span><a class="line" href="#StableUnitary-L14" id="StableUnitary-L14"> 14</a> variable {ι κ ρ σ : Type} [Fintype ι] [Fintype κ] [Fintype ρ] [Fintype σ]</span>
+<span><a class="line" href="#StableUnitary-L15" id="StableUnitary-L15"> 15</a> variable [DecidableEq ι] [DecidableEq κ] [DecidableEq ρ] [DecidableEq σ]</span>
+<span><a class="line" href="#StableUnitary-L16" id="StableUnitary-L16"> 16</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.unitaryReindex"><a class="line" href="#StableUnitary-L17" id="StableUnitary-L17"> 17</a> def unitaryReindex (e : ι ≃ κ) (a : MatrixUnitary A ι) : MatrixUnitary A κ :=</span>
+<span><a class="line" href="#StableUnitary-L18" id="StableUnitary-L18"> 18</a>   ⟨CStarMatrix.reindexₐ ℂ A e a, Unitary.map_mem (CStarMatrix.reindexₐ ℂ A e) a.property⟩</span>
+<span><a class="line" href="#StableUnitary-L19" id="StableUnitary-L19"> 19</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.unitaryReindex_apply"><a class="line" href="#StableUnitary-L20" id="StableUnitary-L20"> 20</a> @[simp] theorem unitaryReindex_apply (e : ι ≃ κ) (a : MatrixUnitary A ι) (i j : κ) :</span>
+<span><a class="line" href="#StableUnitary-L21" id="StableUnitary-L21"> 21</a>     (unitaryReindex e a : CStarMatrix κ κ A) i j = (a : CStarMatrix ι ι A) (e.symm i) (e.symm j) := rfl</span>
+<span><a class="line" href="#StableUnitary-L22" id="StableUnitary-L22"> 22</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.unitaryReindex_refl"><a class="line" href="#StableUnitary-L23" id="StableUnitary-L23"> 23</a> @[simp] theorem unitaryReindex_refl (a : MatrixUnitary A ι) :</span>
+<span><a class="line" href="#StableUnitary-L24" id="StableUnitary-L24"> 24</a>     unitaryReindex (Equiv.refl ι) a = a := by apply Subtype.ext; rfl</span>
+<span><a class="line" href="#StableUnitary-L25" id="StableUnitary-L25"> 25</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.unitaryReindex_star"><a class="line" href="#StableUnitary-L26" id="StableUnitary-L26"> 26</a> @[simp] theorem unitaryReindex_star (e : ι ≃ κ) (a : MatrixUnitary A ι) :</span>
+<span><a class="line" href="#StableUnitary-L27" id="StableUnitary-L27"> 27</a>     unitaryReindex e (star a) = star (unitaryReindex e a) := by</span>
+<span><a class="line" href="#StableUnitary-L28" id="StableUnitary-L28"> 28</a>   apply Subtype.ext</span>
+<span><a class="line" href="#StableUnitary-L29" id="StableUnitary-L29"> 29</a>   exact map_star (CStarMatrix.reindexₐ ℂ A e) (a : CStarMatrix ι ι A)</span>
+<span><a class="line" href="#StableUnitary-L30" id="StableUnitary-L30"> 30</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.unitaryReindex_blockSum"><a class="line" href="#StableUnitary-L31" id="StableUnitary-L31"> 31</a> theorem unitaryReindex_blockSum (e : ι ≃ κ) (f : ρ ≃ σ)</span>
+<span><a class="line" href="#StableUnitary-L32" id="StableUnitary-L32"> 32</a>     (a : MatrixUnitary A ι) (b : MatrixUnitary A ρ) :</span>
+<span><a class="line" href="#StableUnitary-L33" id="StableUnitary-L33"> 33</a>     unitaryReindex (e.sumCongr f) (unitaryBlockSum a b) =</span>
+<span><a class="line" href="#StableUnitary-L34" id="StableUnitary-L34"> 34</a>       unitaryBlockSum (unitaryReindex e a) (unitaryReindex f b) := by</span>
+<span><a class="line" href="#StableUnitary-L35" id="StableUnitary-L35"> 35</a>   apply Subtype.ext</span>
+<span><a class="line" href="#StableUnitary-L36" id="StableUnitary-L36"> 36</a>   ext i j</span>
+<span><a class="line" href="#StableUnitary-L37" id="StableUnitary-L37"> 37</a>   cases i &lt;;&gt; cases j &lt;;&gt; rfl</span>
+<span><a class="line" href="#StableUnitary-L38" id="StableUnitary-L38"> 38</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.unitaryBlockSum_star"><a class="line" href="#StableUnitary-L39" id="StableUnitary-L39"> 39</a> @[simp] theorem unitaryBlockSum_star (a : MatrixUnitary A ι) (b : MatrixUnitary A κ) :</span>
+<span><a class="line" href="#StableUnitary-L40" id="StableUnitary-L40"> 40</a>     star (unitaryBlockSum a b) = unitaryBlockSum (star a) (star b) := by</span>
+<span><a class="line" href="#StableUnitary-L41" id="StableUnitary-L41"> 41</a>   apply Subtype.ext</span>
+<span><a class="line" href="#StableUnitary-L42" id="StableUnitary-L42"> 42</a>   exact matrixBlockSum_star (a : CStarMatrix ι ι A) (b : CStarMatrix κ κ A)</span>
+<span><a class="line" href="#StableUnitary-L43" id="StableUnitary-L43"> 43</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteUnitary"><a class="line" href="#StableUnitary-L44" id="StableUnitary-L44"> 44</a> structure FiniteUnitary (A : Type u) [CStarAlgebra A] [PartialOrder A] [StarOrderedRing A] where</span>
+<span><a class="line" href="#StableUnitary-L45" id="StableUnitary-L45"> 45</a>   Index : Type</span>
+<span><a class="line" href="#StableUnitary-L46" id="StableUnitary-L46"> 46</a>   [indexFintype : Fintype Index]</span>
+<span><a class="line" href="#StableUnitary-L47" id="StableUnitary-L47"> 47</a>   [indexDecidableEq : DecidableEq Index]</span>
+<span><a class="line" href="#StableUnitary-L48" id="StableUnitary-L48"> 48</a>   val : MatrixUnitary A Index</span>
+<span><a class="line" href="#StableUnitary-L49" id="StableUnitary-L49"> 49</a> attribute [instance] FiniteUnitary.indexFintype FiniteUnitary.indexDecidableEq</span>
+<span><a class="line" href="#StableUnitary-L50" id="StableUnitary-L50"> 50</a> </span>
+<span><a class="line" href="#StableUnitary-L51" id="StableUnitary-L51"> 51</a> namespace FiniteUnitary</span>
+<span><a class="line" href="#StableUnitary-L52" id="StableUnitary-L52"> 52</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteUnitary.ofUnitary"><a class="line" href="#StableUnitary-L53" id="StableUnitary-L53"> 53</a> abbrev ofUnitary (a : MatrixUnitary A ι) : FiniteUnitary A := ⟨ι, a⟩</span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteUnitary.identity"><a class="line" href="#StableUnitary-L54" id="StableUnitary-L54"> 54</a> abbrev identity (ι : Type) [Fintype ι] [DecidableEq ι] : FiniteUnitary A := ofUnitary (1 : MatrixUnitary A ι)</span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteUnitary.zero"><a class="line" href="#StableUnitary-L55" id="StableUnitary-L55"> 55</a> abbrev zero : FiniteUnitary A := identity Empty</span>
+<span><a class="line" href="#StableUnitary-L56" id="StableUnitary-L56"> 56</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteUnitary.blockSum"><a class="line" href="#StableUnitary-L57" id="StableUnitary-L57"> 57</a> abbrev blockSum (a b : FiniteUnitary A) : FiniteUnitary A :=</span>
+<span><a class="line" href="#StableUnitary-L58" id="StableUnitary-L58"> 58</a>   ofUnitary (unitaryBlockSum a.val b.val)</span>
+<span><a class="line" href="#StableUnitary-L59" id="StableUnitary-L59"> 59</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteUnitary.adjoint"><a class="line" href="#StableUnitary-L60" id="StableUnitary-L60"> 60</a> abbrev adjoint (a : FiniteUnitary A) : FiniteUnitary A := ofUnitary (star a.val)</span>
+<span><a class="line" href="#StableUnitary-L61" id="StableUnitary-L61"> 61</a> </span>
+<span><a class="line" href="#StableUnitary-L62" id="StableUnitary-L62"> 62</a> /-- The geometric moves defining the stable quotient. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteUnitary.Move"><a class="line" href="#StableUnitary-L63" id="StableUnitary-L63"> 63</a> inductive Move : FiniteUnitary A → FiniteUnitary A → Prop</span>
+<span><a class="line" href="#StableUnitary-L64" id="StableUnitary-L64"> 64</a>   | homotopy (a b : FiniteUnitary A) (e : a.Index ≃ b.Index)</span>
+<span><a class="line" href="#StableUnitary-L65" id="StableUnitary-L65"> 65</a>       (h : UnitaryHomotopic (unitaryReindex e a.val) b.val) : Move a b</span>
+<span><a class="line" href="#StableUnitary-L66" id="StableUnitary-L66"> 66</a>   | stabilize (a : FiniteUnitary A) (κ : Type) [Fintype κ] [DecidableEq κ] :</span>
+<span><a class="line" href="#StableUnitary-L67" id="StableUnitary-L67"> 67</a>       Move a (blockSum a (identity κ))</span>
+<span><a class="line" href="#StableUnitary-L68" id="StableUnitary-L68"> 68</a> </span>
+<span><a class="line" href="#StableUnitary-L69" id="StableUnitary-L69"> 69</a> /-- A finite chain of coordinate changes, norm homotopies, and identity stabilizations. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteUnitary.Equivalent"><a class="line" href="#StableUnitary-L70" id="StableUnitary-L70"> 70</a> def Equivalent : FiniteUnitary A → FiniteUnitary A → Prop := Relation.EqvGen Move</span>
+<span><a class="line" href="#StableUnitary-L71" id="StableUnitary-L71"> 71</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteUnitary.equivalent_refl"><a class="line" href="#StableUnitary-L72" id="StableUnitary-L72"> 72</a> theorem equivalent_refl (a : FiniteUnitary A) : Equivalent a a := .refl _</span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteUnitary.equivalent_symm"><a class="line" href="#StableUnitary-L73" id="StableUnitary-L73"> 73</a> theorem equivalent_symm {a b : FiniteUnitary A} (h : Equivalent a b) : Equivalent b a := .symm _ _ h</span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteUnitary.equivalent_trans"><a class="line" href="#StableUnitary-L74" id="StableUnitary-L74"> 74</a> theorem equivalent_trans {a b c : FiniteUnitary A} (h : Equivalent a b) (k : Equivalent b c) :</span>
+<span><a class="line" href="#StableUnitary-L75" id="StableUnitary-L75"> 75</a>     Equivalent a c := .trans _ _ _ h k</span>
+<span><a class="line" href="#StableUnitary-L76" id="StableUnitary-L76"> 76</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteUnitary.equivalent_reindex"><a class="line" href="#StableUnitary-L77" id="StableUnitary-L77"> 77</a> theorem equivalent_reindex (a b : FiniteUnitary A) (e : a.Index ≃ b.Index)</span>
+<span><a class="line" href="#StableUnitary-L78" id="StableUnitary-L78"> 78</a>     (h : unitaryReindex e a.val = b.val) : Equivalent a b :=</span>
+<span><a class="line" href="#StableUnitary-L79" id="StableUnitary-L79"> 79</a>   .rel _ _ (.homotopy a b e (h ▸ unitaryHomotopic_refl _))</span>
+<span><a class="line" href="#StableUnitary-L80" id="StableUnitary-L80"> 80</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteUnitary.equivalent_homotopy"><a class="line" href="#StableUnitary-L81" id="StableUnitary-L81"> 81</a> theorem equivalent_homotopy {a b : MatrixUnitary A ι} (h : UnitaryHomotopic a b) :</span>
+<span><a class="line" href="#StableUnitary-L82" id="StableUnitary-L82"> 82</a>     Equivalent (ofUnitary a) (ofUnitary b) :=</span>
+<span><a class="line" href="#StableUnitary-L83" id="StableUnitary-L83"> 83</a>   .rel _ _ (.homotopy _ _ (Equiv.refl ι) (by</span>
+<span><a class="line" href="#StableUnitary-L84" id="StableUnitary-L84"> 84</a>     change UnitaryHomotopic (unitaryReindex (Equiv.refl ι) a) b</span>
+<span><a class="line" href="#StableUnitary-L85" id="StableUnitary-L85"> 85</a>     simpa only [unitaryReindex_refl] using h))</span>
+<span><a class="line" href="#StableUnitary-L86" id="StableUnitary-L86"> 86</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteUnitary.equivalent_stabilize"><a class="line" href="#StableUnitary-L87" id="StableUnitary-L87"> 87</a> theorem equivalent_stabilize (a : FiniteUnitary A) (κ : Type) [Fintype κ] [DecidableEq κ] :</span>
+<span><a class="line" href="#StableUnitary-L88" id="StableUnitary-L88"> 88</a>     Equivalent a (blockSum a (identity κ)) := .rel _ _ (.stabilize a κ)</span>
+<span><a class="line" href="#StableUnitary-L89" id="StableUnitary-L89"> 89</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteUnitary.blockSum_comm"><a class="line" href="#StableUnitary-L90" id="StableUnitary-L90"> 90</a> theorem blockSum_comm (a b : FiniteUnitary A) : Equivalent (blockSum a b) (blockSum b a) := by</span>
+<span><a class="line" href="#StableUnitary-L91" id="StableUnitary-L91"> 91</a>   apply equivalent_reindex _ _ (Equiv.sumComm a.Index b.Index)</span>
+<span><a class="line" href="#StableUnitary-L92" id="StableUnitary-L92"> 92</a>   apply Subtype.ext</span>
+<span><a class="line" href="#StableUnitary-L93" id="StableUnitary-L93"> 93</a>   ext i j</span>
+<span><a class="line" href="#StableUnitary-L94" id="StableUnitary-L94"> 94</a>   cases i &lt;;&gt; cases j &lt;;&gt; rfl</span>
+<span><a class="line" href="#StableUnitary-L95" id="StableUnitary-L95"> 95</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteUnitary.blockSum_assoc"><a class="line" href="#StableUnitary-L96" id="StableUnitary-L96"> 96</a> theorem blockSum_assoc (a b c : FiniteUnitary A) :</span>
+<span><a class="line" href="#StableUnitary-L97" id="StableUnitary-L97"> 97</a>     Equivalent (blockSum (blockSum a b) c) (blockSum a (blockSum b c)) := by</span>
+<span><a class="line" href="#StableUnitary-L98" id="StableUnitary-L98"> 98</a>   apply equivalent_reindex _ _ (Equiv.sumAssoc a.Index b.Index c.Index)</span>
+<span><a class="line" href="#StableUnitary-L99" id="StableUnitary-L99"> 99</a>   apply Subtype.ext</span>
+<span><a class="line" href="#StableUnitary-L100" id="StableUnitary-L100">100</a>   ext i j</span>
+<span><a class="line" href="#StableUnitary-L101" id="StableUnitary-L101">101</a>   rcases i with i | (i | i) &lt;;&gt; rcases j with j | (j | j) &lt;;&gt; rfl</span>
+<span><a class="line" href="#StableUnitary-L102" id="StableUnitary-L102">102</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteUnitary.zero_blockSum"><a class="line" href="#StableUnitary-L103" id="StableUnitary-L103">103</a> theorem zero_blockSum (a : FiniteUnitary A) : Equivalent (blockSum zero a) a := by</span>
+<span><a class="line" href="#StableUnitary-L104" id="StableUnitary-L104">104</a>   apply equivalent_reindex _ _ (Equiv.emptySum Empty a.Index)</span>
+<span><a class="line" href="#StableUnitary-L105" id="StableUnitary-L105">105</a>   apply Subtype.ext</span>
+<span><a class="line" href="#StableUnitary-L106" id="StableUnitary-L106">106</a>   ext i j</span>
+<span><a class="line" href="#StableUnitary-L107" id="StableUnitary-L107">107</a>   rfl</span>
+<span><a class="line" href="#StableUnitary-L108" id="StableUnitary-L108">108</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteUnitary.blockSum_zero"><a class="line" href="#StableUnitary-L109" id="StableUnitary-L109">109</a> theorem blockSum_zero (a : FiniteUnitary A) : Equivalent (blockSum a zero) a :=</span>
+<span><a class="line" href="#StableUnitary-L110" id="StableUnitary-L110">110</a>   equivalent_trans (blockSum_comm a zero) (zero_blockSum a)</span>
+<span><a class="line" href="#StableUnitary-L111" id="StableUnitary-L111">111</a> </span>
+<span><a class="line" href="#StableUnitary-L112" id="StableUnitary-L112">112</a> /-- Compatibility with a block context is derived from the geometric moves. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteUnitary.blockSum_right"><a class="line" href="#StableUnitary-L113" id="StableUnitary-L113">113</a> theorem blockSum_right {a b : FiniteUnitary A} (h : Equivalent a b) (c : FiniteUnitary A) :</span>
+<span><a class="line" href="#StableUnitary-L114" id="StableUnitary-L114">114</a>     Equivalent (blockSum a c) (blockSum b c) := by</span>
+<span><a class="line" href="#StableUnitary-L115" id="StableUnitary-L115">115</a>   induction h with</span>
+<span><a class="line" href="#StableUnitary-L116" id="StableUnitary-L116">116</a>   | refl a =&gt; exact equivalent_refl _</span>
+<span><a class="line" href="#StableUnitary-L117" id="StableUnitary-L117">117</a>   | symm a b h ih =&gt; exact equivalent_symm ih</span>
+<span><a class="line" href="#StableUnitary-L118" id="StableUnitary-L118">118</a>   | trans a b d h k ih ik =&gt; exact equivalent_trans ih ik</span>
+<span><a class="line" href="#StableUnitary-L119" id="StableUnitary-L119">119</a>   | rel a b h =&gt;</span>
+<span><a class="line" href="#StableUnitary-L120" id="StableUnitary-L120">120</a>     cases h with</span>
+<span><a class="line" href="#StableUnitary-L121" id="StableUnitary-L121">121</a>     | homotopy b e h =&gt;</span>
+<span><a class="line" href="#StableUnitary-L122" id="StableUnitary-L122">122</a>       apply Relation.EqvGen.rel</span>
+<span><a class="line" href="#StableUnitary-L123" id="StableUnitary-L123">123</a>       apply Move.homotopy _ _ (e.sumCongr (Equiv.refl c.Index))</span>
+<span><a class="line" href="#StableUnitary-L124" id="StableUnitary-L124">124</a>       simpa only [blockSum, ofUnitary, unitaryReindex_blockSum, unitaryReindex_refl] using</span>
+<span><a class="line" href="#StableUnitary-L125" id="StableUnitary-L125">125</a>         unitaryHomotopic_blockSum h (unitaryHomotopic_refl c.val)</span>
+<span><a class="line" href="#StableUnitary-L126" id="StableUnitary-L126">126</a>     | stabilize κ =&gt;</span>
+<span><a class="line" href="#StableUnitary-L127" id="StableUnitary-L127">127</a>       -- Move the new identity block past the fixed context by finite reindexing.</span>
+<span><a class="line" href="#StableUnitary-L128" id="StableUnitary-L128">128</a>       apply equivalent_trans (equivalent_stabilize (blockSum a c) κ)</span>
+<span><a class="line" href="#StableUnitary-L129" id="StableUnitary-L129">129</a>       apply equivalent_reindex _ _</span>
+<span><a class="line" href="#StableUnitary-L130" id="StableUnitary-L130">130</a>         (((Equiv.sumAssoc a.Index c.Index κ).trans</span>
+<span><a class="line" href="#StableUnitary-L131" id="StableUnitary-L131">131</a>           ((Equiv.refl a.Index).sumCongr (Equiv.sumComm c.Index κ))).trans</span>
+<span><a class="line" href="#StableUnitary-L132" id="StableUnitary-L132">132</a>           (Equiv.sumAssoc a.Index κ c.Index).symm)</span>
+<span><a class="line" href="#StableUnitary-L133" id="StableUnitary-L133">133</a>       apply Subtype.ext</span>
+<span><a class="line" href="#StableUnitary-L134" id="StableUnitary-L134">134</a>       ext i j</span>
+<span><a class="line" href="#StableUnitary-L135" id="StableUnitary-L135">135</a>       rcases i with (i | i) | i &lt;;&gt; rcases j with (j | j) | j &lt;;&gt; rfl</span>
+<span><a class="line" href="#StableUnitary-L136" id="StableUnitary-L136">136</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteUnitary.blockSum_congr"><a class="line" href="#StableUnitary-L137" id="StableUnitary-L137">137</a> theorem blockSum_congr {a b c d : FiniteUnitary A}</span>
+<span><a class="line" href="#StableUnitary-L138" id="StableUnitary-L138">138</a>     (h : Equivalent a b) (k : Equivalent c d) : Equivalent (blockSum a c) (blockSum b d) :=</span>
+<span><a class="line" href="#StableUnitary-L139" id="StableUnitary-L139">139</a>   equivalent_trans (blockSum_right h c)</span>
+<span><a class="line" href="#StableUnitary-L140" id="StableUnitary-L140">140</a>     (equivalent_trans (blockSum_comm b c)</span>
+<span><a class="line" href="#StableUnitary-L141" id="StableUnitary-L141">141</a>       (equivalent_trans (blockSum_right k b) (blockSum_comm d b)))</span>
+<span><a class="line" href="#StableUnitary-L142" id="StableUnitary-L142">142</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteUnitary.adjoint_congr"><a class="line" href="#StableUnitary-L143" id="StableUnitary-L143">143</a> theorem adjoint_congr {a b : FiniteUnitary A} (h : Equivalent a b) :</span>
+<span><a class="line" href="#StableUnitary-L144" id="StableUnitary-L144">144</a>     Equivalent (adjoint a) (adjoint b) := by</span>
+<span><a class="line" href="#StableUnitary-L145" id="StableUnitary-L145">145</a>   induction h with</span>
+<span><a class="line" href="#StableUnitary-L146" id="StableUnitary-L146">146</a>   | refl a =&gt; exact equivalent_refl _</span>
+<span><a class="line" href="#StableUnitary-L147" id="StableUnitary-L147">147</a>   | symm a b h ih =&gt; exact equivalent_symm ih</span>
+<span><a class="line" href="#StableUnitary-L148" id="StableUnitary-L148">148</a>   | trans a b c h k ih ik =&gt; exact equivalent_trans ih ik</span>
+<span><a class="line" href="#StableUnitary-L149" id="StableUnitary-L149">149</a>   | rel a b h =&gt;</span>
+<span><a class="line" href="#StableUnitary-L150" id="StableUnitary-L150">150</a>     cases h with</span>
+<span><a class="line" href="#StableUnitary-L151" id="StableUnitary-L151">151</a>     | homotopy b e h =&gt;</span>
+<span><a class="line" href="#StableUnitary-L152" id="StableUnitary-L152">152</a>       apply Relation.EqvGen.rel</span>
+<span><a class="line" href="#StableUnitary-L153" id="StableUnitary-L153">153</a>       apply Move.homotopy (adjoint a) (adjoint b) e</span>
+<span><a class="line" href="#StableUnitary-L154" id="StableUnitary-L154">154</a>       change UnitaryHomotopic (unitaryReindex e (star a.val)) (star b.val)</span>
+<span><a class="line" href="#StableUnitary-L155" id="StableUnitary-L155">155</a>       rw [unitaryReindex_star]</span>
+<span><a class="line" href="#StableUnitary-L156" id="StableUnitary-L156">156</a>       exact unitaryHomotopic_inv h</span>
+<span><a class="line" href="#StableUnitary-L157" id="StableUnitary-L157">157</a>     | stabilize κ =&gt;</span>
+<span><a class="line" href="#StableUnitary-L158" id="StableUnitary-L158">158</a>       have eq : adjoint (blockSum a (identity κ)) = blockSum (adjoint a) (identity κ) := by</span>
+<span><a class="line" href="#StableUnitary-L159" id="StableUnitary-L159">159</a>         change ofUnitary (star (unitaryBlockSum a.val 1)) = ofUnitary (unitaryBlockSum (star a.val) 1)</span>
+<span><a class="line" href="#StableUnitary-L160" id="StableUnitary-L160">160</a>         rw [unitaryBlockSum_star, star_one]</span>
+<span><a class="line" href="#StableUnitary-L161" id="StableUnitary-L161">161</a>       rw [eq]</span>
+<span><a class="line" href="#StableUnitary-L162" id="StableUnitary-L162">162</a>       exact equivalent_stabilize (adjoint a) κ</span>
+<span><a class="line" href="#StableUnitary-L163" id="StableUnitary-L163">163</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteUnitary.equivalent_identity"><a class="line" href="#StableUnitary-L164" id="StableUnitary-L164">164</a> theorem equivalent_identity (ι : Type) [Fintype ι] [DecidableEq ι] :</span>
+<span><a class="line" href="#StableUnitary-L165" id="StableUnitary-L165">165</a>     Equivalent (identity (A := A) ι) zero :=</span>
+<span><a class="line" href="#StableUnitary-L166" id="StableUnitary-L166">166</a>   equivalent_symm (equivalent_trans (equivalent_stabilize zero ι) (zero_blockSum (identity ι)))</span>
+<span><a class="line" href="#StableUnitary-L167" id="StableUnitary-L167">167</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteUnitary.adjoint_blockSum"><a class="line" href="#StableUnitary-L168" id="StableUnitary-L168">168</a> theorem adjoint_blockSum (a : FiniteUnitary A) : Equivalent (blockSum (adjoint a) a) zero :=</span>
+<span><a class="line" href="#StableUnitary-L169" id="StableUnitary-L169">169</a>   equivalent_trans (equivalent_homotopy (unitaryHomotopic_star_blockSum a.val))</span>
+<span><a class="line" href="#StableUnitary-L170" id="StableUnitary-L170">170</a>     (equivalent_identity (a.Index ⊕ a.Index))</span>
+<span><a class="line" href="#StableUnitary-L171" id="StableUnitary-L171">171</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteUnitary.setoid"><a class="line" href="#StableUnitary-L172" id="StableUnitary-L172">172</a> def setoid : Setoid (FiniteUnitary A) := Relation.EqvGen.setoid Move</span>
+<span><a class="line" href="#StableUnitary-L173" id="StableUnitary-L173">173</a> </span>
+<span><a class="line" href="#StableUnitary-L174" id="StableUnitary-L174">174</a> end FiniteUnitary</span>
+<span><a class="line" href="#StableUnitary-L175" id="StableUnitary-L175">175</a> </span>
+<span><a class="line" href="#StableUnitary-L176" id="StableUnitary-L176">176</a> /-- The stable unitary norm-homotopy quotient, with arbitrary finite coordinates. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.K1"><a class="line" href="#StableUnitary-L177" id="StableUnitary-L177">177</a> abbrev K1 (A : Type u) [CStarAlgebra A] [PartialOrder A] [StarOrderedRing A] :=</span>
+<span><a class="line" href="#StableUnitary-L178" id="StableUnitary-L178">178</a>   Quotient (FiniteUnitary.setoid (A := A))</span>
+<span><a class="line" href="#StableUnitary-L179" id="StableUnitary-L179">179</a> </span>
+<span><a class="line" href="#StableUnitary-L180" id="StableUnitary-L180">180</a> namespace K1</span>
+<span><a class="line" href="#StableUnitary-L181" id="StableUnitary-L181">181</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.K1.of"><a class="line" href="#StableUnitary-L182" id="StableUnitary-L182">182</a> def of (a : FiniteUnitary A) : K1 A := Quotient.mk _ a</span>
+<span><a class="line" href="#StableUnitary-L183" id="StableUnitary-L183">183</a> instance : Zero (K1 A) := ⟨of FiniteUnitary.zero⟩</span>
+<span><a class="line" href="#StableUnitary-L184" id="StableUnitary-L184">184</a> instance : Add (K1 A) := ⟨Quotient.map₂ FiniteUnitary.blockSum</span>
+<span><a class="line" href="#StableUnitary-L185" id="StableUnitary-L185">185</a>   (fun _ _ h _ _ k =&gt; FiniteUnitary.blockSum_congr h k)⟩</span>
+<span><a class="line" href="#StableUnitary-L186" id="StableUnitary-L186">186</a> instance : Neg (K1 A) := ⟨Quotient.map FiniteUnitary.adjoint (fun _ _ h =&gt; FiniteUnitary.adjoint_congr h)⟩</span>
+<span><a class="line" href="#StableUnitary-L187" id="StableUnitary-L187">187</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.K1.of_blockSum"><a class="line" href="#StableUnitary-L188" id="StableUnitary-L188">188</a> @[simp] theorem of_blockSum (a b : FiniteUnitary A) : of (FiniteUnitary.blockSum a b) = of a + of b := rfl</span>
+<span id="doc/BC4lean.OperatorKTheory.K1.of_adjoint"><a class="line" href="#StableUnitary-L189" id="StableUnitary-L189">189</a> @[simp] theorem of_adjoint (a : FiniteUnitary A) : of (FiniteUnitary.adjoint a) = -of a := rfl</span>
+<span><a class="line" href="#StableUnitary-L190" id="StableUnitary-L190">190</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.K1.of_eq_iff"><a class="line" href="#StableUnitary-L191" id="StableUnitary-L191">191</a> theorem of_eq_iff (a b : FiniteUnitary A) : of a = of b ↔ FiniteUnitary.Equivalent a b := Quotient.eq</span>
+<span><a class="line" href="#StableUnitary-L192" id="StableUnitary-L192">192</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.K1.instAddCommGroup"><a class="line" href="#StableUnitary-L193" id="StableUnitary-L193">193</a> instance instAddCommGroup : AddCommGroup (K1 A) where</span>
+<span><a class="line" href="#StableUnitary-L194" id="StableUnitary-L194">194</a>   add_assoc a b c := Quotient.inductionOn₃ a b c fun a b c =&gt; Quotient.sound (FiniteUnitary.blockSum_assoc a b c)</span>
+<span><a class="line" href="#StableUnitary-L195" id="StableUnitary-L195">195</a>   zero_add a := Quotient.inductionOn a fun a =&gt; Quotient.sound (FiniteUnitary.zero_blockSum a)</span>
+<span><a class="line" href="#StableUnitary-L196" id="StableUnitary-L196">196</a>   add_zero a := Quotient.inductionOn a fun a =&gt; Quotient.sound (FiniteUnitary.blockSum_zero a)</span>
+<span><a class="line" href="#StableUnitary-L197" id="StableUnitary-L197">197</a>   add_comm a b := Quotient.inductionOn₂ a b fun a b =&gt; Quotient.sound (FiniteUnitary.blockSum_comm a b)</span>
+<span><a class="line" href="#StableUnitary-L198" id="StableUnitary-L198">198</a>   neg_add_cancel a := Quotient.inductionOn a fun a =&gt; Quotient.sound (FiniteUnitary.adjoint_blockSum a)</span>
+<span><a class="line" href="#StableUnitary-L199" id="StableUnitary-L199">199</a>   nsmul := nsmulRec</span>
+<span><a class="line" href="#StableUnitary-L200" id="StableUnitary-L200">200</a>   zsmul := zsmulRec</span>
+<span><a class="line" href="#StableUnitary-L201" id="StableUnitary-L201">201</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.K1.of_identity"><a class="line" href="#StableUnitary-L202" id="StableUnitary-L202">202</a> @[simp] theorem of_identity (ι : Type) [Fintype ι] [DecidableEq ι] :</span>
+<span><a class="line" href="#StableUnitary-L203" id="StableUnitary-L203">203</a>     of (FiniteUnitary.identity (A := A) ι) = 0 := Quotient.sound (FiniteUnitary.equivalent_identity ι)</span>
+<span><a class="line" href="#StableUnitary-L204" id="StableUnitary-L204">204</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.K1.of_homotopic"><a class="line" href="#StableUnitary-L205" id="StableUnitary-L205">205</a> theorem of_homotopic {a b : MatrixUnitary A ι} (h : UnitaryHomotopic a b) :</span>
+<span><a class="line" href="#StableUnitary-L206" id="StableUnitary-L206">206</a>     of (FiniteUnitary.ofUnitary a) = of (FiniteUnitary.ofUnitary b) :=</span>
+<span><a class="line" href="#StableUnitary-L207" id="StableUnitary-L207">207</a>   Quotient.sound (FiniteUnitary.equivalent_homotopy h)</span>
+<span><a class="line" href="#StableUnitary-L208" id="StableUnitary-L208">208</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.K1.of_stabilize"><a class="line" href="#StableUnitary-L209" id="StableUnitary-L209">209</a> theorem of_stabilize (a : FiniteUnitary A) (κ : Type) [Fintype κ] [DecidableEq κ] :</span>
+<span><a class="line" href="#StableUnitary-L210" id="StableUnitary-L210">210</a>     of (FiniteUnitary.blockSum a (FiniteUnitary.identity κ)) = of a :=</span>
+<span><a class="line" href="#StableUnitary-L211" id="StableUnitary-L211">211</a>   Quotient.sound (FiniteUnitary.equivalent_symm (FiniteUnitary.equivalent_stabilize a κ))</span>
+<span><a class="line" href="#StableUnitary-L212" id="StableUnitary-L212">212</a> </span>
+<span><a class="line" href="#StableUnitary-L213" id="StableUnitary-L213">213</a> end K1</span>
+<span><a class="line" href="#StableUnitary-L214" id="StableUnitary-L214">214</a> /-- Every stable unitary class has an ordinary finite-matrix representative. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.K1.exists_finRepresentative"><a class="line" href="#StableUnitary-L215" id="StableUnitary-L215">215</a> theorem K1.exists_finRepresentative (x : K1 A) :</span>
+<span><a class="line" href="#StableUnitary-L216" id="StableUnitary-L216">216</a>     ∃ (n : ℕ) (a : MatrixUnitary A (Fin n)), K1.of (FiniteUnitary.ofUnitary a) = x := by</span>
+<span><a class="line" href="#StableUnitary-L217" id="StableUnitary-L217">217</a>   refine Quotient.inductionOn x ?_</span>
+<span><a class="line" href="#StableUnitary-L218" id="StableUnitary-L218">218</a>   intro a</span>
+<span><a class="line" href="#StableUnitary-L219" id="StableUnitary-L219">219</a>   let e := Fintype.equivFin a.Index</span>
+<span><a class="line" href="#StableUnitary-L220" id="StableUnitary-L220">220</a>   refine ⟨Fintype.card a.Index, unitaryReindex e a.val, ?_⟩</span>
+<span><a class="line" href="#StableUnitary-L221" id="StableUnitary-L221">221</a>   exact Quotient.sound (FiniteUnitary.equivalent_symm</span>
+<span><a class="line" href="#StableUnitary-L222" id="StableUnitary-L222">222</a>     (FiniteUnitary.equivalent_reindex a (FiniteUnitary.ofUnitary (unitaryReindex e a.val)) e rfl))</span>
+<span><a class="line" href="#StableUnitary-L223" id="StableUnitary-L223">223</a> </span>
+<span><a class="line" href="#StableUnitary-L224" id="StableUnitary-L224">224</a> end BC4lean.OperatorKTheory</span>
+</pre>
+<h2 id="OperatorK1Functoriality">OperatorK1Functoriality.lean</h2><p>源码 SHA-256：<code>5d5948fa08aa8143f5187ab32a022d327e46ee58c17c7f9d957bef1ca9fe327e</code></p><pre>
+<span><a class="line" href="#OperatorK1Functoriality-L1" id="OperatorK1Functoriality-L1">  1</a> import BC4lean.StableUnitary</span>
+<span><a class="line" href="#OperatorK1Functoriality-L2" id="OperatorK1Functoriality-L2">  2</a> import Mathlib.Analysis.CStarAlgebra.Spectrum</span>
+<span><a class="line" href="#OperatorK1Functoriality-L3" id="OperatorK1Functoriality-L3">  3</a> </span>
+<span><a class="line" href="#OperatorK1Functoriality-L4" id="OperatorK1Functoriality-L4">  4</a> /-! # Functoriality of the stable unitary quotient -/</span>
+<span><a class="line" href="#OperatorK1Functoriality-L5" id="OperatorK1Functoriality-L5">  5</a> noncomputable section</span>
+<span><a class="line" href="#OperatorK1Functoriality-L6" id="OperatorK1Functoriality-L6">  6</a> open scoped CStarAlgebra</span>
+<span><a class="line" href="#OperatorK1Functoriality-L7" id="OperatorK1Functoriality-L7">  7</a> namespace BC4lean.OperatorKTheory</span>
+<span><a class="line" href="#OperatorK1Functoriality-L8" id="OperatorK1Functoriality-L8">  8</a> universe u v w</span>
+<span><a class="line" href="#OperatorK1Functoriality-L9" id="OperatorK1Functoriality-L9">  9</a> variable {A : Type u} {B : Type v} {C : Type w}</span>
+<span><a class="line" href="#OperatorK1Functoriality-L10" id="OperatorK1Functoriality-L10"> 10</a> variable [CStarAlgebra A] [CStarAlgebra B] [CStarAlgebra C]</span>
+<span><a class="line" href="#OperatorK1Functoriality-L11" id="OperatorK1Functoriality-L11"> 11</a> variable [PartialOrder A] [StarOrderedRing A] [PartialOrder B] [StarOrderedRing B]</span>
+<span><a class="line" href="#OperatorK1Functoriality-L12" id="OperatorK1Functoriality-L12"> 12</a> variable [PartialOrder C] [StarOrderedRing C]</span>
+<span><a class="line" href="#OperatorK1Functoriality-L13" id="OperatorK1Functoriality-L13"> 13</a> variable {ι κ : Type} [Fintype ι] [Fintype κ] [DecidableEq ι] [DecidableEq κ]</span>
+<span><a class="line" href="#OperatorK1Functoriality-L14" id="OperatorK1Functoriality-L14"> 14</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.matrixUnitaryMap"><a class="line" href="#OperatorK1Functoriality-L15" id="OperatorK1Functoriality-L15"> 15</a> def matrixUnitaryMap (φ : A →⋆ₐ[ℂ] B) (a : MatrixUnitary A ι) : MatrixUnitary B ι :=</span>
+<span><a class="line" href="#OperatorK1Functoriality-L16" id="OperatorK1Functoriality-L16"> 16</a>   ⟨matrixMap φ a, Unitary.map_mem (matrixMap φ) a.property⟩</span>
+<span><a class="line" href="#OperatorK1Functoriality-L17" id="OperatorK1Functoriality-L17"> 17</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.matrixUnitaryMap_apply"><a class="line" href="#OperatorK1Functoriality-L18" id="OperatorK1Functoriality-L18"> 18</a> @[simp] theorem matrixUnitaryMap_apply (φ : A →⋆ₐ[ℂ] B) (a : MatrixUnitary A ι) (i j : ι) :</span>
+<span><a class="line" href="#OperatorK1Functoriality-L19" id="OperatorK1Functoriality-L19"> 19</a>     (matrixUnitaryMap φ a : CStarMatrix ι ι B) i j = φ ((a : CStarMatrix ι ι A) i j) := rfl</span>
+<span><a class="line" href="#OperatorK1Functoriality-L20" id="OperatorK1Functoriality-L20"> 20</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.continuous_matrixUnitaryMap"><a class="line" href="#OperatorK1Functoriality-L21" id="OperatorK1Functoriality-L21"> 21</a> theorem continuous_matrixUnitaryMap (φ : A →⋆ₐ[ℂ] B) :</span>
+<span><a class="line" href="#OperatorK1Functoriality-L22" id="OperatorK1Functoriality-L22"> 22</a>     Continuous (matrixUnitaryMap (ι := ι) φ) :=</span>
+<span><a class="line" href="#OperatorK1Functoriality-L23" id="OperatorK1Functoriality-L23"> 23</a>   ((map_continuous (matrixMap φ)).comp continuous_subtype_val).subtype_mk _</span>
+<span><a class="line" href="#OperatorK1Functoriality-L24" id="OperatorK1Functoriality-L24"> 24</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.matrixUnitaryMap_one"><a class="line" href="#OperatorK1Functoriality-L25" id="OperatorK1Functoriality-L25"> 25</a> @[simp] theorem matrixUnitaryMap_one (φ : A →⋆ₐ[ℂ] B) :</span>
+<span><a class="line" href="#OperatorK1Functoriality-L26" id="OperatorK1Functoriality-L26"> 26</a>     matrixUnitaryMap φ (1 : MatrixUnitary A ι) = 1 := by</span>
+<span><a class="line" href="#OperatorK1Functoriality-L27" id="OperatorK1Functoriality-L27"> 27</a>   apply Subtype.ext</span>
+<span><a class="line" href="#OperatorK1Functoriality-L28" id="OperatorK1Functoriality-L28"> 28</a>   exact map_one (matrixMap φ)</span>
+<span><a class="line" href="#OperatorK1Functoriality-L29" id="OperatorK1Functoriality-L29"> 29</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.matrixUnitaryMap_blockSum"><a class="line" href="#OperatorK1Functoriality-L30" id="OperatorK1Functoriality-L30"> 30</a> @[simp] theorem matrixUnitaryMap_blockSum (φ : A →⋆ₐ[ℂ] B)</span>
+<span><a class="line" href="#OperatorK1Functoriality-L31" id="OperatorK1Functoriality-L31"> 31</a>     (a : MatrixUnitary A ι) (b : MatrixUnitary A κ) :</span>
+<span><a class="line" href="#OperatorK1Functoriality-L32" id="OperatorK1Functoriality-L32"> 32</a>     matrixUnitaryMap φ (unitaryBlockSum a b) =</span>
+<span><a class="line" href="#OperatorK1Functoriality-L33" id="OperatorK1Functoriality-L33"> 33</a>       unitaryBlockSum (matrixUnitaryMap φ a) (matrixUnitaryMap φ b) := by</span>
+<span><a class="line" href="#OperatorK1Functoriality-L34" id="OperatorK1Functoriality-L34"> 34</a>   apply Subtype.ext</span>
+<span><a class="line" href="#OperatorK1Functoriality-L35" id="OperatorK1Functoriality-L35"> 35</a>   ext i j</span>
+<span><a class="line" href="#OperatorK1Functoriality-L36" id="OperatorK1Functoriality-L36"> 36</a>   cases i &lt;;&gt; cases j &lt;;&gt; simp [unitaryBlockSum, matrixBlockSum, Matrix.fromBlocks, matrixUnitaryMap_apply]</span>
+<span><a class="line" href="#OperatorK1Functoriality-L37" id="OperatorK1Functoriality-L37"> 37</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.matrixUnitaryMap_reindex"><a class="line" href="#OperatorK1Functoriality-L38" id="OperatorK1Functoriality-L38"> 38</a> @[simp] theorem matrixUnitaryMap_reindex (φ : A →⋆ₐ[ℂ] B) (e : ι ≃ κ) (a : MatrixUnitary A ι) :</span>
+<span><a class="line" href="#OperatorK1Functoriality-L39" id="OperatorK1Functoriality-L39"> 39</a>     matrixUnitaryMap φ (unitaryReindex e a) = unitaryReindex e (matrixUnitaryMap φ a) := by</span>
+<span><a class="line" href="#OperatorK1Functoriality-L40" id="OperatorK1Functoriality-L40"> 40</a>   apply Subtype.ext</span>
+<span><a class="line" href="#OperatorK1Functoriality-L41" id="OperatorK1Functoriality-L41"> 41</a>   rfl</span>
+<span><a class="line" href="#OperatorK1Functoriality-L42" id="OperatorK1Functoriality-L42"> 42</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.unitaryHomotopic_map"><a class="line" href="#OperatorK1Functoriality-L43" id="OperatorK1Functoriality-L43"> 43</a> theorem unitaryHomotopic_map (φ : A →⋆ₐ[ℂ] B) {a b : MatrixUnitary A ι}</span>
+<span><a class="line" href="#OperatorK1Functoriality-L44" id="OperatorK1Functoriality-L44"> 44</a>     (h : UnitaryHomotopic a b) : UnitaryHomotopic (matrixUnitaryMap φ a) (matrixUnitaryMap φ b) :=</span>
+<span><a class="line" href="#OperatorK1Functoriality-L45" id="OperatorK1Functoriality-L45"> 45</a>   h.map (continuous_matrixUnitaryMap φ)</span>
+<span><a class="line" href="#OperatorK1Functoriality-L46" id="OperatorK1Functoriality-L46"> 46</a> </span>
+<span><a class="line" href="#OperatorK1Functoriality-L47" id="OperatorK1Functoriality-L47"> 47</a> namespace FiniteUnitary</span>
+<span><a class="line" href="#OperatorK1Functoriality-L48" id="OperatorK1Functoriality-L48"> 48</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteUnitary.map"><a class="line" href="#OperatorK1Functoriality-L49" id="OperatorK1Functoriality-L49"> 49</a> abbrev map (φ : A →⋆ₐ[ℂ] B) (a : FiniteUnitary A) : FiniteUnitary B :=</span>
+<span><a class="line" href="#OperatorK1Functoriality-L50" id="OperatorK1Functoriality-L50"> 50</a>   ofUnitary (matrixUnitaryMap φ a.val)</span>
+<span><a class="line" href="#OperatorK1Functoriality-L51" id="OperatorK1Functoriality-L51"> 51</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteUnitary.map_identity"><a class="line" href="#OperatorK1Functoriality-L52" id="OperatorK1Functoriality-L52"> 52</a> @[simp] theorem map_identity (φ : A →⋆ₐ[ℂ] B) (ι : Type) [Fintype ι] [DecidableEq ι] :</span>
+<span><a class="line" href="#OperatorK1Functoriality-L53" id="OperatorK1Functoriality-L53"> 53</a>     map φ (identity ι) = identity ι := by</span>
+<span><a class="line" href="#OperatorK1Functoriality-L54" id="OperatorK1Functoriality-L54"> 54</a>   change ofUnitary (matrixUnitaryMap φ 1) = ofUnitary 1</span>
+<span><a class="line" href="#OperatorK1Functoriality-L55" id="OperatorK1Functoriality-L55"> 55</a>   rw [matrixUnitaryMap_one]</span>
+<span><a class="line" href="#OperatorK1Functoriality-L56" id="OperatorK1Functoriality-L56"> 56</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteUnitary.map_blockSum"><a class="line" href="#OperatorK1Functoriality-L57" id="OperatorK1Functoriality-L57"> 57</a> @[simp] theorem map_blockSum (φ : A →⋆ₐ[ℂ] B) (a b : FiniteUnitary A) :</span>
+<span><a class="line" href="#OperatorK1Functoriality-L58" id="OperatorK1Functoriality-L58"> 58</a>     map φ (blockSum a b) = blockSum (map φ a) (map φ b) := by</span>
+<span><a class="line" href="#OperatorK1Functoriality-L59" id="OperatorK1Functoriality-L59"> 59</a>   change ofUnitary (matrixUnitaryMap φ (unitaryBlockSum a.val b.val)) = _</span>
+<span><a class="line" href="#OperatorK1Functoriality-L60" id="OperatorK1Functoriality-L60"> 60</a>   rw [matrixUnitaryMap_blockSum]</span>
+<span><a class="line" href="#OperatorK1Functoriality-L61" id="OperatorK1Functoriality-L61"> 61</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteUnitary.equivalent_map"><a class="line" href="#OperatorK1Functoriality-L62" id="OperatorK1Functoriality-L62"> 62</a> theorem equivalent_map (φ : A →⋆ₐ[ℂ] B) {a b : FiniteUnitary A} (h : Equivalent a b) :</span>
+<span><a class="line" href="#OperatorK1Functoriality-L63" id="OperatorK1Functoriality-L63"> 63</a>     Equivalent (map φ a) (map φ b) := by</span>
+<span><a class="line" href="#OperatorK1Functoriality-L64" id="OperatorK1Functoriality-L64"> 64</a>   induction h with</span>
+<span><a class="line" href="#OperatorK1Functoriality-L65" id="OperatorK1Functoriality-L65"> 65</a>   | refl a =&gt; exact equivalent_refl _</span>
+<span><a class="line" href="#OperatorK1Functoriality-L66" id="OperatorK1Functoriality-L66"> 66</a>   | symm a b h ih =&gt; exact equivalent_symm ih</span>
+<span><a class="line" href="#OperatorK1Functoriality-L67" id="OperatorK1Functoriality-L67"> 67</a>   | trans a b c h k ih ik =&gt; exact equivalent_trans ih ik</span>
+<span><a class="line" href="#OperatorK1Functoriality-L68" id="OperatorK1Functoriality-L68"> 68</a>   | rel a b h =&gt;</span>
+<span><a class="line" href="#OperatorK1Functoriality-L69" id="OperatorK1Functoriality-L69"> 69</a>     cases h with</span>
+<span><a class="line" href="#OperatorK1Functoriality-L70" id="OperatorK1Functoriality-L70"> 70</a>     | homotopy b e h =&gt;</span>
+<span><a class="line" href="#OperatorK1Functoriality-L71" id="OperatorK1Functoriality-L71"> 71</a>       apply Relation.EqvGen.rel</span>
+<span><a class="line" href="#OperatorK1Functoriality-L72" id="OperatorK1Functoriality-L72"> 72</a>       apply Move.homotopy (map φ a) (map φ b) e</span>
+<span><a class="line" href="#OperatorK1Functoriality-L73" id="OperatorK1Functoriality-L73"> 73</a>       simpa only [map, ofUnitary, matrixUnitaryMap_reindex] using unitaryHomotopic_map φ h</span>
+<span><a class="line" href="#OperatorK1Functoriality-L74" id="OperatorK1Functoriality-L74"> 74</a>     | stabilize κ =&gt;</span>
+<span><a class="line" href="#OperatorK1Functoriality-L75" id="OperatorK1Functoriality-L75"> 75</a>       rw [map_blockSum, map_identity]</span>
+<span><a class="line" href="#OperatorK1Functoriality-L76" id="OperatorK1Functoriality-L76"> 76</a>       exact equivalent_stabilize _ κ</span>
+<span><a class="line" href="#OperatorK1Functoriality-L77" id="OperatorK1Functoriality-L77"> 77</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteUnitary.map_id"><a class="line" href="#OperatorK1Functoriality-L78" id="OperatorK1Functoriality-L78"> 78</a> @[simp] theorem map_id (a : FiniteUnitary A) : map (StarAlgHom.id ℂ A) a = a := by</span>
+<span><a class="line" href="#OperatorK1Functoriality-L79" id="OperatorK1Functoriality-L79"> 79</a>   cases a</span>
+<span><a class="line" href="#OperatorK1Functoriality-L80" id="OperatorK1Functoriality-L80"> 80</a>   rfl</span>
+<span><a class="line" href="#OperatorK1Functoriality-L81" id="OperatorK1Functoriality-L81"> 81</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteUnitary.map_comp"><a class="line" href="#OperatorK1Functoriality-L82" id="OperatorK1Functoriality-L82"> 82</a> @[simp] theorem map_comp (ψ : B →⋆ₐ[ℂ] C) (φ : A →⋆ₐ[ℂ] B) (a : FiniteUnitary A) :</span>
+<span><a class="line" href="#OperatorK1Functoriality-L83" id="OperatorK1Functoriality-L83"> 83</a>     map (ψ.comp φ) a = map ψ (map φ a) := rfl</span>
+<span><a class="line" href="#OperatorK1Functoriality-L84" id="OperatorK1Functoriality-L84"> 84</a> end FiniteUnitary</span>
+<span><a class="line" href="#OperatorK1Functoriality-L85" id="OperatorK1Functoriality-L85"> 85</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.k1Map"><a class="line" href="#OperatorK1Functoriality-L86" id="OperatorK1Functoriality-L86"> 86</a> def k1Map (φ : A →⋆ₐ[ℂ] B) : K1 A →+ K1 B where</span>
+<span><a class="line" href="#OperatorK1Functoriality-L87" id="OperatorK1Functoriality-L87"> 87</a>   toFun := Quotient.map (FiniteUnitary.map φ) (fun _ _ h =&gt; FiniteUnitary.equivalent_map φ h)</span>
+<span><a class="line" href="#OperatorK1Functoriality-L88" id="OperatorK1Functoriality-L88"> 88</a>   map_zero&#x27; := by</span>
+<span><a class="line" href="#OperatorK1Functoriality-L89" id="OperatorK1Functoriality-L89"> 89</a>     change K1.of (FiniteUnitary.map φ (FiniteUnitary.identity Empty)) = _</span>
+<span><a class="line" href="#OperatorK1Functoriality-L90" id="OperatorK1Functoriality-L90"> 90</a>     rw [FiniteUnitary.map_identity]</span>
+<span><a class="line" href="#OperatorK1Functoriality-L91" id="OperatorK1Functoriality-L91"> 91</a>     rfl</span>
+<span><a class="line" href="#OperatorK1Functoriality-L92" id="OperatorK1Functoriality-L92"> 92</a>   map_add&#x27; a b := by</span>
+<span><a class="line" href="#OperatorK1Functoriality-L93" id="OperatorK1Functoriality-L93"> 93</a>     refine Quotient.inductionOn₂ a b ?_</span>
+<span><a class="line" href="#OperatorK1Functoriality-L94" id="OperatorK1Functoriality-L94"> 94</a>     intro a b</span>
+<span><a class="line" href="#OperatorK1Functoriality-L95" id="OperatorK1Functoriality-L95"> 95</a>     change K1.of (FiniteUnitary.map φ (FiniteUnitary.blockSum a b)) = _</span>
+<span><a class="line" href="#OperatorK1Functoriality-L96" id="OperatorK1Functoriality-L96"> 96</a>     rw [FiniteUnitary.map_blockSum]</span>
+<span><a class="line" href="#OperatorK1Functoriality-L97" id="OperatorK1Functoriality-L97"> 97</a>     rfl</span>
+<span><a class="line" href="#OperatorK1Functoriality-L98" id="OperatorK1Functoriality-L98"> 98</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.k1Map_of"><a class="line" href="#OperatorK1Functoriality-L99" id="OperatorK1Functoriality-L99"> 99</a> @[simp] theorem k1Map_of (φ : A →⋆ₐ[ℂ] B) (a : FiniteUnitary A) :</span>
+<span><a class="line" href="#OperatorK1Functoriality-L100" id="OperatorK1Functoriality-L100">100</a>     k1Map φ (K1.of a) = K1.of (FiniteUnitary.map φ a) := rfl</span>
+<span><a class="line" href="#OperatorK1Functoriality-L101" id="OperatorK1Functoriality-L101">101</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.k1Map_id"><a class="line" href="#OperatorK1Functoriality-L102" id="OperatorK1Functoriality-L102">102</a> @[simp] theorem k1Map_id : k1Map (StarAlgHom.id ℂ A) = AddMonoidHom.id (K1 A) := by</span>
+<span><a class="line" href="#OperatorK1Functoriality-L103" id="OperatorK1Functoriality-L103">103</a>   ext x</span>
+<span><a class="line" href="#OperatorK1Functoriality-L104" id="OperatorK1Functoriality-L104">104</a>   refine Quotient.inductionOn x ?_</span>
+<span><a class="line" href="#OperatorK1Functoriality-L105" id="OperatorK1Functoriality-L105">105</a>   intro a</span>
+<span><a class="line" href="#OperatorK1Functoriality-L106" id="OperatorK1Functoriality-L106">106</a>   exact congrArg K1.of (FiniteUnitary.map_id a)</span>
+<span><a class="line" href="#OperatorK1Functoriality-L107" id="OperatorK1Functoriality-L107">107</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.k1Map_comp"><a class="line" href="#OperatorK1Functoriality-L108" id="OperatorK1Functoriality-L108">108</a> @[simp] theorem k1Map_comp (ψ : B →⋆ₐ[ℂ] C) (φ : A →⋆ₐ[ℂ] B) :</span>
+<span><a class="line" href="#OperatorK1Functoriality-L109" id="OperatorK1Functoriality-L109">109</a>     k1Map (ψ.comp φ) = (k1Map ψ).comp (k1Map φ) := by</span>
+<span><a class="line" href="#OperatorK1Functoriality-L110" id="OperatorK1Functoriality-L110">110</a>   ext x</span>
+<span><a class="line" href="#OperatorK1Functoriality-L111" id="OperatorK1Functoriality-L111">111</a>   refine Quotient.inductionOn x ?_</span>
+<span><a class="line" href="#OperatorK1Functoriality-L112" id="OperatorK1Functoriality-L112">112</a>   intro a</span>
+<span><a class="line" href="#OperatorK1Functoriality-L113" id="OperatorK1Functoriality-L113">113</a>   rfl</span>
+<span><a class="line" href="#OperatorK1Functoriality-L114" id="OperatorK1Functoriality-L114">114</a> </span>
+<span><a class="line" href="#OperatorK1Functoriality-L115" id="OperatorK1Functoriality-L115">115</a> end BC4lean.OperatorKTheory</span>
+</pre>
+<h2 id="NonunitalOperatorK">NonunitalOperatorK.lean</h2><p>源码 SHA-256：<code>ad22a2a965520e0c299eaf26b9a0d3058ebba09caf978568a32cec3c54e570bd</code></p><pre>
+<span><a class="line" href="#NonunitalOperatorK-L1" id="NonunitalOperatorK-L1">  1</a> import BC4lean.OperatorK0Functoriality</span>
+<span><a class="line" href="#NonunitalOperatorK-L2" id="NonunitalOperatorK-L2">  2</a> import BC4lean.OperatorK1Functoriality</span>
+<span><a class="line" href="#NonunitalOperatorK-L3" id="NonunitalOperatorK-L3">  3</a> import Mathlib.Analysis.CStarAlgebra.Unitization</span>
+<span><a class="line" href="#NonunitalOperatorK-L4" id="NonunitalOperatorK-L4">  4</a> import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Basic</span>
+<span><a class="line" href="#NonunitalOperatorK-L5" id="NonunitalOperatorK-L5">  5</a> import Mathlib.Algebra.Group.Subgroup.Ker</span>
+<span><a class="line" href="#NonunitalOperatorK-L6" id="NonunitalOperatorK-L6">  6</a> </span>
+<span><a class="line" href="#NonunitalOperatorK-L7" id="NonunitalOperatorK-L7">  7</a> /-! # Operator K-groups through forced unitization</span>
+<span><a class="line" href="#NonunitalOperatorK-L8" id="NonunitalOperatorK-L8">  8</a> </span>
+<span><a class="line" href="#NonunitalOperatorK-L9" id="NonunitalOperatorK-L9">  9</a> For a possibly nonunital complex C*-algebra, take the kernels of the scalar</span>
+<span><a class="line" href="#NonunitalOperatorK-L10" id="NonunitalOperatorK-L10"> 10</a> quotient maps in degrees zero and one. All matrix orders are spectral orders.</span>
+<span><a class="line" href="#NonunitalOperatorK-L11" id="NonunitalOperatorK-L11"> 11</a> -/</span>
+<span><a class="line" href="#NonunitalOperatorK-L12" id="NonunitalOperatorK-L12"> 12</a> noncomputable section</span>
+<span><a class="line" href="#NonunitalOperatorK-L13" id="NonunitalOperatorK-L13"> 13</a> namespace BC4lean.OperatorKTheory</span>
+<span><a class="line" href="#NonunitalOperatorK-L14" id="NonunitalOperatorK-L14"> 14</a> universe u v w</span>
+<span><a class="line" href="#NonunitalOperatorK-L15" id="NonunitalOperatorK-L15"> 15</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.operatorSpectralOrder"><a class="line" href="#NonunitalOperatorK-L16" id="NonunitalOperatorK-L16"> 16</a> local instance operatorSpectralOrder (B : Type*) [CStarAlgebra B] : PartialOrder B :=</span>
+<span><a class="line" href="#NonunitalOperatorK-L17" id="NonunitalOperatorK-L17"> 17</a>   CStarAlgebra.spectralOrder B</span>
+<span id="doc/BC4lean.OperatorKTheory.operatorSpectralOrderedRing"><a class="line" href="#NonunitalOperatorK-L18" id="NonunitalOperatorK-L18"> 18</a> local instance operatorSpectralOrderedRing (B : Type*) [CStarAlgebra B] : StarOrderedRing B :=</span>
+<span><a class="line" href="#NonunitalOperatorK-L19" id="NonunitalOperatorK-L19"> 19</a>   CStarAlgebra.spectralOrderedRing B</span>
+<span><a class="line" href="#NonunitalOperatorK-L20" id="NonunitalOperatorK-L20"> 20</a> </span>
+<span><a class="line" href="#NonunitalOperatorK-L21" id="NonunitalOperatorK-L21"> 21</a> variable (A : Type u) [NonUnitalCStarAlgebra A]</span>
+<span><a class="line" href="#NonunitalOperatorK-L22" id="NonunitalOperatorK-L22"> 22</a> </span>
+<span><a class="line" href="#NonunitalOperatorK-L23" id="NonunitalOperatorK-L23"> 23</a> /-- The scalar quotient of the forced unitization. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.scalarQuotient"><a class="line" href="#NonunitalOperatorK-L24" id="NonunitalOperatorK-L24"> 24</a> def scalarQuotient : Unitization ℂ A →⋆ₐ[ℂ] ℂ :=</span>
+<span><a class="line" href="#NonunitalOperatorK-L25" id="NonunitalOperatorK-L25"> 25</a>   { Unitization.fstHom ℂ A with map_star&#x27; := Unitization.fst_star }</span>
+<span><a class="line" href="#NonunitalOperatorK-L26" id="NonunitalOperatorK-L26"> 26</a> </span>
+<span><a class="line" href="#NonunitalOperatorK-L27" id="NonunitalOperatorK-L27"> 27</a> /-- The scalar inclusion is a unital section. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.scalarSection"><a class="line" href="#NonunitalOperatorK-L28" id="NonunitalOperatorK-L28"> 28</a> def scalarSection : ℂ →⋆ₐ[ℂ] Unitization ℂ A := StarAlgHom.ofId ℂ _</span>
+<span><a class="line" href="#NonunitalOperatorK-L29" id="NonunitalOperatorK-L29"> 29</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.scalarQuotient_section"><a class="line" href="#NonunitalOperatorK-L30" id="NonunitalOperatorK-L30"> 30</a> @[simp] theorem scalarQuotient_section :</span>
+<span><a class="line" href="#NonunitalOperatorK-L31" id="NonunitalOperatorK-L31"> 31</a>     (scalarQuotient A).comp (scalarSection A) = StarAlgHom.id ℂ ℂ := by</span>
+<span><a class="line" href="#NonunitalOperatorK-L32" id="NonunitalOperatorK-L32"> 32</a>   ext z</span>
+<span><a class="line" href="#NonunitalOperatorK-L33" id="NonunitalOperatorK-L33"> 33</a>   rfl</span>
+<span><a class="line" href="#NonunitalOperatorK-L34" id="NonunitalOperatorK-L34"> 34</a> </span>
+<span><a class="line" href="#NonunitalOperatorK-L35" id="NonunitalOperatorK-L35"> 35</a> /-- Degree-zero operator K-theory for a possibly nonunital algebra. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.OperatorK0"><a class="line" href="#NonunitalOperatorK-L36" id="NonunitalOperatorK-L36"> 36</a> def OperatorK0 : Type _ := (k0Map (scalarQuotient A)).ker</span>
+<span><a class="line" href="#NonunitalOperatorK-L37" id="NonunitalOperatorK-L37"> 37</a> </span>
+<span><a class="line" href="#NonunitalOperatorK-L38" id="NonunitalOperatorK-L38"> 38</a> /-- Degree-one operator K-theory for a possibly nonunital algebra. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.OperatorK1"><a class="line" href="#NonunitalOperatorK-L39" id="NonunitalOperatorK-L39"> 39</a> def OperatorK1 : Type _ := (k1Map (scalarQuotient A)).ker</span>
+<span><a class="line" href="#NonunitalOperatorK-L40" id="NonunitalOperatorK-L40"> 40</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.operatorK0AddCommGroup"><a class="line" href="#NonunitalOperatorK-L41" id="NonunitalOperatorK-L41"> 41</a> instance operatorK0AddCommGroup : AddCommGroup (OperatorK0 A) :=</span>
+<span><a class="line" href="#NonunitalOperatorK-L42" id="NonunitalOperatorK-L42"> 42</a>   inferInstanceAs (AddCommGroup (k0Map (scalarQuotient A)).ker)</span>
+<span id="doc/BC4lean.OperatorKTheory.operatorK1AddCommGroup"><a class="line" href="#NonunitalOperatorK-L43" id="NonunitalOperatorK-L43"> 43</a> instance operatorK1AddCommGroup : AddCommGroup (OperatorK1 A) :=</span>
+<span><a class="line" href="#NonunitalOperatorK-L44" id="NonunitalOperatorK-L44"> 44</a>   inferInstanceAs (AddCommGroup (k1Map (scalarQuotient A)).ker)</span>
+<span><a class="line" href="#NonunitalOperatorK-L45" id="NonunitalOperatorK-L45"> 45</a> </span>
+<span><a class="line" href="#NonunitalOperatorK-L46" id="NonunitalOperatorK-L46"> 46</a> /-- Inclusion of the degree-zero kernel into the K-group of the unitization. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.operatorK0Inclusion"><a class="line" href="#NonunitalOperatorK-L47" id="NonunitalOperatorK-L47"> 47</a> def operatorK0Inclusion : OperatorK0 A →+ K0 (Unitization ℂ A) :=</span>
+<span><a class="line" href="#NonunitalOperatorK-L48" id="NonunitalOperatorK-L48"> 48</a>   (k0Map (scalarQuotient A)).ker.subtype</span>
+<span><a class="line" href="#NonunitalOperatorK-L49" id="NonunitalOperatorK-L49"> 49</a> </span>
+<span><a class="line" href="#NonunitalOperatorK-L50" id="NonunitalOperatorK-L50"> 50</a> /-- Inclusion of the degree-one kernel into the K-group of the unitization. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.operatorK1Inclusion"><a class="line" href="#NonunitalOperatorK-L51" id="NonunitalOperatorK-L51"> 51</a> def operatorK1Inclusion : OperatorK1 A →+ K1 (Unitization ℂ A) :=</span>
+<span><a class="line" href="#NonunitalOperatorK-L52" id="NonunitalOperatorK-L52"> 52</a>   (k1Map (scalarQuotient A)).ker.subtype</span>
+<span><a class="line" href="#NonunitalOperatorK-L53" id="NonunitalOperatorK-L53"> 53</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.operatorK0Inclusion_injective"><a class="line" href="#NonunitalOperatorK-L54" id="NonunitalOperatorK-L54"> 54</a> theorem operatorK0Inclusion_injective : Function.Injective (operatorK0Inclusion A) := Subtype.val_injective</span>
+<span id="doc/BC4lean.OperatorKTheory.operatorK1Inclusion_injective"><a class="line" href="#NonunitalOperatorK-L55" id="NonunitalOperatorK-L55"> 55</a> theorem operatorK1Inclusion_injective : Function.Injective (operatorK1Inclusion A) := Subtype.val_injective</span>
+<span><a class="line" href="#NonunitalOperatorK-L56" id="NonunitalOperatorK-L56"> 56</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.operatorK0_scalar_zero"><a class="line" href="#NonunitalOperatorK-L57" id="NonunitalOperatorK-L57"> 57</a> theorem operatorK0_scalar_zero (x : OperatorK0 A) : k0Map (scalarQuotient A) (operatorK0Inclusion A x) = 0 := x.property</span>
+<span id="doc/BC4lean.OperatorKTheory.operatorK1_scalar_zero"><a class="line" href="#NonunitalOperatorK-L58" id="NonunitalOperatorK-L58"> 58</a> theorem operatorK1_scalar_zero (x : OperatorK1 A) : k1Map (scalarQuotient A) (operatorK1Inclusion A x) = 0 := x.property</span>
+<span><a class="line" href="#NonunitalOperatorK-L59" id="NonunitalOperatorK-L59"> 59</a> </span>
+<span><a class="line" href="#NonunitalOperatorK-L60" id="NonunitalOperatorK-L60"> 60</a> variable {A} {B : Type v} {C : Type w} [NonUnitalCStarAlgebra B] [NonUnitalCStarAlgebra C]</span>
+<span><a class="line" href="#NonunitalOperatorK-L61" id="NonunitalOperatorK-L61"> 61</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.scalarQuotient_natural"><a class="line" href="#NonunitalOperatorK-L62" id="NonunitalOperatorK-L62"> 62</a> theorem scalarQuotient_natural (φ : A →⋆ₙₐ[ℂ] B) :</span>
+<span><a class="line" href="#NonunitalOperatorK-L63" id="NonunitalOperatorK-L63"> 63</a>     (scalarQuotient B).comp (Unitization.starMap φ) = scalarQuotient A := by</span>
+<span><a class="line" href="#NonunitalOperatorK-L64" id="NonunitalOperatorK-L64"> 64</a>   ext x</span>
+<span><a class="line" href="#NonunitalOperatorK-L65" id="NonunitalOperatorK-L65"> 65</a>   change (Unitization.starMap φ (x : Unitization ℂ A)).fst = 0</span>
+<span><a class="line" href="#NonunitalOperatorK-L66" id="NonunitalOperatorK-L66"> 66</a>   simp</span>
+<span><a class="line" href="#NonunitalOperatorK-L67" id="NonunitalOperatorK-L67"> 67</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.operatorK0Map"><a class="line" href="#NonunitalOperatorK-L68" id="NonunitalOperatorK-L68"> 68</a> def operatorK0Map (φ : A →⋆ₙₐ[ℂ] B) : OperatorK0 A →+ OperatorK0 B where</span>
+<span><a class="line" href="#NonunitalOperatorK-L69" id="NonunitalOperatorK-L69"> 69</a>   toFun x := ⟨k0Map (Unitization.starMap φ) x.val, by</span>
+<span><a class="line" href="#NonunitalOperatorK-L70" id="NonunitalOperatorK-L70"> 70</a>     change k0Map (scalarQuotient B) (k0Map (Unitization.starMap φ) x.val) = 0</span>
+<span><a class="line" href="#NonunitalOperatorK-L71" id="NonunitalOperatorK-L71"> 71</a>     rw [← AddMonoidHom.comp_apply, ← k0Map_comp, scalarQuotient_natural]</span>
+<span><a class="line" href="#NonunitalOperatorK-L72" id="NonunitalOperatorK-L72"> 72</a>     exact x.property⟩</span>
+<span><a class="line" href="#NonunitalOperatorK-L73" id="NonunitalOperatorK-L73"> 73</a>   map_zero&#x27; := Subtype.ext (map_zero _)</span>
+<span><a class="line" href="#NonunitalOperatorK-L74" id="NonunitalOperatorK-L74"> 74</a>   map_add&#x27; x y := Subtype.ext (map_add _ x.val y.val)</span>
+<span><a class="line" href="#NonunitalOperatorK-L75" id="NonunitalOperatorK-L75"> 75</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.operatorK1Map"><a class="line" href="#NonunitalOperatorK-L76" id="NonunitalOperatorK-L76"> 76</a> def operatorK1Map (φ : A →⋆ₙₐ[ℂ] B) : OperatorK1 A →+ OperatorK1 B where</span>
+<span><a class="line" href="#NonunitalOperatorK-L77" id="NonunitalOperatorK-L77"> 77</a>   toFun x := ⟨k1Map (Unitization.starMap φ) x.val, by</span>
+<span><a class="line" href="#NonunitalOperatorK-L78" id="NonunitalOperatorK-L78"> 78</a>     change k1Map (scalarQuotient B) (k1Map (Unitization.starMap φ) x.val) = 0</span>
+<span><a class="line" href="#NonunitalOperatorK-L79" id="NonunitalOperatorK-L79"> 79</a>     rw [← AddMonoidHom.comp_apply, ← k1Map_comp, scalarQuotient_natural]</span>
+<span><a class="line" href="#NonunitalOperatorK-L80" id="NonunitalOperatorK-L80"> 80</a>     exact x.property⟩</span>
+<span><a class="line" href="#NonunitalOperatorK-L81" id="NonunitalOperatorK-L81"> 81</a>   map_zero&#x27; := Subtype.ext (map_zero _)</span>
+<span><a class="line" href="#NonunitalOperatorK-L82" id="NonunitalOperatorK-L82"> 82</a>   map_add&#x27; x y := Subtype.ext (map_add _ x.val y.val)</span>
+<span><a class="line" href="#NonunitalOperatorK-L83" id="NonunitalOperatorK-L83"> 83</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.operatorK0Map_id"><a class="line" href="#NonunitalOperatorK-L84" id="NonunitalOperatorK-L84"> 84</a> @[simp] theorem operatorK0Map_id : operatorK0Map (NonUnitalStarAlgHom.id ℂ A) = AddMonoidHom.id (OperatorK0 A) := by</span>
+<span><a class="line" href="#NonunitalOperatorK-L85" id="NonunitalOperatorK-L85"> 85</a>   ext x</span>
+<span><a class="line" href="#NonunitalOperatorK-L86" id="NonunitalOperatorK-L86"> 86</a>   apply Subtype.ext</span>
+<span><a class="line" href="#NonunitalOperatorK-L87" id="NonunitalOperatorK-L87"> 87</a>   change k0Map (Unitization.starMap (NonUnitalStarAlgHom.id ℂ A)) x.val = x.val</span>
+<span><a class="line" href="#NonunitalOperatorK-L88" id="NonunitalOperatorK-L88"> 88</a>   rw [Unitization.starMap_id, k0Map_id]</span>
+<span><a class="line" href="#NonunitalOperatorK-L89" id="NonunitalOperatorK-L89"> 89</a>   rfl</span>
+<span><a class="line" href="#NonunitalOperatorK-L90" id="NonunitalOperatorK-L90"> 90</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.operatorK1Map_id"><a class="line" href="#NonunitalOperatorK-L91" id="NonunitalOperatorK-L91"> 91</a> @[simp] theorem operatorK1Map_id : operatorK1Map (NonUnitalStarAlgHom.id ℂ A) = AddMonoidHom.id (OperatorK1 A) := by</span>
+<span><a class="line" href="#NonunitalOperatorK-L92" id="NonunitalOperatorK-L92"> 92</a>   ext x</span>
+<span><a class="line" href="#NonunitalOperatorK-L93" id="NonunitalOperatorK-L93"> 93</a>   apply Subtype.ext</span>
+<span><a class="line" href="#NonunitalOperatorK-L94" id="NonunitalOperatorK-L94"> 94</a>   change k1Map (Unitization.starMap (NonUnitalStarAlgHom.id ℂ A)) x.val = x.val</span>
+<span><a class="line" href="#NonunitalOperatorK-L95" id="NonunitalOperatorK-L95"> 95</a>   rw [Unitization.starMap_id, k1Map_id]</span>
+<span><a class="line" href="#NonunitalOperatorK-L96" id="NonunitalOperatorK-L96"> 96</a>   rfl</span>
+<span><a class="line" href="#NonunitalOperatorK-L97" id="NonunitalOperatorK-L97"> 97</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.operatorK0Map_comp"><a class="line" href="#NonunitalOperatorK-L98" id="NonunitalOperatorK-L98"> 98</a> @[simp] theorem operatorK0Map_comp (ψ : B →⋆ₙₐ[ℂ] C) (φ : A →⋆ₙₐ[ℂ] B) :</span>
+<span><a class="line" href="#NonunitalOperatorK-L99" id="NonunitalOperatorK-L99"> 99</a>     operatorK0Map (ψ.comp φ) = (operatorK0Map ψ).comp (operatorK0Map φ) := by</span>
+<span><a class="line" href="#NonunitalOperatorK-L100" id="NonunitalOperatorK-L100">100</a>   ext x</span>
+<span><a class="line" href="#NonunitalOperatorK-L101" id="NonunitalOperatorK-L101">101</a>   apply Subtype.ext</span>
+<span><a class="line" href="#NonunitalOperatorK-L102" id="NonunitalOperatorK-L102">102</a>   change k0Map (Unitization.starMap (ψ.comp φ)) x.val = _</span>
+<span><a class="line" href="#NonunitalOperatorK-L103" id="NonunitalOperatorK-L103">103</a>   rw [Unitization.starMap_comp, k0Map_comp]</span>
+<span><a class="line" href="#NonunitalOperatorK-L104" id="NonunitalOperatorK-L104">104</a>   rfl</span>
+<span><a class="line" href="#NonunitalOperatorK-L105" id="NonunitalOperatorK-L105">105</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.operatorK1Map_comp"><a class="line" href="#NonunitalOperatorK-L106" id="NonunitalOperatorK-L106">106</a> @[simp] theorem operatorK1Map_comp (ψ : B →⋆ₙₐ[ℂ] C) (φ : A →⋆ₙₐ[ℂ] B) :</span>
+<span><a class="line" href="#NonunitalOperatorK-L107" id="NonunitalOperatorK-L107">107</a>     operatorK1Map (ψ.comp φ) = (operatorK1Map ψ).comp (operatorK1Map φ) := by</span>
+<span><a class="line" href="#NonunitalOperatorK-L108" id="NonunitalOperatorK-L108">108</a>   ext x</span>
+<span><a class="line" href="#NonunitalOperatorK-L109" id="NonunitalOperatorK-L109">109</a>   apply Subtype.ext</span>
+<span><a class="line" href="#NonunitalOperatorK-L110" id="NonunitalOperatorK-L110">110</a>   change k1Map (Unitization.starMap (ψ.comp φ)) x.val = _</span>
+<span><a class="line" href="#NonunitalOperatorK-L111" id="NonunitalOperatorK-L111">111</a>   rw [Unitization.starMap_comp, k1Map_comp]</span>
+<span><a class="line" href="#NonunitalOperatorK-L112" id="NonunitalOperatorK-L112">112</a>   rfl</span>
+<span><a class="line" href="#NonunitalOperatorK-L113" id="NonunitalOperatorK-L113">113</a> </span>
+<span><a class="line" href="#NonunitalOperatorK-L114" id="NonunitalOperatorK-L114">114</a> end BC4lean.OperatorKTheory</span>
+</pre>
+<h2 id="UnitizationSplitting">UnitizationSplitting.lean</h2><p>源码 SHA-256：<code>23ba89c79c9406c8da472fd19c7e6c049475c780ecd507f96da440b9b0b5a9f3</code></p><pre>
+<span><a class="line" href="#UnitizationSplitting-L1" id="UnitizationSplitting-L1">  1</a> import Mathlib.Analysis.CStarAlgebra.Unitization</span>
+<span><a class="line" href="#UnitizationSplitting-L2" id="UnitizationSplitting-L2">  2</a> import Mathlib.Algebra.Star.StarAlgHom</span>
+<span><a class="line" href="#UnitizationSplitting-L3" id="UnitizationSplitting-L3">  3</a> </span>
+<span><a class="line" href="#UnitizationSplitting-L4" id="UnitizationSplitting-L4">  4</a> /-! # The forced unitization of an already unital algebra -/</span>
+<span><a class="line" href="#UnitizationSplitting-L5" id="UnitizationSplitting-L5">  5</a> noncomputable section</span>
+<span><a class="line" href="#UnitizationSplitting-L6" id="UnitizationSplitting-L6">  6</a> namespace BC4lean.OperatorKTheory</span>
+<span><a class="line" href="#UnitizationSplitting-L7" id="UnitizationSplitting-L7">  7</a> variable (A : Type*) [CStarAlgebra A]</span>
+<span><a class="line" href="#UnitizationSplitting-L8" id="UnitizationSplitting-L8">  8</a> </span>
+<span><a class="line" href="#UnitizationSplitting-L9" id="UnitizationSplitting-L9">  9</a> /-- Evaluation of the new scalar unit using the original unit. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.unitizationEval"><a class="line" href="#UnitizationSplitting-L10" id="UnitizationSplitting-L10"> 10</a> def unitizationEval : Unitization ℂ A →⋆ₐ[ℂ] A :=</span>
+<span><a class="line" href="#UnitizationSplitting-L11" id="UnitizationSplitting-L11"> 11</a>   Unitization.starLift (NonUnitalStarAlgHom.id ℂ A)</span>
+<span><a class="line" href="#UnitizationSplitting-L12" id="UnitizationSplitting-L12"> 12</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.unitizationEval_apply"><a class="line" href="#UnitizationSplitting-L13" id="UnitizationSplitting-L13"> 13</a> @[simp] theorem unitizationEval_apply (x : Unitization ℂ A) :</span>
+<span><a class="line" href="#UnitizationSplitting-L14" id="UnitizationSplitting-L14"> 14</a>     unitizationEval A x = algebraMap ℂ A x.fst + x.snd := rfl</span>
+<span><a class="line" href="#UnitizationSplitting-L15" id="UnitizationSplitting-L15"> 15</a> </span>
+<span><a class="line" href="#UnitizationSplitting-L16" id="UnitizationSplitting-L16"> 16</a> /-- The scalar coordinate and original-unit evaluation split the forced unitization. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.unitizationProductHom"><a class="line" href="#UnitizationSplitting-L17" id="UnitizationSplitting-L17"> 17</a> def unitizationProductHom : Unitization ℂ A →⋆ₐ[ℂ] ℂ × A :=</span>
+<span><a class="line" href="#UnitizationSplitting-L18" id="UnitizationSplitting-L18"> 18</a>   ({ Unitization.fstHom ℂ A with map_star&#x27; := Unitization.fst_star } :</span>
+<span><a class="line" href="#UnitizationSplitting-L19" id="UnitizationSplitting-L19"> 19</a>     Unitization ℂ A →⋆ₐ[ℂ] ℂ).prod (unitizationEval A)</span>
+<span><a class="line" href="#UnitizationSplitting-L20" id="UnitizationSplitting-L20"> 20</a> </span>
+<span><a class="line" href="#UnitizationSplitting-L21" id="UnitizationSplitting-L21"> 21</a> /-- The splitting is an actual star-algebra isomorphism, with no K-theory premise. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.unitizationProductEquiv"><a class="line" href="#UnitizationSplitting-L22" id="UnitizationSplitting-L22"> 22</a> def unitizationProductEquiv : Unitization ℂ A ≃⋆ₐ[ℂ] ℂ × A :=</span>
+<span><a class="line" href="#UnitizationSplitting-L23" id="UnitizationSplitting-L23"> 23</a>   StarAlgEquiv.ofBijective (unitizationProductHom A) (by</span>
+<span><a class="line" href="#UnitizationSplitting-L24" id="UnitizationSplitting-L24"> 24</a>     constructor</span>
+<span><a class="line" href="#UnitizationSplitting-L25" id="UnitizationSplitting-L25"> 25</a>     · intro x y h</span>
+<span><a class="line" href="#UnitizationSplitting-L26" id="UnitizationSplitting-L26"> 26</a>       have hfst := congrArg (fun z : ℂ × A =&gt; z.1) h</span>
+<span><a class="line" href="#UnitizationSplitting-L27" id="UnitizationSplitting-L27"> 27</a>       change x.fst = y.fst at hfst</span>
+<span><a class="line" href="#UnitizationSplitting-L28" id="UnitizationSplitting-L28"> 28</a>       have hsnd := congrArg (fun z : ℂ × A =&gt; z.2) h</span>
+<span><a class="line" href="#UnitizationSplitting-L29" id="UnitizationSplitting-L29"> 29</a>       change algebraMap ℂ A x.fst + x.snd = algebraMap ℂ A y.fst + y.snd at hsnd</span>
+<span><a class="line" href="#UnitizationSplitting-L30" id="UnitizationSplitting-L30"> 30</a>       apply Unitization.ext hfst</span>
+<span><a class="line" href="#UnitizationSplitting-L31" id="UnitizationSplitting-L31"> 31</a>       rw [hfst] at hsnd</span>
+<span><a class="line" href="#UnitizationSplitting-L32" id="UnitizationSplitting-L32"> 32</a>       exact add_left_cancel hsnd</span>
+<span><a class="line" href="#UnitizationSplitting-L33" id="UnitizationSplitting-L33"> 33</a>     · intro x</span>
+<span><a class="line" href="#UnitizationSplitting-L34" id="UnitizationSplitting-L34"> 34</a>       refine ⟨⟨x.1, x.2 - algebraMap ℂ A x.1⟩, ?_⟩</span>
+<span><a class="line" href="#UnitizationSplitting-L35" id="UnitizationSplitting-L35"> 35</a>       apply Prod.ext</span>
+<span><a class="line" href="#UnitizationSplitting-L36" id="UnitizationSplitting-L36"> 36</a>       · rfl</span>
+<span><a class="line" href="#UnitizationSplitting-L37" id="UnitizationSplitting-L37"> 37</a>       · change algebraMap ℂ A x.1 + (x.2 - algebraMap ℂ A x.1) = x.2</span>
+<span><a class="line" href="#UnitizationSplitting-L38" id="UnitizationSplitting-L38"> 38</a>         abel)</span>
+<span><a class="line" href="#UnitizationSplitting-L39" id="UnitizationSplitting-L39"> 39</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.unitizationProductEquiv_fst"><a class="line" href="#UnitizationSplitting-L40" id="UnitizationSplitting-L40"> 40</a> @[simp] theorem unitizationProductEquiv_fst (x : Unitization ℂ A) :</span>
+<span><a class="line" href="#UnitizationSplitting-L41" id="UnitizationSplitting-L41"> 41</a>     (unitizationProductEquiv A x).1 = x.fst := rfl</span>
+<span><a class="line" href="#UnitizationSplitting-L42" id="UnitizationSplitting-L42"> 42</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.unitizationProductEquiv_snd"><a class="line" href="#UnitizationSplitting-L43" id="UnitizationSplitting-L43"> 43</a> @[simp] theorem unitizationProductEquiv_snd (x : Unitization ℂ A) :</span>
+<span><a class="line" href="#UnitizationSplitting-L44" id="UnitizationSplitting-L44"> 44</a>     (unitizationProductEquiv A x).2 = algebraMap ℂ A x.fst + x.snd := rfl</span>
+<span><a class="line" href="#UnitizationSplitting-L45" id="UnitizationSplitting-L45"> 45</a> </span>
+<span><a class="line" href="#UnitizationSplitting-L46" id="UnitizationSplitting-L46"> 46</a> end BC4lean.OperatorKTheory</span>
+</pre>
+<h2 id="NonUnitalK0Map">NonUnitalK0Map.lean</h2><p>源码 SHA-256：<code>6abdad4e56e332f8b07d47c080f2c6e8fcbc67e4d274573d8d8cc5bb2ad46596</code></p><pre>
+<span><a class="line" href="#NonUnitalK0Map-L1" id="NonUnitalK0Map-L1">  1</a> import BC4lean.OperatorK0Functoriality</span>
+<span><a class="line" href="#NonUnitalK0Map-L2" id="NonUnitalK0Map-L2">  2</a> </span>
+<span><a class="line" href="#NonUnitalK0Map-L3" id="NonUnitalK0Map-L3">  3</a> /-! # Nonunital homomorphisms on the projection definition of unital K₀ -/</span>
+<span><a class="line" href="#NonUnitalK0Map-L4" id="NonUnitalK0Map-L4">  4</a> noncomputable section</span>
+<span><a class="line" href="#NonUnitalK0Map-L5" id="NonUnitalK0Map-L5">  5</a> open scoped Matrix</span>
+<span><a class="line" href="#NonUnitalK0Map-L6" id="NonUnitalK0Map-L6">  6</a> namespace BC4lean.OperatorKTheory</span>
+<span><a class="line" href="#NonUnitalK0Map-L7" id="NonUnitalK0Map-L7">  7</a> universe u v w</span>
+<span><a class="line" href="#NonUnitalK0Map-L8" id="NonUnitalK0Map-L8">  8</a> variable {A : Type u} {B : Type v} {C : Type w}</span>
+<span><a class="line" href="#NonUnitalK0Map-L9" id="NonUnitalK0Map-L9">  9</a> variable [CStarAlgebra A] [CStarAlgebra B] [CStarAlgebra C]</span>
+<span><a class="line" href="#NonUnitalK0Map-L10" id="NonUnitalK0Map-L10"> 10</a> variable [PartialOrder A] [StarOrderedRing A] [PartialOrder B] [StarOrderedRing B]</span>
+<span><a class="line" href="#NonUnitalK0Map-L11" id="NonUnitalK0Map-L11"> 11</a> variable [PartialOrder C] [StarOrderedRing C]</span>
+<span><a class="line" href="#NonUnitalK0Map-L12" id="NonUnitalK0Map-L12"> 12</a> variable {ι κ : Type} [Fintype ι] [Fintype κ] [DecidableEq ι] [DecidableEq κ]</span>
+<span><a class="line" href="#NonUnitalK0Map-L13" id="NonUnitalK0Map-L13"> 13</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.projectionMapNU"><a class="line" href="#NonUnitalK0Map-L14" id="NonUnitalK0Map-L14"> 14</a> def projectionMapNU (φ : A →⋆ₙₐ[ℂ] B) (p : MatrixProjection A ι) : MatrixProjection B ι :=</span>
+<span><a class="line" href="#NonUnitalK0Map-L15" id="NonUnitalK0Map-L15"> 15</a>   ⟨CStarMatrix.ofMatrix ((projectionMatrix p).map φ), ⟨by</span>
+<span><a class="line" href="#NonUnitalK0Map-L16" id="NonUnitalK0Map-L16"> 16</a>     change (projectionMatrix p).map φ * (projectionMatrix p).map φ = (projectionMatrix p).map φ</span>
+<span><a class="line" href="#NonUnitalK0Map-L17" id="NonUnitalK0Map-L17"> 17</a>     rw [← Matrix.map_mul, projectionMatrix_mul], by</span>
+<span><a class="line" href="#NonUnitalK0Map-L18" id="NonUnitalK0Map-L18"> 18</a>     change ((projectionMatrix p).map φ)ᴴ = (projectionMatrix p).map φ</span>
+<span><a class="line" href="#NonUnitalK0Map-L19" id="NonUnitalK0Map-L19"> 19</a>     rw [← Matrix.conjTranspose_map φ (fun x =&gt; map_star φ x), projectionMatrix_star]⟩⟩</span>
+<span><a class="line" href="#NonUnitalK0Map-L20" id="NonUnitalK0Map-L20"> 20</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.projectionMatrix_mapNU"><a class="line" href="#NonUnitalK0Map-L21" id="NonUnitalK0Map-L21"> 21</a> @[simp] theorem projectionMatrix_mapNU (φ : A →⋆ₙₐ[ℂ] B) (p : MatrixProjection A ι) :</span>
+<span><a class="line" href="#NonUnitalK0Map-L22" id="NonUnitalK0Map-L22"> 22</a>     projectionMatrix (projectionMapNU φ p) = (projectionMatrix p).map φ := rfl</span>
+<span><a class="line" href="#NonUnitalK0Map-L23" id="NonUnitalK0Map-L23"> 23</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.rectEquivalent_mapNU"><a class="line" href="#NonUnitalK0Map-L24" id="NonUnitalK0Map-L24"> 24</a> theorem rectEquivalent_mapNU (φ : A →⋆ₙₐ[ℂ] B)</span>
+<span><a class="line" href="#NonUnitalK0Map-L25" id="NonUnitalK0Map-L25"> 25</a>     {p : MatrixProjection A ι} {q : MatrixProjection A κ} (h : RectEquivalent p q) :</span>
+<span><a class="line" href="#NonUnitalK0Map-L26" id="NonUnitalK0Map-L26"> 26</a>     RectEquivalent (projectionMapNU φ p) (projectionMapNU φ q) := by</span>
+<span><a class="line" href="#NonUnitalK0Map-L27" id="NonUnitalK0Map-L27"> 27</a>   obtain ⟨v, hv, hv&#x27;⟩ := h</span>
+<span><a class="line" href="#NonUnitalK0Map-L28" id="NonUnitalK0Map-L28"> 28</a>   refine ⟨v.map φ, ?_, ?_⟩</span>
+<span><a class="line" href="#NonUnitalK0Map-L29" id="NonUnitalK0Map-L29"> 29</a>   · simpa only [Matrix.map_mul, Matrix.conjTranspose_map φ (fun a =&gt; map_star φ a),</span>
+<span><a class="line" href="#NonUnitalK0Map-L30" id="NonUnitalK0Map-L30"> 30</a>       projectionMatrix_mapNU] using congrArg (fun M =&gt; M.map φ) hv</span>
+<span><a class="line" href="#NonUnitalK0Map-L31" id="NonUnitalK0Map-L31"> 31</a>   · simpa only [Matrix.map_mul, Matrix.conjTranspose_map φ (fun a =&gt; map_star φ a),</span>
+<span><a class="line" href="#NonUnitalK0Map-L32" id="NonUnitalK0Map-L32"> 32</a>       projectionMatrix_mapNU] using congrArg (fun M =&gt; M.map φ) hv&#x27;</span>
+<span><a class="line" href="#NonUnitalK0Map-L33" id="NonUnitalK0Map-L33"> 33</a> </span>
+<span><a class="line" href="#NonUnitalK0Map-L34" id="NonUnitalK0Map-L34"> 34</a> namespace FiniteProjection</span>
+<span><a class="line" href="#NonUnitalK0Map-L35" id="NonUnitalK0Map-L35"> 35</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteProjection.mapNU"><a class="line" href="#NonUnitalK0Map-L36" id="NonUnitalK0Map-L36"> 36</a> def mapNU (φ : A →⋆ₙₐ[ℂ] B) (p : FiniteProjection A) : FiniteProjection B :=</span>
+<span><a class="line" href="#NonUnitalK0Map-L37" id="NonUnitalK0Map-L37"> 37</a>   ofProjection (projectionMapNU φ p.projection)</span>
+<span><a class="line" href="#NonUnitalK0Map-L38" id="NonUnitalK0Map-L38"> 38</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteProjection.mapNU_blockSum"><a class="line" href="#NonUnitalK0Map-L39" id="NonUnitalK0Map-L39"> 39</a> @[simp] theorem mapNU_blockSum (φ : A →⋆ₙₐ[ℂ] B) (p q : FiniteProjection A) :</span>
+<span><a class="line" href="#NonUnitalK0Map-L40" id="NonUnitalK0Map-L40"> 40</a>     mapNU φ (blockSum p q) = blockSum (mapNU φ p) (mapNU φ q) := by</span>
+<span><a class="line" href="#NonUnitalK0Map-L41" id="NonUnitalK0Map-L41"> 41</a>   apply congrArg (fun p : MatrixProjection B (p.Index ⊕ q.Index) =&gt; ofProjection p)</span>
+<span><a class="line" href="#NonUnitalK0Map-L42" id="NonUnitalK0Map-L42"> 42</a>   apply Subtype.ext</span>
+<span><a class="line" href="#NonUnitalK0Map-L43" id="NonUnitalK0Map-L43"> 43</a>   change (Matrix.fromBlocks (projectionMatrix p.projection) (0 : Matrix p.Index q.Index A)</span>
+<span><a class="line" href="#NonUnitalK0Map-L44" id="NonUnitalK0Map-L44"> 44</a>     (0 : Matrix q.Index p.Index A) (projectionMatrix q.projection)).map φ =</span>
+<span><a class="line" href="#NonUnitalK0Map-L45" id="NonUnitalK0Map-L45"> 45</a>     Matrix.fromBlocks ((projectionMatrix p.projection).map φ) 0 0 ((projectionMatrix q.projection).map φ)</span>
+<span><a class="line" href="#NonUnitalK0Map-L46" id="NonUnitalK0Map-L46"> 46</a>   ext i j</span>
+<span><a class="line" href="#NonUnitalK0Map-L47" id="NonUnitalK0Map-L47"> 47</a>   cases i &lt;;&gt; cases j &lt;;&gt; simp [Matrix.fromBlocks]</span>
+<span><a class="line" href="#NonUnitalK0Map-L48" id="NonUnitalK0Map-L48"> 48</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteProjection.mapNU_zero"><a class="line" href="#NonUnitalK0Map-L49" id="NonUnitalK0Map-L49"> 49</a> @[simp] theorem mapNU_zero (φ : A →⋆ₙₐ[ℂ] B) : mapNU φ zero = zero := by</span>
+<span><a class="line" href="#NonUnitalK0Map-L50" id="NonUnitalK0Map-L50"> 50</a>   apply congrArg (fun p : MatrixProjection B Empty =&gt; ofProjection p)</span>
+<span><a class="line" href="#NonUnitalK0Map-L51" id="NonUnitalK0Map-L51"> 51</a>   apply Subtype.ext</span>
+<span><a class="line" href="#NonUnitalK0Map-L52" id="NonUnitalK0Map-L52"> 52</a>   ext i</span>
+<span><a class="line" href="#NonUnitalK0Map-L53" id="NonUnitalK0Map-L53"> 53</a>   exact i.elim</span>
+<span><a class="line" href="#NonUnitalK0Map-L54" id="NonUnitalK0Map-L54"> 54</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteProjection.equivalent_mapNU"><a class="line" href="#NonUnitalK0Map-L55" id="NonUnitalK0Map-L55"> 55</a> theorem equivalent_mapNU (φ : A →⋆ₙₐ[ℂ] B) {p q : FiniteProjection A} (h : Equivalent p q) :</span>
+<span><a class="line" href="#NonUnitalK0Map-L56" id="NonUnitalK0Map-L56"> 56</a>     Equivalent (mapNU φ p) (mapNU φ q) := rectEquivalent_mapNU φ h</span>
+<span><a class="line" href="#NonUnitalK0Map-L57" id="NonUnitalK0Map-L57"> 57</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteProjection.mapNU_id"><a class="line" href="#NonUnitalK0Map-L58" id="NonUnitalK0Map-L58"> 58</a> @[simp] theorem mapNU_id (p : FiniteProjection A) : mapNU (NonUnitalStarAlgHom.id ℂ A) p = p := by</span>
+<span><a class="line" href="#NonUnitalK0Map-L59" id="NonUnitalK0Map-L59"> 59</a>   cases p</span>
+<span><a class="line" href="#NonUnitalK0Map-L60" id="NonUnitalK0Map-L60"> 60</a>   rfl</span>
+<span><a class="line" href="#NonUnitalK0Map-L61" id="NonUnitalK0Map-L61"> 61</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteProjection.mapNU_comp"><a class="line" href="#NonUnitalK0Map-L62" id="NonUnitalK0Map-L62"> 62</a> @[simp] theorem mapNU_comp (ψ : B →⋆ₙₐ[ℂ] C) (φ : A →⋆ₙₐ[ℂ] B) (p : FiniteProjection A) :</span>
+<span><a class="line" href="#NonUnitalK0Map-L63" id="NonUnitalK0Map-L63"> 63</a>     mapNU (ψ.comp φ) p = mapNU ψ (mapNU φ p) := rfl</span>
+<span><a class="line" href="#NonUnitalK0Map-L64" id="NonUnitalK0Map-L64"> 64</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteProjection.mapNU_unital"><a class="line" href="#NonUnitalK0Map-L65" id="NonUnitalK0Map-L65"> 65</a> @[simp] theorem mapNU_unital (φ : A →⋆ₐ[ℂ] B) (p : FiniteProjection A) :</span>
+<span><a class="line" href="#NonUnitalK0Map-L66" id="NonUnitalK0Map-L66"> 66</a>     mapNU φ.toNonUnitalStarAlgHom p = map φ p := rfl</span>
+<span><a class="line" href="#NonUnitalK0Map-L67" id="NonUnitalK0Map-L67"> 67</a> end FiniteProjection</span>
+<span><a class="line" href="#NonUnitalK0Map-L68" id="NonUnitalK0Map-L68"> 68</a> </span>
+<span><a class="line" href="#NonUnitalK0Map-L69" id="NonUnitalK0Map-L69"> 69</a> namespace StableProjectionMonoid</span>
+<span><a class="line" href="#NonUnitalK0Map-L70" id="NonUnitalK0Map-L70"> 70</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.StableProjectionMonoid.mapNU"><a class="line" href="#NonUnitalK0Map-L71" id="NonUnitalK0Map-L71"> 71</a> def mapNU (φ : A →⋆ₙₐ[ℂ] B) : StableProjectionMonoid A →+ StableProjectionMonoid B where</span>
+<span><a class="line" href="#NonUnitalK0Map-L72" id="NonUnitalK0Map-L72"> 72</a>   toFun := Quotient.map (FiniteProjection.mapNU φ) (fun _ _ h =&gt; FiniteProjection.equivalent_mapNU φ h)</span>
+<span><a class="line" href="#NonUnitalK0Map-L73" id="NonUnitalK0Map-L73"> 73</a>   map_zero&#x27; := congrArg of (FiniteProjection.mapNU_zero φ)</span>
+<span><a class="line" href="#NonUnitalK0Map-L74" id="NonUnitalK0Map-L74"> 74</a>   map_add&#x27; p q := by</span>
+<span><a class="line" href="#NonUnitalK0Map-L75" id="NonUnitalK0Map-L75"> 75</a>     refine Quotient.inductionOn₂ p q ?_</span>
+<span><a class="line" href="#NonUnitalK0Map-L76" id="NonUnitalK0Map-L76"> 76</a>     intro p q</span>
+<span><a class="line" href="#NonUnitalK0Map-L77" id="NonUnitalK0Map-L77"> 77</a>     exact congrArg of (FiniteProjection.mapNU_blockSum φ p q)</span>
+<span><a class="line" href="#NonUnitalK0Map-L78" id="NonUnitalK0Map-L78"> 78</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.StableProjectionMonoid.mapNU_of"><a class="line" href="#NonUnitalK0Map-L79" id="NonUnitalK0Map-L79"> 79</a> @[simp] theorem mapNU_of (φ : A →⋆ₙₐ[ℂ] B) (p : FiniteProjection A) :</span>
+<span><a class="line" href="#NonUnitalK0Map-L80" id="NonUnitalK0Map-L80"> 80</a>     mapNU φ (of p) = of (FiniteProjection.mapNU φ p) := rfl</span>
+<span><a class="line" href="#NonUnitalK0Map-L81" id="NonUnitalK0Map-L81"> 81</a> end StableProjectionMonoid</span>
+<span><a class="line" href="#NonUnitalK0Map-L82" id="NonUnitalK0Map-L82"> 82</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.k0MapNU"><a class="line" href="#NonUnitalK0Map-L83" id="NonUnitalK0Map-L83"> 83</a> def k0MapNU (φ : A →⋆ₙₐ[ℂ] B) : K0 A →+ K0 B :=</span>
+<span><a class="line" href="#NonUnitalK0Map-L84" id="NonUnitalK0Map-L84"> 84</a>   k0Universal (k0Class.comp (StableProjectionMonoid.mapNU φ))</span>
+<span><a class="line" href="#NonUnitalK0Map-L85" id="NonUnitalK0Map-L85"> 85</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.k0MapNU_projection"><a class="line" href="#NonUnitalK0Map-L86" id="NonUnitalK0Map-L86"> 86</a> @[simp] theorem k0MapNU_projection (φ : A →⋆ₙₐ[ℂ] B) (p : FiniteProjection A) :</span>
+<span><a class="line" href="#NonUnitalK0Map-L87" id="NonUnitalK0Map-L87"> 87</a>     k0MapNU φ (k0Projection p) = k0Projection (FiniteProjection.mapNU φ p) := k0Universal_class _ _</span>
+<span><a class="line" href="#NonUnitalK0Map-L88" id="NonUnitalK0Map-L88"> 88</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.k0MapNU_id"><a class="line" href="#NonUnitalK0Map-L89" id="NonUnitalK0Map-L89"> 89</a> @[simp] theorem k0MapNU_id : k0MapNU (NonUnitalStarAlgHom.id ℂ A) = AddMonoidHom.id (K0 A) := by</span>
+<span><a class="line" href="#NonUnitalK0Map-L90" id="NonUnitalK0Map-L90"> 90</a>   apply k0Hom_ext</span>
+<span><a class="line" href="#NonUnitalK0Map-L91" id="NonUnitalK0Map-L91"> 91</a>   intro p</span>
+<span><a class="line" href="#NonUnitalK0Map-L92" id="NonUnitalK0Map-L92"> 92</a>   simp only [k0MapNU_projection, FiniteProjection.mapNU_id, AddMonoidHom.id_apply]</span>
+<span><a class="line" href="#NonUnitalK0Map-L93" id="NonUnitalK0Map-L93"> 93</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.k0MapNU_comp"><a class="line" href="#NonUnitalK0Map-L94" id="NonUnitalK0Map-L94"> 94</a> @[simp] theorem k0MapNU_comp (ψ : B →⋆ₙₐ[ℂ] C) (φ : A →⋆ₙₐ[ℂ] B) :</span>
+<span><a class="line" href="#NonUnitalK0Map-L95" id="NonUnitalK0Map-L95"> 95</a>     k0MapNU (ψ.comp φ) = (k0MapNU ψ).comp (k0MapNU φ) := by</span>
+<span><a class="line" href="#NonUnitalK0Map-L96" id="NonUnitalK0Map-L96"> 96</a>   apply k0Hom_ext</span>
+<span><a class="line" href="#NonUnitalK0Map-L97" id="NonUnitalK0Map-L97"> 97</a>   intro p</span>
+<span><a class="line" href="#NonUnitalK0Map-L98" id="NonUnitalK0Map-L98"> 98</a>   simp only [k0MapNU_projection, FiniteProjection.mapNU_comp, AddMonoidHom.comp_apply]</span>
+<span><a class="line" href="#NonUnitalK0Map-L99" id="NonUnitalK0Map-L99"> 99</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.k0MapNU_unital"><a class="line" href="#NonUnitalK0Map-L100" id="NonUnitalK0Map-L100">100</a> @[simp] theorem k0MapNU_unital (φ : A →⋆ₐ[ℂ] B) : k0MapNU φ.toNonUnitalStarAlgHom = k0Map φ := by</span>
+<span><a class="line" href="#NonUnitalK0Map-L101" id="NonUnitalK0Map-L101">101</a>   apply k0Hom_ext</span>
+<span><a class="line" href="#NonUnitalK0Map-L102" id="NonUnitalK0Map-L102">102</a>   intro p</span>
+<span><a class="line" href="#NonUnitalK0Map-L103" id="NonUnitalK0Map-L103">103</a>   simp only [k0MapNU_projection, FiniteProjection.mapNU_unital, k0Map_projection]</span>
+<span><a class="line" href="#NonUnitalK0Map-L104" id="NonUnitalK0Map-L104">104</a> </span>
+<span><a class="line" href="#NonUnitalK0Map-L105" id="NonUnitalK0Map-L105">105</a> end BC4lean.OperatorKTheory</span>
+</pre>
+<h2 id="OperatorK0Product">OperatorK0Product.lean</h2><p>源码 SHA-256：<code>ee890a855e1f628ce2f800f5d8498a696ebd8d9e1b73bed497776c1afe6c86ff</code></p><pre>
+<span><a class="line" href="#OperatorK0Product-L1" id="OperatorK0Product-L1">  1</a> import BC4lean.NonUnitalK0Map</span>
+<span><a class="line" href="#OperatorK0Product-L2" id="OperatorK0Product-L2">  2</a> import Mathlib.Data.Matrix.ColumnRowPartitioned</span>
+<span><a class="line" href="#OperatorK0Product-L3" id="OperatorK0Product-L3">  3</a> </span>
+<span><a class="line" href="#OperatorK0Product-L4" id="OperatorK0Product-L4">  4</a> /-! # Product decomposition for projection K₀ -/</span>
+<span><a class="line" href="#OperatorK0Product-L5" id="OperatorK0Product-L5">  5</a> noncomputable section</span>
+<span><a class="line" href="#OperatorK0Product-L6" id="OperatorK0Product-L6">  6</a> open scoped Matrix</span>
+<span><a class="line" href="#OperatorK0Product-L7" id="OperatorK0Product-L7">  7</a> namespace BC4lean.OperatorKTheory</span>
+<span><a class="line" href="#OperatorK0Product-L8" id="OperatorK0Product-L8">  8</a> universe u v</span>
+<span><a class="line" href="#OperatorK0Product-L9" id="OperatorK0Product-L9">  9</a> variable {A : Type u} {B : Type v} [CStarAlgebra A] [CStarAlgebra B]</span>
+<span><a class="line" href="#OperatorK0Product-L10" id="OperatorK0Product-L10"> 10</a> variable [PartialOrder A] [StarOrderedRing A] [PartialOrder B] [StarOrderedRing B]</span>
+<span><a class="line" href="#OperatorK0Product-L11" id="OperatorK0Product-L11"> 11</a> variable [PartialOrder (A × B)] [StarOrderedRing (A × B)]</span>
+<span><a class="line" href="#OperatorK0Product-L12" id="OperatorK0Product-L12"> 12</a> </span>
+<span><a class="line" href="#OperatorK0Product-L13" id="OperatorK0Product-L13"> 13</a> /-- A projection over a product is the orthogonal sum of its two components. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.productProjection_split"><a class="line" href="#OperatorK0Product-L14" id="OperatorK0Product-L14"> 14</a> theorem productProjection_split (p : FiniteProjection (A × B)) :</span>
+<span><a class="line" href="#OperatorK0Product-L15" id="OperatorK0Product-L15"> 15</a>     FiniteProjection.Equivalent p</span>
+<span><a class="line" href="#OperatorK0Product-L16" id="OperatorK0Product-L16"> 16</a>       (FiniteProjection.blockSum</span>
+<span><a class="line" href="#OperatorK0Product-L17" id="OperatorK0Product-L17"> 17</a>         (FiniteProjection.mapNU (NonUnitalStarAlgHom.inl ℂ A B)</span>
+<span><a class="line" href="#OperatorK0Product-L18" id="OperatorK0Product-L18"> 18</a>           (FiniteProjection.map (StarAlgHom.fst ℂ A B) p))</span>
+<span><a class="line" href="#OperatorK0Product-L19" id="OperatorK0Product-L19"> 19</a>         (FiniteProjection.mapNU (NonUnitalStarAlgHom.inr ℂ A B)</span>
+<span><a class="line" href="#OperatorK0Product-L20" id="OperatorK0Product-L20"> 20</a>           (FiniteProjection.map (StarAlgHom.snd ℂ A B) p))) := by</span>
+<span><a class="line" href="#OperatorK0Product-L21" id="OperatorK0Product-L21"> 21</a>   let P := projectionMatrix p.projection</span>
+<span><a class="line" href="#OperatorK0Product-L22" id="OperatorK0Product-L22"> 22</a>   let l : A × B →⋆ₙₐ[ℂ] A × B :=</span>
+<span><a class="line" href="#OperatorK0Product-L23" id="OperatorK0Product-L23"> 23</a>     (NonUnitalStarAlgHom.inl ℂ A B).comp (NonUnitalStarAlgHom.fst ℂ A B)</span>
+<span><a class="line" href="#OperatorK0Product-L24" id="OperatorK0Product-L24"> 24</a>   let r : A × B →⋆ₙₐ[ℂ] A × B :=</span>
+<span><a class="line" href="#OperatorK0Product-L25" id="OperatorK0Product-L25"> 25</a>     (NonUnitalStarAlgHom.inr ℂ A B).comp (NonUnitalStarAlgHom.snd ℂ A B)</span>
+<span><a class="line" href="#OperatorK0Product-L26" id="OperatorK0Product-L26"> 26</a>   let L := P.map l</span>
+<span><a class="line" href="#OperatorK0Product-L27" id="OperatorK0Product-L27"> 27</a>   let R := P.map r</span>
+<span><a class="line" href="#OperatorK0Product-L28" id="OperatorK0Product-L28"> 28</a>   have hL : Lᴴ = L := by</span>
+<span><a class="line" href="#OperatorK0Product-L29" id="OperatorK0Product-L29"> 29</a>     dsimp [L]</span>
+<span><a class="line" href="#OperatorK0Product-L30" id="OperatorK0Product-L30"> 30</a>     rw [← Matrix.conjTranspose_map l (fun x =&gt; map_star l x)]</span>
+<span><a class="line" href="#OperatorK0Product-L31" id="OperatorK0Product-L31"> 31</a>     exact congrArg (fun M =&gt; M.map l) (projectionMatrix_star p.projection)</span>
+<span><a class="line" href="#OperatorK0Product-L32" id="OperatorK0Product-L32"> 32</a>   have hR : Rᴴ = R := by</span>
+<span><a class="line" href="#OperatorK0Product-L33" id="OperatorK0Product-L33"> 33</a>     dsimp [R]</span>
+<span><a class="line" href="#OperatorK0Product-L34" id="OperatorK0Product-L34"> 34</a>     rw [← Matrix.conjTranspose_map r (fun x =&gt; map_star r x)]</span>
+<span><a class="line" href="#OperatorK0Product-L35" id="OperatorK0Product-L35"> 35</a>     exact congrArg (fun M =&gt; M.map r) (projectionMatrix_star p.projection)</span>
+<span><a class="line" href="#OperatorK0Product-L36" id="OperatorK0Product-L36"> 36</a>   have hLL : L * L = L := by</span>
+<span><a class="line" href="#OperatorK0Product-L37" id="OperatorK0Product-L37"> 37</a>     dsimp [L]</span>
+<span><a class="line" href="#OperatorK0Product-L38" id="OperatorK0Product-L38"> 38</a>     rw [← Matrix.map_mul]</span>
+<span><a class="line" href="#OperatorK0Product-L39" id="OperatorK0Product-L39"> 39</a>     exact congrArg (fun M =&gt; M.map l) (projectionMatrix_mul p.projection)</span>
+<span><a class="line" href="#OperatorK0Product-L40" id="OperatorK0Product-L40"> 40</a>   have hRR : R * R = R := by</span>
+<span><a class="line" href="#OperatorK0Product-L41" id="OperatorK0Product-L41"> 41</a>     dsimp [R]</span>
+<span><a class="line" href="#OperatorK0Product-L42" id="OperatorK0Product-L42"> 42</a>     rw [← Matrix.map_mul]</span>
+<span><a class="line" href="#OperatorK0Product-L43" id="OperatorK0Product-L43"> 43</a>     exact congrArg (fun M =&gt; M.map r) (projectionMatrix_mul p.projection)</span>
+<span><a class="line" href="#OperatorK0Product-L44" id="OperatorK0Product-L44"> 44</a>   have hLR : L * R = 0 := by</span>
+<span><a class="line" href="#OperatorK0Product-L45" id="OperatorK0Product-L45"> 45</a>     funext i j</span>
+<span><a class="line" href="#OperatorK0Product-L46" id="OperatorK0Product-L46"> 46</a>     apply Prod.ext &lt;;&gt; simp [L, R, l, r, Matrix.mul_apply]</span>
+<span><a class="line" href="#OperatorK0Product-L47" id="OperatorK0Product-L47"> 47</a>   have hRL : R * L = 0 := by</span>
+<span><a class="line" href="#OperatorK0Product-L48" id="OperatorK0Product-L48"> 48</a>     funext i j</span>
+<span><a class="line" href="#OperatorK0Product-L49" id="OperatorK0Product-L49"> 49</a>     apply Prod.ext &lt;;&gt; simp [L, R, l, r, Matrix.mul_apply]</span>
+<span><a class="line" href="#OperatorK0Product-L50" id="OperatorK0Product-L50"> 50</a>   have hsum : L + R = P := by</span>
+<span><a class="line" href="#OperatorK0Product-L51" id="OperatorK0Product-L51"> 51</a>     funext i j</span>
+<span><a class="line" href="#OperatorK0Product-L52" id="OperatorK0Product-L52"> 52</a>     apply Prod.ext &lt;;&gt; simp [L, R, l, r]</span>
+<span><a class="line" href="#OperatorK0Product-L53" id="OperatorK0Product-L53"> 53</a>   change ∃ v : Matrix p.Index (p.Index ⊕ p.Index) (A × B),</span>
+<span><a class="line" href="#OperatorK0Product-L54" id="OperatorK0Product-L54"> 54</a>     v * vᴴ = P ∧ vᴴ * v = Matrix.fromBlocks L 0 0 R</span>
+<span><a class="line" href="#OperatorK0Product-L55" id="OperatorK0Product-L55"> 55</a>   refine ⟨Matrix.fromCols L R, ?_, ?_⟩</span>
+<span><a class="line" href="#OperatorK0Product-L56" id="OperatorK0Product-L56"> 56</a>   · rw [Matrix.conjTranspose_fromCols_eq_fromRows_conjTranspose,</span>
+<span><a class="line" href="#OperatorK0Product-L57" id="OperatorK0Product-L57"> 57</a>       Matrix.fromCols_mul_fromRows, hL, hR, hLL, hRR]</span>
+<span><a class="line" href="#OperatorK0Product-L58" id="OperatorK0Product-L58"> 58</a>     exact hsum</span>
+<span><a class="line" href="#OperatorK0Product-L59" id="OperatorK0Product-L59"> 59</a>   · rw [Matrix.conjTranspose_fromCols_eq_fromRows_conjTranspose,</span>
+<span><a class="line" href="#OperatorK0Product-L60" id="OperatorK0Product-L60"> 60</a>       Matrix.fromRows_mul_fromCols, hL, hR, hLL, hRR, hLR, hRL]</span>
+<span><a class="line" href="#OperatorK0Product-L61" id="OperatorK0Product-L61"> 61</a> </span>
+<span><a class="line" href="#OperatorK0Product-L62" id="OperatorK0Product-L62"> 62</a> variable (A B)</span>
+<span><a class="line" href="#OperatorK0Product-L63" id="OperatorK0Product-L63"> 63</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.k0ProductForward"><a class="line" href="#OperatorK0Product-L64" id="OperatorK0Product-L64"> 64</a> def k0ProductForward : K0 (A × B) →+ K0 A × K0 B :=</span>
+<span><a class="line" href="#OperatorK0Product-L65" id="OperatorK0Product-L65"> 65</a>   (k0Map (StarAlgHom.fst ℂ A B)).prod (k0Map (StarAlgHom.snd ℂ A B))</span>
+<span><a class="line" href="#OperatorK0Product-L66" id="OperatorK0Product-L66"> 66</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.k0ProductInverse"><a class="line" href="#OperatorK0Product-L67" id="OperatorK0Product-L67"> 67</a> def k0ProductInverse : K0 A × K0 B →+ K0 (A × B) :=</span>
+<span><a class="line" href="#OperatorK0Product-L68" id="OperatorK0Product-L68"> 68</a>   (k0MapNU (NonUnitalStarAlgHom.inl ℂ A B)).coprod (k0MapNU (NonUnitalStarAlgHom.inr ℂ A B))</span>
+<span><a class="line" href="#OperatorK0Product-L69" id="OperatorK0Product-L69"> 69</a> </span>
+<span><a class="line" href="#OperatorK0Product-L70" id="OperatorK0Product-L70"> 70</a> /-- The component maps reconstruct every K₀ class. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.k0Product_leftInverse"><a class="line" href="#OperatorK0Product-L71" id="OperatorK0Product-L71"> 71</a> theorem k0Product_leftInverse : Function.LeftInverse (k0ProductInverse A B) (k0ProductForward A B) := by</span>
+<span><a class="line" href="#OperatorK0Product-L72" id="OperatorK0Product-L72"> 72</a>   have h : (k0ProductInverse A B).comp (k0ProductForward A B) = AddMonoidHom.id _ := by</span>
+<span><a class="line" href="#OperatorK0Product-L73" id="OperatorK0Product-L73"> 73</a>     apply k0Hom_ext</span>
+<span><a class="line" href="#OperatorK0Product-L74" id="OperatorK0Product-L74"> 74</a>     intro p</span>
+<span><a class="line" href="#OperatorK0Product-L75" id="OperatorK0Product-L75"> 75</a>     change k0MapNU _ (k0Map _ (k0Projection p)) + k0MapNU _ (k0Map _ (k0Projection p)) = k0Projection p</span>
+<span><a class="line" href="#OperatorK0Product-L76" id="OperatorK0Product-L76"> 76</a>     simp only [k0Map_projection, k0MapNU_projection]</span>
+<span><a class="line" href="#OperatorK0Product-L77" id="OperatorK0Product-L77"> 77</a>     rw [← k0Projection_blockSum]</span>
+<span><a class="line" href="#OperatorK0Product-L78" id="OperatorK0Product-L78"> 78</a>     exact (k0Projection_eq_of_equivalent (productProjection_split p)).symm</span>
+<span><a class="line" href="#OperatorK0Product-L79" id="OperatorK0Product-L79"> 79</a>   intro x</span>
+<span><a class="line" href="#OperatorK0Product-L80" id="OperatorK0Product-L80"> 80</a>   exact DFunLike.congr_fun h x</span>
+<span><a class="line" href="#OperatorK0Product-L81" id="OperatorK0Product-L81"> 81</a> </span>
+<span><a class="line" href="#OperatorK0Product-L82" id="OperatorK0Product-L82"> 82</a> variable {A B}</span>
+<span><a class="line" href="#OperatorK0Product-L83" id="OperatorK0Product-L83"> 83</a> </span>
+<span><a class="line" href="#OperatorK0Product-L84" id="OperatorK0Product-L84"> 84</a> omit [PartialOrder (A × B)] [StarOrderedRing (A × B)] in</span>
+<span id="doc/BC4lean.OperatorKTheory.k0MapNU_zero"><a class="line" href="#OperatorK0Product-L85" id="OperatorK0Product-L85"> 85</a> @[simp] theorem k0MapNU_zero : k0MapNU (0 : A →⋆ₙₐ[ℂ] B) = 0 := by</span>
+<span><a class="line" href="#OperatorK0Product-L86" id="OperatorK0Product-L86"> 86</a>   apply k0Hom_ext</span>
+<span><a class="line" href="#OperatorK0Product-L87" id="OperatorK0Product-L87"> 87</a>   intro p</span>
+<span><a class="line" href="#OperatorK0Product-L88" id="OperatorK0Product-L88"> 88</a>   rw [k0MapNU_projection]</span>
+<span><a class="line" href="#OperatorK0Product-L89" id="OperatorK0Product-L89"> 89</a>   change k0Projection (FiniteProjection.ofProjection (projectionMapNU 0 p.projection)) = 0</span>
+<span><a class="line" href="#OperatorK0Product-L90" id="OperatorK0Product-L90"> 90</a>   have h : projectionMapNU (0 : A →⋆ₙₐ[ℂ] B) p.projection = Projection.zero := by</span>
+<span><a class="line" href="#OperatorK0Product-L91" id="OperatorK0Product-L91"> 91</a>     apply Subtype.ext</span>
+<span><a class="line" href="#OperatorK0Product-L92" id="OperatorK0Product-L92"> 92</a>     rfl</span>
+<span><a class="line" href="#OperatorK0Product-L93" id="OperatorK0Product-L93"> 93</a>   rw [h]</span>
+<span><a class="line" href="#OperatorK0Product-L94" id="OperatorK0Product-L94"> 94</a>   exact (congrArg k0Class (StableProjectionMonoid.of_zeroProjection (A := B) (ι := p.Index))).trans</span>
+<span><a class="line" href="#OperatorK0Product-L95" id="OperatorK0Product-L95"> 95</a>     (map_zero k0Class)</span>
+<span><a class="line" href="#OperatorK0Product-L96" id="OperatorK0Product-L96"> 96</a> </span>
+<span><a class="line" href="#OperatorK0Product-L97" id="OperatorK0Product-L97"> 97</a> variable (A B)</span>
+<span><a class="line" href="#OperatorK0Product-L98" id="OperatorK0Product-L98"> 98</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.k0Product_rightInverse"><a class="line" href="#OperatorK0Product-L99" id="OperatorK0Product-L99"> 99</a> theorem k0Product_rightInverse : Function.RightInverse (k0ProductInverse A B) (k0ProductForward A B) := by</span>
+<span><a class="line" href="#OperatorK0Product-L100" id="OperatorK0Product-L100">100</a>   have fl : (k0Map (StarAlgHom.fst ℂ A B)).comp (k0MapNU (NonUnitalStarAlgHom.inl ℂ A B)) =</span>
+<span><a class="line" href="#OperatorK0Product-L101" id="OperatorK0Product-L101">101</a>       AddMonoidHom.id (K0 A) := by</span>
+<span><a class="line" href="#OperatorK0Product-L102" id="OperatorK0Product-L102">102</a>     rw [← k0MapNU_unital, ← k0MapNU_comp]</span>
+<span><a class="line" href="#OperatorK0Product-L103" id="OperatorK0Product-L103">103</a>     have h : ((StarAlgHom.fst ℂ A B).toNonUnitalStarAlgHom).comp</span>
+<span><a class="line" href="#OperatorK0Product-L104" id="OperatorK0Product-L104">104</a>         (NonUnitalStarAlgHom.inl ℂ A B) = NonUnitalStarAlgHom.id ℂ A := by ext; rfl</span>
+<span><a class="line" href="#OperatorK0Product-L105" id="OperatorK0Product-L105">105</a>     rw [h, k0MapNU_id]</span>
+<span><a class="line" href="#OperatorK0Product-L106" id="OperatorK0Product-L106">106</a>   have fr : (k0Map (StarAlgHom.fst ℂ A B)).comp (k0MapNU (NonUnitalStarAlgHom.inr ℂ A B)) = 0 := by</span>
+<span><a class="line" href="#OperatorK0Product-L107" id="OperatorK0Product-L107">107</a>     rw [← k0MapNU_unital, ← k0MapNU_comp]</span>
+<span><a class="line" href="#OperatorK0Product-L108" id="OperatorK0Product-L108">108</a>     have h : ((StarAlgHom.fst ℂ A B).toNonUnitalStarAlgHom).comp</span>
+<span><a class="line" href="#OperatorK0Product-L109" id="OperatorK0Product-L109">109</a>         (NonUnitalStarAlgHom.inr ℂ A B) = 0 := by ext; rfl</span>
+<span><a class="line" href="#OperatorK0Product-L110" id="OperatorK0Product-L110">110</a>     rw [h, k0MapNU_zero]</span>
+<span><a class="line" href="#OperatorK0Product-L111" id="OperatorK0Product-L111">111</a>   have sl : (k0Map (StarAlgHom.snd ℂ A B)).comp (k0MapNU (NonUnitalStarAlgHom.inl ℂ A B)) = 0 := by</span>
+<span><a class="line" href="#OperatorK0Product-L112" id="OperatorK0Product-L112">112</a>     rw [← k0MapNU_unital, ← k0MapNU_comp]</span>
+<span><a class="line" href="#OperatorK0Product-L113" id="OperatorK0Product-L113">113</a>     have h : ((StarAlgHom.snd ℂ A B).toNonUnitalStarAlgHom).comp</span>
+<span><a class="line" href="#OperatorK0Product-L114" id="OperatorK0Product-L114">114</a>         (NonUnitalStarAlgHom.inl ℂ A B) = 0 := by ext; rfl</span>
+<span><a class="line" href="#OperatorK0Product-L115" id="OperatorK0Product-L115">115</a>     rw [h, k0MapNU_zero]</span>
+<span><a class="line" href="#OperatorK0Product-L116" id="OperatorK0Product-L116">116</a>   have sr : (k0Map (StarAlgHom.snd ℂ A B)).comp (k0MapNU (NonUnitalStarAlgHom.inr ℂ A B)) =</span>
+<span><a class="line" href="#OperatorK0Product-L117" id="OperatorK0Product-L117">117</a>       AddMonoidHom.id (K0 B) := by</span>
+<span><a class="line" href="#OperatorK0Product-L118" id="OperatorK0Product-L118">118</a>     rw [← k0MapNU_unital, ← k0MapNU_comp]</span>
+<span><a class="line" href="#OperatorK0Product-L119" id="OperatorK0Product-L119">119</a>     have h : ((StarAlgHom.snd ℂ A B).toNonUnitalStarAlgHom).comp</span>
+<span><a class="line" href="#OperatorK0Product-L120" id="OperatorK0Product-L120">120</a>         (NonUnitalStarAlgHom.inr ℂ A B) = NonUnitalStarAlgHom.id ℂ B := by ext; rfl</span>
+<span><a class="line" href="#OperatorK0Product-L121" id="OperatorK0Product-L121">121</a>     rw [h, k0MapNU_id]</span>
+<span><a class="line" href="#OperatorK0Product-L122" id="OperatorK0Product-L122">122</a>   intro x</span>
+<span><a class="line" href="#OperatorK0Product-L123" id="OperatorK0Product-L123">123</a>   apply Prod.ext</span>
+<span><a class="line" href="#OperatorK0Product-L124" id="OperatorK0Product-L124">124</a>   · change k0Map (StarAlgHom.fst ℂ A B)</span>
+<span><a class="line" href="#OperatorK0Product-L125" id="OperatorK0Product-L125">125</a>       (k0MapNU (NonUnitalStarAlgHom.inl ℂ A B) x.1 +</span>
+<span><a class="line" href="#OperatorK0Product-L126" id="OperatorK0Product-L126">126</a>         k0MapNU (NonUnitalStarAlgHom.inr ℂ A B) x.2) = x.1</span>
+<span><a class="line" href="#OperatorK0Product-L127" id="OperatorK0Product-L127">127</a>     rw [map_add]</span>
+<span><a class="line" href="#OperatorK0Product-L128" id="OperatorK0Product-L128">128</a>     exact (congrArg₂ (· + ·) (DFunLike.congr_fun fl x.1) (DFunLike.congr_fun fr x.2)).trans (add_zero _)</span>
+<span><a class="line" href="#OperatorK0Product-L129" id="OperatorK0Product-L129">129</a>   · change k0Map (StarAlgHom.snd ℂ A B)</span>
+<span><a class="line" href="#OperatorK0Product-L130" id="OperatorK0Product-L130">130</a>       (k0MapNU (NonUnitalStarAlgHom.inl ℂ A B) x.1 +</span>
+<span><a class="line" href="#OperatorK0Product-L131" id="OperatorK0Product-L131">131</a>         k0MapNU (NonUnitalStarAlgHom.inr ℂ A B) x.2) = x.2</span>
+<span><a class="line" href="#OperatorK0Product-L132" id="OperatorK0Product-L132">132</a>     rw [map_add]</span>
+<span><a class="line" href="#OperatorK0Product-L133" id="OperatorK0Product-L133">133</a>     exact (congrArg₂ (· + ·) (DFunLike.congr_fun sl x.1) (DFunLike.congr_fun sr x.2)).trans (zero_add _)</span>
+<span><a class="line" href="#OperatorK0Product-L134" id="OperatorK0Product-L134">134</a> </span>
+<span><a class="line" href="#OperatorK0Product-L135" id="OperatorK0Product-L135">135</a> /-- K₀ carries finite products of unital C*-algebras to products of abelian groups. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.k0ProductEquiv"><a class="line" href="#OperatorK0Product-L136" id="OperatorK0Product-L136">136</a> def k0ProductEquiv : K0 (A × B) ≃+ K0 A × K0 B where</span>
+<span><a class="line" href="#OperatorK0Product-L137" id="OperatorK0Product-L137">137</a>   toFun := k0ProductForward A B</span>
+<span><a class="line" href="#OperatorK0Product-L138" id="OperatorK0Product-L138">138</a>   invFun := k0ProductInverse A B</span>
+<span><a class="line" href="#OperatorK0Product-L139" id="OperatorK0Product-L139">139</a>   left_inv := k0Product_leftInverse A B</span>
+<span><a class="line" href="#OperatorK0Product-L140" id="OperatorK0Product-L140">140</a>   right_inv := k0Product_rightInverse A B</span>
+<span><a class="line" href="#OperatorK0Product-L141" id="OperatorK0Product-L141">141</a>   map_add&#x27; := map_add (k0ProductForward A B)</span>
+<span><a class="line" href="#OperatorK0Product-L142" id="OperatorK0Product-L142">142</a> </span>
+<span><a class="line" href="#OperatorK0Product-L143" id="OperatorK0Product-L143">143</a> end BC4lean.OperatorKTheory</span>
+</pre>
+<h2 id="OperatorK1Product">OperatorK1Product.lean</h2><p>源码 SHA-256：<code>0966564a77291ae5744a7b05ad77755cf02df4b4aa0b03b3b4c5b7581f72dbe4</code></p><pre>
+<span><a class="line" href="#OperatorK1Product-L1" id="OperatorK1Product-L1">  1</a> import BC4lean.OperatorK1Functoriality</span>
+<span><a class="line" href="#OperatorK1Product-L2" id="OperatorK1Product-L2">  2</a> </span>
+<span><a class="line" href="#OperatorK1Product-L3" id="OperatorK1Product-L3">  3</a> /-! # Product decomposition for stable unitary K₁ -/</span>
+<span><a class="line" href="#OperatorK1Product-L4" id="OperatorK1Product-L4">  4</a> noncomputable section</span>
+<span><a class="line" href="#OperatorK1Product-L5" id="OperatorK1Product-L5">  5</a> open scoped CStarAlgebra</span>
+<span><a class="line" href="#OperatorK1Product-L6" id="OperatorK1Product-L6">  6</a> namespace BC4lean.OperatorKTheory</span>
+<span><a class="line" href="#OperatorK1Product-L7" id="OperatorK1Product-L7">  7</a> universe u v</span>
+<span><a class="line" href="#OperatorK1Product-L8" id="OperatorK1Product-L8">  8</a> variable {A : Type u} {B : Type v} [CStarAlgebra A] [CStarAlgebra B]</span>
+<span><a class="line" href="#OperatorK1Product-L9" id="OperatorK1Product-L9">  9</a> variable {ι κ : Type} [Fintype ι] [Fintype κ] [DecidableEq ι] [DecidableEq κ]</span>
+<span><a class="line" href="#OperatorK1Product-L10" id="OperatorK1Product-L10"> 10</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.matrixPair"><a class="line" href="#OperatorK1Product-L11" id="OperatorK1Product-L11"> 11</a> def matrixPair (x : CStarMatrix ι ι A) (y : CStarMatrix ι ι B) : CStarMatrix ι ι (A × B) :=</span>
+<span><a class="line" href="#OperatorK1Product-L12" id="OperatorK1Product-L12"> 12</a>   CStarMatrix.ofMatrix (fun i j =&gt; (x i j, y i j))</span>
+<span><a class="line" href="#OperatorK1Product-L13" id="OperatorK1Product-L13"> 13</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.matrixMap_fst_pair"><a class="line" href="#OperatorK1Product-L14" id="OperatorK1Product-L14"> 14</a> @[simp] theorem matrixMap_fst_pair (x : CStarMatrix ι ι A) (y : CStarMatrix ι ι B) :</span>
+<span><a class="line" href="#OperatorK1Product-L15" id="OperatorK1Product-L15"> 15</a>     matrixMap (StarAlgHom.fst ℂ A B) (matrixPair x y) = x := rfl</span>
+<span id="doc/BC4lean.OperatorKTheory.matrixMap_snd_pair"><a class="line" href="#OperatorK1Product-L16" id="OperatorK1Product-L16"> 16</a> @[simp] theorem matrixMap_snd_pair (x : CStarMatrix ι ι A) (y : CStarMatrix ι ι B) :</span>
+<span><a class="line" href="#OperatorK1Product-L17" id="OperatorK1Product-L17"> 17</a>     matrixMap (StarAlgHom.snd ℂ A B) (matrixPair x y) = y := rfl</span>
+<span><a class="line" href="#OperatorK1Product-L18" id="OperatorK1Product-L18"> 18</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.matrix_prod_ext"><a class="line" href="#OperatorK1Product-L19" id="OperatorK1Product-L19"> 19</a> theorem matrix_prod_ext {x y : CStarMatrix ι ι (A × B)}</span>
+<span><a class="line" href="#OperatorK1Product-L20" id="OperatorK1Product-L20"> 20</a>     (h : matrixMap (StarAlgHom.fst ℂ A B) x = matrixMap (StarAlgHom.fst ℂ A B) y)</span>
+<span><a class="line" href="#OperatorK1Product-L21" id="OperatorK1Product-L21"> 21</a>     (k : matrixMap (StarAlgHom.snd ℂ A B) x = matrixMap (StarAlgHom.snd ℂ A B) y) : x = y := by</span>
+<span><a class="line" href="#OperatorK1Product-L22" id="OperatorK1Product-L22"> 22</a>   funext i j</span>
+<span><a class="line" href="#OperatorK1Product-L23" id="OperatorK1Product-L23"> 23</a>   exact Prod.ext (congrArg (fun M : CStarMatrix ι ι A =&gt; M i j) h)</span>
+<span><a class="line" href="#OperatorK1Product-L24" id="OperatorK1Product-L24"> 24</a>     (congrArg (fun M : CStarMatrix ι ι B =&gt; M i j) k)</span>
+<span><a class="line" href="#OperatorK1Product-L25" id="OperatorK1Product-L25"> 25</a> </span>
+<span><a class="line" href="#OperatorK1Product-L26" id="OperatorK1Product-L26"> 26</a> variable [PartialOrder A] [StarOrderedRing A] [PartialOrder B] [StarOrderedRing B]</span>
+<span><a class="line" href="#OperatorK1Product-L27" id="OperatorK1Product-L27"> 27</a> variable [PartialOrder (A × B)] [StarOrderedRing (A × B)]</span>
+<span><a class="line" href="#OperatorK1Product-L28" id="OperatorK1Product-L28"> 28</a> </span>
+<span><a class="line" href="#OperatorK1Product-L29" id="OperatorK1Product-L29"> 29</a> /-- Pair finite matrix unitaries of the same size, entry by entry. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.unitaryPair"><a class="line" href="#OperatorK1Product-L30" id="OperatorK1Product-L30"> 30</a> def unitaryPair (a : MatrixUnitary A ι) (b : MatrixUnitary B ι) : MatrixUnitary (A × B) ι :=</span>
+<span><a class="line" href="#OperatorK1Product-L31" id="OperatorK1Product-L31"> 31</a>   ⟨matrixPair a b, by</span>
+<span><a class="line" href="#OperatorK1Product-L32" id="OperatorK1Product-L32"> 32</a>     rw [Unitary.mem_iff]</span>
+<span><a class="line" href="#OperatorK1Product-L33" id="OperatorK1Product-L33"> 33</a>     constructor &lt;;&gt; apply matrix_prod_ext &lt;;&gt;</span>
+<span><a class="line" href="#OperatorK1Product-L34" id="OperatorK1Product-L34"> 34</a>       simp only [map_mul, map_star, map_one, matrixMap_fst_pair, matrixMap_snd_pair,</span>
+<span><a class="line" href="#OperatorK1Product-L35" id="OperatorK1Product-L35"> 35</a>         Unitary.star_mul_self_of_mem a.property, Unitary.mul_star_self_of_mem a.property,</span>
+<span><a class="line" href="#OperatorK1Product-L36" id="OperatorK1Product-L36"> 36</a>         Unitary.star_mul_self_of_mem b.property, Unitary.mul_star_self_of_mem b.property]⟩</span>
+<span><a class="line" href="#OperatorK1Product-L37" id="OperatorK1Product-L37"> 37</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.unitaryPair_fst"><a class="line" href="#OperatorK1Product-L38" id="OperatorK1Product-L38"> 38</a> @[simp] theorem unitaryPair_fst (a : MatrixUnitary A ι) (b : MatrixUnitary B ι) :</span>
+<span><a class="line" href="#OperatorK1Product-L39" id="OperatorK1Product-L39"> 39</a>     matrixUnitaryMap (StarAlgHom.fst ℂ A B) (unitaryPair a b) = a := by apply Subtype.ext; rfl</span>
+<span id="doc/BC4lean.OperatorKTheory.unitaryPair_snd"><a class="line" href="#OperatorK1Product-L40" id="OperatorK1Product-L40"> 40</a> @[simp] theorem unitaryPair_snd (a : MatrixUnitary A ι) (b : MatrixUnitary B ι) :</span>
+<span><a class="line" href="#OperatorK1Product-L41" id="OperatorK1Product-L41"> 41</a>     matrixUnitaryMap (StarAlgHom.snd ℂ A B) (unitaryPair a b) = b := by apply Subtype.ext; rfl</span>
+<span><a class="line" href="#OperatorK1Product-L42" id="OperatorK1Product-L42"> 42</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.unitaryPair_one"><a class="line" href="#OperatorK1Product-L43" id="OperatorK1Product-L43"> 43</a> @[simp] theorem unitaryPair_one : unitaryPair (1 : MatrixUnitary A ι) (1 : MatrixUnitary B ι) = 1 := by</span>
+<span><a class="line" href="#OperatorK1Product-L44" id="OperatorK1Product-L44"> 44</a>   apply Subtype.ext</span>
+<span><a class="line" href="#OperatorK1Product-L45" id="OperatorK1Product-L45"> 45</a>   change matrixPair (1 : CStarMatrix ι ι A) (1 : CStarMatrix ι ι B) = 1</span>
+<span><a class="line" href="#OperatorK1Product-L46" id="OperatorK1Product-L46"> 46</a>   apply matrix_prod_ext &lt;;&gt; simp only [map_one, matrixMap_fst_pair, matrixMap_snd_pair]</span>
+<span><a class="line" href="#OperatorK1Product-L47" id="OperatorK1Product-L47"> 47</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.continuous_unitaryPair"><a class="line" href="#OperatorK1Product-L48" id="OperatorK1Product-L48"> 48</a> theorem continuous_unitaryPair : Continuous (fun x : MatrixUnitary A ι × MatrixUnitary B ι =&gt; unitaryPair x.1 x.2) := by</span>
+<span><a class="line" href="#OperatorK1Product-L49" id="OperatorK1Product-L49"> 49</a>   apply Continuous.subtype_mk</span>
+<span><a class="line" href="#OperatorK1Product-L50" id="OperatorK1Product-L50"> 50</a>   apply CStarMatrix.ofMatrixL.continuous.comp</span>
+<span><a class="line" href="#OperatorK1Product-L51" id="OperatorK1Product-L51"> 51</a>   apply continuous_pi</span>
+<span><a class="line" href="#OperatorK1Product-L52" id="OperatorK1Product-L52"> 52</a>   intro i</span>
+<span><a class="line" href="#OperatorK1Product-L53" id="OperatorK1Product-L53"> 53</a>   apply continuous_pi</span>
+<span><a class="line" href="#OperatorK1Product-L54" id="OperatorK1Product-L54"> 54</a>   intro j</span>
+<span><a class="line" href="#OperatorK1Product-L55" id="OperatorK1Product-L55"> 55</a>   have ha := CStarMatrix.ofMatrixL.symm.continuous.comp</span>
+<span><a class="line" href="#OperatorK1Product-L56" id="OperatorK1Product-L56"> 56</a>     (continuous_subtype_val.comp (continuous_fst : Continuous (fun x : MatrixUnitary A ι × MatrixUnitary B ι =&gt; x.1)))</span>
+<span><a class="line" href="#OperatorK1Product-L57" id="OperatorK1Product-L57"> 57</a>   have hb := CStarMatrix.ofMatrixL.symm.continuous.comp</span>
+<span><a class="line" href="#OperatorK1Product-L58" id="OperatorK1Product-L58"> 58</a>     (continuous_subtype_val.comp (continuous_snd : Continuous (fun x : MatrixUnitary A ι × MatrixUnitary B ι =&gt; x.2)))</span>
+<span><a class="line" href="#OperatorK1Product-L59" id="OperatorK1Product-L59"> 59</a>   exact ((continuous_apply j).comp ((continuous_apply i).comp ha)).prodMk</span>
+<span><a class="line" href="#OperatorK1Product-L60" id="OperatorK1Product-L60"> 60</a>     ((continuous_apply j).comp ((continuous_apply i).comp hb))</span>
+<span><a class="line" href="#OperatorK1Product-L61" id="OperatorK1Product-L61"> 61</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.unitaryReindex_one"><a class="line" href="#OperatorK1Product-L62" id="OperatorK1Product-L62"> 62</a> @[simp] theorem unitaryReindex_one (e : ι ≃ κ) : unitaryReindex e (1 : MatrixUnitary A ι) = 1 := by</span>
+<span><a class="line" href="#OperatorK1Product-L63" id="OperatorK1Product-L63"> 63</a>   apply Subtype.ext</span>
+<span><a class="line" href="#OperatorK1Product-L64" id="OperatorK1Product-L64"> 64</a>   exact map_one (CStarMatrix.reindexₐ ℂ A e)</span>
+<span><a class="line" href="#OperatorK1Product-L65" id="OperatorK1Product-L65"> 65</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.unitaryPair_reindex"><a class="line" href="#OperatorK1Product-L66" id="OperatorK1Product-L66"> 66</a> theorem unitaryPair_reindex (e : ι ≃ κ) (a : MatrixUnitary A ι) (b : MatrixUnitary B ι) :</span>
+<span><a class="line" href="#OperatorK1Product-L67" id="OperatorK1Product-L67"> 67</a>     unitaryReindex e (unitaryPair a b) = unitaryPair (unitaryReindex e a) (unitaryReindex e b) := by</span>
+<span><a class="line" href="#OperatorK1Product-L68" id="OperatorK1Product-L68"> 68</a>   apply Subtype.ext</span>
+<span><a class="line" href="#OperatorK1Product-L69" id="OperatorK1Product-L69"> 69</a>   rfl</span>
+<span><a class="line" href="#OperatorK1Product-L70" id="OperatorK1Product-L70"> 70</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.unitaryPair_blockSum"><a class="line" href="#OperatorK1Product-L71" id="OperatorK1Product-L71"> 71</a> theorem unitaryPair_blockSum (a : MatrixUnitary A ι) (b : MatrixUnitary B ι)</span>
+<span><a class="line" href="#OperatorK1Product-L72" id="OperatorK1Product-L72"> 72</a>     (c : MatrixUnitary A κ) (d : MatrixUnitary B κ) :</span>
+<span><a class="line" href="#OperatorK1Product-L73" id="OperatorK1Product-L73"> 73</a>     unitaryPair (unitaryBlockSum a c) (unitaryBlockSum b d) =</span>
+<span><a class="line" href="#OperatorK1Product-L74" id="OperatorK1Product-L74"> 74</a>       unitaryBlockSum (unitaryPair a b) (unitaryPair c d) := by</span>
+<span><a class="line" href="#OperatorK1Product-L75" id="OperatorK1Product-L75"> 75</a>   apply Subtype.ext</span>
+<span><a class="line" href="#OperatorK1Product-L76" id="OperatorK1Product-L76"> 76</a>   funext i j</span>
+<span><a class="line" href="#OperatorK1Product-L77" id="OperatorK1Product-L77"> 77</a>   cases i &lt;;&gt; cases j &lt;;&gt; rfl</span>
+<span><a class="line" href="#OperatorK1Product-L78" id="OperatorK1Product-L78"> 78</a> </span>
+<span><a class="line" href="#OperatorK1Product-L79" id="OperatorK1Product-L79"> 79</a> namespace FiniteUnitary</span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteUnitary.prodInl"><a class="line" href="#OperatorK1Product-L80" id="OperatorK1Product-L80"> 80</a> abbrev prodInl (a : FiniteUnitary A) : FiniteUnitary (A × B) := ofUnitary (unitaryPair a.val 1)</span>
+<span><a class="line" href="#OperatorK1Product-L81" id="OperatorK1Product-L81"> 81</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteUnitary.prodInl_blockSum"><a class="line" href="#OperatorK1Product-L82" id="OperatorK1Product-L82"> 82</a> theorem prodInl_blockSum (a b : FiniteUnitary A) :</span>
+<span><a class="line" href="#OperatorK1Product-L83" id="OperatorK1Product-L83"> 83</a>     prodInl (B := B) (blockSum a b) = blockSum (prodInl a) (prodInl b) := by</span>
+<span><a class="line" href="#OperatorK1Product-L84" id="OperatorK1Product-L84"> 84</a>   have h : unitaryBlockSum (1 : MatrixUnitary B a.Index) (1 : MatrixUnitary B b.Index) = 1 :=</span>
+<span><a class="line" href="#OperatorK1Product-L85" id="OperatorK1Product-L85"> 85</a>     Subtype.ext matrixBlockSum_one</span>
+<span><a class="line" href="#OperatorK1Product-L86" id="OperatorK1Product-L86"> 86</a>   change ofUnitary (unitaryPair (unitaryBlockSum a.val b.val) 1) = _</span>
+<span><a class="line" href="#OperatorK1Product-L87" id="OperatorK1Product-L87"> 87</a>   rw [← h, unitaryPair_blockSum]</span>
+<span><a class="line" href="#OperatorK1Product-L88" id="OperatorK1Product-L88"> 88</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteUnitary.prodInl_identity"><a class="line" href="#OperatorK1Product-L89" id="OperatorK1Product-L89"> 89</a> @[simp] theorem prodInl_identity (ι : Type) [Fintype ι] [DecidableEq ι] :</span>
+<span><a class="line" href="#OperatorK1Product-L90" id="OperatorK1Product-L90"> 90</a>     prodInl (B := B) (identity (A := A) ι) = identity ι := by</span>
+<span><a class="line" href="#OperatorK1Product-L91" id="OperatorK1Product-L91"> 91</a>   change ofUnitary (unitaryPair (1 : MatrixUnitary A ι) (1 : MatrixUnitary B ι)) = ofUnitary 1</span>
+<span><a class="line" href="#OperatorK1Product-L92" id="OperatorK1Product-L92"> 92</a>   rw [unitaryPair_one]</span>
+<span><a class="line" href="#OperatorK1Product-L93" id="OperatorK1Product-L93"> 93</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteUnitary.prodInl_congr"><a class="line" href="#OperatorK1Product-L94" id="OperatorK1Product-L94"> 94</a> theorem prodInl_congr {a b : FiniteUnitary A} (h : Equivalent a b) :</span>
+<span><a class="line" href="#OperatorK1Product-L95" id="OperatorK1Product-L95"> 95</a>     Equivalent (prodInl (B := B) a) (prodInl b) := by</span>
+<span><a class="line" href="#OperatorK1Product-L96" id="OperatorK1Product-L96"> 96</a>   induction h with</span>
+<span><a class="line" href="#OperatorK1Product-L97" id="OperatorK1Product-L97"> 97</a>   | refl a =&gt; exact equivalent_refl _</span>
+<span><a class="line" href="#OperatorK1Product-L98" id="OperatorK1Product-L98"> 98</a>   | symm a b h ih =&gt; exact equivalent_symm ih</span>
+<span><a class="line" href="#OperatorK1Product-L99" id="OperatorK1Product-L99"> 99</a>   | trans a b c h k ih ik =&gt; exact equivalent_trans ih ik</span>
+<span><a class="line" href="#OperatorK1Product-L100" id="OperatorK1Product-L100">100</a>   | rel a b h =&gt;</span>
+<span><a class="line" href="#OperatorK1Product-L101" id="OperatorK1Product-L101">101</a>     cases h with</span>
+<span><a class="line" href="#OperatorK1Product-L102" id="OperatorK1Product-L102">102</a>     | homotopy b e h =&gt;</span>
+<span><a class="line" href="#OperatorK1Product-L103" id="OperatorK1Product-L103">103</a>       apply Relation.EqvGen.rel</span>
+<span><a class="line" href="#OperatorK1Product-L104" id="OperatorK1Product-L104">104</a>       apply Move.homotopy (prodInl a) (prodInl b) e</span>
+<span><a class="line" href="#OperatorK1Product-L105" id="OperatorK1Product-L105">105</a>       change UnitaryHomotopic (unitaryReindex e (unitaryPair a.val 1)) (unitaryPair b.val 1)</span>
+<span><a class="line" href="#OperatorK1Product-L106" id="OperatorK1Product-L106">106</a>       rw [unitaryPair_reindex, unitaryReindex_one]</span>
+<span><a class="line" href="#OperatorK1Product-L107" id="OperatorK1Product-L107">107</a>       exact (Joined.prod h (unitaryHomotopic_refl (1 : MatrixUnitary B b.Index))).map continuous_unitaryPair</span>
+<span><a class="line" href="#OperatorK1Product-L108" id="OperatorK1Product-L108">108</a>     | stabilize κ =&gt;</span>
+<span><a class="line" href="#OperatorK1Product-L109" id="OperatorK1Product-L109">109</a>       rw [prodInl_blockSum, prodInl_identity]</span>
+<span><a class="line" href="#OperatorK1Product-L110" id="OperatorK1Product-L110">110</a>       exact equivalent_stabilize _ κ</span>
+<span><a class="line" href="#OperatorK1Product-L111" id="OperatorK1Product-L111">111</a> end FiniteUnitary</span>
+<span><a class="line" href="#OperatorK1Product-L112" id="OperatorK1Product-L112">112</a> </span>
+<span><a class="line" href="#OperatorK1Product-L113" id="OperatorK1Product-L113">113</a> variable (A B)</span>
+<span id="doc/BC4lean.OperatorKTheory.k1ProductInl"><a class="line" href="#OperatorK1Product-L114" id="OperatorK1Product-L114">114</a> def k1ProductInl : K1 A →+ K1 (A × B) where</span>
+<span><a class="line" href="#OperatorK1Product-L115" id="OperatorK1Product-L115">115</a>   toFun := Quotient.map FiniteUnitary.prodInl (fun _ _ h =&gt; FiniteUnitary.prodInl_congr h)</span>
+<span><a class="line" href="#OperatorK1Product-L116" id="OperatorK1Product-L116">116</a>   map_zero&#x27; := congrArg K1.of (FiniteUnitary.prodInl_identity (A := A) (B := B) Empty)</span>
+<span><a class="line" href="#OperatorK1Product-L117" id="OperatorK1Product-L117">117</a>   map_add&#x27; a b := by</span>
+<span><a class="line" href="#OperatorK1Product-L118" id="OperatorK1Product-L118">118</a>     refine Quotient.inductionOn₂ a b ?_</span>
+<span><a class="line" href="#OperatorK1Product-L119" id="OperatorK1Product-L119">119</a>     intro a b</span>
+<span><a class="line" href="#OperatorK1Product-L120" id="OperatorK1Product-L120">120</a>     exact congrArg K1.of (FiniteUnitary.prodInl_blockSum a b)</span>
+<span><a class="line" href="#OperatorK1Product-L121" id="OperatorK1Product-L121">121</a> </span>
+<span><a class="line" href="#OperatorK1Product-L122" id="OperatorK1Product-L122">122</a> /-- Swap the factors using the unital coordinate homomorphisms. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.productSwap"><a class="line" href="#OperatorK1Product-L123" id="OperatorK1Product-L123">123</a> def productSwap : B × A →⋆ₐ[ℂ] A × B := (StarAlgHom.snd ℂ B A).prod (StarAlgHom.fst ℂ B A)</span>
+<span><a class="line" href="#OperatorK1Product-L124" id="OperatorK1Product-L124">124</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.k1ProductInr"><a class="line" href="#OperatorK1Product-L125" id="OperatorK1Product-L125">125</a> def k1ProductInr : K1 B →+ K1 (A × B) := (k1Map (productSwap A B)).comp (k1ProductInl B A)</span>
+<span><a class="line" href="#OperatorK1Product-L126" id="OperatorK1Product-L126">126</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.k1ProductInl_of"><a class="line" href="#OperatorK1Product-L127" id="OperatorK1Product-L127">127</a> @[simp] theorem k1ProductInl_of (a : FiniteUnitary A) :</span>
+<span><a class="line" href="#OperatorK1Product-L128" id="OperatorK1Product-L128">128</a>     k1ProductInl A B (K1.of a) = K1.of (FiniteUnitary.ofUnitary (unitaryPair a.val (1 : MatrixUnitary B a.Index))) := rfl</span>
+<span><a class="line" href="#OperatorK1Product-L129" id="OperatorK1Product-L129">129</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.k1ProductInr_of"><a class="line" href="#OperatorK1Product-L130" id="OperatorK1Product-L130">130</a> @[simp] theorem k1ProductInr_of (b : FiniteUnitary B) :</span>
+<span><a class="line" href="#OperatorK1Product-L131" id="OperatorK1Product-L131">131</a>     k1ProductInr A B (K1.of b) = K1.of (FiniteUnitary.ofUnitary (unitaryPair (1 : MatrixUnitary A b.Index) b.val)) := by</span>
+<span><a class="line" href="#OperatorK1Product-L132" id="OperatorK1Product-L132">132</a>   apply congrArg K1.of</span>
+<span><a class="line" href="#OperatorK1Product-L133" id="OperatorK1Product-L133">133</a>   apply congrArg FiniteUnitary.ofUnitary</span>
+<span><a class="line" href="#OperatorK1Product-L134" id="OperatorK1Product-L134">134</a>   apply Subtype.ext</span>
+<span><a class="line" href="#OperatorK1Product-L135" id="OperatorK1Product-L135">135</a>   rfl</span>
+<span><a class="line" href="#OperatorK1Product-L136" id="OperatorK1Product-L136">136</a> </span>
+<span><a class="line" href="#OperatorK1Product-L137" id="OperatorK1Product-L137">137</a> variable {A B}</span>
+<span><a class="line" href="#OperatorK1Product-L138" id="OperatorK1Product-L138">138</a> /-- Multiplication and block sum give the same stable K₁ class. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.k1_of_mul"><a class="line" href="#OperatorK1Product-L139" id="OperatorK1Product-L139">139</a> theorem k1_of_mul (a b : MatrixUnitary A ι) :</span>
+<span><a class="line" href="#OperatorK1Product-L140" id="OperatorK1Product-L140">140</a>     K1.of (FiniteUnitary.ofUnitary (a * b)) =</span>
+<span><a class="line" href="#OperatorK1Product-L141" id="OperatorK1Product-L141">141</a>       K1.of (FiniteUnitary.ofUnitary a) + K1.of (FiniteUnitary.ofUnitary b) := by</span>
+<span><a class="line" href="#OperatorK1Product-L142" id="OperatorK1Product-L142">142</a>   calc</span>
+<span><a class="line" href="#OperatorK1Product-L143" id="OperatorK1Product-L143">143</a>     _ = K1.of (FiniteUnitary.ofUnitary (unitaryBlockSum (a * b) 1)) :=</span>
+<span><a class="line" href="#OperatorK1Product-L144" id="OperatorK1Product-L144">144</a>       (K1.of_stabilize (FiniteUnitary.ofUnitary (a * b)) ι).symm</span>
+<span><a class="line" href="#OperatorK1Product-L145" id="OperatorK1Product-L145">145</a>     _ = K1.of (FiniteUnitary.ofUnitary (unitaryBlockSum a b)) :=</span>
+<span><a class="line" href="#OperatorK1Product-L146" id="OperatorK1Product-L146">146</a>       (K1.of_homotopic (unitaryHomotopic_blockSum_mul a b)).symm</span>
+<span><a class="line" href="#OperatorK1Product-L147" id="OperatorK1Product-L147">147</a>     _ = _ := rfl</span>
+<span><a class="line" href="#OperatorK1Product-L148" id="OperatorK1Product-L148">148</a> </span>
+<span><a class="line" href="#OperatorK1Product-L149" id="OperatorK1Product-L149">149</a> variable (A B)</span>
+<span><a class="line" href="#OperatorK1Product-L150" id="OperatorK1Product-L150">150</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.k1ProductForward"><a class="line" href="#OperatorK1Product-L151" id="OperatorK1Product-L151">151</a> def k1ProductForward : K1 (A × B) →+ K1 A × K1 B :=</span>
+<span><a class="line" href="#OperatorK1Product-L152" id="OperatorK1Product-L152">152</a>   (k1Map (StarAlgHom.fst ℂ A B)).prod (k1Map (StarAlgHom.snd ℂ A B))</span>
+<span><a class="line" href="#OperatorK1Product-L153" id="OperatorK1Product-L153">153</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.k1ProductInverse"><a class="line" href="#OperatorK1Product-L154" id="OperatorK1Product-L154">154</a> def k1ProductInverse : K1 A × K1 B →+ K1 (A × B) :=</span>
+<span><a class="line" href="#OperatorK1Product-L155" id="OperatorK1Product-L155">155</a>   (k1ProductInl A B).coprod (k1ProductInr A B)</span>
+<span><a class="line" href="#OperatorK1Product-L156" id="OperatorK1Product-L156">156</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.k1Product_leftInverse"><a class="line" href="#OperatorK1Product-L157" id="OperatorK1Product-L157">157</a> theorem k1Product_leftInverse : Function.LeftInverse (k1ProductInverse A B) (k1ProductForward A B) := by</span>
+<span><a class="line" href="#OperatorK1Product-L158" id="OperatorK1Product-L158">158</a>   intro x</span>
+<span><a class="line" href="#OperatorK1Product-L159" id="OperatorK1Product-L159">159</a>   refine Quotient.inductionOn x ?_</span>
+<span><a class="line" href="#OperatorK1Product-L160" id="OperatorK1Product-L160">160</a>   intro p</span>
+<span><a class="line" href="#OperatorK1Product-L161" id="OperatorK1Product-L161">161</a>   change k1ProductInl A B (k1Map (StarAlgHom.fst ℂ A B) (K1.of p)) +</span>
+<span><a class="line" href="#OperatorK1Product-L162" id="OperatorK1Product-L162">162</a>     k1ProductInr A B (k1Map (StarAlgHom.snd ℂ A B) (K1.of p)) = K1.of p</span>
+<span><a class="line" href="#OperatorK1Product-L163" id="OperatorK1Product-L163">163</a>   rw [k1Map_of, k1Map_of, k1ProductInl_of, k1ProductInr_of, ← k1_of_mul]</span>
+<span><a class="line" href="#OperatorK1Product-L164" id="OperatorK1Product-L164">164</a>   apply congrArg K1.of</span>
+<span><a class="line" href="#OperatorK1Product-L165" id="OperatorK1Product-L165">165</a>   apply congrArg FiniteUnitary.ofUnitary</span>
+<span><a class="line" href="#OperatorK1Product-L166" id="OperatorK1Product-L166">166</a>   apply Subtype.ext</span>
+<span><a class="line" href="#OperatorK1Product-L167" id="OperatorK1Product-L167">167</a>   change matrixPair (matrixMap (StarAlgHom.fst ℂ A B) (p.val : CStarMatrix p.Index p.Index (A × B)))</span>
+<span><a class="line" href="#OperatorK1Product-L168" id="OperatorK1Product-L168">168</a>       (1 : CStarMatrix p.Index p.Index B) *</span>
+<span><a class="line" href="#OperatorK1Product-L169" id="OperatorK1Product-L169">169</a>     matrixPair (1 : CStarMatrix p.Index p.Index A)</span>
+<span><a class="line" href="#OperatorK1Product-L170" id="OperatorK1Product-L170">170</a>       (matrixMap (StarAlgHom.snd ℂ A B) (p.val : CStarMatrix p.Index p.Index (A × B))) =</span>
+<span><a class="line" href="#OperatorK1Product-L171" id="OperatorK1Product-L171">171</a>     (p.val : CStarMatrix p.Index p.Index (A × B))</span>
+<span><a class="line" href="#OperatorK1Product-L172" id="OperatorK1Product-L172">172</a>   apply matrix_prod_ext &lt;;&gt;</span>
+<span><a class="line" href="#OperatorK1Product-L173" id="OperatorK1Product-L173">173</a>     simp only [map_mul, matrixMap_fst_pair, matrixMap_snd_pair, one_mul, mul_one]</span>
+<span><a class="line" href="#OperatorK1Product-L174" id="OperatorK1Product-L174">174</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.k1Product_rightInverse"><a class="line" href="#OperatorK1Product-L175" id="OperatorK1Product-L175">175</a> theorem k1Product_rightInverse : Function.RightInverse (k1ProductInverse A B) (k1ProductForward A B) := by</span>
+<span><a class="line" href="#OperatorK1Product-L176" id="OperatorK1Product-L176">176</a>   rintro ⟨x,y⟩</span>
+<span><a class="line" href="#OperatorK1Product-L177" id="OperatorK1Product-L177">177</a>   refine Quotient.inductionOn₂ x y ?_</span>
+<span><a class="line" href="#OperatorK1Product-L178" id="OperatorK1Product-L178">178</a>   intro p q</span>
+<span><a class="line" href="#OperatorK1Product-L179" id="OperatorK1Product-L179">179</a>   apply Prod.ext</span>
+<span><a class="line" href="#OperatorK1Product-L180" id="OperatorK1Product-L180">180</a>   · change k1Map (StarAlgHom.fst ℂ A B) (k1ProductInl A B (K1.of p) + k1ProductInr A B (K1.of q)) = K1.of p</span>
+<span><a class="line" href="#OperatorK1Product-L181" id="OperatorK1Product-L181">181</a>     rw [map_add, k1ProductInl_of, k1ProductInr_of, k1Map_of, k1Map_of]</span>
+<span><a class="line" href="#OperatorK1Product-L182" id="OperatorK1Product-L182">182</a>     change K1.of (FiniteUnitary.ofUnitary (matrixUnitaryMap (StarAlgHom.fst ℂ A B) (unitaryPair p.val 1))) +</span>
+<span><a class="line" href="#OperatorK1Product-L183" id="OperatorK1Product-L183">183</a>       K1.of (FiniteUnitary.ofUnitary (matrixUnitaryMap (StarAlgHom.fst ℂ A B) (unitaryPair 1 q.val))) = _</span>
+<span><a class="line" href="#OperatorK1Product-L184" id="OperatorK1Product-L184">184</a>     rw [unitaryPair_fst, unitaryPair_fst]</span>
+<span><a class="line" href="#OperatorK1Product-L185" id="OperatorK1Product-L185">185</a>     change K1.of p + K1.of (FiniteUnitary.identity q.Index) = K1.of p</span>
+<span><a class="line" href="#OperatorK1Product-L186" id="OperatorK1Product-L186">186</a>     rw [K1.of_identity, add_zero]</span>
+<span><a class="line" href="#OperatorK1Product-L187" id="OperatorK1Product-L187">187</a>   · change k1Map (StarAlgHom.snd ℂ A B) (k1ProductInl A B (K1.of p) + k1ProductInr A B (K1.of q)) = K1.of q</span>
+<span><a class="line" href="#OperatorK1Product-L188" id="OperatorK1Product-L188">188</a>     rw [map_add, k1ProductInl_of, k1ProductInr_of, k1Map_of, k1Map_of]</span>
+<span><a class="line" href="#OperatorK1Product-L189" id="OperatorK1Product-L189">189</a>     change K1.of (FiniteUnitary.ofUnitary (matrixUnitaryMap (StarAlgHom.snd ℂ A B) (unitaryPair p.val 1))) +</span>
+<span><a class="line" href="#OperatorK1Product-L190" id="OperatorK1Product-L190">190</a>       K1.of (FiniteUnitary.ofUnitary (matrixUnitaryMap (StarAlgHom.snd ℂ A B) (unitaryPair 1 q.val))) = _</span>
+<span><a class="line" href="#OperatorK1Product-L191" id="OperatorK1Product-L191">191</a>     rw [unitaryPair_snd, unitaryPair_snd]</span>
+<span><a class="line" href="#OperatorK1Product-L192" id="OperatorK1Product-L192">192</a>     change K1.of (FiniteUnitary.identity p.Index) + K1.of q = K1.of q</span>
+<span><a class="line" href="#OperatorK1Product-L193" id="OperatorK1Product-L193">193</a>     rw [K1.of_identity, zero_add]</span>
+<span><a class="line" href="#OperatorK1Product-L194" id="OperatorK1Product-L194">194</a> </span>
+<span><a class="line" href="#OperatorK1Product-L195" id="OperatorK1Product-L195">195</a> /-- K₁ carries finite products to products of abelian groups. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.k1ProductEquiv"><a class="line" href="#OperatorK1Product-L196" id="OperatorK1Product-L196">196</a> def k1ProductEquiv : K1 (A × B) ≃+ K1 A × K1 B where</span>
+<span><a class="line" href="#OperatorK1Product-L197" id="OperatorK1Product-L197">197</a>   toFun := k1ProductForward A B</span>
+<span><a class="line" href="#OperatorK1Product-L198" id="OperatorK1Product-L198">198</a>   invFun := k1ProductInverse A B</span>
+<span><a class="line" href="#OperatorK1Product-L199" id="OperatorK1Product-L199">199</a>   left_inv := k1Product_leftInverse A B</span>
+<span><a class="line" href="#OperatorK1Product-L200" id="OperatorK1Product-L200">200</a>   right_inv := k1Product_rightInverse A B</span>
+<span><a class="line" href="#OperatorK1Product-L201" id="OperatorK1Product-L201">201</a>   map_add&#x27; := map_add (k1ProductForward A B)</span>
+<span><a class="line" href="#OperatorK1Product-L202" id="OperatorK1Product-L202">202</a> </span>
+<span><a class="line" href="#OperatorK1Product-L203" id="OperatorK1Product-L203">203</a> end BC4lean.OperatorKTheory</span>
+</pre>
+<h2 id="KernelProductEquiv">KernelProductEquiv.lean</h2><p>源码 SHA-256：<code>7fb17db3a3e1dceabd714e9f0fda1fcf944509133ce8b13ac83606be2a168033</code></p><pre>
+<span><a class="line" href="#KernelProductEquiv-L1" id="KernelProductEquiv-L1">  1</a> import Mathlib.Algebra.Group.Subgroup.Ker</span>
+<span><a class="line" href="#KernelProductEquiv-L2" id="KernelProductEquiv-L2">  2</a> </span>
+<span><a class="line" href="#KernelProductEquiv-L3" id="KernelProductEquiv-L3">  3</a> /-! # Identifying a kernel from an additive product decomposition -/</span>
+<span><a class="line" href="#KernelProductEquiv-L4" id="KernelProductEquiv-L4">  4</a> namespace BC4lean.OperatorKTheory</span>
+<span><a class="line" href="#KernelProductEquiv-L5" id="KernelProductEquiv-L5">  5</a> variable {G H J : Type*} [AddCommGroup G] [AddCommGroup H] [AddCommGroup J]</span>
+<span><a class="line" href="#KernelProductEquiv-L6" id="KernelProductEquiv-L6">  6</a> </span>
+<span><a class="line" href="#KernelProductEquiv-L7" id="KernelProductEquiv-L7">  7</a> /-- If the first coordinate of an additive product decomposition is `f`, its kernel</span>
+<span><a class="line" href="#KernelProductEquiv-L8" id="KernelProductEquiv-L8">  8</a> is canonically the second factor. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.kernelProductEquiv"><a class="line" href="#KernelProductEquiv-L9" id="KernelProductEquiv-L9">  9</a> def kernelProductEquiv (e : G ≃+ H × J) (f : G →+ H) (h : ∀ x, (e x).1 = f x) :</span>
+<span><a class="line" href="#KernelProductEquiv-L10" id="KernelProductEquiv-L10"> 10</a>     f.ker ≃+ J where</span>
+<span><a class="line" href="#KernelProductEquiv-L11" id="KernelProductEquiv-L11"> 11</a>   toFun x := (e x.val).2</span>
+<span><a class="line" href="#KernelProductEquiv-L12" id="KernelProductEquiv-L12"> 12</a>   invFun y := ⟨e.symm (0, y), by</span>
+<span><a class="line" href="#KernelProductEquiv-L13" id="KernelProductEquiv-L13"> 13</a>     change f (e.symm (0, y)) = 0</span>
+<span><a class="line" href="#KernelProductEquiv-L14" id="KernelProductEquiv-L14"> 14</a>     rw [← h, e.apply_symm_apply]⟩</span>
+<span><a class="line" href="#KernelProductEquiv-L15" id="KernelProductEquiv-L15"> 15</a>   left_inv x := by</span>
+<span><a class="line" href="#KernelProductEquiv-L16" id="KernelProductEquiv-L16"> 16</a>     apply Subtype.ext</span>
+<span><a class="line" href="#KernelProductEquiv-L17" id="KernelProductEquiv-L17"> 17</a>     apply e.injective</span>
+<span><a class="line" href="#KernelProductEquiv-L18" id="KernelProductEquiv-L18"> 18</a>     rw [e.apply_symm_apply]</span>
+<span><a class="line" href="#KernelProductEquiv-L19" id="KernelProductEquiv-L19"> 19</a>     apply Prod.ext</span>
+<span><a class="line" href="#KernelProductEquiv-L20" id="KernelProductEquiv-L20"> 20</a>     · exact (h x.val |&gt;.trans x.property).symm</span>
+<span><a class="line" href="#KernelProductEquiv-L21" id="KernelProductEquiv-L21"> 21</a>     · rfl</span>
+<span><a class="line" href="#KernelProductEquiv-L22" id="KernelProductEquiv-L22"> 22</a>   right_inv y := by simp</span>
+<span><a class="line" href="#KernelProductEquiv-L23" id="KernelProductEquiv-L23"> 23</a>   map_add&#x27; x y := by</span>
+<span><a class="line" href="#KernelProductEquiv-L24" id="KernelProductEquiv-L24"> 24</a>     change (e (x.val + y.val)).2 = (e x.val).2 + (e y.val).2</span>
+<span><a class="line" href="#KernelProductEquiv-L25" id="KernelProductEquiv-L25"> 25</a>     rw [map_add]</span>
+<span><a class="line" href="#KernelProductEquiv-L26" id="KernelProductEquiv-L26"> 26</a>     rfl</span>
+<span><a class="line" href="#KernelProductEquiv-L27" id="KernelProductEquiv-L27"> 27</a> </span>
+<span><a class="line" href="#KernelProductEquiv-L28" id="KernelProductEquiv-L28"> 28</a> end BC4lean.OperatorKTheory</span>
+</pre>
+<h2 id="OperatorK1Equivalence">OperatorK1Equivalence.lean</h2><p>源码 SHA-256：<code>503ff9463a93acf00a5c3c0db5fa6642280fe3c42834ef3d4495dde2a731e513</code></p><pre>
+<span><a class="line" href="#OperatorK1Equivalence-L1" id="OperatorK1Equivalence-L1">  1</a> import BC4lean.OperatorK1Functoriality</span>
+<span><a class="line" href="#OperatorK1Equivalence-L2" id="OperatorK1Equivalence-L2">  2</a> </span>
+<span><a class="line" href="#OperatorK1Equivalence-L3" id="OperatorK1Equivalence-L3">  3</a> /-! # Isomorphism invariance of unital K₁ -/</span>
+<span><a class="line" href="#OperatorK1Equivalence-L4" id="OperatorK1Equivalence-L4">  4</a> noncomputable section</span>
+<span><a class="line" href="#OperatorK1Equivalence-L5" id="OperatorK1Equivalence-L5">  5</a> namespace BC4lean.OperatorKTheory</span>
+<span><a class="line" href="#OperatorK1Equivalence-L6" id="OperatorK1Equivalence-L6">  6</a> universe u v w</span>
+<span><a class="line" href="#OperatorK1Equivalence-L7" id="OperatorK1Equivalence-L7">  7</a> variable {A : Type u} {B : Type v} {C : Type w}</span>
+<span><a class="line" href="#OperatorK1Equivalence-L8" id="OperatorK1Equivalence-L8">  8</a> variable [CStarAlgebra A] [CStarAlgebra B] [CStarAlgebra C]</span>
+<span><a class="line" href="#OperatorK1Equivalence-L9" id="OperatorK1Equivalence-L9">  9</a> variable [PartialOrder A] [StarOrderedRing A]</span>
+<span><a class="line" href="#OperatorK1Equivalence-L10" id="OperatorK1Equivalence-L10"> 10</a> variable [PartialOrder B] [StarOrderedRing B]</span>
+<span><a class="line" href="#OperatorK1Equivalence-L11" id="OperatorK1Equivalence-L11"> 11</a> variable [PartialOrder C] [StarOrderedRing C]</span>
+<span><a class="line" href="#OperatorK1Equivalence-L12" id="OperatorK1Equivalence-L12"> 12</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.k1Map_leftInverse"><a class="line" href="#OperatorK1Equivalence-L13" id="OperatorK1Equivalence-L13"> 13</a> theorem k1Map_leftInverse (e : A ≃⋆ₐ[ℂ] B) :</span>
+<span><a class="line" href="#OperatorK1Equivalence-L14" id="OperatorK1Equivalence-L14"> 14</a>     Function.LeftInverse (k1Map e.symm.toStarAlgHom) (k1Map e.toStarAlgHom) := by</span>
+<span><a class="line" href="#OperatorK1Equivalence-L15" id="OperatorK1Equivalence-L15"> 15</a>   intro x</span>
+<span><a class="line" href="#OperatorK1Equivalence-L16" id="OperatorK1Equivalence-L16"> 16</a>   have h : e.symm.toStarAlgHom.comp e.toStarAlgHom = StarAlgHom.id ℂ A := by</span>
+<span><a class="line" href="#OperatorK1Equivalence-L17" id="OperatorK1Equivalence-L17"> 17</a>     ext a</span>
+<span><a class="line" href="#OperatorK1Equivalence-L18" id="OperatorK1Equivalence-L18"> 18</a>     exact e.symm_apply_apply a</span>
+<span><a class="line" href="#OperatorK1Equivalence-L19" id="OperatorK1Equivalence-L19"> 19</a>   change ((k1Map e.symm.toStarAlgHom).comp (k1Map e.toStarAlgHom)) x = x</span>
+<span><a class="line" href="#OperatorK1Equivalence-L20" id="OperatorK1Equivalence-L20"> 20</a>   rw [← k1Map_comp, h, k1Map_id]</span>
+<span><a class="line" href="#OperatorK1Equivalence-L21" id="OperatorK1Equivalence-L21"> 21</a>   rfl</span>
+<span><a class="line" href="#OperatorK1Equivalence-L22" id="OperatorK1Equivalence-L22"> 22</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.k1Map_rightInverse"><a class="line" href="#OperatorK1Equivalence-L23" id="OperatorK1Equivalence-L23"> 23</a> theorem k1Map_rightInverse (e : A ≃⋆ₐ[ℂ] B) :</span>
+<span><a class="line" href="#OperatorK1Equivalence-L24" id="OperatorK1Equivalence-L24"> 24</a>     Function.RightInverse (k1Map e.symm.toStarAlgHom) (k1Map e.toStarAlgHom) := by</span>
+<span><a class="line" href="#OperatorK1Equivalence-L25" id="OperatorK1Equivalence-L25"> 25</a>   intro x</span>
+<span><a class="line" href="#OperatorK1Equivalence-L26" id="OperatorK1Equivalence-L26"> 26</a>   have h : e.toStarAlgHom.comp e.symm.toStarAlgHom = StarAlgHom.id ℂ B := by</span>
+<span><a class="line" href="#OperatorK1Equivalence-L27" id="OperatorK1Equivalence-L27"> 27</a>     ext a</span>
+<span><a class="line" href="#OperatorK1Equivalence-L28" id="OperatorK1Equivalence-L28"> 28</a>     exact e.apply_symm_apply a</span>
+<span><a class="line" href="#OperatorK1Equivalence-L29" id="OperatorK1Equivalence-L29"> 29</a>   change ((k1Map e.toStarAlgHom).comp (k1Map e.symm.toStarAlgHom)) x = x</span>
+<span><a class="line" href="#OperatorK1Equivalence-L30" id="OperatorK1Equivalence-L30"> 30</a>   rw [← k1Map_comp, h, k1Map_id]</span>
+<span><a class="line" href="#OperatorK1Equivalence-L31" id="OperatorK1Equivalence-L31"> 31</a>   rfl</span>
+<span><a class="line" href="#OperatorK1Equivalence-L32" id="OperatorK1Equivalence-L32"> 32</a> </span>
+<span><a class="line" href="#OperatorK1Equivalence-L33" id="OperatorK1Equivalence-L33"> 33</a> /-- The canonical additive equivalence on unital K₁ induced by a star-algebra equivalence. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.k1Equiv"><a class="line" href="#OperatorK1Equivalence-L34" id="OperatorK1Equivalence-L34"> 34</a> def k1Equiv (e : A ≃⋆ₐ[ℂ] B) : K1 A ≃+ K1 B where</span>
+<span><a class="line" href="#OperatorK1Equivalence-L35" id="OperatorK1Equivalence-L35"> 35</a>   toFun := k1Map e.toStarAlgHom</span>
+<span><a class="line" href="#OperatorK1Equivalence-L36" id="OperatorK1Equivalence-L36"> 36</a>   invFun := k1Map e.symm.toStarAlgHom</span>
+<span><a class="line" href="#OperatorK1Equivalence-L37" id="OperatorK1Equivalence-L37"> 37</a>   left_inv := k1Map_leftInverse e</span>
+<span><a class="line" href="#OperatorK1Equivalence-L38" id="OperatorK1Equivalence-L38"> 38</a>   right_inv := k1Map_rightInverse e</span>
+<span><a class="line" href="#OperatorK1Equivalence-L39" id="OperatorK1Equivalence-L39"> 39</a>   map_add&#x27; := (k1Map e.toStarAlgHom).map_add</span>
+<span><a class="line" href="#OperatorK1Equivalence-L40" id="OperatorK1Equivalence-L40"> 40</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.k1Equiv_toAddMonoidHom"><a class="line" href="#OperatorK1Equivalence-L41" id="OperatorK1Equivalence-L41"> 41</a> @[simp] theorem k1Equiv_toAddMonoidHom (e : A ≃⋆ₐ[ℂ] B) :</span>
+<span><a class="line" href="#OperatorK1Equivalence-L42" id="OperatorK1Equivalence-L42"> 42</a>     (k1Equiv e).toAddMonoidHom = k1Map e.toStarAlgHom := rfl</span>
+<span><a class="line" href="#OperatorK1Equivalence-L43" id="OperatorK1Equivalence-L43"> 43</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.k1Equiv_refl"><a class="line" href="#OperatorK1Equivalence-L44" id="OperatorK1Equivalence-L44"> 44</a> @[simp] theorem k1Equiv_refl : k1Equiv (StarAlgEquiv.refl ℂ A) = AddEquiv.refl (K1 A) := by</span>
+<span><a class="line" href="#OperatorK1Equivalence-L45" id="OperatorK1Equivalence-L45"> 45</a>   ext x</span>
+<span><a class="line" href="#OperatorK1Equivalence-L46" id="OperatorK1Equivalence-L46"> 46</a>   change k1Map (StarAlgHom.id ℂ A) x = x</span>
+<span><a class="line" href="#OperatorK1Equivalence-L47" id="OperatorK1Equivalence-L47"> 47</a>   rw [k1Map_id]</span>
+<span><a class="line" href="#OperatorK1Equivalence-L48" id="OperatorK1Equivalence-L48"> 48</a>   rfl</span>
+<span><a class="line" href="#OperatorK1Equivalence-L49" id="OperatorK1Equivalence-L49"> 49</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.k1Equiv_symm"><a class="line" href="#OperatorK1Equivalence-L50" id="OperatorK1Equivalence-L50"> 50</a> @[simp] theorem k1Equiv_symm (e : A ≃⋆ₐ[ℂ] B) : k1Equiv e.symm = (k1Equiv e).symm := by</span>
+<span><a class="line" href="#OperatorK1Equivalence-L51" id="OperatorK1Equivalence-L51"> 51</a>   ext x</span>
+<span><a class="line" href="#OperatorK1Equivalence-L52" id="OperatorK1Equivalence-L52"> 52</a>   rfl</span>
+<span><a class="line" href="#OperatorK1Equivalence-L53" id="OperatorK1Equivalence-L53"> 53</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.k1Equiv_trans"><a class="line" href="#OperatorK1Equivalence-L54" id="OperatorK1Equivalence-L54"> 54</a> @[simp] theorem k1Equiv_trans (e : A ≃⋆ₐ[ℂ] B) (f : B ≃⋆ₐ[ℂ] C) :</span>
+<span><a class="line" href="#OperatorK1Equivalence-L55" id="OperatorK1Equivalence-L55"> 55</a>     k1Equiv (e.trans f) = (k1Equiv e).trans (k1Equiv f) := by</span>
+<span><a class="line" href="#OperatorK1Equivalence-L56" id="OperatorK1Equivalence-L56"> 56</a>   ext x</span>
+<span><a class="line" href="#OperatorK1Equivalence-L57" id="OperatorK1Equivalence-L57"> 57</a>   exact DFunLike.congr_fun (k1Map_comp f.toStarAlgHom e.toStarAlgHom) x</span>
+<span><a class="line" href="#OperatorK1Equivalence-L58" id="OperatorK1Equivalence-L58"> 58</a> </span>
+<span><a class="line" href="#OperatorK1Equivalence-L59" id="OperatorK1Equivalence-L59"> 59</a> end BC4lean.OperatorKTheory</span>
+</pre>
+<h2 id="OperatorKUnitalAgreement">OperatorKUnitalAgreement.lean</h2><p>源码 SHA-256：<code>726791d722f2b3f3bc5daa4c777a47e8b5f21ddb627dbfa68a1c9cbc3c72796d</code></p><pre>
+<span><a class="line" href="#OperatorKUnitalAgreement-L1" id="OperatorKUnitalAgreement-L1">  1</a> import BC4lean.NonunitalOperatorK</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L2" id="OperatorKUnitalAgreement-L2">  2</a> import BC4lean.UnitizationSplitting</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L3" id="OperatorKUnitalAgreement-L3">  3</a> import BC4lean.OperatorK0Equivalence</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L4" id="OperatorKUnitalAgreement-L4">  4</a> import BC4lean.OperatorK1Equivalence</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L5" id="OperatorKUnitalAgreement-L5">  5</a> import BC4lean.OperatorK0Product</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L6" id="OperatorKUnitalAgreement-L6">  6</a> import BC4lean.OperatorK1Product</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L7" id="OperatorKUnitalAgreement-L7">  7</a> import BC4lean.KernelProductEquiv</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L8" id="OperatorKUnitalAgreement-L8">  8</a> </span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L9" id="OperatorKUnitalAgreement-L9">  9</a> /-! # Agreement of the unitization-kernel and unital definitions</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L10" id="OperatorKUnitalAgreement-L10"> 10</a> </span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L11" id="OperatorKUnitalAgreement-L11"> 11</a> Split the forced unitization as ℂ × A, split the K-groups of that product,</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L12" id="OperatorKUnitalAgreement-L12"> 12</a> and identify the scalar kernel with the second factor. The construction uses</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L13" id="OperatorKUnitalAgreement-L13"> 13</a> canonical spectral orders throughout.</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L14" id="OperatorKUnitalAgreement-L14"> 14</a> -/</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L15" id="OperatorKUnitalAgreement-L15"> 15</a> noncomputable section</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L16" id="OperatorKUnitalAgreement-L16"> 16</a> namespace BC4lean.OperatorKTheory</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L17" id="OperatorKUnitalAgreement-L17"> 17</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.comparisonSpectralOrder"><a class="line" href="#OperatorKUnitalAgreement-L18" id="OperatorKUnitalAgreement-L18"> 18</a> local instance comparisonSpectralOrder (B : Type*) [CStarAlgebra B] : PartialOrder B :=</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L19" id="OperatorKUnitalAgreement-L19"> 19</a>   CStarAlgebra.spectralOrder B</span>
+<span id="doc/BC4lean.OperatorKTheory.comparisonSpectralOrderedRing"><a class="line" href="#OperatorKUnitalAgreement-L20" id="OperatorKUnitalAgreement-L20"> 20</a> local instance comparisonSpectralOrderedRing (B : Type*) [CStarAlgebra B] : StarOrderedRing B :=</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L21" id="OperatorKUnitalAgreement-L21"> 21</a>   CStarAlgebra.spectralOrderedRing B</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L22" id="OperatorKUnitalAgreement-L22"> 22</a> </span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L23" id="OperatorKUnitalAgreement-L23"> 23</a> variable (A : Type*) [CStarAlgebra A]</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L24" id="OperatorKUnitalAgreement-L24"> 24</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.unitizationProduct_fst"><a class="line" href="#OperatorKUnitalAgreement-L25" id="OperatorKUnitalAgreement-L25"> 25</a> theorem unitizationProduct_fst :</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L26" id="OperatorKUnitalAgreement-L26"> 26</a>     (StarAlgHom.fst ℂ ℂ A).comp (unitizationProductEquiv A).toStarAlgHom = scalarQuotient A := by</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L27" id="OperatorKUnitalAgreement-L27"> 27</a>   apply DFunLike.ext</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L28" id="OperatorKUnitalAgreement-L28"> 28</a>   intro x</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L29" id="OperatorKUnitalAgreement-L29"> 29</a>   rfl</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L30" id="OperatorKUnitalAgreement-L30"> 30</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.unitizationProduct_snd"><a class="line" href="#OperatorKUnitalAgreement-L31" id="OperatorKUnitalAgreement-L31"> 31</a> theorem unitizationProduct_snd :</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L32" id="OperatorKUnitalAgreement-L32"> 32</a>     (StarAlgHom.snd ℂ ℂ A).comp (unitizationProductEquiv A).toStarAlgHom = unitizationEval A := by</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L33" id="OperatorKUnitalAgreement-L33"> 33</a>   apply DFunLike.ext</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L34" id="OperatorKUnitalAgreement-L34"> 34</a>   intro x</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L35" id="OperatorKUnitalAgreement-L35"> 35</a>   rfl</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L36" id="OperatorKUnitalAgreement-L36"> 36</a> </span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L37" id="OperatorKUnitalAgreement-L37"> 37</a> /-- The degree-zero kernel definition agrees canonically with unital projection K₀. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.operatorK0UnitalEquiv"><a class="line" href="#OperatorKUnitalAgreement-L38" id="OperatorKUnitalAgreement-L38"> 38</a> def operatorK0UnitalEquiv : OperatorK0 A ≃+ K0 A :=</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L39" id="OperatorKUnitalAgreement-L39"> 39</a>   kernelProductEquiv</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L40" id="OperatorKUnitalAgreement-L40"> 40</a>     ((k0Equiv (unitizationProductEquiv A)).trans (k0ProductEquiv ℂ A))</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L41" id="OperatorKUnitalAgreement-L41"> 41</a>     (k0Map (scalarQuotient A)) (by</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L42" id="OperatorKUnitalAgreement-L42"> 42</a>       intro x</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L43" id="OperatorKUnitalAgreement-L43"> 43</a>       change k0Map (StarAlgHom.fst ℂ ℂ A) (k0Map (unitizationProductEquiv A).toStarAlgHom x) = _</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L44" id="OperatorKUnitalAgreement-L44"> 44</a>       rw [← AddMonoidHom.comp_apply, ← k0Map_comp, unitizationProduct_fst])</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L45" id="OperatorKUnitalAgreement-L45"> 45</a> </span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L46" id="OperatorKUnitalAgreement-L46"> 46</a> /-- The degree-one kernel definition agrees canonically with stable unitary K₁. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.operatorK1UnitalEquiv"><a class="line" href="#OperatorKUnitalAgreement-L47" id="OperatorKUnitalAgreement-L47"> 47</a> def operatorK1UnitalEquiv : OperatorK1 A ≃+ K1 A :=</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L48" id="OperatorKUnitalAgreement-L48"> 48</a>   kernelProductEquiv</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L49" id="OperatorKUnitalAgreement-L49"> 49</a>     ((k1Equiv (unitizationProductEquiv A)).trans (k1ProductEquiv ℂ A))</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L50" id="OperatorKUnitalAgreement-L50"> 50</a>     (k1Map (scalarQuotient A)) (by</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L51" id="OperatorKUnitalAgreement-L51"> 51</a>       intro x</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L52" id="OperatorKUnitalAgreement-L52"> 52</a>       change k1Map (StarAlgHom.fst ℂ ℂ A) (k1Map (unitizationProductEquiv A).toStarAlgHom x) = _</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L53" id="OperatorKUnitalAgreement-L53"> 53</a>       rw [← AddMonoidHom.comp_apply, ← k1Map_comp, unitizationProduct_fst])</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L54" id="OperatorKUnitalAgreement-L54"> 54</a> </span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L55" id="OperatorKUnitalAgreement-L55"> 55</a> /-- The comparison sends a kernel class by evaluation using the original unit. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.operatorK0UnitalEquiv_apply"><a class="line" href="#OperatorKUnitalAgreement-L56" id="OperatorKUnitalAgreement-L56"> 56</a> theorem operatorK0UnitalEquiv_apply (x : OperatorK0 A) :</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L57" id="OperatorKUnitalAgreement-L57"> 57</a>     operatorK0UnitalEquiv A x = k0Map (unitizationEval A) (operatorK0Inclusion A x) := by</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L58" id="OperatorKUnitalAgreement-L58"> 58</a>   change k0Map (StarAlgHom.snd ℂ ℂ A) (k0Map (unitizationProductEquiv A).toStarAlgHom x.val) = _</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L59" id="OperatorKUnitalAgreement-L59"> 59</a>   rw [← AddMonoidHom.comp_apply, ← k0Map_comp, unitizationProduct_snd]</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L60" id="OperatorKUnitalAgreement-L60"> 60</a>   rfl</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L61" id="OperatorKUnitalAgreement-L61"> 61</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.operatorK1UnitalEquiv_apply"><a class="line" href="#OperatorKUnitalAgreement-L62" id="OperatorKUnitalAgreement-L62"> 62</a> theorem operatorK1UnitalEquiv_apply (x : OperatorK1 A) :</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L63" id="OperatorKUnitalAgreement-L63"> 63</a>     operatorK1UnitalEquiv A x = k1Map (unitizationEval A) (operatorK1Inclusion A x) := by</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L64" id="OperatorKUnitalAgreement-L64"> 64</a>   change k1Map (StarAlgHom.snd ℂ ℂ A) (k1Map (unitizationProductEquiv A).toStarAlgHom x.val) = _</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L65" id="OperatorKUnitalAgreement-L65"> 65</a>   rw [← AddMonoidHom.comp_apply, ← k1Map_comp, unitizationProduct_snd]</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L66" id="OperatorKUnitalAgreement-L66"> 66</a>   rfl</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L67" id="OperatorKUnitalAgreement-L67"> 67</a> </span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L68" id="OperatorKUnitalAgreement-L68"> 68</a> variable {A} {B : Type*} [CStarAlgebra B]</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L69" id="OperatorKUnitalAgreement-L69"> 69</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.unitizationEval_natural"><a class="line" href="#OperatorKUnitalAgreement-L70" id="OperatorKUnitalAgreement-L70"> 70</a> theorem unitizationEval_natural (φ : A →⋆ₐ[ℂ] B) :</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L71" id="OperatorKUnitalAgreement-L71"> 71</a>     (unitizationEval B).comp (Unitization.starMap φ.toNonUnitalStarAlgHom) =</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L72" id="OperatorKUnitalAgreement-L72"> 72</a>       φ.comp (unitizationEval A) := by</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L73" id="OperatorKUnitalAgreement-L73"> 73</a>   ext x</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L74" id="OperatorKUnitalAgreement-L74"> 74</a>   change unitizationEval B (Unitization.starMap φ.toNonUnitalStarAlgHom (x : Unitization ℂ A)) =</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L75" id="OperatorKUnitalAgreement-L75"> 75</a>     φ (unitizationEval A (x : Unitization ℂ A))</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L76" id="OperatorKUnitalAgreement-L76"> 76</a>   simp [unitizationEval_apply]</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L77" id="OperatorKUnitalAgreement-L77"> 77</a> </span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L78" id="OperatorKUnitalAgreement-L78"> 78</a> /-- Agreement with the unital definition is natural for unital star homomorphisms. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.operatorK0UnitalEquiv_natural"><a class="line" href="#OperatorKUnitalAgreement-L79" id="OperatorKUnitalAgreement-L79"> 79</a> theorem operatorK0UnitalEquiv_natural (φ : A →⋆ₐ[ℂ] B) (x : OperatorK0 A) :</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L80" id="OperatorKUnitalAgreement-L80"> 80</a>     operatorK0UnitalEquiv B (operatorK0Map φ.toNonUnitalStarAlgHom x) =</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L81" id="OperatorKUnitalAgreement-L81"> 81</a>       k0Map φ (operatorK0UnitalEquiv A x) := by</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L82" id="OperatorKUnitalAgreement-L82"> 82</a>   rw [operatorK0UnitalEquiv_apply, operatorK0UnitalEquiv_apply]</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L83" id="OperatorKUnitalAgreement-L83"> 83</a>   change k0Map (unitizationEval B) (k0Map (Unitization.starMap φ.toNonUnitalStarAlgHom) x.val) =</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L84" id="OperatorKUnitalAgreement-L84"> 84</a>     k0Map φ (k0Map (unitizationEval A) x.val)</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L85" id="OperatorKUnitalAgreement-L85"> 85</a>   have h := congrArg k0Map (unitizationEval_natural φ)</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L86" id="OperatorKUnitalAgreement-L86"> 86</a>   simpa only [k0Map_comp, AddMonoidHom.comp_apply] using DFunLike.congr_fun h x.val</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L87" id="OperatorKUnitalAgreement-L87"> 87</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.operatorK1UnitalEquiv_natural"><a class="line" href="#OperatorKUnitalAgreement-L88" id="OperatorKUnitalAgreement-L88"> 88</a> theorem operatorK1UnitalEquiv_natural (φ : A →⋆ₐ[ℂ] B) (x : OperatorK1 A) :</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L89" id="OperatorKUnitalAgreement-L89"> 89</a>     operatorK1UnitalEquiv B (operatorK1Map φ.toNonUnitalStarAlgHom x) =</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L90" id="OperatorKUnitalAgreement-L90"> 90</a>       k1Map φ (operatorK1UnitalEquiv A x) := by</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L91" id="OperatorKUnitalAgreement-L91"> 91</a>   rw [operatorK1UnitalEquiv_apply, operatorK1UnitalEquiv_apply]</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L92" id="OperatorKUnitalAgreement-L92"> 92</a>   change k1Map (unitizationEval B) (k1Map (Unitization.starMap φ.toNonUnitalStarAlgHom) x.val) =</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L93" id="OperatorKUnitalAgreement-L93"> 93</a>     k1Map φ (k1Map (unitizationEval A) x.val)</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L94" id="OperatorKUnitalAgreement-L94"> 94</a>   have h := congrArg k1Map (unitizationEval_natural φ)</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L95" id="OperatorKUnitalAgreement-L95"> 95</a>   simpa only [k1Map_comp, AddMonoidHom.comp_apply] using DFunLike.congr_fun h x.val</span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L96" id="OperatorKUnitalAgreement-L96"> 96</a> </span>
+<span><a class="line" href="#OperatorKUnitalAgreement-L97" id="OperatorKUnitalAgreement-L97"> 97</a> end BC4lean.OperatorKTheory</span>
+</pre>
+<h2 id="ReducedOperatorK1">ReducedOperatorK1.lean</h2><p>源码 SHA-256：<code>02c9efd88aede956d34f6eacce288287e66e15793c42218dfae316791ba91a1c</code></p><pre>
+<span><a class="line" href="#ReducedOperatorK1-L1" id="ReducedOperatorK1-L1">  1</a> import BC4lean.StableUnitary</span>
+<span><a class="line" href="#ReducedOperatorK1-L2" id="ReducedOperatorK1-L2">  2</a> import BC4lean.ReducedOperatorK0</span>
+<span><a class="line" href="#ReducedOperatorK1-L3" id="ReducedOperatorK1-L3">  3</a> </span>
+<span><a class="line" href="#ReducedOperatorK1-L4" id="ReducedOperatorK1-L4">  4</a> /-! # The degree-one reduced analytic target -/</span>
+<span><a class="line" href="#ReducedOperatorK1-L5" id="ReducedOperatorK1-L5">  5</a> noncomputable section</span>
+<span><a class="line" href="#ReducedOperatorK1-L6" id="ReducedOperatorK1-L6">  6</a> namespace BC4lean</span>
+<span><a class="line" href="#ReducedOperatorK1-L7" id="ReducedOperatorK1-L7">  7</a> variable (Γ : Type*) [Group Γ]</span>
+<span><a class="line" href="#ReducedOperatorK1-L8" id="ReducedOperatorK1-L8">  8</a> </span>
+<span><a class="line" href="#ReducedOperatorK1-L9" id="ReducedOperatorK1-L9">  9</a> /-- Stable norm-homotopy K₁ of the reduced group C*-algebra, with spectral order. -/</span>
+<span id="doc/BC4lean.ReducedK1"><a class="line" href="#ReducedOperatorK1-L10" id="ReducedOperatorK1-L10"> 10</a> def ReducedK1 : Type _ :=</span>
+<span><a class="line" href="#ReducedOperatorK1-L11" id="ReducedOperatorK1-L11"> 11</a>   letI := CStarAlgebra.spectralOrder (ReducedGroupCStar Γ)</span>
+<span><a class="line" href="#ReducedOperatorK1-L12" id="ReducedOperatorK1-L12"> 12</a>   letI := CStarAlgebra.spectralOrderedRing (ReducedGroupCStar Γ)</span>
+<span><a class="line" href="#ReducedOperatorK1-L13" id="ReducedOperatorK1-L13"> 13</a>   OperatorKTheory.K1 (ReducedGroupCStar Γ)</span>
+<span><a class="line" href="#ReducedOperatorK1-L14" id="ReducedOperatorK1-L14"> 14</a> </span>
+<span id="doc/BC4lean.reducedK1AddCommGroup"><a class="line" href="#ReducedOperatorK1-L15" id="ReducedOperatorK1-L15"> 15</a> instance reducedK1AddCommGroup : AddCommGroup (ReducedK1 Γ) := by</span>
+<span><a class="line" href="#ReducedOperatorK1-L16" id="ReducedOperatorK1-L16"> 16</a>   letI := CStarAlgebra.spectralOrder (ReducedGroupCStar Γ)</span>
+<span><a class="line" href="#ReducedOperatorK1-L17" id="ReducedOperatorK1-L17"> 17</a>   letI := CStarAlgebra.spectralOrderedRing (ReducedGroupCStar Γ)</span>
+<span><a class="line" href="#ReducedOperatorK1-L18" id="ReducedOperatorK1-L18"> 18</a>   exact inferInstanceAs (AddCommGroup (OperatorKTheory.K1 (ReducedGroupCStar Γ)))</span>
+<span><a class="line" href="#ReducedOperatorK1-L19" id="ReducedOperatorK1-L19"> 19</a> </span>
+<span><a class="line" href="#ReducedOperatorK1-L20" id="ReducedOperatorK1-L20"> 20</a> end BC4lean</span>
+</pre>
+<h2 id="UnitaryStableConjugation">UnitaryStableConjugation.lean</h2><p>源码 SHA-256：<code>8db6d5e677d31606b748f997feffc45c4c26cee79bbed4f3b865e106dc03c33c</code></p><pre>
+<span><a class="line" href="#UnitaryStableConjugation-L1" id="UnitaryStableConjugation-L1">  1</a> import BC4lean.StableUnitary</span>
+<span><a class="line" href="#UnitaryStableConjugation-L2" id="UnitaryStableConjugation-L2">  2</a> </span>
+<span><a class="line" href="#UnitaryStableConjugation-L3" id="UnitaryStableConjugation-L3">  3</a> /-! # A geometric justification for stable changes of coordinates -/</span>
+<span><a class="line" href="#UnitaryStableConjugation-L4" id="UnitaryStableConjugation-L4">  4</a> noncomputable section</span>
+<span><a class="line" href="#UnitaryStableConjugation-L5" id="UnitaryStableConjugation-L5">  5</a> namespace BC4lean.OperatorKTheory</span>
+<span><a class="line" href="#UnitaryStableConjugation-L6" id="UnitaryStableConjugation-L6">  6</a> variable {A : Type*} [CStarAlgebra A] [PartialOrder A] [StarOrderedRing A]</span>
+<span><a class="line" href="#UnitaryStableConjugation-L7" id="UnitaryStableConjugation-L7">  7</a> variable {ι : Type} [Fintype ι] [DecidableEq ι]</span>
+<span><a class="line" href="#UnitaryStableConjugation-L8" id="UnitaryStableConjugation-L8">  8</a> </span>
+<span><a class="line" href="#UnitaryStableConjugation-L9" id="UnitaryStableConjugation-L9">  9</a> /-- Conjugation by any matrix unitary is norm homotopic to the identity action</span>
+<span><a class="line" href="#UnitaryStableConjugation-L10" id="UnitaryStableConjugation-L10"> 10</a> on a unitary after adjoining an identity block. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.unitaryHomotopic_stable_conjugate"><a class="line" href="#UnitaryStableConjugation-L11" id="UnitaryStableConjugation-L11"> 11</a> theorem unitaryHomotopic_stable_conjugate (w a : MatrixUnitary A ι) :</span>
+<span><a class="line" href="#UnitaryStableConjugation-L12" id="UnitaryStableConjugation-L12"> 12</a>     UnitaryHomotopic (unitaryBlockSum (w * a * star w) (1 : MatrixUnitary A ι)) (unitaryBlockSum a (1 : MatrixUnitary A ι)) := by</span>
+<span><a class="line" href="#UnitaryStableConjugation-L13" id="UnitaryStableConjugation-L13"> 13</a>   have h := unitaryHomotopic_blockSum_star w</span>
+<span><a class="line" href="#UnitaryStableConjugation-L14" id="UnitaryStableConjugation-L14"> 14</a>   have hi := unitaryHomotopic_inv h</span>
+<span><a class="line" href="#UnitaryStableConjugation-L15" id="UnitaryStableConjugation-L15"> 15</a>   have hstar : (unitaryBlockSum w (star w))⁻¹ = unitaryBlockSum (star w) w := by</span>
+<span><a class="line" href="#UnitaryStableConjugation-L16" id="UnitaryStableConjugation-L16"> 16</a>     change star (unitaryBlockSum w (star w)) = _</span>
+<span><a class="line" href="#UnitaryStableConjugation-L17" id="UnitaryStableConjugation-L17"> 17</a>     rw [unitaryBlockSum_star, star_star]</span>
+<span><a class="line" href="#UnitaryStableConjugation-L18" id="UnitaryStableConjugation-L18"> 18</a>   rw [hstar, inv_one] at hi</span>
+<span><a class="line" href="#UnitaryStableConjugation-L19" id="UnitaryStableConjugation-L19"> 19</a>   have hh := unitaryHomotopic_mul (unitaryHomotopic_mul h</span>
+<span><a class="line" href="#UnitaryStableConjugation-L20" id="UnitaryStableConjugation-L20"> 20</a>     (unitaryHomotopic_refl (unitaryBlockSum a (1 : MatrixUnitary A ι)))) hi</span>
+<span><a class="line" href="#UnitaryStableConjugation-L21" id="UnitaryStableConjugation-L21"> 21</a>   simpa only [unitaryBlockSum_mul, one_mul, mul_one, Unitary.star_mul_self] using hh</span>
+<span><a class="line" href="#UnitaryStableConjugation-L22" id="UnitaryStableConjugation-L22"> 22</a> </span>
+<span><a class="line" href="#UnitaryStableConjugation-L23" id="UnitaryStableConjugation-L23"> 23</a> end BC4lean.OperatorKTheory</span>
 </pre>
 </body></html>

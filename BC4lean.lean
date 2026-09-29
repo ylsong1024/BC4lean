@@ -19,3 +19,15 @@ import BC4lean.OperatorK0Functoriality
 import BC4lean.OperatorK0Equivalence
 import BC4lean.ReducedCompletionK0
 import BC4lean.UnitaryRotation
+import BC4lean.StableUnitary
+import BC4lean.OperatorK1Functoriality
+import BC4lean.NonunitalOperatorK
+import BC4lean.UnitizationSplitting
+import BC4lean.NonUnitalK0Map
+import BC4lean.OperatorK0Product
+import BC4lean.OperatorK1Product
+import BC4lean.KernelProductEquiv
+import BC4lean.OperatorK1Equivalence
+import BC4lean.OperatorKUnitalAgreement
+import BC4lean.ReducedOperatorK1
+import BC4lean.UnitaryStableConjugation
