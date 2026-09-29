@@ -31,3 +31,6 @@ import BC4lean.OperatorK1Equivalence
 import BC4lean.OperatorKUnitalAgreement
 import BC4lean.ReducedOperatorK1
 import BC4lean.UnitaryStableConjugation
+import BC4lean.ProjectionHomotopy
+import BC4lean.StarHomotopy
+import BC4lean.OperatorKHomotopy

@@ -7,8 +7,9 @@ the unital groups $K_0(A)$ and $K_1(A)$, and their functoriality.
 For possibly nonunital complex $C^*$-algebras, the scalar kernels of the
 forced unitization define both operator $K$-groups. For unital algebras,
 these kernel definitions are naturally isomorphic to the preceding unital
-constructions. Homotopy invariance of induced maps, exact sequences,
-Bott periodicity, and the assembly map remain separate formalization targets.
+constructions. Point-norm homotopy invariance of induced maps is also verified.
+Exact sequences, Bott periodicity, and the assembly map remain separate
+formalization targets.
 
 \section{Projections and Murray--von Neumann equivalence}
 
@@ -524,11 +525,73 @@ composition laws descend from the unital functors. Naturality of evaluation
 proves compatibility with the unital comparison isomorphisms.
 \end{proof}
 
-\begin{proposition}\label{prop:operator-k-homotopy-invariance}
-\uses{prop:operator-k-functoriality}
-\notready
-Point-norm homotopic star homomorphisms induce the same maps on $K_i$.
+\begin{definition}\label{def:star-homotopy}
+\lean{BC4lean.OperatorKTheory.UnitalStarHomotopy,BC4lean.OperatorKTheory.StarHomotopy,BC4lean.OperatorKTheory.UnitalStarHomotopy.toStarHomotopy,BC4lean.OperatorKTheory.StarHomotopy.unitization}
+\leanok
+A point-norm homotopy from $\phi:A\to B$ to $\psi:A\to B$ is a family
+of complex star homomorphisms $H_t$, $t\in[0,1]$, such that $H_0=\phi$,
+$H_1=\psi$, and $t\mapsto H_t(a)$ is norm-continuous for each $a\in A$.
+In the unital version every $H_t$ preserves the unit. Homomorphisms of
+possibly nonunital algebras admit a unitalized point-norm homotopy
+$H_t^+(r,a)=(r,H_t(a))$.
+Continuity of $t\mapsto H_t$ in operator norm is not required.
+\end{definition}
+
+\begin{proposition}\label{prop:projection-intertwiner-equivalence}
+\uses{def:projection-equivalence}
+\lean{BC4lean.OperatorKTheory.Projection.equivalent_of_invertible_intertwiner,BC4lean.OperatorKTheory.Projection.eventually_equivalent}
+If projections $p,q$ admit an invertible element $s$ with $sp=qs$, then
+$p$ and $q$ are Murray--von Neumann equivalent. In particular, every
+projection has a norm neighborhood of equivalent projections.
 \end{proposition}
+\begin{proof}
+\leanok
+Put $t=s^*s$ and $z=t^{-1/2}$ using continuous functional calculus.
+The intertwining equation implies that $t$, and hence $z$, commutes with $p$.
+Then $u=sz$ is unitary, $up=qu$, and $v=up$ satisfies $v^*v=p$, $vv^*=q$.
+For the local assertion use $s(q)=qp+(1-q)(1-p)$.
+This is continuous in $q$, satisfies $s(p)=1$ and $s(q)p=qs(q)$,
+and is invertible for $q$ in a neighborhood of $p$, since the invertible
+elements form an open subset of the Banach algebra.
+\end{proof}
+
+\begin{proposition}\label{prop:projection-homotopy-invariance}
+\uses{prop:projection-intertwiner-equivalence,prop:projection-equivalence}
+\lean{BC4lean.OperatorKTheory.Projection.isLocallyConstant_class,BC4lean.OperatorKTheory.Projection.equivalent_of_path}
+The endpoints of a norm-continuous path of projections are
+Murray--von Neumann equivalent.
+\end{proposition}
+\begin{proof}
+\leanok
+The preceding neighborhood result makes the equivalence-class map locally
+constant. Its composite with the path is locally constant on the connected
+interval $[0,1]$, so the endpoint classes coincide.
+\end{proof}
+
+\begin{proposition}\label{prop:operator-k-homotopy-invariance}
+\uses{prop:operator-k-functoriality,def:star-homotopy,prop:projection-homotopy-invariance,prop:operator-k1-group}
+\lean{BC4lean.OperatorKTheory.UnitalStarHomotopy.continuous_matrixMap,BC4lean.OperatorKTheory.UnitalStarHomotopy.projectionPath,BC4lean.OperatorKTheory.UnitalStarHomotopy.unitaryPath,BC4lean.OperatorKTheory.finiteProjection_equivalent_of_homotopy,BC4lean.OperatorKTheory.stableProjectionMap_homotopy,BC4lean.OperatorKTheory.k0Map_homotopy,BC4lean.OperatorKTheory.k1Map_homotopy,BC4lean.OperatorKTheory.operatorK0Map_homotopy,BC4lean.OperatorKTheory.operatorK1Map_homotopy}
+Point-norm homotopic complex star homomorphisms $\phi,\psi:A\to B$ induce
+the same maps on both operator $K$-groups:
+\[
+ K_i^{\mathrm{op}}(\phi)=K_i^{\mathrm{op}}(\psi),\qquad i=0,1.
+\]
+This holds for possibly nonunital algebras and homomorphisms. For a homotopy
+through unital homomorphisms, equality also holds directly for the unital
+projection and stable-unitary constructions, and for $V(\phi),V(\psi)$.
+\end{proposition}
+\begin{proof}
+\leanok
+For a unital homotopy, apply $H_t$ entrywise to a finite matrix.
+Entrywise continuity implies continuity in the finite-matrix $C^*$-norm.
+A matrix projection therefore gives a norm path of projections, whose
+endpoints are equivalent by the preceding result. Equality on projection
+classes gives equality on $V(A)$ and, by the Grothendieck universal property,
+on $K_0(A)$. A matrix unitary gives a norm path of unitaries, so the endpoint
+classes agree in the stable quotient $K_1(B)$.
+For a possibly nonunital homotopy, unitalize it and apply these two unital
+results. Restrict equality of the induced maps to the scalar kernels.
+\end{proof}
 
 The six-term exact sequence and Bott periodicity require separate future
 nodes and proofs. They are not consequences of the formalized foundations

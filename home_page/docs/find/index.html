@@ -39,6 +39,9 @@ code{overflow-wrap:anywhere}</style></head><body><a href="../../blueprint/">返�
 <li><a href="#OperatorKUnitalAgreement">OperatorKUnitalAgreement.lean</a></li>
 <li><a href="#ReducedOperatorK1">ReducedOperatorK1.lean</a></li>
 <li><a href="#UnitaryStableConjugation">UnitaryStableConjugation.lean</a></li>
+<li><a href="#ProjectionHomotopy">ProjectionHomotopy.lean</a></li>
+<li><a href="#StarHomotopy">StarHomotopy.lean</a></li>
+<li><a href="#OperatorKHomotopy">OperatorKHomotopy.lean</a></li>
 </ul></nav>
 <h2 id="GroupAlgebra">GroupAlgebra.lean</h2><p>源码 SHA-256：<code>1c6c0899fe9bc9f7860f291ba7c5573353d18a3c5809258769d689bc39da8ad4</code></p><pre>
 <span><a class="line" href="#L1" id="L1">  1</a> import Mathlib.Algebra.MonoidAlgebra.Basic</span>
@@ -3486,5 +3489,285 @@ code{overflow-wrap:anywhere}</style></head><body><a href="../../blueprint/">返�
 <span><a class="line" href="#UnitaryStableConjugation-L21" id="UnitaryStableConjugation-L21"> 21</a>   simpa only [unitaryBlockSum_mul, one_mul, mul_one, Unitary.star_mul_self] using hh</span>
 <span><a class="line" href="#UnitaryStableConjugation-L22" id="UnitaryStableConjugation-L22"> 22</a> </span>
 <span><a class="line" href="#UnitaryStableConjugation-L23" id="UnitaryStableConjugation-L23"> 23</a> end BC4lean.OperatorKTheory</span>
+</pre>
+<h2 id="ProjectionHomotopy">ProjectionHomotopy.lean</h2><p>源码 SHA-256：<code>9ede6e13834de074b9c88a4af30ab4e414bf555843c982b99cc87b23571decc1</code></p><pre>
+<span><a class="line" href="#ProjectionHomotopy-L1" id="ProjectionHomotopy-L1">  1</a> import BC4lean.OperatorProjections</span>
+<span><a class="line" href="#ProjectionHomotopy-L2" id="ProjectionHomotopy-L2">  2</a> import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Basic</span>
+<span><a class="line" href="#ProjectionHomotopy-L3" id="ProjectionHomotopy-L3">  3</a> import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Commute</span>
+<span><a class="line" href="#ProjectionHomotopy-L4" id="ProjectionHomotopy-L4">  4</a> import Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.Rpow.Basic</span>
+<span><a class="line" href="#ProjectionHomotopy-L5" id="ProjectionHomotopy-L5">  5</a> import Mathlib.Analysis.Normed.Ring.Units</span>
+<span><a class="line" href="#ProjectionHomotopy-L6" id="ProjectionHomotopy-L6">  6</a> import Mathlib.Topology.LocallyConstant.Basic</span>
+<span><a class="line" href="#ProjectionHomotopy-L7" id="ProjectionHomotopy-L7">  7</a> import Mathlib.Topology.Connected.PathConnected</span>
+<span><a class="line" href="#ProjectionHomotopy-L8" id="ProjectionHomotopy-L8">  8</a> import Mathlib.Tactic.NoncommRing</span>
+<span><a class="line" href="#ProjectionHomotopy-L9" id="ProjectionHomotopy-L9">  9</a> </span>
+<span><a class="line" href="#ProjectionHomotopy-L10" id="ProjectionHomotopy-L10"> 10</a> /-! # Norm homotopies of projections preserve Murray–von Neumann classes -/</span>
+<span><a class="line" href="#ProjectionHomotopy-L11" id="ProjectionHomotopy-L11"> 11</a> noncomputable section</span>
+<span><a class="line" href="#ProjectionHomotopy-L12" id="ProjectionHomotopy-L12"> 12</a> open Filter Topology</span>
+<span><a class="line" href="#ProjectionHomotopy-L13" id="ProjectionHomotopy-L13"> 13</a> namespace BC4lean.OperatorKTheory</span>
+<span><a class="line" href="#ProjectionHomotopy-L14" id="ProjectionHomotopy-L14"> 14</a> namespace Projection</span>
+<span><a class="line" href="#ProjectionHomotopy-L15" id="ProjectionHomotopy-L15"> 15</a> variable {A : Type*} [CStarAlgebra A]</span>
+<span><a class="line" href="#ProjectionHomotopy-L16" id="ProjectionHomotopy-L16"> 16</a> </span>
+<span><a class="line" href="#ProjectionHomotopy-L17" id="ProjectionHomotopy-L17"> 17</a> /-- An invertible intertwiner between projections can be normalized to a partial isometry. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.Projection.equivalent_of_invertible_intertwiner"><a class="line" href="#ProjectionHomotopy-L18" id="ProjectionHomotopy-L18"> 18</a> theorem equivalent_of_invertible_intertwiner (p q : Projection A) (s : A)</span>
+<span><a class="line" href="#ProjectionHomotopy-L19" id="ProjectionHomotopy-L19"> 19</a>     (hs : IsUnit s) (hsp : s * p = q * s) : Equivalent p q := by</span>
+<span><a class="line" href="#ProjectionHomotopy-L20" id="ProjectionHomotopy-L20"> 20</a>   let _ := CStarAlgebra.spectralOrder A</span>
+<span><a class="line" href="#ProjectionHomotopy-L21" id="ProjectionHomotopy-L21"> 21</a>   let _ := CStarAlgebra.spectralOrderedRing A</span>
+<span><a class="line" href="#ProjectionHomotopy-L22" id="ProjectionHomotopy-L22"> 22</a>   let t := star s * s</span>
+<span><a class="line" href="#ProjectionHomotopy-L23" id="ProjectionHomotopy-L23"> 23</a>   have ht : IsUnit t := hs.star.mul hs</span>
+<span><a class="line" href="#ProjectionHomotopy-L24" id="ProjectionHomotopy-L24"> 24</a>   have htpos : 0 ≤ t := star_mul_self_nonneg s</span>
+<span><a class="line" href="#ProjectionHomotopy-L25" id="ProjectionHomotopy-L25"> 25</a>   let z : A := CFC.rpow t (- (1 / 2 : ℝ))</span>
+<span><a class="line" href="#ProjectionHomotopy-L26" id="ProjectionHomotopy-L26"> 26</a>   have hzstar : star z = z := (CFC.rpow_nonneg (a := t) (y := -(1 / 2 : ℝ))).isSelfAdjoint.star_eq</span>
+<span><a class="line" href="#ProjectionHomotopy-L27" id="ProjectionHomotopy-L27"> 27</a>   have hzunit : IsUnit z := ht.cfcRpow _ htpos</span>
+<span><a class="line" href="#ProjectionHomotopy-L28" id="ProjectionHomotopy-L28"> 28</a>   have hstar : (p : A) * star s = star s * q := by</span>
+<span><a class="line" href="#ProjectionHomotopy-L29" id="ProjectionHomotopy-L29"> 29</a>     simpa only [star_mul, star_coe] using congrArg star hsp</span>
+<span><a class="line" href="#ProjectionHomotopy-L30" id="ProjectionHomotopy-L30"> 30</a>   have htp : Commute t (p : A) := by</span>
+<span><a class="line" href="#ProjectionHomotopy-L31" id="ProjectionHomotopy-L31"> 31</a>     show (star s * s) * p = p * (star s * s)</span>
+<span><a class="line" href="#ProjectionHomotopy-L32" id="ProjectionHomotopy-L32"> 32</a>     calc</span>
+<span><a class="line" href="#ProjectionHomotopy-L33" id="ProjectionHomotopy-L33"> 33</a>       (star s * s) * p = star s * (q * s) := by rw [mul_assoc, hsp]</span>
+<span><a class="line" href="#ProjectionHomotopy-L34" id="ProjectionHomotopy-L34"> 34</a>       _ = (p * star s) * s := by rw [hstar, mul_assoc]</span>
+<span><a class="line" href="#ProjectionHomotopy-L35" id="ProjectionHomotopy-L35"> 35</a>       _ = p * (star s * s) := mul_assoc _ _ _</span>
+<span><a class="line" href="#ProjectionHomotopy-L36" id="ProjectionHomotopy-L36"> 36</a>   have hzp : z * p = p * z := (htp.cfc_nnreal (fun x =&gt; x ^ (-(1 / 2 : ℝ)))).eq</span>
+<span><a class="line" href="#ProjectionHomotopy-L37" id="ProjectionHomotopy-L37"> 37</a>   have hztz : z * t * z = 1 := by</span>
+<span><a class="line" href="#ProjectionHomotopy-L38" id="ProjectionHomotopy-L38"> 38</a>     simp only [z, CFC.rpow_eq_pow]</span>
+<span><a class="line" href="#ProjectionHomotopy-L39" id="ProjectionHomotopy-L39"> 39</a>     calc</span>
+<span><a class="line" href="#ProjectionHomotopy-L40" id="ProjectionHomotopy-L40"> 40</a>       t ^ (-(1 / 2 : ℝ)) * t * t ^ (-(1 / 2 : ℝ)) = (t ^ (-(1 / 2 : ℝ)) * t ^ (1 : ℝ)) *</span>
+<span><a class="line" href="#ProjectionHomotopy-L41" id="ProjectionHomotopy-L41"> 41</a>           t ^ (-(1 / 2 : ℝ)) := by rw [CFC.rpow_one t htpos]</span>
+<span><a class="line" href="#ProjectionHomotopy-L42" id="ProjectionHomotopy-L42"> 42</a>       _ = t ^ ((-(1 / 2 : ℝ) + 1) + -(1 / 2 : ℝ)) := by</span>
+<span><a class="line" href="#ProjectionHomotopy-L43" id="ProjectionHomotopy-L43"> 43</a>         rw [CFC.rpow_add ht, CFC.rpow_add ht]</span>
+<span><a class="line" href="#ProjectionHomotopy-L44" id="ProjectionHomotopy-L44"> 44</a>       _ = 1 := by norm_num; exact CFC.rpow_zero t htpos</span>
+<span><a class="line" href="#ProjectionHomotopy-L45" id="ProjectionHomotopy-L45"> 45</a>   let u := s * z</span>
+<span><a class="line" href="#ProjectionHomotopy-L46" id="ProjectionHomotopy-L46"> 46</a>   have hu : star u * u = 1 := by</span>
+<span><a class="line" href="#ProjectionHomotopy-L47" id="ProjectionHomotopy-L47"> 47</a>     calc</span>
+<span><a class="line" href="#ProjectionHomotopy-L48" id="ProjectionHomotopy-L48"> 48</a>       star u * u = z * t * z := by simp only [u, t, star_mul, hzstar, mul_assoc]</span>
+<span><a class="line" href="#ProjectionHomotopy-L49" id="ProjectionHomotopy-L49"> 49</a>       _ = 1 := hztz</span>
+<span><a class="line" href="#ProjectionHomotopy-L50" id="ProjectionHomotopy-L50"> 50</a>   have huu : u * star u = 1 := by</span>
+<span><a class="line" href="#ProjectionHomotopy-L51" id="ProjectionHomotopy-L51"> 51</a>     apply (hs.mul hzunit).mul_right_cancel</span>
+<span><a class="line" href="#ProjectionHomotopy-L52" id="ProjectionHomotopy-L52"> 52</a>     change (u * star u) * u = 1 * u</span>
+<span><a class="line" href="#ProjectionHomotopy-L53" id="ProjectionHomotopy-L53"> 53</a>     rw [mul_assoc, hu, mul_one, one_mul]</span>
+<span><a class="line" href="#ProjectionHomotopy-L54" id="ProjectionHomotopy-L54"> 54</a>   have hup : u * p = q * u := by</span>
+<span><a class="line" href="#ProjectionHomotopy-L55" id="ProjectionHomotopy-L55"> 55</a>     change (s * z) * p = q * (s * z)</span>
+<span><a class="line" href="#ProjectionHomotopy-L56" id="ProjectionHomotopy-L56"> 56</a>     rw [mul_assoc, hzp, ← mul_assoc, hsp, mul_assoc]</span>
+<span><a class="line" href="#ProjectionHomotopy-L57" id="ProjectionHomotopy-L57"> 57</a>   refine ⟨u * p, ?_, ?_⟩</span>
+<span><a class="line" href="#ProjectionHomotopy-L58" id="ProjectionHomotopy-L58"> 58</a>   · calc</span>
+<span><a class="line" href="#ProjectionHomotopy-L59" id="ProjectionHomotopy-L59"> 59</a>       star (u * p) * (u * p) = p * (star u * u) * p := by simp only [star_mul, star_coe, mul_assoc]</span>
+<span><a class="line" href="#ProjectionHomotopy-L60" id="ProjectionHomotopy-L60"> 60</a>       _ = p := by rw [hu, mul_one, mul_self]</span>
+<span><a class="line" href="#ProjectionHomotopy-L61" id="ProjectionHomotopy-L61"> 61</a>   · calc</span>
+<span><a class="line" href="#ProjectionHomotopy-L62" id="ProjectionHomotopy-L62"> 62</a>       (u * p) * star (u * p) = u * ((p * p) * star u) := by simp only [star_mul, star_coe, mul_assoc]</span>
+<span><a class="line" href="#ProjectionHomotopy-L63" id="ProjectionHomotopy-L63"> 63</a>       _ = (u * p) * star u := by rw [mul_self]; exact (mul_assoc u (p : A) (star u)).symm</span>
+<span><a class="line" href="#ProjectionHomotopy-L64" id="ProjectionHomotopy-L64"> 64</a>       _ = q * (u * star u) := by rw [hup, mul_assoc]</span>
+<span><a class="line" href="#ProjectionHomotopy-L65" id="ProjectionHomotopy-L65"> 65</a>       _ = q := by rw [huu, mul_one]</span>
+<span><a class="line" href="#ProjectionHomotopy-L66" id="ProjectionHomotopy-L66"> 66</a> </span>
+<span><a class="line" href="#ProjectionHomotopy-L67" id="ProjectionHomotopy-L67"> 67</a> /-- The standard intertwiner is invertible on a neighborhood of a projection. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.Projection.eventually_equivalent"><a class="line" href="#ProjectionHomotopy-L68" id="ProjectionHomotopy-L68"> 68</a> theorem eventually_equivalent (p : Projection A) : ∀ᶠ q in nhds p, Equivalent p q := by</span>
+<span><a class="line" href="#ProjectionHomotopy-L69" id="ProjectionHomotopy-L69"> 69</a>   let s : Projection A → A := fun q =&gt; (q : A) * p + (1 - q) * (1 - p)</span>
+<span><a class="line" href="#ProjectionHomotopy-L70" id="ProjectionHomotopy-L70"> 70</a>   have hc : Continuous s :=</span>
+<span><a class="line" href="#ProjectionHomotopy-L71" id="ProjectionHomotopy-L71"> 71</a>     (continuous_subtype_val.mul continuous_const).add</span>
+<span><a class="line" href="#ProjectionHomotopy-L72" id="ProjectionHomotopy-L72"> 72</a>       ((continuous_const.sub continuous_subtype_val).mul continuous_const)</span>
+<span><a class="line" href="#ProjectionHomotopy-L73" id="ProjectionHomotopy-L73"> 73</a>   have hsp : s p = 1 := by</span>
+<span><a class="line" href="#ProjectionHomotopy-L74" id="ProjectionHomotopy-L74"> 74</a>     dsimp [s]</span>
+<span><a class="line" href="#ProjectionHomotopy-L75" id="ProjectionHomotopy-L75"> 75</a>     noncomm_ring [mul_self p]</span>
+<span><a class="line" href="#ProjectionHomotopy-L76" id="ProjectionHomotopy-L76"> 76</a>   have he : ∀ᶠ q in nhds p, IsUnit (s q) :=</span>
+<span><a class="line" href="#ProjectionHomotopy-L77" id="ProjectionHomotopy-L77"> 77</a>     hc.continuousAt (Units.isOpen.mem_nhds (hsp ▸ isUnit_one))</span>
+<span><a class="line" href="#ProjectionHomotopy-L78" id="ProjectionHomotopy-L78"> 78</a>   filter_upwards [he] with q hq</span>
+<span><a class="line" href="#ProjectionHomotopy-L79" id="ProjectionHomotopy-L79"> 79</a>   apply equivalent_of_invertible_intertwiner p q (s q) hq</span>
+<span><a class="line" href="#ProjectionHomotopy-L80" id="ProjectionHomotopy-L80"> 80</a>   dsimp [s]</span>
+<span><a class="line" href="#ProjectionHomotopy-L81" id="ProjectionHomotopy-L81"> 81</a>   simp only [add_mul, mul_add, sub_mul, mul_sub, one_mul, mul_one, mul_assoc,</span>
+<span><a class="line" href="#ProjectionHomotopy-L82" id="ProjectionHomotopy-L82"> 82</a>     ← mul_assoc (q : A) (q : A) (p : A), mul_self]</span>
+<span><a class="line" href="#ProjectionHomotopy-L83" id="ProjectionHomotopy-L83"> 83</a>   noncomm_ring</span>
+<span><a class="line" href="#ProjectionHomotopy-L84" id="ProjectionHomotopy-L84"> 84</a> </span>
+<span><a class="line" href="#ProjectionHomotopy-L85" id="ProjectionHomotopy-L85"> 85</a> /-- The Murray–von Neumann class of a projection is locally constant in norm. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.Projection.isLocallyConstant_class"><a class="line" href="#ProjectionHomotopy-L86" id="ProjectionHomotopy-L86"> 86</a> theorem isLocallyConstant_class :</span>
+<span><a class="line" href="#ProjectionHomotopy-L87" id="ProjectionHomotopy-L87"> 87</a>     IsLocallyConstant (fun p : Projection A =&gt; (Quotient.mk _ p : Classes A)) := by</span>
+<span><a class="line" href="#ProjectionHomotopy-L88" id="ProjectionHomotopy-L88"> 88</a>   rw [IsLocallyConstant.iff_eventually_eq]</span>
+<span><a class="line" href="#ProjectionHomotopy-L89" id="ProjectionHomotopy-L89"> 89</a>   intro p</span>
+<span><a class="line" href="#ProjectionHomotopy-L90" id="ProjectionHomotopy-L90"> 90</a>   filter_upwards [eventually_equivalent p] with q hq</span>
+<span><a class="line" href="#ProjectionHomotopy-L91" id="ProjectionHomotopy-L91"> 91</a>   exact Quotient.sound (equivalent_symm hq)</span>
+<span><a class="line" href="#ProjectionHomotopy-L92" id="ProjectionHomotopy-L92"> 92</a> </span>
+<span><a class="line" href="#ProjectionHomotopy-L93" id="ProjectionHomotopy-L93"> 93</a> /-- Endpoints of a norm-continuous projection path are Murray–von Neumann equivalent. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.Projection.equivalent_of_path"><a class="line" href="#ProjectionHomotopy-L94" id="ProjectionHomotopy-L94"> 94</a> theorem equivalent_of_path {p q : Projection A} (h : Path p q) : Equivalent p q := by</span>
+<span><a class="line" href="#ProjectionHomotopy-L95" id="ProjectionHomotopy-L95"> 95</a>   have hc := isLocallyConstant_class.comp_continuous h.continuous</span>
+<span><a class="line" href="#ProjectionHomotopy-L96" id="ProjectionHomotopy-L96"> 96</a>   have he := hc.apply_eq_of_preconnectedSpace (0 : unitInterval) 1</span>
+<span><a class="line" href="#ProjectionHomotopy-L97" id="ProjectionHomotopy-L97"> 97</a>   change (Quotient.mk _ (h 0) : Classes A) = Quotient.mk _ (h 1) at he</span>
+<span><a class="line" href="#ProjectionHomotopy-L98" id="ProjectionHomotopy-L98"> 98</a>   rw [h.source, h.target] at he</span>
+<span><a class="line" href="#ProjectionHomotopy-L99" id="ProjectionHomotopy-L99"> 99</a>   exact Quotient.exact he</span>
+<span><a class="line" href="#ProjectionHomotopy-L100" id="ProjectionHomotopy-L100">100</a> </span>
+<span><a class="line" href="#ProjectionHomotopy-L101" id="ProjectionHomotopy-L101">101</a> end Projection</span>
+<span><a class="line" href="#ProjectionHomotopy-L102" id="ProjectionHomotopy-L102">102</a> end BC4lean.OperatorKTheory</span>
+</pre>
+<h2 id="StarHomotopy">StarHomotopy.lean</h2><p>源码 SHA-256：<code>5de668399d50bc41ef29e3ad531f47e942c089f519e267cf5e731b8969fb820f</code></p><pre>
+<span><a class="line" href="#StarHomotopy-L1" id="StarHomotopy-L1">  1</a> import BC4lean.OperatorK1Functoriality</span>
+<span><a class="line" href="#StarHomotopy-L2" id="StarHomotopy-L2">  2</a> import Mathlib.Analysis.CStarAlgebra.Unitization</span>
+<span><a class="line" href="#StarHomotopy-L3" id="StarHomotopy-L3">  3</a> </span>
+<span><a class="line" href="#StarHomotopy-L4" id="StarHomotopy-L4">  4</a> /-! # Point-norm homotopies of complex star homomorphisms</span>
+<span><a class="line" href="#StarHomotopy-L5" id="StarHomotopy-L5">  5</a> </span>
+<span><a class="line" href="#StarHomotopy-L6" id="StarHomotopy-L6">  6</a> Continuity is required separately at every fixed algebra element; no continuity</span>
+<span><a class="line" href="#StarHomotopy-L7" id="StarHomotopy-L7">  7</a> in the operator norm on the space of homomorphisms is assumed.</span>
+<span><a class="line" href="#StarHomotopy-L8" id="StarHomotopy-L8">  8</a> -/</span>
+<span><a class="line" href="#StarHomotopy-L9" id="StarHomotopy-L9">  9</a> noncomputable section</span>
+<span><a class="line" href="#StarHomotopy-L10" id="StarHomotopy-L10"> 10</a> namespace BC4lean.OperatorKTheory</span>
+<span><a class="line" href="#StarHomotopy-L11" id="StarHomotopy-L11"> 11</a> </span>
+<span><a class="line" href="#StarHomotopy-L12" id="StarHomotopy-L12"> 12</a> /-- A point-norm homotopy through unital complex star homomorphisms. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.UnitalStarHomotopy"><a class="line" href="#StarHomotopy-L13" id="StarHomotopy-L13"> 13</a> structure UnitalStarHomotopy {A B : Type*} [CStarAlgebra A] [CStarAlgebra B]</span>
+<span><a class="line" href="#StarHomotopy-L14" id="StarHomotopy-L14"> 14</a>     (φ ψ : A →⋆ₐ[ℂ] B) where</span>
+<span><a class="line" href="#StarHomotopy-L15" id="StarHomotopy-L15"> 15</a>   toFun : unitInterval → A →⋆ₐ[ℂ] B</span>
+<span><a class="line" href="#StarHomotopy-L16" id="StarHomotopy-L16"> 16</a>   continuous_apply : ∀ a : A, Continuous (fun t =&gt; toFun t a)</span>
+<span><a class="line" href="#StarHomotopy-L17" id="StarHomotopy-L17"> 17</a>   source : toFun 0 = φ</span>
+<span><a class="line" href="#StarHomotopy-L18" id="StarHomotopy-L18"> 18</a>   target : toFun 1 = ψ</span>
+<span><a class="line" href="#StarHomotopy-L19" id="StarHomotopy-L19"> 19</a> </span>
+<span><a class="line" href="#StarHomotopy-L20" id="StarHomotopy-L20"> 20</a> /-- A point-norm homotopy through possibly nonunital complex star homomorphisms. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.StarHomotopy"><a class="line" href="#StarHomotopy-L21" id="StarHomotopy-L21"> 21</a> structure StarHomotopy {A B : Type*} [NonUnitalCStarAlgebra A] [NonUnitalCStarAlgebra B]</span>
+<span><a class="line" href="#StarHomotopy-L22" id="StarHomotopy-L22"> 22</a>     (φ ψ : A →⋆ₙₐ[ℂ] B) where</span>
+<span><a class="line" href="#StarHomotopy-L23" id="StarHomotopy-L23"> 23</a>   toFun : unitInterval → A →⋆ₙₐ[ℂ] B</span>
+<span><a class="line" href="#StarHomotopy-L24" id="StarHomotopy-L24"> 24</a>   continuous_apply : ∀ a : A, Continuous (fun t =&gt; toFun t a)</span>
+<span><a class="line" href="#StarHomotopy-L25" id="StarHomotopy-L25"> 25</a>   source : toFun 0 = φ</span>
+<span><a class="line" href="#StarHomotopy-L26" id="StarHomotopy-L26"> 26</a>   target : toFun 1 = ψ</span>
+<span><a class="line" href="#StarHomotopy-L27" id="StarHomotopy-L27"> 27</a> </span>
+<span><a class="line" href="#StarHomotopy-L28" id="StarHomotopy-L28"> 28</a> namespace UnitalStarHomotopy</span>
+<span><a class="line" href="#StarHomotopy-L29" id="StarHomotopy-L29"> 29</a> variable {A B : Type*} [CStarAlgebra A] [CStarAlgebra B]</span>
+<span><a class="line" href="#StarHomotopy-L30" id="StarHomotopy-L30"> 30</a> variable {φ ψ : A →⋆ₐ[ℂ] B}</span>
+<span><a class="line" href="#StarHomotopy-L31" id="StarHomotopy-L31"> 31</a> </span>
+<span><a class="line" href="#StarHomotopy-L32" id="StarHomotopy-L32"> 32</a> /-- A constant family is a point-norm homotopy. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.UnitalStarHomotopy.refl"><a class="line" href="#StarHomotopy-L33" id="StarHomotopy-L33"> 33</a> def refl (φ : A →⋆ₐ[ℂ] B) : UnitalStarHomotopy φ φ where</span>
+<span><a class="line" href="#StarHomotopy-L34" id="StarHomotopy-L34"> 34</a>   toFun _ := φ</span>
+<span><a class="line" href="#StarHomotopy-L35" id="StarHomotopy-L35"> 35</a>   continuous_apply _ := continuous_const</span>
+<span><a class="line" href="#StarHomotopy-L36" id="StarHomotopy-L36"> 36</a>   source := rfl</span>
+<span><a class="line" href="#StarHomotopy-L37" id="StarHomotopy-L37"> 37</a>   target := rfl</span>
+<span><a class="line" href="#StarHomotopy-L38" id="StarHomotopy-L38"> 38</a> </span>
+<span><a class="line" href="#StarHomotopy-L39" id="StarHomotopy-L39"> 39</a> /-- Forget preservation of the unit without changing the point-norm continuity. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.UnitalStarHomotopy.toStarHomotopy"><a class="line" href="#StarHomotopy-L40" id="StarHomotopy-L40"> 40</a> def toStarHomotopy (h : UnitalStarHomotopy φ ψ) :</span>
+<span><a class="line" href="#StarHomotopy-L41" id="StarHomotopy-L41"> 41</a>     StarHomotopy φ.toNonUnitalStarAlgHom ψ.toNonUnitalStarAlgHom where</span>
+<span><a class="line" href="#StarHomotopy-L42" id="StarHomotopy-L42"> 42</a>   toFun t := (h.toFun t).toNonUnitalStarAlgHom</span>
+<span><a class="line" href="#StarHomotopy-L43" id="StarHomotopy-L43"> 43</a>   continuous_apply := h.continuous_apply</span>
+<span><a class="line" href="#StarHomotopy-L44" id="StarHomotopy-L44"> 44</a>   source := congrArg StarAlgHom.toNonUnitalStarAlgHom h.source</span>
+<span><a class="line" href="#StarHomotopy-L45" id="StarHomotopy-L45"> 45</a>   target := congrArg StarAlgHom.toNonUnitalStarAlgHom h.target</span>
+<span><a class="line" href="#StarHomotopy-L46" id="StarHomotopy-L46"> 46</a> </span>
+<span><a class="line" href="#StarHomotopy-L47" id="StarHomotopy-L47"> 47</a> variable {ι : Type*} [Fintype ι] [DecidableEq ι]</span>
+<span><a class="line" href="#StarHomotopy-L48" id="StarHomotopy-L48"> 48</a> </span>
+<span><a class="line" href="#StarHomotopy-L49" id="StarHomotopy-L49"> 49</a> /-- Point-norm continuity gives norm continuity on each fixed finite matrix. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.UnitalStarHomotopy.continuous_matrixMap"><a class="line" href="#StarHomotopy-L50" id="StarHomotopy-L50"> 50</a> theorem continuous_matrixMap (h : UnitalStarHomotopy φ ψ) (M : CStarMatrix ι ι A) :</span>
+<span><a class="line" href="#StarHomotopy-L51" id="StarHomotopy-L51"> 51</a>     Continuous (fun t =&gt; matrixMap (h.toFun t) M) := by</span>
+<span><a class="line" href="#StarHomotopy-L52" id="StarHomotopy-L52"> 52</a>   apply CStarMatrix.ofMatrixL.continuous.comp</span>
+<span><a class="line" href="#StarHomotopy-L53" id="StarHomotopy-L53"> 53</a>   exact continuous_pi (fun i =&gt; continuous_pi (fun j =&gt; h.continuous_apply (M i j)))</span>
+<span><a class="line" href="#StarHomotopy-L54" id="StarHomotopy-L54"> 54</a> </span>
+<span><a class="line" href="#StarHomotopy-L55" id="StarHomotopy-L55"> 55</a> variable [PartialOrder A] [StarOrderedRing A] [PartialOrder B] [StarOrderedRing B]</span>
+<span><a class="line" href="#StarHomotopy-L56" id="StarHomotopy-L56"> 56</a> </span>
+<span><a class="line" href="#StarHomotopy-L57" id="StarHomotopy-L57"> 57</a> /-- Evaluate a point-norm homotopy on a matrix projection. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.UnitalStarHomotopy.projectionPath"><a class="line" href="#StarHomotopy-L58" id="StarHomotopy-L58"> 58</a> def projectionPath (h : UnitalStarHomotopy φ ψ) (p : MatrixProjection A ι) :</span>
+<span><a class="line" href="#StarHomotopy-L59" id="StarHomotopy-L59"> 59</a>     Path (matrixProjectionMap φ p) (matrixProjectionMap ψ p) where</span>
+<span><a class="line" href="#StarHomotopy-L60" id="StarHomotopy-L60"> 60</a>   toFun t := matrixProjectionMap (h.toFun t) p</span>
+<span><a class="line" href="#StarHomotopy-L61" id="StarHomotopy-L61"> 61</a>   continuous_toFun := (h.continuous_matrixMap p.val).subtype_mk _</span>
+<span><a class="line" href="#StarHomotopy-L62" id="StarHomotopy-L62"> 62</a>   source&#x27; := by rw [h.source]</span>
+<span><a class="line" href="#StarHomotopy-L63" id="StarHomotopy-L63"> 63</a>   target&#x27; := by rw [h.target]</span>
+<span><a class="line" href="#StarHomotopy-L64" id="StarHomotopy-L64"> 64</a> </span>
+<span><a class="line" href="#StarHomotopy-L65" id="StarHomotopy-L65"> 65</a> /-- Evaluate a point-norm homotopy on a matrix unitary. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.UnitalStarHomotopy.unitaryPath"><a class="line" href="#StarHomotopy-L66" id="StarHomotopy-L66"> 66</a> def unitaryPath (h : UnitalStarHomotopy φ ψ) (u : MatrixUnitary A ι) :</span>
+<span><a class="line" href="#StarHomotopy-L67" id="StarHomotopy-L67"> 67</a>     Path (⟨matrixMap φ u, Unitary.map_mem (matrixMap φ) u.property⟩ : MatrixUnitary B ι)</span>
+<span><a class="line" href="#StarHomotopy-L68" id="StarHomotopy-L68"> 68</a>       ⟨matrixMap ψ u, Unitary.map_mem (matrixMap ψ) u.property⟩ where</span>
+<span><a class="line" href="#StarHomotopy-L69" id="StarHomotopy-L69"> 69</a>   toFun t := ⟨matrixMap (h.toFun t) u, Unitary.map_mem (matrixMap (h.toFun t)) u.property⟩</span>
+<span><a class="line" href="#StarHomotopy-L70" id="StarHomotopy-L70"> 70</a>   continuous_toFun := (h.continuous_matrixMap u.val).subtype_mk _</span>
+<span><a class="line" href="#StarHomotopy-L71" id="StarHomotopy-L71"> 71</a>   source&#x27; := by rw [h.source]</span>
+<span><a class="line" href="#StarHomotopy-L72" id="StarHomotopy-L72"> 72</a>   target&#x27; := by rw [h.target]</span>
+<span><a class="line" href="#StarHomotopy-L73" id="StarHomotopy-L73"> 73</a> end UnitalStarHomotopy</span>
+<span><a class="line" href="#StarHomotopy-L74" id="StarHomotopy-L74"> 74</a> </span>
+<span><a class="line" href="#StarHomotopy-L75" id="StarHomotopy-L75"> 75</a> namespace StarHomotopy</span>
+<span><a class="line" href="#StarHomotopy-L76" id="StarHomotopy-L76"> 76</a> variable {A B : Type*} [NonUnitalCStarAlgebra A] [NonUnitalCStarAlgebra B]</span>
+<span><a class="line" href="#StarHomotopy-L77" id="StarHomotopy-L77"> 77</a> variable {φ ψ : A →⋆ₙₐ[ℂ] B}</span>
+<span><a class="line" href="#StarHomotopy-L78" id="StarHomotopy-L78"> 78</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.StarHomotopy.refl"><a class="line" href="#StarHomotopy-L79" id="StarHomotopy-L79"> 79</a> def refl (φ : A →⋆ₙₐ[ℂ] B) : StarHomotopy φ φ where</span>
+<span><a class="line" href="#StarHomotopy-L80" id="StarHomotopy-L80"> 80</a>   toFun _ := φ</span>
+<span><a class="line" href="#StarHomotopy-L81" id="StarHomotopy-L81"> 81</a>   continuous_apply _ := continuous_const</span>
+<span><a class="line" href="#StarHomotopy-L82" id="StarHomotopy-L82"> 82</a>   source := rfl</span>
+<span><a class="line" href="#StarHomotopy-L83" id="StarHomotopy-L83"> 83</a>   target := rfl</span>
+<span><a class="line" href="#StarHomotopy-L84" id="StarHomotopy-L84"> 84</a> </span>
+<span><a class="line" href="#StarHomotopy-L85" id="StarHomotopy-L85"> 85</a> /-- Forced unitization preserves point-norm homotopies. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.StarHomotopy.unitization"><a class="line" href="#StarHomotopy-L86" id="StarHomotopy-L86"> 86</a> def unitization (h : StarHomotopy φ ψ) :</span>
+<span><a class="line" href="#StarHomotopy-L87" id="StarHomotopy-L87"> 87</a>     UnitalStarHomotopy (Unitization.starMap φ) (Unitization.starMap ψ) where</span>
+<span><a class="line" href="#StarHomotopy-L88" id="StarHomotopy-L88"> 88</a>   toFun t := Unitization.starMap (h.toFun t)</span>
+<span><a class="line" href="#StarHomotopy-L89" id="StarHomotopy-L89"> 89</a>   continuous_apply x := by</span>
+<span><a class="line" href="#StarHomotopy-L90" id="StarHomotopy-L90"> 90</a>     have hx : (fun t =&gt; Unitization.starMap (h.toFun t) x) =</span>
+<span><a class="line" href="#StarHomotopy-L91" id="StarHomotopy-L91"> 91</a>         fun t =&gt; algebraMap ℂ (Unitization ℂ B) x.fst + (h.toFun t x.snd : Unitization ℂ B) := by</span>
+<span><a class="line" href="#StarHomotopy-L92" id="StarHomotopy-L92"> 92</a>       funext t</span>
+<span><a class="line" href="#StarHomotopy-L93" id="StarHomotopy-L93"> 93</a>       conv_lhs =&gt; rw [← Unitization.inl_fst_add_inr_snd_eq x]</span>
+<span><a class="line" href="#StarHomotopy-L94" id="StarHomotopy-L94"> 94</a>       rw [map_add, Unitization.starMap_inl, Unitization.starMap_inr]</span>
+<span><a class="line" href="#StarHomotopy-L95" id="StarHomotopy-L95"> 95</a>     rw [hx]</span>
+<span><a class="line" href="#StarHomotopy-L96" id="StarHomotopy-L96"> 96</a>     exact continuous_const.add (Unitization.continuous_inr.comp (h.continuous_apply x.snd))</span>
+<span><a class="line" href="#StarHomotopy-L97" id="StarHomotopy-L97"> 97</a>   source := congrArg Unitization.starMap h.source</span>
+<span><a class="line" href="#StarHomotopy-L98" id="StarHomotopy-L98"> 98</a>   target := congrArg Unitization.starMap h.target</span>
+<span><a class="line" href="#StarHomotopy-L99" id="StarHomotopy-L99"> 99</a> end StarHomotopy</span>
+<span><a class="line" href="#StarHomotopy-L100" id="StarHomotopy-L100">100</a> end BC4lean.OperatorKTheory</span>
+</pre>
+<h2 id="OperatorKHomotopy">OperatorKHomotopy.lean</h2><p>源码 SHA-256：<code>e0de7464914e757552fbd6966586697dccecb552450d8f33eee790673b0e08af</code></p><pre>
+<span><a class="line" href="#OperatorKHomotopy-L1" id="OperatorKHomotopy-L1">  1</a> import BC4lean.ProjectionHomotopy</span>
+<span><a class="line" href="#OperatorKHomotopy-L2" id="OperatorKHomotopy-L2">  2</a> import BC4lean.StarHomotopy</span>
+<span><a class="line" href="#OperatorKHomotopy-L3" id="OperatorKHomotopy-L3">  3</a> import BC4lean.NonunitalOperatorK</span>
+<span><a class="line" href="#OperatorKHomotopy-L4" id="OperatorKHomotopy-L4">  4</a> </span>
+<span><a class="line" href="#OperatorKHomotopy-L5" id="OperatorKHomotopy-L5">  5</a> /-! # Homotopy invariance of maps on operator K-theory -/</span>
+<span><a class="line" href="#OperatorKHomotopy-L6" id="OperatorKHomotopy-L6">  6</a> noncomputable section</span>
+<span><a class="line" href="#OperatorKHomotopy-L7" id="OperatorKHomotopy-L7">  7</a> namespace BC4lean.OperatorKTheory</span>
+<span><a class="line" href="#OperatorKHomotopy-L8" id="OperatorKHomotopy-L8">  8</a> section Unital</span>
+<span><a class="line" href="#OperatorKHomotopy-L9" id="OperatorKHomotopy-L9">  9</a> variable {A B : Type*} [CStarAlgebra A] [CStarAlgebra B]</span>
+<span><a class="line" href="#OperatorKHomotopy-L10" id="OperatorKHomotopy-L10"> 10</a> variable [PartialOrder A] [StarOrderedRing A] [PartialOrder B] [StarOrderedRing B]</span>
+<span><a class="line" href="#OperatorKHomotopy-L11" id="OperatorKHomotopy-L11"> 11</a> variable {φ ψ : A →⋆ₐ[ℂ] B}</span>
+<span><a class="line" href="#OperatorKHomotopy-L12" id="OperatorKHomotopy-L12"> 12</a> </span>
+<span><a class="line" href="#OperatorKHomotopy-L13" id="OperatorKHomotopy-L13"> 13</a> /-- Point-norm homotopic unital homomorphisms have equivalent images of projections. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.finiteProjection_equivalent_of_homotopy"><a class="line" href="#OperatorKHomotopy-L14" id="OperatorKHomotopy-L14"> 14</a> theorem finiteProjection_equivalent_of_homotopy (h : UnitalStarHomotopy φ ψ)</span>
+<span><a class="line" href="#OperatorKHomotopy-L15" id="OperatorKHomotopy-L15"> 15</a>     (p : FiniteProjection A) : FiniteProjection.Equivalent (FiniteProjection.map φ p)</span>
+<span><a class="line" href="#OperatorKHomotopy-L16" id="OperatorKHomotopy-L16"> 16</a>       (FiniteProjection.map ψ p) := by</span>
+<span><a class="line" href="#OperatorKHomotopy-L17" id="OperatorKHomotopy-L17"> 17</a>   obtain ⟨v, hv, hv&#x27;⟩ := Projection.equivalent_of_path (h.projectionPath p.projection)</span>
+<span><a class="line" href="#OperatorKHomotopy-L18" id="OperatorKHomotopy-L18"> 18</a>   change ∃ w : CStarMatrix p.Index p.Index B,</span>
+<span><a class="line" href="#OperatorKHomotopy-L19" id="OperatorKHomotopy-L19"> 19</a>     w * star w = (matrixProjectionMap φ p.projection).val ∧</span>
+<span><a class="line" href="#OperatorKHomotopy-L20" id="OperatorKHomotopy-L20"> 20</a>     star w * w = (matrixProjectionMap ψ p.projection).val</span>
+<span><a class="line" href="#OperatorKHomotopy-L21" id="OperatorKHomotopy-L21"> 21</a>   exact ⟨star v, by simpa using hv, by simpa using hv&#x27;⟩</span>
+<span><a class="line" href="#OperatorKHomotopy-L22" id="OperatorKHomotopy-L22"> 22</a> </span>
+<span><a class="line" href="#OperatorKHomotopy-L23" id="OperatorKHomotopy-L23"> 23</a> /-- Point-norm homotopic unital homomorphisms induce the same map on V(A). -/</span>
+<span id="doc/BC4lean.OperatorKTheory.stableProjectionMap_homotopy"><a class="line" href="#OperatorKHomotopy-L24" id="OperatorKHomotopy-L24"> 24</a> theorem stableProjectionMap_homotopy (h : UnitalStarHomotopy φ ψ) :</span>
+<span><a class="line" href="#OperatorKHomotopy-L25" id="OperatorKHomotopy-L25"> 25</a>     StableProjectionMonoid.map φ = StableProjectionMonoid.map ψ := by</span>
+<span><a class="line" href="#OperatorKHomotopy-L26" id="OperatorKHomotopy-L26"> 26</a>   ext x</span>
+<span><a class="line" href="#OperatorKHomotopy-L27" id="OperatorKHomotopy-L27"> 27</a>   refine Quotient.inductionOn x ?_</span>
+<span><a class="line" href="#OperatorKHomotopy-L28" id="OperatorKHomotopy-L28"> 28</a>   intro p</span>
+<span><a class="line" href="#OperatorKHomotopy-L29" id="OperatorKHomotopy-L29"> 29</a>   exact Quotient.sound (finiteProjection_equivalent_of_homotopy h p)</span>
+<span><a class="line" href="#OperatorKHomotopy-L30" id="OperatorKHomotopy-L30"> 30</a> </span>
+<span><a class="line" href="#OperatorKHomotopy-L31" id="OperatorKHomotopy-L31"> 31</a> /-- Point-norm homotopic unital homomorphisms induce the same K₀ map. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.k0Map_homotopy"><a class="line" href="#OperatorKHomotopy-L32" id="OperatorKHomotopy-L32"> 32</a> theorem k0Map_homotopy (h : UnitalStarHomotopy φ ψ) : k0Map φ = k0Map ψ := by</span>
+<span><a class="line" href="#OperatorKHomotopy-L33" id="OperatorKHomotopy-L33"> 33</a>   apply k0Hom_ext</span>
+<span><a class="line" href="#OperatorKHomotopy-L34" id="OperatorKHomotopy-L34"> 34</a>   intro p</span>
+<span><a class="line" href="#OperatorKHomotopy-L35" id="OperatorKHomotopy-L35"> 35</a>   rw [k0Map_projection, k0Map_projection]</span>
+<span><a class="line" href="#OperatorKHomotopy-L36" id="OperatorKHomotopy-L36"> 36</a>   exact k0Projection_eq_of_equivalent (finiteProjection_equivalent_of_homotopy h p)</span>
+<span><a class="line" href="#OperatorKHomotopy-L37" id="OperatorKHomotopy-L37"> 37</a> </span>
+<span><a class="line" href="#OperatorKHomotopy-L38" id="OperatorKHomotopy-L38"> 38</a> /-- Point-norm homotopic unital homomorphisms induce the same K₁ map. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.k1Map_homotopy"><a class="line" href="#OperatorKHomotopy-L39" id="OperatorKHomotopy-L39"> 39</a> theorem k1Map_homotopy (h : UnitalStarHomotopy φ ψ) : k1Map φ = k1Map ψ := by</span>
+<span><a class="line" href="#OperatorKHomotopy-L40" id="OperatorKHomotopy-L40"> 40</a>   ext x</span>
+<span><a class="line" href="#OperatorKHomotopy-L41" id="OperatorKHomotopy-L41"> 41</a>   refine Quotient.inductionOn x ?_</span>
+<span><a class="line" href="#OperatorKHomotopy-L42" id="OperatorKHomotopy-L42"> 42</a>   intro u</span>
+<span><a class="line" href="#OperatorKHomotopy-L43" id="OperatorKHomotopy-L43"> 43</a>   change k1Map φ (K1.of u) = k1Map ψ (K1.of u)</span>
+<span><a class="line" href="#OperatorKHomotopy-L44" id="OperatorKHomotopy-L44"> 44</a>   rw [k1Map_of, k1Map_of]</span>
+<span><a class="line" href="#OperatorKHomotopy-L45" id="OperatorKHomotopy-L45"> 45</a>   exact K1.of_homotopic ⟨h.unitaryPath u.val⟩</span>
+<span><a class="line" href="#OperatorKHomotopy-L46" id="OperatorKHomotopy-L46"> 46</a> end Unital</span>
+<span><a class="line" href="#OperatorKHomotopy-L47" id="OperatorKHomotopy-L47"> 47</a> </span>
+<span><a class="line" href="#OperatorKHomotopy-L48" id="OperatorKHomotopy-L48"> 48</a> section Nonunital</span>
+<span><a class="line" href="#OperatorKHomotopy-L49" id="OperatorKHomotopy-L49"> 49</a> variable {A B : Type*} [NonUnitalCStarAlgebra A] [NonUnitalCStarAlgebra B]</span>
+<span><a class="line" href="#OperatorKHomotopy-L50" id="OperatorKHomotopy-L50"> 50</a> variable {φ ψ : A →⋆ₙₐ[ℂ] B}</span>
+<span><a class="line" href="#OperatorKHomotopy-L51" id="OperatorKHomotopy-L51"> 51</a> </span>
+<span><a class="line" href="#OperatorKHomotopy-L52" id="OperatorKHomotopy-L52"> 52</a> /-- Point-norm homotopic possibly nonunital homomorphisms induce the same operator K₀ map. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.operatorK0Map_homotopy"><a class="line" href="#OperatorKHomotopy-L53" id="OperatorKHomotopy-L53"> 53</a> theorem operatorK0Map_homotopy (h : StarHomotopy φ ψ) : operatorK0Map φ = operatorK0Map ψ := by</span>
+<span><a class="line" href="#OperatorKHomotopy-L54" id="OperatorKHomotopy-L54"> 54</a>   let _ := CStarAlgebra.spectralOrder (Unitization ℂ A)</span>
+<span><a class="line" href="#OperatorKHomotopy-L55" id="OperatorKHomotopy-L55"> 55</a>   let _ := CStarAlgebra.spectralOrderedRing (Unitization ℂ A)</span>
+<span><a class="line" href="#OperatorKHomotopy-L56" id="OperatorKHomotopy-L56"> 56</a>   let _ := CStarAlgebra.spectralOrder (Unitization ℂ B)</span>
+<span><a class="line" href="#OperatorKHomotopy-L57" id="OperatorKHomotopy-L57"> 57</a>   let _ := CStarAlgebra.spectralOrderedRing (Unitization ℂ B)</span>
+<span><a class="line" href="#OperatorKHomotopy-L58" id="OperatorKHomotopy-L58"> 58</a>   ext x</span>
+<span><a class="line" href="#OperatorKHomotopy-L59" id="OperatorKHomotopy-L59"> 59</a>   apply Subtype.ext</span>
+<span><a class="line" href="#OperatorKHomotopy-L60" id="OperatorKHomotopy-L60"> 60</a>   exact DFunLike.congr_fun (k0Map_homotopy h.unitization) x.val</span>
+<span><a class="line" href="#OperatorKHomotopy-L61" id="OperatorKHomotopy-L61"> 61</a> </span>
+<span><a class="line" href="#OperatorKHomotopy-L62" id="OperatorKHomotopy-L62"> 62</a> /-- Point-norm homotopic possibly nonunital homomorphisms induce the same operator K₁ map. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.operatorK1Map_homotopy"><a class="line" href="#OperatorKHomotopy-L63" id="OperatorKHomotopy-L63"> 63</a> theorem operatorK1Map_homotopy (h : StarHomotopy φ ψ) : operatorK1Map φ = operatorK1Map ψ := by</span>
+<span><a class="line" href="#OperatorKHomotopy-L64" id="OperatorKHomotopy-L64"> 64</a>   let _ := CStarAlgebra.spectralOrder (Unitization ℂ A)</span>
+<span><a class="line" href="#OperatorKHomotopy-L65" id="OperatorKHomotopy-L65"> 65</a>   let _ := CStarAlgebra.spectralOrderedRing (Unitization ℂ A)</span>
+<span><a class="line" href="#OperatorKHomotopy-L66" id="OperatorKHomotopy-L66"> 66</a>   let _ := CStarAlgebra.spectralOrder (Unitization ℂ B)</span>
+<span><a class="line" href="#OperatorKHomotopy-L67" id="OperatorKHomotopy-L67"> 67</a>   let _ := CStarAlgebra.spectralOrderedRing (Unitization ℂ B)</span>
+<span><a class="line" href="#OperatorKHomotopy-L68" id="OperatorKHomotopy-L68"> 68</a>   ext x</span>
+<span><a class="line" href="#OperatorKHomotopy-L69" id="OperatorKHomotopy-L69"> 69</a>   apply Subtype.ext</span>
+<span><a class="line" href="#OperatorKHomotopy-L70" id="OperatorKHomotopy-L70"> 70</a>   exact DFunLike.congr_fun (k1Map_homotopy h.unitization) x.val</span>
+<span><a class="line" href="#OperatorKHomotopy-L71" id="OperatorKHomotopy-L71"> 71</a> end Nonunital</span>
+<span><a class="line" href="#OperatorKHomotopy-L72" id="OperatorKHomotopy-L72"> 72</a> end BC4lean.OperatorKTheory</span>
 </pre>
 </body></html>
