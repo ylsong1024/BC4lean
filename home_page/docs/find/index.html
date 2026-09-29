@@ -13,6 +13,8 @@ code{overflow-wrap:anywhere}</style></head><body><a href="../../blueprint/">返�
 <li><a href="#IntegratedRepresentation">IntegratedRepresentation.lean</a></li>
 <li><a href="#ReducedGroupCStar">ReducedGroupCStar.lean</a></li>
 <li><a href="#ReducedGroupCStarTrivial">ReducedGroupCStarTrivial.lean</a></li>
+<li><a href="#ReducedNormGroupAlgebra">ReducedNormGroupAlgebra.lean</a></li>
+<li><a href="#ReducedCompletion">ReducedCompletion.lean</a></li>
 </ul></nav>
 <h2 id="GroupAlgebra">GroupAlgebra.lean</h2><p>源码 SHA-256：<code>1c6c0899fe9bc9f7860f291ba7c5573353d18a3c5809258769d689bc39da8ad4</code></p><pre>
 <span><a class="line" href="#L1" id="L1">  1</a> import Mathlib.Algebra.MonoidAlgebra.Basic</span>
@@ -704,5 +706,222 @@ code{overflow-wrap:anywhere}</style></head><body><a href="../../blueprint/">返�
 <span><a class="line" href="#ReducedGroupCStarTrivial-L37" id="ReducedGroupCStarTrivial-L37"> 37</a>   algebraMap_isometry ℂ (ReducedGroupCStar Γ)</span>
 <span><a class="line" href="#ReducedGroupCStarTrivial-L38" id="ReducedGroupCStarTrivial-L38"> 38</a> </span>
 <span><a class="line" href="#ReducedGroupCStarTrivial-L39" id="ReducedGroupCStarTrivial-L39"> 39</a> end BC4lean</span>
+</pre>
+<h2 id="ReducedNormGroupAlgebra">ReducedNormGroupAlgebra.lean</h2><p>源码 SHA-256：<code>b65b835545d92cb8cf33e3eb4748008cb1a3bd6a9fc8465da8ac2b72a49a2446</code></p><pre>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L1" id="ReducedNormGroupAlgebra-L1">  1</a> import BC4lean.ReducedGroupCStar</span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L2" id="ReducedNormGroupAlgebra-L2">  2</a> </span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L3" id="ReducedNormGroupAlgebra-L3">  3</a> /-! # The group algebra with its reduced norm</span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L4" id="ReducedNormGroupAlgebra-L4">  4</a> </span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L5" id="ReducedNormGroupAlgebra-L5">  5</a> A dedicated type synonym keeps this norm separate from possible ℓ¹ norms.</span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L6" id="ReducedNormGroupAlgebra-L6">  6</a> The algebraic operations are precisely those of `GroupAlgebra Γ`.</span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L7" id="ReducedNormGroupAlgebra-L7">  7</a> -/</span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L8" id="ReducedNormGroupAlgebra-L8">  8</a> </span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L9" id="ReducedNormGroupAlgebra-L9">  9</a> noncomputable section</span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L10" id="ReducedNormGroupAlgebra-L10"> 10</a> namespace BC4lean</span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L11" id="ReducedNormGroupAlgebra-L11"> 11</a> </span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L12" id="ReducedNormGroupAlgebra-L12"> 12</a> variable (Γ : Type*) [Group Γ]</span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L13" id="ReducedNormGroupAlgebra-L13"> 13</a> </span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L14" id="ReducedNormGroupAlgebra-L14"> 14</a> /-- The complex group algebra, reserved for the reduced-norm topology. -/</span>
+<span id="doc/BC4lean.ReducedNormGroupAlgebra"><a class="line" href="#ReducedNormGroupAlgebra-L15" id="ReducedNormGroupAlgebra-L15"> 15</a> def ReducedNormGroupAlgebra := GroupAlgebra Γ</span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L16" id="ReducedNormGroupAlgebra-L16"> 16</a> </span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L17" id="ReducedNormGroupAlgebra-L17"> 17</a> namespace ReducedNormGroupAlgebra</span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L18" id="ReducedNormGroupAlgebra-L18"> 18</a> </span>
+<span id="doc/BC4lean.ReducedNormGroupAlgebra.instRing"><a class="line" href="#ReducedNormGroupAlgebra-L19" id="ReducedNormGroupAlgebra-L19"> 19</a> instance instRing : Ring (ReducedNormGroupAlgebra Γ) :=</span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L20" id="ReducedNormGroupAlgebra-L20"> 20</a>   inferInstanceAs (Ring (GroupAlgebra Γ))</span>
+<span id="doc/BC4lean.ReducedNormGroupAlgebra.instAlgebra"><a class="line" href="#ReducedNormGroupAlgebra-L21" id="ReducedNormGroupAlgebra-L21"> 21</a> instance instAlgebra : Algebra ℂ (ReducedNormGroupAlgebra Γ) :=</span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L22" id="ReducedNormGroupAlgebra-L22"> 22</a>   inferInstanceAs (Algebra ℂ (GroupAlgebra Γ))</span>
+<span id="doc/BC4lean.ReducedNormGroupAlgebra.instStarRing"><a class="line" href="#ReducedNormGroupAlgebra-L23" id="ReducedNormGroupAlgebra-L23"> 23</a> instance instStarRing : StarRing (ReducedNormGroupAlgebra Γ) :=</span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L24" id="ReducedNormGroupAlgebra-L24"> 24</a>   inferInstanceAs (StarRing (GroupAlgebra Γ))</span>
+<span id="doc/BC4lean.ReducedNormGroupAlgebra.instStarModule"><a class="line" href="#ReducedNormGroupAlgebra-L25" id="ReducedNormGroupAlgebra-L25"> 25</a> instance instStarModule : StarModule ℂ (ReducedNormGroupAlgebra Γ) :=</span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L26" id="ReducedNormGroupAlgebra-L26"> 26</a>   inferInstanceAs (StarModule ℂ (GroupAlgebra Γ))</span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L27" id="ReducedNormGroupAlgebra-L27"> 27</a> </span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L28" id="ReducedNormGroupAlgebra-L28"> 28</a> /-- Identity on coefficients; only the choice of topological structure changes. -/</span>
+<span id="doc/BC4lean.ReducedNormGroupAlgebra.ofGroupAlgebra"><a class="line" href="#ReducedNormGroupAlgebra-L29" id="ReducedNormGroupAlgebra-L29"> 29</a> def ofGroupAlgebra : GroupAlgebra Γ ≃⋆ₐ[ℂ] ReducedNormGroupAlgebra Γ :=</span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L30" id="ReducedNormGroupAlgebra-L30"> 30</a>   StarAlgEquiv.refl ℂ (GroupAlgebra Γ)</span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L31" id="ReducedNormGroupAlgebra-L31"> 31</a> </span>
+<span id="doc/BC4lean.ReducedNormGroupAlgebra.toReduced"><a class="line" href="#ReducedNormGroupAlgebra-L32" id="ReducedNormGroupAlgebra-L32"> 32</a> def toReduced : ReducedNormGroupAlgebra Γ →⋆ₐ[ℂ] ReducedGroupCStar Γ :=</span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L33" id="ReducedNormGroupAlgebra-L33"> 33</a>   integratedToReduced</span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L34" id="ReducedNormGroupAlgebra-L34"> 34</a> </span>
+<span id="doc/BC4lean.ReducedNormGroupAlgebra.toReduced_injective"><a class="line" href="#ReducedNormGroupAlgebra-L35" id="ReducedNormGroupAlgebra-L35"> 35</a> theorem toReduced_injective : Function.Injective (toReduced Γ) :=</span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L36" id="ReducedNormGroupAlgebra-L36"> 36</a>   integratedToReduced_injective</span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L37" id="ReducedNormGroupAlgebra-L37"> 37</a> </span>
+<span id="doc/BC4lean.ReducedNormGroupAlgebra.instNormedRing"><a class="line" href="#ReducedNormGroupAlgebra-L38" id="ReducedNormGroupAlgebra-L38"> 38</a> instance instNormedRing : NormedRing (ReducedNormGroupAlgebra Γ) :=</span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L39" id="ReducedNormGroupAlgebra-L39"> 39</a>   NormedRing.induced _ _ (toReduced Γ) (toReduced_injective Γ)</span>
+<span id="doc/BC4lean.ReducedNormGroupAlgebra.instNormedAlgebra"><a class="line" href="#ReducedNormGroupAlgebra-L40" id="ReducedNormGroupAlgebra-L40"> 40</a> instance instNormedAlgebra : NormedAlgebra ℂ (ReducedNormGroupAlgebra Γ) :=</span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L41" id="ReducedNormGroupAlgebra-L41"> 41</a>   NormedAlgebra.induced ℂ _ _ (toReduced Γ)</span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L42" id="ReducedNormGroupAlgebra-L42"> 42</a> </span>
+<span id="doc/BC4lean.ReducedNormGroupAlgebra.norm_ofGroupAlgebra"><a class="line" href="#ReducedNormGroupAlgebra-L43" id="ReducedNormGroupAlgebra-L43"> 43</a> @[simp] theorem norm_ofGroupAlgebra (a : GroupAlgebra Γ) :</span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L44" id="ReducedNormGroupAlgebra-L44"> 44</a>     ‖ofGroupAlgebra Γ a‖ = reducedNorm a := rfl</span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L45" id="ReducedNormGroupAlgebra-L45"> 45</a> </span>
+<span id="doc/BC4lean.ReducedNormGroupAlgebra.norm_toReduced"><a class="line" href="#ReducedNormGroupAlgebra-L46" id="ReducedNormGroupAlgebra-L46"> 46</a> @[simp] theorem norm_toReduced (a : ReducedNormGroupAlgebra Γ) :</span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L47" id="ReducedNormGroupAlgebra-L47"> 47</a>     ‖toReduced Γ a‖ = ‖a‖ := rfl</span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L48" id="ReducedNormGroupAlgebra-L48"> 48</a> </span>
+<span id="doc/BC4lean.ReducedNormGroupAlgebra.instNormedStarGroup"><a class="line" href="#ReducedNormGroupAlgebra-L49" id="ReducedNormGroupAlgebra-L49"> 49</a> instance instNormedStarGroup : NormedStarGroup (ReducedNormGroupAlgebra Γ) where</span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L50" id="ReducedNormGroupAlgebra-L50"> 50</a>   norm_star_le a := by</span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L51" id="ReducedNormGroupAlgebra-L51"> 51</a>     change ‖toReduced Γ (star a)‖ ≤ ‖toReduced Γ a‖</span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L52" id="ReducedNormGroupAlgebra-L52"> 52</a>     rw [map_star]</span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L53" id="ReducedNormGroupAlgebra-L53"> 53</a>     exact (norm_star (toReduced Γ a)).le</span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L54" id="ReducedNormGroupAlgebra-L54"> 54</a> </span>
+<span id="doc/BC4lean.ReducedNormGroupAlgebra.instCStarRing"><a class="line" href="#ReducedNormGroupAlgebra-L55" id="ReducedNormGroupAlgebra-L55"> 55</a> instance instCStarRing : CStarRing (ReducedNormGroupAlgebra Γ) where</span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L56" id="ReducedNormGroupAlgebra-L56"> 56</a>   norm_mul_self_le a := by</span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L57" id="ReducedNormGroupAlgebra-L57"> 57</a>     change ‖toReduced Γ a‖ * ‖toReduced Γ a‖ ≤ ‖toReduced Γ (star a * a)‖</span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L58" id="ReducedNormGroupAlgebra-L58"> 58</a>     rw [map_mul, map_star]</span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L59" id="ReducedNormGroupAlgebra-L59"> 59</a>     exact CStarRing.norm_star_mul_self.symm.le</span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L60" id="ReducedNormGroupAlgebra-L60"> 60</a> </span>
+<span id="doc/BC4lean.ReducedNormGroupAlgebra.toReduced_isometry"><a class="line" href="#ReducedNormGroupAlgebra-L61" id="ReducedNormGroupAlgebra-L61"> 61</a> theorem toReduced_isometry : Isometry (toReduced Γ) :=</span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L62" id="ReducedNormGroupAlgebra-L62"> 62</a>   AddMonoidHomClass.isometry_of_norm (toReduced Γ) (norm_toReduced Γ)</span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L63" id="ReducedNormGroupAlgebra-L63"> 63</a> </span>
+<span id="doc/BC4lean.ReducedNormGroupAlgebra.toReduced_denseRange"><a class="line" href="#ReducedNormGroupAlgebra-L64" id="ReducedNormGroupAlgebra-L64"> 64</a> theorem toReduced_denseRange : DenseRange (toReduced Γ) :=</span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L65" id="ReducedNormGroupAlgebra-L65"> 65</a>   denseRange_integratedToReduced</span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L66" id="ReducedNormGroupAlgebra-L66"> 66</a> </span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L67" id="ReducedNormGroupAlgebra-L67"> 67</a> end ReducedNormGroupAlgebra</span>
+<span><a class="line" href="#ReducedNormGroupAlgebra-L68" id="ReducedNormGroupAlgebra-L68"> 68</a> end BC4lean</span>
+</pre>
+<h2 id="ReducedCompletion">ReducedCompletion.lean</h2><p>源码 SHA-256：<code>27bc0c056893f22d9ed1a17462215a71356768e9d5435025630aa3cb025b2754</code></p><pre>
+<span><a class="line" href="#ReducedCompletion-L1" id="ReducedCompletion-L1">  1</a> import BC4lean.ReducedNormGroupAlgebra</span>
+<span><a class="line" href="#ReducedCompletion-L2" id="ReducedCompletion-L2">  2</a> import Mathlib.Analysis.Normed.Module.Completion</span>
+<span><a class="line" href="#ReducedCompletion-L3" id="ReducedCompletion-L3">  3</a> </span>
+<span><a class="line" href="#ReducedCompletion-L4" id="ReducedCompletion-L4">  4</a> /-! # The abstract reduced-norm completion and its concrete realization</span>
+<span><a class="line" href="#ReducedCompletion-L5" id="ReducedCompletion-L5">  5</a> </span>
+<span><a class="line" href="#ReducedCompletion-L6" id="ReducedCompletion-L6">  6</a> The source is Mathlib&#x27;s uniform completion of the reduced-norm group algebra.</span>
+<span><a class="line" href="#ReducedCompletion-L7" id="ReducedCompletion-L7">  7</a> Its ring, complex module and algebra operations are the standard completion</span>
+<span><a class="line" href="#ReducedCompletion-L8" id="ReducedCompletion-L8">  8</a> operations. Its star is `Completion.map star`, not a transported operation.</span>
+<span><a class="line" href="#ReducedCompletion-L9" id="ReducedCompletion-L9">  9</a> -/</span>
+<span><a class="line" href="#ReducedCompletion-L10" id="ReducedCompletion-L10"> 10</a> </span>
+<span><a class="line" href="#ReducedCompletion-L11" id="ReducedCompletion-L11"> 11</a> noncomputable section</span>
+<span><a class="line" href="#ReducedCompletion-L12" id="ReducedCompletion-L12"> 12</a> namespace BC4lean</span>
+<span><a class="line" href="#ReducedCompletion-L13" id="ReducedCompletion-L13"> 13</a> open UniformSpace</span>
+<span><a class="line" href="#ReducedCompletion-L14" id="ReducedCompletion-L14"> 14</a> </span>
+<span><a class="line" href="#ReducedCompletion-L15" id="ReducedCompletion-L15"> 15</a> variable (Γ : Type*) [Group Γ]</span>
+<span><a class="line" href="#ReducedCompletion-L16" id="ReducedCompletion-L16"> 16</a> </span>
+<span><a class="line" href="#ReducedCompletion-L17" id="ReducedCompletion-L17"> 17</a> /-- Abstract norm completion of the complex group algebra with reduced norm. -/</span>
+<span id="doc/BC4lean.ReducedCompletion"><a class="line" href="#ReducedCompletion-L18" id="ReducedCompletion-L18"> 18</a> abbrev ReducedCompletion := Completion (ReducedNormGroupAlgebra Γ)</span>
+<span><a class="line" href="#ReducedCompletion-L19" id="ReducedCompletion-L19"> 19</a> </span>
+<span><a class="line" href="#ReducedCompletion-L20" id="ReducedCompletion-L20"> 20</a> /-- Continuous extension of the canonical ring homomorphism. -/</span>
+<span id="doc/BC4lean.completionMap"><a class="line" href="#ReducedCompletion-L21" id="ReducedCompletion-L21"> 21</a> def completionMap : ReducedCompletion Γ →+* ReducedGroupCStar Γ :=</span>
+<span><a class="line" href="#ReducedCompletion-L22" id="ReducedCompletion-L22"> 22</a>   Completion.extensionHom (ReducedNormGroupAlgebra.toReduced Γ).toAlgHom.toRingHom</span>
+<span><a class="line" href="#ReducedCompletion-L23" id="ReducedCompletion-L23"> 23</a>     (ReducedNormGroupAlgebra.toReduced_isometry Γ).continuous</span>
+<span><a class="line" href="#ReducedCompletion-L24" id="ReducedCompletion-L24"> 24</a> </span>
+<span id="doc/BC4lean.completionMap_coe"><a class="line" href="#ReducedCompletion-L25" id="ReducedCompletion-L25"> 25</a> @[simp] theorem completionMap_coe (a : ReducedNormGroupAlgebra Γ) :</span>
+<span><a class="line" href="#ReducedCompletion-L26" id="ReducedCompletion-L26"> 26</a>     completionMap Γ (a : ReducedCompletion Γ) = ReducedNormGroupAlgebra.toReduced Γ a :=</span>
+<span><a class="line" href="#ReducedCompletion-L27" id="ReducedCompletion-L27"> 27</a>   Completion.extensionHom_coe _ _ a</span>
+<span><a class="line" href="#ReducedCompletion-L28" id="ReducedCompletion-L28"> 28</a> </span>
+<span id="doc/BC4lean.completionMap_isometry"><a class="line" href="#ReducedCompletion-L29" id="ReducedCompletion-L29"> 29</a> theorem completionMap_isometry : Isometry (completionMap Γ) :=</span>
+<span><a class="line" href="#ReducedCompletion-L30" id="ReducedCompletion-L30"> 30</a>   (ReducedNormGroupAlgebra.toReduced_isometry Γ).completion_extension</span>
+<span><a class="line" href="#ReducedCompletion-L31" id="ReducedCompletion-L31"> 31</a> </span>
+<span id="doc/BC4lean.completionMap_injective"><a class="line" href="#ReducedCompletion-L32" id="ReducedCompletion-L32"> 32</a> theorem completionMap_injective : Function.Injective (completionMap Γ) :=</span>
+<span><a class="line" href="#ReducedCompletion-L33" id="ReducedCompletion-L33"> 33</a>   (completionMap_isometry Γ).injective</span>
+<span><a class="line" href="#ReducedCompletion-L34" id="ReducedCompletion-L34"> 34</a> </span>
+<span id="doc/BC4lean.norm_completionMap"><a class="line" href="#ReducedCompletion-L35" id="ReducedCompletion-L35"> 35</a> @[simp] theorem norm_completionMap (x : ReducedCompletion Γ) :</span>
+<span><a class="line" href="#ReducedCompletion-L36" id="ReducedCompletion-L36"> 36</a>     ‖completionMap Γ x‖ = ‖x‖ := by</span>
+<span><a class="line" href="#ReducedCompletion-L37" id="ReducedCompletion-L37"> 37</a>   simpa only [map_zero, dist_zero_right] using (completionMap_isometry Γ).dist_eq x 0</span>
+<span><a class="line" href="#ReducedCompletion-L38" id="ReducedCompletion-L38"> 38</a> </span>
+<span id="doc/BC4lean.completionMap_surjective"><a class="line" href="#ReducedCompletion-L39" id="ReducedCompletion-L39"> 39</a> theorem completionMap_surjective : Function.Surjective (completionMap Γ) := by</span>
+<span><a class="line" href="#ReducedCompletion-L40" id="ReducedCompletion-L40"> 40</a>   intro T</span>
+<span><a class="line" href="#ReducedCompletion-L41" id="ReducedCompletion-L41"> 41</a>   have hsubset : Set.range (ReducedNormGroupAlgebra.toReduced Γ) ⊆</span>
+<span><a class="line" href="#ReducedCompletion-L42" id="ReducedCompletion-L42"> 42</a>       Set.range (completionMap Γ) := by</span>
+<span><a class="line" href="#ReducedCompletion-L43" id="ReducedCompletion-L43"> 43</a>     rintro _ ⟨a, rfl⟩</span>
+<span><a class="line" href="#ReducedCompletion-L44" id="ReducedCompletion-L44"> 44</a>     exact ⟨(a : ReducedCompletion Γ), completionMap_coe Γ a⟩</span>
+<span><a class="line" href="#ReducedCompletion-L45" id="ReducedCompletion-L45"> 45</a>   have h := closure_mono hsubset (ReducedNormGroupAlgebra.toReduced_denseRange Γ T)</span>
+<span><a class="line" href="#ReducedCompletion-L46" id="ReducedCompletion-L46"> 46</a>   rwa [(completionMap_isometry Γ).isClosedEmbedding.isClosed_range.closure_eq] at h</span>
+<span><a class="line" href="#ReducedCompletion-L47" id="ReducedCompletion-L47"> 47</a> </span>
+<span><a class="line" href="#ReducedCompletion-L48" id="ReducedCompletion-L48"> 48</a> /-- Complex-linearity of the canonical extension. -/</span>
+<span id="doc/BC4lean.completionAlgHom"><a class="line" href="#ReducedCompletion-L49" id="ReducedCompletion-L49"> 49</a> def completionAlgHom : ReducedCompletion Γ →ₐ[ℂ] ReducedGroupCStar Γ where</span>
+<span><a class="line" href="#ReducedCompletion-L50" id="ReducedCompletion-L50"> 50</a>   toRingHom := completionMap Γ</span>
+<span><a class="line" href="#ReducedCompletion-L51" id="ReducedCompletion-L51"> 51</a>   commutes&#x27; z := by</span>
+<span><a class="line" href="#ReducedCompletion-L52" id="ReducedCompletion-L52"> 52</a>     change completionMap Γ ((algebraMap ℂ (ReducedNormGroupAlgebra Γ) z :</span>
+<span><a class="line" href="#ReducedCompletion-L53" id="ReducedCompletion-L53"> 53</a>       ReducedNormGroupAlgebra Γ) : ReducedCompletion Γ) = _</span>
+<span><a class="line" href="#ReducedCompletion-L54" id="ReducedCompletion-L54"> 54</a>     rw [completionMap_coe]</span>
+<span><a class="line" href="#ReducedCompletion-L55" id="ReducedCompletion-L55"> 55</a>     exact (ReducedNormGroupAlgebra.toReduced Γ).commutes z</span>
+<span><a class="line" href="#ReducedCompletion-L56" id="ReducedCompletion-L56"> 56</a> </span>
+<span id="doc/BC4lean.completionStar"><a class="line" href="#ReducedCompletion-L57" id="ReducedCompletion-L57"> 57</a> instance completionStar : Star (ReducedCompletion Γ) :=</span>
+<span><a class="line" href="#ReducedCompletion-L58" id="ReducedCompletion-L58"> 58</a>   ⟨Completion.map (star : ReducedNormGroupAlgebra Γ → ReducedNormGroupAlgebra Γ)⟩</span>
+<span><a class="line" href="#ReducedCompletion-L59" id="ReducedCompletion-L59"> 59</a> </span>
+<span id="doc/BC4lean.completion_star_coe"><a class="line" href="#ReducedCompletion-L60" id="ReducedCompletion-L60"> 60</a> @[simp] theorem completion_star_coe (a : ReducedNormGroupAlgebra Γ) :</span>
+<span><a class="line" href="#ReducedCompletion-L61" id="ReducedCompletion-L61"> 61</a>     star (a : ReducedCompletion Γ) = (star a : ReducedNormGroupAlgebra Γ) :=</span>
+<span><a class="line" href="#ReducedCompletion-L62" id="ReducedCompletion-L62"> 62</a>   Completion.map_coe star_isometry.uniformContinuous a</span>
+<span><a class="line" href="#ReducedCompletion-L63" id="ReducedCompletion-L63"> 63</a> </span>
+<span id="doc/BC4lean.completionContinuousStar"><a class="line" href="#ReducedCompletion-L64" id="ReducedCompletion-L64"> 64</a> instance completionContinuousStar : ContinuousStar (ReducedCompletion Γ) :=</span>
+<span><a class="line" href="#ReducedCompletion-L65" id="ReducedCompletion-L65"> 65</a>   ⟨Completion.continuous_map⟩</span>
+<span><a class="line" href="#ReducedCompletion-L66" id="ReducedCompletion-L66"> 66</a> </span>
+<span id="doc/BC4lean.completionMap_star"><a class="line" href="#ReducedCompletion-L67" id="ReducedCompletion-L67"> 67</a> theorem completionMap_star (x : ReducedCompletion Γ) :</span>
+<span><a class="line" href="#ReducedCompletion-L68" id="ReducedCompletion-L68"> 68</a>     completionMap Γ (star x) = star (completionMap Γ x) := by</span>
+<span><a class="line" href="#ReducedCompletion-L69" id="ReducedCompletion-L69"> 69</a>   induction x using Completion.induction_on with</span>
+<span><a class="line" href="#ReducedCompletion-L70" id="ReducedCompletion-L70"> 70</a>   | hp =&gt;</span>
+<span><a class="line" href="#ReducedCompletion-L71" id="ReducedCompletion-L71"> 71</a>     exact isClosed_eq ((completionMap_isometry Γ).continuous.comp continuous_star)</span>
+<span><a class="line" href="#ReducedCompletion-L72" id="ReducedCompletion-L72"> 72</a>       (continuous_star.comp (completionMap_isometry Γ).continuous)</span>
+<span><a class="line" href="#ReducedCompletion-L73" id="ReducedCompletion-L73"> 73</a>   | ih a =&gt; simp only [completion_star_coe, completionMap_coe, map_star]</span>
+<span><a class="line" href="#ReducedCompletion-L74" id="ReducedCompletion-L74"> 74</a> </span>
+<span id="doc/BC4lean.completionStarRing"><a class="line" href="#ReducedCompletion-L75" id="ReducedCompletion-L75"> 75</a> instance completionStarRing : StarRing (ReducedCompletion Γ) :=</span>
+<span><a class="line" href="#ReducedCompletion-L76" id="ReducedCompletion-L76"> 76</a>   (completionMap_injective Γ).starRing (completionMap Γ)</span>
+<span><a class="line" href="#ReducedCompletion-L77" id="ReducedCompletion-L77"> 77</a>     (completionMap_star Γ) (map_add _) (map_mul _)</span>
+<span><a class="line" href="#ReducedCompletion-L78" id="ReducedCompletion-L78"> 78</a> </span>
+<span id="doc/BC4lean.completionStarModule"><a class="line" href="#ReducedCompletion-L79" id="ReducedCompletion-L79"> 79</a> instance completionStarModule : StarModule ℂ (ReducedCompletion Γ) :=</span>
+<span><a class="line" href="#ReducedCompletion-L80" id="ReducedCompletion-L80"> 80</a>   Function.Injective.starModule (completionMap Γ) ℂ (completionMap_injective Γ)</span>
+<span><a class="line" href="#ReducedCompletion-L81" id="ReducedCompletion-L81"> 81</a>     (completionMap_star Γ) (map_smul (completionAlgHom Γ))</span>
+<span><a class="line" href="#ReducedCompletion-L82" id="ReducedCompletion-L82"> 82</a> </span>
+<span id="doc/BC4lean.completionNormedAlgebra"><a class="line" href="#ReducedCompletion-L83" id="ReducedCompletion-L83"> 83</a> instance completionNormedAlgebra : NormedAlgebra ℂ (ReducedCompletion Γ) where</span>
+<span><a class="line" href="#ReducedCompletion-L84" id="ReducedCompletion-L84"> 84</a>   norm_smul_le := norm_smul_le</span>
+<span><a class="line" href="#ReducedCompletion-L85" id="ReducedCompletion-L85"> 85</a> </span>
+<span id="doc/BC4lean.completionCStarRing"><a class="line" href="#ReducedCompletion-L86" id="ReducedCompletion-L86"> 86</a> instance completionCStarRing : CStarRing (ReducedCompletion Γ) where</span>
+<span><a class="line" href="#ReducedCompletion-L87" id="ReducedCompletion-L87"> 87</a>   norm_mul_self_le x := by</span>
+<span><a class="line" href="#ReducedCompletion-L88" id="ReducedCompletion-L88"> 88</a>     rw [← norm_completionMap Γ x, ← norm_completionMap Γ (star x * x),</span>
+<span><a class="line" href="#ReducedCompletion-L89" id="ReducedCompletion-L89"> 89</a>       map_mul, completionMap_star]</span>
+<span><a class="line" href="#ReducedCompletion-L90" id="ReducedCompletion-L90"> 90</a>     exact CStarRing.norm_star_mul_self.symm.le</span>
+<span><a class="line" href="#ReducedCompletion-L91" id="ReducedCompletion-L91"> 91</a> </span>
+<span id="doc/BC4lean.completionCStarAlgebra"><a class="line" href="#ReducedCompletion-L92" id="ReducedCompletion-L92"> 92</a> instance completionCStarAlgebra : CStarAlgebra (ReducedCompletion Γ) where</span>
+<span><a class="line" href="#ReducedCompletion-L93" id="ReducedCompletion-L93"> 93</a> </span>
+<span><a class="line" href="#ReducedCompletion-L94" id="ReducedCompletion-L94"> 94</a> /-- The extended map as a unital complex star-algebra homomorphism. -/</span>
+<span id="doc/BC4lean.completionStarHom"><a class="line" href="#ReducedCompletion-L95" id="ReducedCompletion-L95"> 95</a> def completionStarHom : ReducedCompletion Γ →⋆ₐ[ℂ] ReducedGroupCStar Γ where</span>
+<span><a class="line" href="#ReducedCompletion-L96" id="ReducedCompletion-L96"> 96</a>   toAlgHom := completionAlgHom Γ</span>
+<span><a class="line" href="#ReducedCompletion-L97" id="ReducedCompletion-L97"> 97</a>   map_star&#x27; := completionMap_star Γ</span>
+<span><a class="line" href="#ReducedCompletion-L98" id="ReducedCompletion-L98"> 98</a> </span>
+<span><a class="line" href="#ReducedCompletion-L99" id="ReducedCompletion-L99"> 99</a> /-- The abstract norm completion is canonically the concrete reduced group C⋆-algebra. -/</span>
+<span id="doc/BC4lean.reducedCompletionEquiv"><a class="line" href="#ReducedCompletion-L100" id="ReducedCompletion-L100">100</a> def reducedCompletionEquiv : ReducedCompletion Γ ≃⋆ₐ[ℂ] ReducedGroupCStar Γ :=</span>
+<span><a class="line" href="#ReducedCompletion-L101" id="ReducedCompletion-L101">101</a>   StarAlgEquiv.ofBijective (completionStarHom Γ)</span>
+<span><a class="line" href="#ReducedCompletion-L102" id="ReducedCompletion-L102">102</a>     ⟨completionMap_injective Γ, completionMap_surjective Γ⟩</span>
+<span><a class="line" href="#ReducedCompletion-L103" id="ReducedCompletion-L103">103</a> </span>
+<span id="doc/BC4lean.reducedCompletionEquiv_isometry"><a class="line" href="#ReducedCompletion-L104" id="ReducedCompletion-L104">104</a> theorem reducedCompletionEquiv_isometry : Isometry (reducedCompletionEquiv Γ) :=</span>
+<span><a class="line" href="#ReducedCompletion-L105" id="ReducedCompletion-L105">105</a>   completionMap_isometry Γ</span>
+<span><a class="line" href="#ReducedCompletion-L106" id="ReducedCompletion-L106">106</a> </span>
+<span id="doc/BC4lean.reducedCompletionEquiv_coe"><a class="line" href="#ReducedCompletion-L107" id="ReducedCompletion-L107">107</a> @[simp] theorem reducedCompletionEquiv_coe (a : ReducedNormGroupAlgebra Γ) :</span>
+<span><a class="line" href="#ReducedCompletion-L108" id="ReducedCompletion-L108">108</a>     reducedCompletionEquiv Γ (a : ReducedCompletion Γ) =</span>
+<span><a class="line" href="#ReducedCompletion-L109" id="ReducedCompletion-L109">109</a>       ReducedNormGroupAlgebra.toReduced Γ a := completionMap_coe Γ a</span>
+<span><a class="line" href="#ReducedCompletion-L110" id="ReducedCompletion-L110">110</a> </span>
+<span><a class="line" href="#ReducedCompletion-L111" id="ReducedCompletion-L111">111</a> /-- The original algebra embeds in the abstract completion. -/</span>
+<span id="doc/BC4lean.groupAlgebraToCompletion"><a class="line" href="#ReducedCompletion-L112" id="ReducedCompletion-L112">112</a> def groupAlgebraToCompletion : GroupAlgebra Γ →⋆ₐ[ℂ] ReducedCompletion Γ where</span>
+<span><a class="line" href="#ReducedCompletion-L113" id="ReducedCompletion-L113">113</a>   toAlgHom :=</span>
+<span><a class="line" href="#ReducedCompletion-L114" id="ReducedCompletion-L114">114</a>     { toRingHom := Completion.coeRingHom.comp</span>
+<span><a class="line" href="#ReducedCompletion-L115" id="ReducedCompletion-L115">115</a>         (ReducedNormGroupAlgebra.ofGroupAlgebra Γ).toAlgEquiv.toAlgHom.toRingHom</span>
+<span><a class="line" href="#ReducedCompletion-L116" id="ReducedCompletion-L116">116</a>       commutes&#x27; _ := rfl }</span>
+<span><a class="line" href="#ReducedCompletion-L117" id="ReducedCompletion-L117">117</a>   map_star&#x27; a := (completion_star_coe Γ (ReducedNormGroupAlgebra.ofGroupAlgebra Γ a)).symm</span>
+<span><a class="line" href="#ReducedCompletion-L118" id="ReducedCompletion-L118">118</a> </span>
+<span id="doc/BC4lean.norm_groupAlgebraToCompletion"><a class="line" href="#ReducedCompletion-L119" id="ReducedCompletion-L119">119</a> @[simp] theorem norm_groupAlgebraToCompletion (a : GroupAlgebra Γ) :</span>
+<span><a class="line" href="#ReducedCompletion-L120" id="ReducedCompletion-L120">120</a>     ‖groupAlgebraToCompletion Γ a‖ = reducedNorm a :=</span>
+<span><a class="line" href="#ReducedCompletion-L121" id="ReducedCompletion-L121">121</a>   Completion.norm_coe (ReducedNormGroupAlgebra.ofGroupAlgebra Γ a)</span>
+<span><a class="line" href="#ReducedCompletion-L122" id="ReducedCompletion-L122">122</a> </span>
+<span id="doc/BC4lean.reducedCompletionEquiv_extends"><a class="line" href="#ReducedCompletion-L123" id="ReducedCompletion-L123">123</a> @[simp] theorem reducedCompletionEquiv_extends (a : GroupAlgebra Γ) :</span>
+<span><a class="line" href="#ReducedCompletion-L124" id="ReducedCompletion-L124">124</a>     reducedCompletionEquiv Γ (groupAlgebraToCompletion Γ a) = integratedToReduced a :=</span>
+<span><a class="line" href="#ReducedCompletion-L125" id="ReducedCompletion-L125">125</a>   completionMap_coe Γ (ReducedNormGroupAlgebra.ofGroupAlgebra Γ a)</span>
+<span><a class="line" href="#ReducedCompletion-L126" id="ReducedCompletion-L126">126</a> </span>
+<span><a class="line" href="#ReducedCompletion-L127" id="ReducedCompletion-L127">127</a> /-- Uniqueness already holds among all continuous functions with the prescribed restriction. -/</span>
+<span id="doc/BC4lean.reducedCompletionEquiv_unique"><a class="line" href="#ReducedCompletion-L128" id="ReducedCompletion-L128">128</a> theorem reducedCompletionEquiv_unique (f : ReducedCompletion Γ → ReducedGroupCStar Γ)</span>
+<span><a class="line" href="#ReducedCompletion-L129" id="ReducedCompletion-L129">129</a>     (hf : Continuous f)</span>
+<span><a class="line" href="#ReducedCompletion-L130" id="ReducedCompletion-L130">130</a>     (h : ∀ a : GroupAlgebra Γ, f (groupAlgebraToCompletion Γ a) = integratedToReduced a) :</span>
+<span><a class="line" href="#ReducedCompletion-L131" id="ReducedCompletion-L131">131</a>     f = reducedCompletionEquiv Γ := by</span>
+<span><a class="line" href="#ReducedCompletion-L132" id="ReducedCompletion-L132">132</a>   apply Completion.ext hf (reducedCompletionEquiv_isometry Γ).continuous</span>
+<span><a class="line" href="#ReducedCompletion-L133" id="ReducedCompletion-L133">133</a>   intro a</span>
+<span><a class="line" href="#ReducedCompletion-L134" id="ReducedCompletion-L134">134</a>   obtain ⟨b, rfl⟩ := (ReducedNormGroupAlgebra.ofGroupAlgebra Γ).surjective a</span>
+<span><a class="line" href="#ReducedCompletion-L135" id="ReducedCompletion-L135">135</a>   exact (h b).trans (reducedCompletionEquiv_extends Γ b).symm</span>
+<span><a class="line" href="#ReducedCompletion-L136" id="ReducedCompletion-L136">136</a> </span>
+<span><a class="line" href="#ReducedCompletion-L137" id="ReducedCompletion-L137">137</a> /-- In particular the extension is the unique isometric star-algebra isomorphism. -/</span>
+<span id="doc/BC4lean.reducedCompletionEquiv_unique_isometric"><a class="line" href="#ReducedCompletion-L138" id="ReducedCompletion-L138">138</a> theorem reducedCompletionEquiv_unique_isometric</span>
+<span><a class="line" href="#ReducedCompletion-L139" id="ReducedCompletion-L139">139</a>     (e : ReducedCompletion Γ ≃⋆ₐ[ℂ] ReducedGroupCStar Γ) (he : Isometry e)</span>
+<span><a class="line" href="#ReducedCompletion-L140" id="ReducedCompletion-L140">140</a>     (h : ∀ a : GroupAlgebra Γ, e (groupAlgebraToCompletion Γ a) = integratedToReduced a) :</span>
+<span><a class="line" href="#ReducedCompletion-L141" id="ReducedCompletion-L141">141</a>     e = reducedCompletionEquiv Γ := by</span>
+<span><a class="line" href="#ReducedCompletion-L142" id="ReducedCompletion-L142">142</a>   apply DFunLike.coe_injective</span>
+<span><a class="line" href="#ReducedCompletion-L143" id="ReducedCompletion-L143">143</a>   exact reducedCompletionEquiv_unique Γ e he.continuous h</span>
+<span><a class="line" href="#ReducedCompletion-L144" id="ReducedCompletion-L144">144</a> </span>
+<span><a class="line" href="#ReducedCompletion-L145" id="ReducedCompletion-L145">145</a> end BC4lean</span>
 </pre>
 </body></html>

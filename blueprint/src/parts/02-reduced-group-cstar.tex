@@ -4,12 +4,12 @@
 Throughout this section, $\Gamma$ is an arbitrary discrete group with
 identity $e$. Countability is needed only for the separability statement.
 Scalars are complex; inner products are conjugate-linear in the first
-variable and linear in the second. Twenty of the twenty-one mathematical nodes in this chapter are verified
-in Lean, including the concrete reduced group $C^*$-algebra, its generating
-property, separability for countable groups, and the trivial-group case.
-The dense norm-preserving group-algebra map is also verified. The extension
-to an isometric $*$-isomorphism from the abstract norm completion remains
-unverified; the completion proposition is therefore not marked as verified.
+variable and linear in the second. All twenty-one mathematical nodes in this chapter are verified in Lean.
+This includes the concrete reduced group $C^*$-algebra and its canonical
+isometric $*$-isomorphism with the abstract reduced-norm completion of
+$\mathbb C[\Gamma]$, together with the generating property, countable-group
+separability, and the trivial-group case. These foundational results do
+not prove any case of the Baum--Connes conjecture.
 
 \section{The complex group algebra}
 
@@ -333,6 +333,8 @@ bounded operators. The $C^*$-identity is inherited from that algebra.
 \end{proof}
 
 \begin{proposition}[Dense embedding and completion]\label{prop:reduced-group-cstar-completion}
+\lean{BC4lean.ReducedNormGroupAlgebra,BC4lean.ReducedNormGroupAlgebra.ofGroupAlgebra,BC4lean.ReducedNormGroupAlgebra.norm_ofGroupAlgebra,BC4lean.ReducedNormGroupAlgebra.toReduced_isometry,BC4lean.ReducedNormGroupAlgebra.toReduced_denseRange,BC4lean.ReducedCompletion,BC4lean.completion_star_coe,BC4lean.completionMap_star,BC4lean.completionCStarAlgebra,BC4lean.groupAlgebraToCompletion,BC4lean.norm_groupAlgebraToCompletion,BC4lean.reducedCompletionEquiv,BC4lean.reducedCompletionEquiv_isometry,BC4lean.reducedCompletionEquiv_extends,BC4lean.reducedCompletionEquiv_unique,BC4lean.reducedCompletionEquiv_unique_isometric}
+\leanok
 \uses{prop:reduced-group-cstar-structure,prop:reduced-norm-laws}
 With codomain restricted to $C_r^*(\Gamma)$, $\rho$ is an isometric
 unital $*$-homomorphism for $\|\cdot\|_r$ and has dense range.
@@ -340,6 +342,7 @@ It extends uniquely to an isometric $*$-isomorphism from the norm
 completion of $(\mathbb C[\Gamma],\|\cdot\|_r)$ onto $C_r^*(\Gamma)$.
 \end{proposition}
 \begin{proof}
+\leanok
 Isometry follows from the reduced norm and density from the definition
 of the closure. Completeness gives a unique isometric linear extension
 to the completion. Its range is closed by completeness and dense because

@@ -5,3 +5,5 @@ import BC4lean.LeftRegularRepresentation
 import BC4lean.IntegratedRepresentation
 import BC4lean.ReducedGroupCStar
 import BC4lean.ReducedGroupCStarTrivial
+import BC4lean.ReducedNormGroupAlgebra
+import BC4lean.ReducedCompletion
