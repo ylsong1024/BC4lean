@@ -26,6 +26,7 @@ code{overflow-wrap:anywhere}</style></head><body><a href="../../blueprint/">返�
 <li><a href="#OperatorK0Functoriality">OperatorK0Functoriality.lean</a></li>
 <li><a href="#OperatorK0Equivalence">OperatorK0Equivalence.lean</a></li>
 <li><a href="#ReducedCompletionK0">ReducedCompletionK0.lean</a></li>
+<li><a href="#UnitaryRotation">UnitaryRotation.lean</a></li>
 </ul></nav>
 <h2 id="GroupAlgebra">GroupAlgebra.lean</h2><p>源码 SHA-256：<code>1c6c0899fe9bc9f7860f291ba7c5573353d18a3c5809258769d689bc39da8ad4</code></p><pre>
 <span><a class="line" href="#L1" id="L1">  1</a> import Mathlib.Algebra.MonoidAlgebra.Basic</span>
@@ -2139,5 +2140,138 @@ code{overflow-wrap:anywhere}</style></head><body><a href="../../blueprint/">返�
 <span><a class="line" href="#ReducedCompletionK0-L109" id="ReducedCompletionK0-L109">109</a>     (DFunLike.congr_fun h (StableProjectionMonoid.of p)).symm</span>
 <span><a class="line" href="#ReducedCompletionK0-L110" id="ReducedCompletionK0-L110">110</a> </span>
 <span><a class="line" href="#ReducedCompletionK0-L111" id="ReducedCompletionK0-L111">111</a> end BC4lean</span>
+</pre>
+<h2 id="UnitaryRotation">UnitaryRotation.lean</h2><p>源码 SHA-256：<code>997580bc744a09a0c35007ceb52f228aaefc3f5a884f3e7b564ccced1e999dc7</code></p><pre>
+<span><a class="line" href="#UnitaryRotation-L1" id="UnitaryRotation-L1">  1</a> import BC4lean.UnitaryHomotopy</span>
+<span><a class="line" href="#UnitaryRotation-L2" id="UnitaryRotation-L2">  2</a> import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic</span>
+<span><a class="line" href="#UnitaryRotation-L3" id="UnitaryRotation-L3">  3</a> </span>
+<span><a class="line" href="#UnitaryRotation-L4" id="UnitaryRotation-L4">  4</a> /-! # Block rotation and the inverse homotopy for matrix unitaries</span>
+<span><a class="line" href="#UnitaryRotation-L5" id="UnitaryRotation-L5">  5</a> </span>
+<span><a class="line" href="#UnitaryRotation-L6" id="UnitaryRotation-L6">  6</a> The explicit rotation path gives the inverse mechanism for stable K₁.</span>
+<span><a class="line" href="#UnitaryRotation-L7" id="UnitaryRotation-L7">  7</a> The stable quotient and its group structure are separate constructions.</span>
+<span><a class="line" href="#UnitaryRotation-L8" id="UnitaryRotation-L8">  8</a> -/</span>
+<span><a class="line" href="#UnitaryRotation-L9" id="UnitaryRotation-L9">  9</a> </span>
+<span><a class="line" href="#UnitaryRotation-L10" id="UnitaryRotation-L10"> 10</a> noncomputable section</span>
+<span><a class="line" href="#UnitaryRotation-L11" id="UnitaryRotation-L11"> 11</a> namespace BC4lean.OperatorKTheory</span>
+<span><a class="line" href="#UnitaryRotation-L12" id="UnitaryRotation-L12"> 12</a> open scoped Matrix</span>
+<span><a class="line" href="#UnitaryRotation-L13" id="UnitaryRotation-L13"> 13</a> </span>
+<span><a class="line" href="#UnitaryRotation-L14" id="UnitaryRotation-L14"> 14</a> variable {A : Type*} [CStarAlgebra A] [PartialOrder A] [StarOrderedRing A]</span>
+<span><a class="line" href="#UnitaryRotation-L15" id="UnitaryRotation-L15"> 15</a> variable {ι : Type*} [Fintype ι] [DecidableEq ι]</span>
+<span><a class="line" href="#UnitaryRotation-L16" id="UnitaryRotation-L16"> 16</a> </span>
+<span><a class="line" href="#UnitaryRotation-L17" id="UnitaryRotation-L17"> 17</a> /-- The scalar block rotation through angle `t`, with identity blocks indexed by `ι`. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.rotationMatrix"><a class="line" href="#UnitaryRotation-L18" id="UnitaryRotation-L18"> 18</a> def rotationMatrix (t : ℝ) : CStarMatrix (ι ⊕ ι) (ι ⊕ ι) A :=</span>
+<span><a class="line" href="#UnitaryRotation-L19" id="UnitaryRotation-L19"> 19</a>   CStarMatrix.ofMatrix (Matrix.fromBlocks</span>
+<span><a class="line" href="#UnitaryRotation-L20" id="UnitaryRotation-L20"> 20</a>     (Real.cos t • (1 : Matrix ι ι A)) (-Real.sin t • (1 : Matrix ι ι A))</span>
+<span><a class="line" href="#UnitaryRotation-L21" id="UnitaryRotation-L21"> 21</a>     (Real.sin t • (1 : Matrix ι ι A)) (Real.cos t • (1 : Matrix ι ι A)))</span>
+<span><a class="line" href="#UnitaryRotation-L22" id="UnitaryRotation-L22"> 22</a> </span>
+<span><a class="line" href="#UnitaryRotation-L23" id="UnitaryRotation-L23"> 23</a> omit [PartialOrder A] [StarOrderedRing A] in</span>
+<span id="doc/BC4lean.OperatorKTheory.rotationMatrix_mem_unitary"><a class="line" href="#UnitaryRotation-L24" id="UnitaryRotation-L24"> 24</a> theorem rotationMatrix_mem_unitary (t : ℝ) :</span>
+<span><a class="line" href="#UnitaryRotation-L25" id="UnitaryRotation-L25"> 25</a>     rotationMatrix (A := A) (ι := ι) t ∈ unitary (CStarMatrix (ι ⊕ ι) (ι ⊕ ι) A) := by</span>
+<span><a class="line" href="#UnitaryRotation-L26" id="UnitaryRotation-L26"> 26</a>   have h : Real.cos t * Real.cos t + Real.sin t * Real.sin t = 1 := by</span>
+<span><a class="line" href="#UnitaryRotation-L27" id="UnitaryRotation-L27"> 27</a>     nlinarith [Real.sin_sq_add_cos_sq t]</span>
+<span><a class="line" href="#UnitaryRotation-L28" id="UnitaryRotation-L28"> 28</a>   have h&#x27; : Real.sin t * Real.sin t + Real.cos t * Real.cos t = 1 := by</span>
+<span><a class="line" href="#UnitaryRotation-L29" id="UnitaryRotation-L29"> 29</a>     simpa only [add_comm] using h</span>
+<span><a class="line" href="#UnitaryRotation-L30" id="UnitaryRotation-L30"> 30</a>   rw [Unitary.mem_iff]</span>
+<span><a class="line" href="#UnitaryRotation-L31" id="UnitaryRotation-L31"> 31</a>   let M : Matrix (ι ⊕ ι) (ι ⊕ ι) A := Matrix.fromBlocks</span>
+<span><a class="line" href="#UnitaryRotation-L32" id="UnitaryRotation-L32"> 32</a>     (Real.cos t • (1 : Matrix ι ι A)) (-Real.sin t • (1 : Matrix ι ι A))</span>
+<span><a class="line" href="#UnitaryRotation-L33" id="UnitaryRotation-L33"> 33</a>     (Real.sin t • (1 : Matrix ι ι A)) (Real.cos t • (1 : Matrix ι ι A))</span>
+<span><a class="line" href="#UnitaryRotation-L34" id="UnitaryRotation-L34"> 34</a>   change (Mᴴ * M = 1) ∧ (M * Mᴴ = 1)</span>
+<span><a class="line" href="#UnitaryRotation-L35" id="UnitaryRotation-L35"> 35</a>   dsimp [M]</span>
+<span><a class="line" href="#UnitaryRotation-L36" id="UnitaryRotation-L36"> 36</a>   simp only [Matrix.fromBlocks_conjTranspose, Matrix.conjTranspose_smul,</span>
+<span><a class="line" href="#UnitaryRotation-L37" id="UnitaryRotation-L37"> 37</a>     star_trivial, Matrix.conjTranspose_one, Matrix.fromBlocks_multiply,</span>
+<span><a class="line" href="#UnitaryRotation-L38" id="UnitaryRotation-L38"> 38</a>     Matrix.smul_mul, Matrix.mul_smul, Matrix.one_mul, smul_smul]</span>
+<span><a class="line" href="#UnitaryRotation-L39" id="UnitaryRotation-L39"> 39</a>   constructor &lt;;&gt;</span>
+<span><a class="line" href="#UnitaryRotation-L40" id="UnitaryRotation-L40"> 40</a>     simp [mul_neg, neg_smul, ← add_smul, h, h&#x27;, mul_comm, Matrix.fromBlocks_one]</span>
+<span><a class="line" href="#UnitaryRotation-L41" id="UnitaryRotation-L41"> 41</a> </span>
+<span><a class="line" href="#UnitaryRotation-L42" id="UnitaryRotation-L42"> 42</a> /-- Scalar rotations, bundled as matrix unitaries. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.rotationUnitary"><a class="line" href="#UnitaryRotation-L43" id="UnitaryRotation-L43"> 43</a> def rotationUnitary (t : ℝ) : MatrixUnitary A (ι ⊕ ι) :=</span>
+<span><a class="line" href="#UnitaryRotation-L44" id="UnitaryRotation-L44"> 44</a>   ⟨rotationMatrix t, rotationMatrix_mem_unitary t⟩</span>
+<span><a class="line" href="#UnitaryRotation-L45" id="UnitaryRotation-L45"> 45</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.continuous_rotationUnitary"><a class="line" href="#UnitaryRotation-L46" id="UnitaryRotation-L46"> 46</a> theorem continuous_rotationUnitary :</span>
+<span><a class="line" href="#UnitaryRotation-L47" id="UnitaryRotation-L47"> 47</a>     Continuous (rotationUnitary (A := A) (ι := ι)) := by</span>
+<span><a class="line" href="#UnitaryRotation-L48" id="UnitaryRotation-L48"> 48</a>   apply Continuous.subtype_mk</span>
+<span><a class="line" href="#UnitaryRotation-L49" id="UnitaryRotation-L49"> 49</a>   exact CStarMatrix.ofMatrixL.continuous.comp</span>
+<span><a class="line" href="#UnitaryRotation-L50" id="UnitaryRotation-L50"> 50</a>     ((Real.continuous_cos.smul continuous_const).matrix_fromBlocks</span>
+<span><a class="line" href="#UnitaryRotation-L51" id="UnitaryRotation-L51"> 51</a>       (Real.continuous_sin.neg.smul continuous_const)</span>
+<span><a class="line" href="#UnitaryRotation-L52" id="UnitaryRotation-L52"> 52</a>       (Real.continuous_sin.smul continuous_const)</span>
+<span><a class="line" href="#UnitaryRotation-L53" id="UnitaryRotation-L53"> 53</a>       (Real.continuous_cos.smul continuous_const))</span>
+<span><a class="line" href="#UnitaryRotation-L54" id="UnitaryRotation-L54"> 54</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.rotationUnitary_zero"><a class="line" href="#UnitaryRotation-L55" id="UnitaryRotation-L55"> 55</a> @[simp] theorem rotationUnitary_zero : rotationUnitary (A := A) (ι := ι) 0 = 1 := by</span>
+<span><a class="line" href="#UnitaryRotation-L56" id="UnitaryRotation-L56"> 56</a>   apply Subtype.ext</span>
+<span><a class="line" href="#UnitaryRotation-L57" id="UnitaryRotation-L57"> 57</a>   change rotationMatrix 0 = 1</span>
+<span><a class="line" href="#UnitaryRotation-L58" id="UnitaryRotation-L58"> 58</a>   simp only [rotationMatrix, Real.cos_zero, Real.sin_zero, neg_zero,</span>
+<span><a class="line" href="#UnitaryRotation-L59" id="UnitaryRotation-L59"> 59</a>     one_smul, zero_smul, Matrix.fromBlocks_one]</span>
+<span><a class="line" href="#UnitaryRotation-L60" id="UnitaryRotation-L60"> 60</a>   rfl</span>
+<span><a class="line" href="#UnitaryRotation-L61" id="UnitaryRotation-L61"> 61</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.unitaryBlockSum_one"><a class="line" href="#UnitaryRotation-L62" id="UnitaryRotation-L62"> 62</a> @[simp] theorem unitaryBlockSum_one :</span>
+<span><a class="line" href="#UnitaryRotation-L63" id="UnitaryRotation-L63"> 63</a>     unitaryBlockSum (1 : MatrixUnitary A ι) (1 : MatrixUnitary A ι) = 1 := by</span>
+<span><a class="line" href="#UnitaryRotation-L64" id="UnitaryRotation-L64"> 64</a>   apply Subtype.ext</span>
+<span><a class="line" href="#UnitaryRotation-L65" id="UnitaryRotation-L65"> 65</a>   exact matrixBlockSum_one</span>
+<span><a class="line" href="#UnitaryRotation-L66" id="UnitaryRotation-L66"> 66</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.unitaryBlockSum_mul"><a class="line" href="#UnitaryRotation-L67" id="UnitaryRotation-L67"> 67</a> theorem unitaryBlockSum_mul (u v w z : MatrixUnitary A ι) :</span>
+<span><a class="line" href="#UnitaryRotation-L68" id="UnitaryRotation-L68"> 68</a>     unitaryBlockSum u v * unitaryBlockSum w z = unitaryBlockSum (u * w) (v * z) := by</span>
+<span><a class="line" href="#UnitaryRotation-L69" id="UnitaryRotation-L69"> 69</a>   apply Subtype.ext</span>
+<span><a class="line" href="#UnitaryRotation-L70" id="UnitaryRotation-L70"> 70</a>   change matrixBlockSum (u : CStarMatrix ι ι A) (v : CStarMatrix ι ι A) *</span>
+<span><a class="line" href="#UnitaryRotation-L71" id="UnitaryRotation-L71"> 71</a>     matrixBlockSum (w : CStarMatrix ι ι A) (z : CStarMatrix ι ι A) =</span>
+<span><a class="line" href="#UnitaryRotation-L72" id="UnitaryRotation-L72"> 72</a>     matrixBlockSum ((u : CStarMatrix ι ι A) * (w : CStarMatrix ι ι A))</span>
+<span><a class="line" href="#UnitaryRotation-L73" id="UnitaryRotation-L73"> 73</a>       ((v : CStarMatrix ι ι A) * (z : CStarMatrix ι ι A))</span>
+<span><a class="line" href="#UnitaryRotation-L74" id="UnitaryRotation-L74"> 74</a>   exact matrixBlockSum_mul (u : CStarMatrix ι ι A) (w : CStarMatrix ι ι A)</span>
+<span><a class="line" href="#UnitaryRotation-L75" id="UnitaryRotation-L75"> 75</a>     (v : CStarMatrix ι ι A) (z : CStarMatrix ι ι A)</span>
+<span><a class="line" href="#UnitaryRotation-L76" id="UnitaryRotation-L76"> 76</a> </span>
+<span><a class="line" href="#UnitaryRotation-L77" id="UnitaryRotation-L77"> 77</a> /-- A quarter-turn exchanges diagonal blocks by conjugation. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.rotationUnitary_conjugate"><a class="line" href="#UnitaryRotation-L78" id="UnitaryRotation-L78"> 78</a> theorem rotationUnitary_conjugate (u v : MatrixUnitary A ι) :</span>
+<span><a class="line" href="#UnitaryRotation-L79" id="UnitaryRotation-L79"> 79</a>     rotationUnitary (Real.pi / 2) * unitaryBlockSum u v *</span>
+<span><a class="line" href="#UnitaryRotation-L80" id="UnitaryRotation-L80"> 80</a>       (rotationUnitary (Real.pi / 2))⁻¹ = unitaryBlockSum v u := by</span>
+<span><a class="line" href="#UnitaryRotation-L81" id="UnitaryRotation-L81"> 81</a>   apply Subtype.ext</span>
+<span><a class="line" href="#UnitaryRotation-L82" id="UnitaryRotation-L82"> 82</a>   let U : Matrix ι ι A := CStarMatrix.ofMatrix.symm u</span>
+<span><a class="line" href="#UnitaryRotation-L83" id="UnitaryRotation-L83"> 83</a>   let V : Matrix ι ι A := CStarMatrix.ofMatrix.symm v</span>
+<span><a class="line" href="#UnitaryRotation-L84" id="UnitaryRotation-L84"> 84</a>   let R : Matrix (ι ⊕ ι) (ι ⊕ ι) A := Matrix.fromBlocks</span>
+<span><a class="line" href="#UnitaryRotation-L85" id="UnitaryRotation-L85"> 85</a>     (Real.cos (Real.pi / 2) • (1 : Matrix ι ι A))</span>
+<span><a class="line" href="#UnitaryRotation-L86" id="UnitaryRotation-L86"> 86</a>     (-Real.sin (Real.pi / 2) • (1 : Matrix ι ι A))</span>
+<span><a class="line" href="#UnitaryRotation-L87" id="UnitaryRotation-L87"> 87</a>     (Real.sin (Real.pi / 2) • (1 : Matrix ι ι A))</span>
+<span><a class="line" href="#UnitaryRotation-L88" id="UnitaryRotation-L88"> 88</a>     (Real.cos (Real.pi / 2) • (1 : Matrix ι ι A))</span>
+<span><a class="line" href="#UnitaryRotation-L89" id="UnitaryRotation-L89"> 89</a>   change R * Matrix.fromBlocks U 0 0 V * Rᴴ = Matrix.fromBlocks V 0 0 U</span>
+<span><a class="line" href="#UnitaryRotation-L90" id="UnitaryRotation-L90"> 90</a>   dsimp [R]</span>
+<span><a class="line" href="#UnitaryRotation-L91" id="UnitaryRotation-L91"> 91</a>   simp [Real.cos_pi_div_two, Real.sin_pi_div_two,</span>
+<span><a class="line" href="#UnitaryRotation-L92" id="UnitaryRotation-L92"> 92</a>     Matrix.fromBlocks_conjTranspose, Matrix.fromBlocks_multiply]</span>
+<span><a class="line" href="#UnitaryRotation-L93" id="UnitaryRotation-L93"> 93</a> </span>
+<span><a class="line" href="#UnitaryRotation-L94" id="UnitaryRotation-L94"> 94</a> /-- Rotate the second factor from the lower block into the upper block. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.unitaryBlockProductPath"><a class="line" href="#UnitaryRotation-L95" id="UnitaryRotation-L95"> 95</a> def unitaryBlockProductPath (u v : MatrixUnitary A ι) :</span>
+<span><a class="line" href="#UnitaryRotation-L96" id="UnitaryRotation-L96"> 96</a>     Path (unitaryBlockSum u v) (unitaryBlockSum (u * v) 1) where</span>
+<span><a class="line" href="#UnitaryRotation-L97" id="UnitaryRotation-L97"> 97</a>   toFun t := unitaryBlockSum u 1 * rotationUnitary ((t : ℝ) * (Real.pi / 2)) *</span>
+<span><a class="line" href="#UnitaryRotation-L98" id="UnitaryRotation-L98"> 98</a>     unitaryBlockSum 1 v * (rotationUnitary ((t : ℝ) * (Real.pi / 2)))⁻¹</span>
+<span><a class="line" href="#UnitaryRotation-L99" id="UnitaryRotation-L99"> 99</a>   continuous_toFun := by</span>
+<span><a class="line" href="#UnitaryRotation-L100" id="UnitaryRotation-L100">100</a>     have h : Continuous (fun t : unitInterval =&gt;</span>
+<span><a class="line" href="#UnitaryRotation-L101" id="UnitaryRotation-L101">101</a>         rotationUnitary (A := A) (ι := ι) ((t : ℝ) * (Real.pi / 2))) :=</span>
+<span><a class="line" href="#UnitaryRotation-L102" id="UnitaryRotation-L102">102</a>       continuous_rotationUnitary.comp</span>
+<span><a class="line" href="#UnitaryRotation-L103" id="UnitaryRotation-L103">103</a>       (continuous_subtype_val.mul_const (Real.pi / 2))</span>
+<span><a class="line" href="#UnitaryRotation-L104" id="UnitaryRotation-L104">104</a>     exact ((continuous_const.mul h).mul continuous_const).mul h.inv</span>
+<span><a class="line" href="#UnitaryRotation-L105" id="UnitaryRotation-L105">105</a>   source&#x27; := by</span>
+<span><a class="line" href="#UnitaryRotation-L106" id="UnitaryRotation-L106">106</a>     simp [unitaryBlockSum_mul]</span>
+<span><a class="line" href="#UnitaryRotation-L107" id="UnitaryRotation-L107">107</a>   target&#x27; := by</span>
+<span><a class="line" href="#UnitaryRotation-L108" id="UnitaryRotation-L108">108</a>     simp only [Set.Icc.coe_one, one_mul]</span>
+<span><a class="line" href="#UnitaryRotation-L109" id="UnitaryRotation-L109">109</a>     rw [mul_assoc (unitaryBlockSum u 1), mul_assoc (unitaryBlockSum u 1),</span>
+<span><a class="line" href="#UnitaryRotation-L110" id="UnitaryRotation-L110">110</a>       rotationUnitary_conjugate]</span>
+<span><a class="line" href="#UnitaryRotation-L111" id="UnitaryRotation-L111">111</a>     simp only [unitaryBlockSum_mul, one_mul]</span>
+<span><a class="line" href="#UnitaryRotation-L112" id="UnitaryRotation-L112">112</a> </span>
+<span><a class="line" href="#UnitaryRotation-L113" id="UnitaryRotation-L113">113</a> /-- After doubling the matrix size, block sum agrees with multiplication up to norm homotopy. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.unitaryHomotopic_blockSum_mul"><a class="line" href="#UnitaryRotation-L114" id="UnitaryRotation-L114">114</a> theorem unitaryHomotopic_blockSum_mul (u v : MatrixUnitary A ι) :</span>
+<span><a class="line" href="#UnitaryRotation-L115" id="UnitaryRotation-L115">115</a>     UnitaryHomotopic (unitaryBlockSum u v) (unitaryBlockSum (u * v) 1) :=</span>
+<span><a class="line" href="#UnitaryRotation-L116" id="UnitaryRotation-L116">116</a>   ⟨unitaryBlockProductPath u v⟩</span>
+<span><a class="line" href="#UnitaryRotation-L117" id="UnitaryRotation-L117">117</a> </span>
+<span><a class="line" href="#UnitaryRotation-L118" id="UnitaryRotation-L118">118</a> /-- The block sum of a unitary and its adjoint has an explicit path to the identity. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.unitaryInversePath"><a class="line" href="#UnitaryRotation-L119" id="UnitaryRotation-L119">119</a> def unitaryInversePath (u : MatrixUnitary A ι) :</span>
+<span><a class="line" href="#UnitaryRotation-L120" id="UnitaryRotation-L120">120</a>     Path (unitaryBlockSum u (star u)) 1 := by</span>
+<span><a class="line" href="#UnitaryRotation-L121" id="UnitaryRotation-L121">121</a>   simpa using unitaryBlockProductPath u (star u)</span>
+<span><a class="line" href="#UnitaryRotation-L122" id="UnitaryRotation-L122">122</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.unitaryHomotopic_blockSum_star"><a class="line" href="#UnitaryRotation-L123" id="UnitaryRotation-L123">123</a> theorem unitaryHomotopic_blockSum_star (u : MatrixUnitary A ι) :</span>
+<span><a class="line" href="#UnitaryRotation-L124" id="UnitaryRotation-L124">124</a>     UnitaryHomotopic (unitaryBlockSum u (star u)) 1 :=</span>
+<span><a class="line" href="#UnitaryRotation-L125" id="UnitaryRotation-L125">125</a>   ⟨unitaryInversePath u⟩</span>
+<span><a class="line" href="#UnitaryRotation-L126" id="UnitaryRotation-L126">126</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.unitaryHomotopic_star_blockSum"><a class="line" href="#UnitaryRotation-L127" id="UnitaryRotation-L127">127</a> theorem unitaryHomotopic_star_blockSum (u : MatrixUnitary A ι) :</span>
+<span><a class="line" href="#UnitaryRotation-L128" id="UnitaryRotation-L128">128</a>     UnitaryHomotopic (unitaryBlockSum (star u) u) 1 := by</span>
+<span><a class="line" href="#UnitaryRotation-L129" id="UnitaryRotation-L129">129</a>   simpa using unitaryHomotopic_blockSum_star (star u)</span>
+<span><a class="line" href="#UnitaryRotation-L130" id="UnitaryRotation-L130">130</a> </span>
+<span><a class="line" href="#UnitaryRotation-L131" id="UnitaryRotation-L131">131</a> end BC4lean.OperatorKTheory</span>
 </pre>
 </body></html>

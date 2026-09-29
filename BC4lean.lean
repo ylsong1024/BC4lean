@@ -18,3 +18,4 @@ import BC4lean.MatrixProjectionMap
 import BC4lean.OperatorK0Functoriality
 import BC4lean.OperatorK0Equivalence
 import BC4lean.ReducedCompletionK0
+import BC4lean.UnitaryRotation

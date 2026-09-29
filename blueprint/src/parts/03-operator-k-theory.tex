@@ -6,7 +6,8 @@ The present Lean milestone constructs the stable projection monoid $V(A)$
 and the unital group $K_0(A)$ with its universal property and functoriality
 under unital complex star homomorphisms, including canonical additive
 isomorphisms induced by unital star-algebra isomorphisms. Matrix unitaries,
-fixed-size norm homotopies, and stabilization maps are also verified.
+fixed-size norm homotopies, stabilization maps, and explicit block-rotation
+homotopies giving the stable inverse mechanism are also verified.
 The stable group $K_1$, nonunital extensions, and later structural properties
 remain separate targets.
 
@@ -344,14 +345,56 @@ in which block sum is continuous. Apply block sum to a pair of paths;
 for stabilization, use a constant identity path in the second factor.
 \end{proof}
 
-\begin{definition}\label{def:operator-k1}
+\begin{proposition}\label{prop:unitary-block-rotation}
 \uses{prop:unitary-homotopy-stabilization}
+\lean{BC4lean.OperatorKTheory.rotationMatrix,BC4lean.OperatorKTheory.rotationMatrix_mem_unitary,BC4lean.OperatorKTheory.rotationUnitary,BC4lean.OperatorKTheory.continuous_rotationUnitary,BC4lean.OperatorKTheory.rotationUnitary_zero,BC4lean.OperatorKTheory.rotationUnitary_conjugate,BC4lean.OperatorKTheory.unitaryBlockProductPath,BC4lean.OperatorKTheory.unitaryHomotopic_blockSum_mul}
+For $u,v\in U_n(A)$, there is an explicit norm-continuous path
+\[
+ u\oplus v\simeq (uv)\oplus 1_n\quad\text{in }U_{2n}(A).
+\]
+\end{proposition}
+\begin{proof}
+\leanok
+Put $\theta=\pi t/2$ for $0\leq t\leq1$ and let
+\[
+ R(\theta)=\begin{pmatrix}
+ \cos\theta\,1_n&-\sin\theta\,1_n\\
+ \sin\theta\,1_n&\cos\theta\,1_n
+ \end{pmatrix}.
+\]
+The identity $\cos^2\theta+\sin^2\theta=1$ proves that $R(\theta)$ is
+unitary. Its entries depend continuously on $\theta$, hence it is continuous
+in the finite-matrix $C^*$-norm. The required path is
+\[
+ H_{u,v}(t)=(u\oplus1_n)R(\theta)(1_n\oplus v)R(\theta)^*.
+\]
+At $t=0$ the rotation is the identity. At $t=1$ its conjugation exchanges
+the two diagonal blocks, giving $(uv)\oplus1_n$.
+\end{proof}
+
+\begin{proposition}\label{prop:unitary-stable-inverse}
+\uses{prop:unitary-block-rotation}
+\lean{BC4lean.OperatorKTheory.unitaryInversePath,BC4lean.OperatorKTheory.unitaryHomotopic_blockSum_star,BC4lean.OperatorKTheory.unitaryHomotopic_star_blockSum}
+For every $u\in U_n(A)$, both $u\oplus u^*$ and $u^*\oplus u$ are
+norm homotopic to $1_{2n}$.
+\end{proposition}
+\begin{proof}
+\leanok
+Specialize the preceding path to $v=u^*$ and use $uu^*=1_n$.
+Apply the same result to $u^*$ for the second assertion.
+This proves the inverse homotopy needed for the stable quotient; it does
+not by itself construct that quotient or its abelian group structure.
+\end{proof}
+
+\begin{definition}\label{def:operator-k1}
+\uses{prop:unitary-homotopy-stabilization,prop:unitary-stable-inverse}
 \notready
 Take the stable quotient of matrix unitaries by norm homotopy after adjoining
 identity blocks. Define $K_1(A)$ to be this quotient and prove that block sum
 gives an abelian group. This requires the stabilization and reindexing
-coherence, block-switching homotopies, and an inverse represented by $u^*$.
-The fixed-size quotients above do not yet establish these assertions.
+coherence and block-switching homotopies. The preceding result supplies
+the homotopy needed for an inverse represented by $u^*$, but the stable
+quotient and its abelian group laws remain to be constructed.
 \end{definition}
 
 \section{Nonunital algebras and structural properties}
