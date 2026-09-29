@@ -22,6 +22,8 @@ code{overflow-wrap:anywhere}</style></head><body><a href="../../blueprint/">返�
 <li><a href="#StableProjectionMonoid">StableProjectionMonoid.lean</a></li>
 <li><a href="#OperatorK0">OperatorK0.lean</a></li>
 <li><a href="#ReducedOperatorK0">ReducedOperatorK0.lean</a></li>
+<li><a href="#MatrixProjectionMap">MatrixProjectionMap.lean</a></li>
+<li><a href="#OperatorK0Functoriality">OperatorK0Functoriality.lean</a></li>
 </ul></nav>
 <h2 id="GroupAlgebra">GroupAlgebra.lean</h2><p>源码 SHA-256：<code>1c6c0899fe9bc9f7860f291ba7c5573353d18a3c5809258769d689bc39da8ad4</code></p><pre>
 <span><a class="line" href="#L1" id="L1">  1</a> import Mathlib.Algebra.MonoidAlgebra.Basic</span>
@@ -1679,5 +1681,218 @@ code{overflow-wrap:anywhere}</style></head><body><a href="../../blueprint/">返�
 <span><a class="line" href="#ReducedOperatorK0-L51" id="ReducedOperatorK0-L51"> 51</a>   exact OperatorKTheory.k0Universal</span>
 <span><a class="line" href="#ReducedOperatorK0-L52" id="ReducedOperatorK0-L52"> 52</a> </span>
 <span><a class="line" href="#ReducedOperatorK0-L53" id="ReducedOperatorK0-L53"> 53</a> end BC4lean</span>
+</pre>
+<h2 id="MatrixProjectionMap">MatrixProjectionMap.lean</h2><p>源码 SHA-256：<code>8302a0991199155f7aa3e835bb5fcc264ba4ad9b845b96f83dd81941cfb37592</code></p><pre>
+<span><a class="line" href="#MatrixProjectionMap-L1" id="MatrixProjectionMap-L1">  1</a> import BC4lean.StableProjectionMonoid</span>
+<span><a class="line" href="#MatrixProjectionMap-L2" id="MatrixProjectionMap-L2">  2</a> </span>
+<span><a class="line" href="#MatrixProjectionMap-L3" id="MatrixProjectionMap-L3">  3</a> /-! # Entrywise maps of finite matrix projections</span>
+<span><a class="line" href="#MatrixProjectionMap-L4" id="MatrixProjectionMap-L4">  4</a> </span>
+<span><a class="line" href="#MatrixProjectionMap-L5" id="MatrixProjectionMap-L5">  5</a> A unital complex ⋆-homomorphism acts on rectangular witnesses entrywise.</span>
+<span><a class="line" href="#MatrixProjectionMap-L6" id="MatrixProjectionMap-L6">  6</a> Consequently it preserves stable Murray–von Neumann equivalence and block sums.</span>
+<span><a class="line" href="#MatrixProjectionMap-L7" id="MatrixProjectionMap-L7">  7</a> -/</span>
+<span><a class="line" href="#MatrixProjectionMap-L8" id="MatrixProjectionMap-L8">  8</a> </span>
+<span><a class="line" href="#MatrixProjectionMap-L9" id="MatrixProjectionMap-L9">  9</a> noncomputable section</span>
+<span><a class="line" href="#MatrixProjectionMap-L10" id="MatrixProjectionMap-L10"> 10</a> open scoped Matrix</span>
+<span><a class="line" href="#MatrixProjectionMap-L11" id="MatrixProjectionMap-L11"> 11</a> namespace BC4lean.OperatorKTheory</span>
+<span><a class="line" href="#MatrixProjectionMap-L12" id="MatrixProjectionMap-L12"> 12</a> </span>
+<span><a class="line" href="#MatrixProjectionMap-L13" id="MatrixProjectionMap-L13"> 13</a> universe u v w</span>
+<span><a class="line" href="#MatrixProjectionMap-L14" id="MatrixProjectionMap-L14"> 14</a> variable {A : Type u} {B : Type v} {C : Type w}</span>
+<span><a class="line" href="#MatrixProjectionMap-L15" id="MatrixProjectionMap-L15"> 15</a> variable [CStarAlgebra A] [CStarAlgebra B] [CStarAlgebra C]</span>
+<span><a class="line" href="#MatrixProjectionMap-L16" id="MatrixProjectionMap-L16"> 16</a> variable {ι κ : Type*} [Fintype ι] [Fintype κ] [DecidableEq ι] [DecidableEq κ]</span>
+<span><a class="line" href="#MatrixProjectionMap-L17" id="MatrixProjectionMap-L17"> 17</a> </span>
+<span><a class="line" href="#MatrixProjectionMap-L18" id="MatrixProjectionMap-L18"> 18</a> /-- The entrywise map, bundled on square matrices with the C⋆-matrix norm. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.matrixMap"><a class="line" href="#MatrixProjectionMap-L19" id="MatrixProjectionMap-L19"> 19</a> def matrixMap (φ : A →⋆ₐ[ℂ] B) : CStarMatrix ι ι A →⋆ₐ[ℂ] CStarMatrix ι ι B :=</span>
+<span><a class="line" href="#MatrixProjectionMap-L20" id="MatrixProjectionMap-L20"> 20</a>   CStarMatrix.ofMatrixStarAlgEquiv.toStarAlgHom.comp</span>
+<span><a class="line" href="#MatrixProjectionMap-L21" id="MatrixProjectionMap-L21"> 21</a>     (({ φ.toAlgHom.mapMatrix with</span>
+<span><a class="line" href="#MatrixProjectionMap-L22" id="MatrixProjectionMap-L22"> 22</a>         map_star&#x27; := fun _ =&gt; Matrix.conjTranspose_map φ (fun a =&gt; map_star φ a) } :</span>
+<span><a class="line" href="#MatrixProjectionMap-L23" id="MatrixProjectionMap-L23"> 23</a>           Matrix ι ι A →⋆ₐ[ℂ] Matrix ι ι B).comp</span>
+<span><a class="line" href="#MatrixProjectionMap-L24" id="MatrixProjectionMap-L24"> 24</a>       CStarMatrix.ofMatrixStarAlgEquiv.symm.toStarAlgHom)</span>
+<span><a class="line" href="#MatrixProjectionMap-L25" id="MatrixProjectionMap-L25"> 25</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.matrixMap_apply"><a class="line" href="#MatrixProjectionMap-L26" id="MatrixProjectionMap-L26"> 26</a> @[simp] theorem matrixMap_apply (φ : A →⋆ₐ[ℂ] B) (M : CStarMatrix ι ι A) (i j : ι) :</span>
+<span><a class="line" href="#MatrixProjectionMap-L27" id="MatrixProjectionMap-L27"> 27</a>     matrixMap φ M i j = φ (M i j) := rfl</span>
+<span><a class="line" href="#MatrixProjectionMap-L28" id="MatrixProjectionMap-L28"> 28</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.matrixMap_id"><a class="line" href="#MatrixProjectionMap-L29" id="MatrixProjectionMap-L29"> 29</a> @[simp] theorem matrixMap_id :</span>
+<span><a class="line" href="#MatrixProjectionMap-L30" id="MatrixProjectionMap-L30"> 30</a>     matrixMap (ι := ι) (StarAlgHom.id ℂ A) = StarAlgHom.id ℂ (CStarMatrix ι ι A) := by</span>
+<span><a class="line" href="#MatrixProjectionMap-L31" id="MatrixProjectionMap-L31"> 31</a>   ext M i j</span>
+<span><a class="line" href="#MatrixProjectionMap-L32" id="MatrixProjectionMap-L32"> 32</a>   rfl</span>
+<span><a class="line" href="#MatrixProjectionMap-L33" id="MatrixProjectionMap-L33"> 33</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.matrixMap_comp"><a class="line" href="#MatrixProjectionMap-L34" id="MatrixProjectionMap-L34"> 34</a> @[simp] theorem matrixMap_comp (ψ : B →⋆ₐ[ℂ] C) (φ : A →⋆ₐ[ℂ] B) :</span>
+<span><a class="line" href="#MatrixProjectionMap-L35" id="MatrixProjectionMap-L35"> 35</a>     matrixMap (ι := ι) (ψ.comp φ) = (matrixMap ψ).comp (matrixMap φ) := by</span>
+<span><a class="line" href="#MatrixProjectionMap-L36" id="MatrixProjectionMap-L36"> 36</a>   ext M i j</span>
+<span><a class="line" href="#MatrixProjectionMap-L37" id="MatrixProjectionMap-L37"> 37</a>   rfl</span>
+<span><a class="line" href="#MatrixProjectionMap-L38" id="MatrixProjectionMap-L38"> 38</a> </span>
+<span><a class="line" href="#MatrixProjectionMap-L39" id="MatrixProjectionMap-L39"> 39</a> variable [PartialOrder A] [StarOrderedRing A]</span>
+<span><a class="line" href="#MatrixProjectionMap-L40" id="MatrixProjectionMap-L40"> 40</a> variable [PartialOrder B] [StarOrderedRing B]</span>
+<span><a class="line" href="#MatrixProjectionMap-L41" id="MatrixProjectionMap-L41"> 41</a> variable [PartialOrder C] [StarOrderedRing C]</span>
+<span><a class="line" href="#MatrixProjectionMap-L42" id="MatrixProjectionMap-L42"> 42</a> </span>
+<span><a class="line" href="#MatrixProjectionMap-L43" id="MatrixProjectionMap-L43"> 43</a> /-- Applying the entrywise homomorphism to a matrix projection. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.matrixProjectionMap"><a class="line" href="#MatrixProjectionMap-L44" id="MatrixProjectionMap-L44"> 44</a> def matrixProjectionMap (φ : A →⋆ₐ[ℂ] B) (p : MatrixProjection A ι) : MatrixProjection B ι :=</span>
+<span><a class="line" href="#MatrixProjectionMap-L45" id="MatrixProjectionMap-L45"> 45</a>   Projection.map (matrixMap φ) p</span>
+<span><a class="line" href="#MatrixProjectionMap-L46" id="MatrixProjectionMap-L46"> 46</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.projectionMatrix_map"><a class="line" href="#MatrixProjectionMap-L47" id="MatrixProjectionMap-L47"> 47</a> @[simp] theorem projectionMatrix_map (φ : A →⋆ₐ[ℂ] B) (p : MatrixProjection A ι) :</span>
+<span><a class="line" href="#MatrixProjectionMap-L48" id="MatrixProjectionMap-L48"> 48</a>     projectionMatrix (matrixProjectionMap φ p) = (projectionMatrix p).map φ := rfl</span>
+<span><a class="line" href="#MatrixProjectionMap-L49" id="MatrixProjectionMap-L49"> 49</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.matrixProjectionMap_id"><a class="line" href="#MatrixProjectionMap-L50" id="MatrixProjectionMap-L50"> 50</a> @[simp] theorem matrixProjectionMap_id (p : MatrixProjection A ι) :</span>
+<span><a class="line" href="#MatrixProjectionMap-L51" id="MatrixProjectionMap-L51"> 51</a>     matrixProjectionMap (StarAlgHom.id ℂ A) p = p := by</span>
+<span><a class="line" href="#MatrixProjectionMap-L52" id="MatrixProjectionMap-L52"> 52</a>   apply Subtype.ext</span>
+<span><a class="line" href="#MatrixProjectionMap-L53" id="MatrixProjectionMap-L53"> 53</a>   rfl</span>
+<span><a class="line" href="#MatrixProjectionMap-L54" id="MatrixProjectionMap-L54"> 54</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.matrixProjectionMap_comp"><a class="line" href="#MatrixProjectionMap-L55" id="MatrixProjectionMap-L55"> 55</a> @[simp] theorem matrixProjectionMap_comp (ψ : B →⋆ₐ[ℂ] C) (φ : A →⋆ₐ[ℂ] B)</span>
+<span><a class="line" href="#MatrixProjectionMap-L56" id="MatrixProjectionMap-L56"> 56</a>     (p : MatrixProjection A ι) :</span>
+<span><a class="line" href="#MatrixProjectionMap-L57" id="MatrixProjectionMap-L57"> 57</a>     matrixProjectionMap (ψ.comp φ) p = matrixProjectionMap ψ (matrixProjectionMap φ p) := rfl</span>
+<span><a class="line" href="#MatrixProjectionMap-L58" id="MatrixProjectionMap-L58"> 58</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.matrixProjectionMap_zero"><a class="line" href="#MatrixProjectionMap-L59" id="MatrixProjectionMap-L59"> 59</a> @[simp] theorem matrixProjectionMap_zero (φ : A →⋆ₐ[ℂ] B) :</span>
+<span><a class="line" href="#MatrixProjectionMap-L60" id="MatrixProjectionMap-L60"> 60</a>     matrixProjectionMap φ (Projection.zero : MatrixProjection A ι) = Projection.zero :=</span>
+<span><a class="line" href="#MatrixProjectionMap-L61" id="MatrixProjectionMap-L61"> 61</a>   Projection.map_zero _</span>
+<span><a class="line" href="#MatrixProjectionMap-L62" id="MatrixProjectionMap-L62"> 62</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.matrixProjectionMap_blockSum"><a class="line" href="#MatrixProjectionMap-L63" id="MatrixProjectionMap-L63"> 63</a> @[simp] theorem matrixProjectionMap_blockSum (φ : A →⋆ₐ[ℂ] B)</span>
+<span><a class="line" href="#MatrixProjectionMap-L64" id="MatrixProjectionMap-L64"> 64</a>     (p : MatrixProjection A ι) (q : MatrixProjection A κ) :</span>
+<span><a class="line" href="#MatrixProjectionMap-L65" id="MatrixProjectionMap-L65"> 65</a>     matrixProjectionMap φ (projectionBlockSum p q) =</span>
+<span><a class="line" href="#MatrixProjectionMap-L66" id="MatrixProjectionMap-L66"> 66</a>       projectionBlockSum (matrixProjectionMap φ p) (matrixProjectionMap φ q) := by</span>
+<span><a class="line" href="#MatrixProjectionMap-L67" id="MatrixProjectionMap-L67"> 67</a>   apply Subtype.ext</span>
+<span><a class="line" href="#MatrixProjectionMap-L68" id="MatrixProjectionMap-L68"> 68</a>   ext i j</span>
+<span><a class="line" href="#MatrixProjectionMap-L69" id="MatrixProjectionMap-L69"> 69</a>   cases i &lt;;&gt; cases j &lt;;&gt; simp [matrixProjectionMap, Projection.map,</span>
+<span><a class="line" href="#MatrixProjectionMap-L70" id="MatrixProjectionMap-L70"> 70</a>     matrixMap_apply, projectionBlockSum, matrixBlockSum, Matrix.fromBlocks]</span>
+<span><a class="line" href="#MatrixProjectionMap-L71" id="MatrixProjectionMap-L71"> 71</a> </span>
+<span><a class="line" href="#MatrixProjectionMap-L72" id="MatrixProjectionMap-L72"> 72</a> /-- Map the actual rectangular witness; no injectivity of φ is required. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.rectEquivalent_map"><a class="line" href="#MatrixProjectionMap-L73" id="MatrixProjectionMap-L73"> 73</a> theorem rectEquivalent_map (φ : A →⋆ₐ[ℂ] B)</span>
+<span><a class="line" href="#MatrixProjectionMap-L74" id="MatrixProjectionMap-L74"> 74</a>     {p : MatrixProjection A ι} {q : MatrixProjection A κ} (h : RectEquivalent p q) :</span>
+<span><a class="line" href="#MatrixProjectionMap-L75" id="MatrixProjectionMap-L75"> 75</a>     RectEquivalent (matrixProjectionMap φ p) (matrixProjectionMap φ q) := by</span>
+<span><a class="line" href="#MatrixProjectionMap-L76" id="MatrixProjectionMap-L76"> 76</a>   obtain ⟨v, hv, hv&#x27;⟩ := h</span>
+<span><a class="line" href="#MatrixProjectionMap-L77" id="MatrixProjectionMap-L77"> 77</a>   refine ⟨v.map φ, ?_, ?_⟩</span>
+<span><a class="line" href="#MatrixProjectionMap-L78" id="MatrixProjectionMap-L78"> 78</a>   · simpa only [Matrix.map_mul, Matrix.conjTranspose_map φ (fun a =&gt; map_star φ a),</span>
+<span><a class="line" href="#MatrixProjectionMap-L79" id="MatrixProjectionMap-L79"> 79</a>       projectionMatrix_map] using congrArg (fun M =&gt; M.map φ) hv</span>
+<span><a class="line" href="#MatrixProjectionMap-L80" id="MatrixProjectionMap-L80"> 80</a>   · simpa only [Matrix.map_mul, Matrix.conjTranspose_map φ (fun a =&gt; map_star φ a),</span>
+<span><a class="line" href="#MatrixProjectionMap-L81" id="MatrixProjectionMap-L81"> 81</a>       projectionMatrix_map] using congrArg (fun M =&gt; M.map φ) hv&#x27;</span>
+<span><a class="line" href="#MatrixProjectionMap-L82" id="MatrixProjectionMap-L82"> 82</a> </span>
+<span><a class="line" href="#MatrixProjectionMap-L83" id="MatrixProjectionMap-L83"> 83</a> namespace FiniteProjection</span>
+<span><a class="line" href="#MatrixProjectionMap-L84" id="MatrixProjectionMap-L84"> 84</a> </span>
+<span><a class="line" href="#MatrixProjectionMap-L85" id="MatrixProjectionMap-L85"> 85</a> /-- Entrywise transport keeps the finite index type. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteProjection.map"><a class="line" href="#MatrixProjectionMap-L86" id="MatrixProjectionMap-L86"> 86</a> def map (φ : A →⋆ₐ[ℂ] B) (p : FiniteProjection A) : FiniteProjection B where</span>
+<span><a class="line" href="#MatrixProjectionMap-L87" id="MatrixProjectionMap-L87"> 87</a>   Index := p.Index</span>
+<span><a class="line" href="#MatrixProjectionMap-L88" id="MatrixProjectionMap-L88"> 88</a>   projection := matrixProjectionMap φ p.projection</span>
+<span><a class="line" href="#MatrixProjectionMap-L89" id="MatrixProjectionMap-L89"> 89</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteProjection.map_id"><a class="line" href="#MatrixProjectionMap-L90" id="MatrixProjectionMap-L90"> 90</a> @[simp] theorem map_id (p : FiniteProjection A) : map (StarAlgHom.id ℂ A) p = p := by</span>
+<span><a class="line" href="#MatrixProjectionMap-L91" id="MatrixProjectionMap-L91"> 91</a>   cases p</span>
+<span><a class="line" href="#MatrixProjectionMap-L92" id="MatrixProjectionMap-L92"> 92</a>   simp only [map, matrixProjectionMap_id]</span>
+<span><a class="line" href="#MatrixProjectionMap-L93" id="MatrixProjectionMap-L93"> 93</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteProjection.map_comp"><a class="line" href="#MatrixProjectionMap-L94" id="MatrixProjectionMap-L94"> 94</a> @[simp] theorem map_comp (ψ : B →⋆ₐ[ℂ] C) (φ : A →⋆ₐ[ℂ] B) (p : FiniteProjection A) :</span>
+<span><a class="line" href="#MatrixProjectionMap-L95" id="MatrixProjectionMap-L95"> 95</a>     map (ψ.comp φ) p = map ψ (map φ p) := rfl</span>
+<span><a class="line" href="#MatrixProjectionMap-L96" id="MatrixProjectionMap-L96"> 96</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteProjection.map_zero"><a class="line" href="#MatrixProjectionMap-L97" id="MatrixProjectionMap-L97"> 97</a> @[simp] theorem map_zero (φ : A →⋆ₐ[ℂ] B) : map φ zero = zero := by</span>
+<span><a class="line" href="#MatrixProjectionMap-L98" id="MatrixProjectionMap-L98"> 98</a>   exact congrArg (fun p : MatrixProjection B Empty =&gt; ofProjection p) (matrixProjectionMap_zero φ)</span>
+<span><a class="line" href="#MatrixProjectionMap-L99" id="MatrixProjectionMap-L99"> 99</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteProjection.map_blockSum"><a class="line" href="#MatrixProjectionMap-L100" id="MatrixProjectionMap-L100">100</a> @[simp] theorem map_blockSum (φ : A →⋆ₐ[ℂ] B) (p q : FiniteProjection A) :</span>
+<span><a class="line" href="#MatrixProjectionMap-L101" id="MatrixProjectionMap-L101">101</a>     map φ (blockSum p q) = blockSum (map φ p) (map φ q) := by</span>
+<span><a class="line" href="#MatrixProjectionMap-L102" id="MatrixProjectionMap-L102">102</a>   exact congrArg (fun r : MatrixProjection B (p.Index ⊕ q.Index) =&gt; ofProjection r)</span>
+<span><a class="line" href="#MatrixProjectionMap-L103" id="MatrixProjectionMap-L103">103</a>     (matrixProjectionMap_blockSum φ p.projection q.projection)</span>
+<span><a class="line" href="#MatrixProjectionMap-L104" id="MatrixProjectionMap-L104">104</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteProjection.equivalent_map"><a class="line" href="#MatrixProjectionMap-L105" id="MatrixProjectionMap-L105">105</a> theorem equivalent_map (φ : A →⋆ₐ[ℂ] B) {p q : FiniteProjection A}</span>
+<span><a class="line" href="#MatrixProjectionMap-L106" id="MatrixProjectionMap-L106">106</a>     (h : Equivalent p q) : Equivalent (map φ p) (map φ q) := rectEquivalent_map φ h</span>
+<span><a class="line" href="#MatrixProjectionMap-L107" id="MatrixProjectionMap-L107">107</a> </span>
+<span><a class="line" href="#MatrixProjectionMap-L108" id="MatrixProjectionMap-L108">108</a> end FiniteProjection</span>
+<span><a class="line" href="#MatrixProjectionMap-L109" id="MatrixProjectionMap-L109">109</a> end BC4lean.OperatorKTheory</span>
+</pre>
+<h2 id="OperatorK0Functoriality">OperatorK0Functoriality.lean</h2><p>源码 SHA-256：<code>c8a9e804b78fef151656b5af0b31794e6400684db49dd051775e2a018dad8e37</code></p><pre>
+<span><a class="line" href="#OperatorK0Functoriality-L1" id="OperatorK0Functoriality-L1">  1</a> import BC4lean.MatrixProjectionMap</span>
+<span><a class="line" href="#OperatorK0Functoriality-L2" id="OperatorK0Functoriality-L2">  2</a> import BC4lean.OperatorK0</span>
+<span><a class="line" href="#OperatorK0Functoriality-L3" id="OperatorK0Functoriality-L3">  3</a> </span>
+<span><a class="line" href="#OperatorK0Functoriality-L4" id="OperatorK0Functoriality-L4">  4</a> /-! # Functoriality of unital operator K₀</span>
+<span><a class="line" href="#OperatorK0Functoriality-L5" id="OperatorK0Functoriality-L5">  5</a> </span>
+<span><a class="line" href="#OperatorK0Functoriality-L6" id="OperatorK0Functoriality-L6">  6</a> First descend entrywise maps to the stable projection monoid, then use the</span>
+<span><a class="line" href="#OperatorK0Functoriality-L7" id="OperatorK0Functoriality-L7">  7</a> Grothendieck group universal property. No cancellation hypothesis is needed.</span>
+<span><a class="line" href="#OperatorK0Functoriality-L8" id="OperatorK0Functoriality-L8">  8</a> -/</span>
+<span><a class="line" href="#OperatorK0Functoriality-L9" id="OperatorK0Functoriality-L9">  9</a> </span>
+<span><a class="line" href="#OperatorK0Functoriality-L10" id="OperatorK0Functoriality-L10"> 10</a> noncomputable section</span>
+<span><a class="line" href="#OperatorK0Functoriality-L11" id="OperatorK0Functoriality-L11"> 11</a> namespace BC4lean.OperatorKTheory</span>
+<span><a class="line" href="#OperatorK0Functoriality-L12" id="OperatorK0Functoriality-L12"> 12</a> </span>
+<span><a class="line" href="#OperatorK0Functoriality-L13" id="OperatorK0Functoriality-L13"> 13</a> universe u v w t</span>
+<span><a class="line" href="#OperatorK0Functoriality-L14" id="OperatorK0Functoriality-L14"> 14</a> variable {A : Type u} {B : Type v} {C : Type w}</span>
+<span><a class="line" href="#OperatorK0Functoriality-L15" id="OperatorK0Functoriality-L15"> 15</a> variable [CStarAlgebra A] [CStarAlgebra B] [CStarAlgebra C]</span>
+<span><a class="line" href="#OperatorK0Functoriality-L16" id="OperatorK0Functoriality-L16"> 16</a> variable [PartialOrder A] [StarOrderedRing A]</span>
+<span><a class="line" href="#OperatorK0Functoriality-L17" id="OperatorK0Functoriality-L17"> 17</a> variable [PartialOrder B] [StarOrderedRing B]</span>
+<span><a class="line" href="#OperatorK0Functoriality-L18" id="OperatorK0Functoriality-L18"> 18</a> variable [PartialOrder C] [StarOrderedRing C]</span>
+<span><a class="line" href="#OperatorK0Functoriality-L19" id="OperatorK0Functoriality-L19"> 19</a> </span>
+<span><a class="line" href="#OperatorK0Functoriality-L20" id="OperatorK0Functoriality-L20"> 20</a> namespace StableProjectionMonoid</span>
+<span><a class="line" href="#OperatorK0Functoriality-L21" id="OperatorK0Functoriality-L21"> 21</a> </span>
+<span><a class="line" href="#OperatorK0Functoriality-L22" id="OperatorK0Functoriality-L22"> 22</a> /-- The additive map on stable projection classes induced by a unital ⋆-homomorphism. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.StableProjectionMonoid.map"><a class="line" href="#OperatorK0Functoriality-L23" id="OperatorK0Functoriality-L23"> 23</a> def map (φ : A →⋆ₐ[ℂ] B) : StableProjectionMonoid A →+ StableProjectionMonoid B where</span>
+<span><a class="line" href="#OperatorK0Functoriality-L24" id="OperatorK0Functoriality-L24"> 24</a>   toFun := Quotient.map (FiniteProjection.map φ) (fun _ _ h =&gt; FiniteProjection.equivalent_map φ h)</span>
+<span><a class="line" href="#OperatorK0Functoriality-L25" id="OperatorK0Functoriality-L25"> 25</a>   map_zero&#x27; := by</span>
+<span><a class="line" href="#OperatorK0Functoriality-L26" id="OperatorK0Functoriality-L26"> 26</a>     change of (FiniteProjection.map φ FiniteProjection.zero) = of FiniteProjection.zero</span>
+<span><a class="line" href="#OperatorK0Functoriality-L27" id="OperatorK0Functoriality-L27"> 27</a>     rw [FiniteProjection.map_zero]</span>
+<span><a class="line" href="#OperatorK0Functoriality-L28" id="OperatorK0Functoriality-L28"> 28</a>   map_add&#x27; x y := by</span>
+<span><a class="line" href="#OperatorK0Functoriality-L29" id="OperatorK0Functoriality-L29"> 29</a>     refine Quotient.inductionOn₂ x y ?_</span>
+<span><a class="line" href="#OperatorK0Functoriality-L30" id="OperatorK0Functoriality-L30"> 30</a>     intro p q</span>
+<span><a class="line" href="#OperatorK0Functoriality-L31" id="OperatorK0Functoriality-L31"> 31</a>     change of (FiniteProjection.map φ (FiniteProjection.blockSum p q)) =</span>
+<span><a class="line" href="#OperatorK0Functoriality-L32" id="OperatorK0Functoriality-L32"> 32</a>       of (FiniteProjection.blockSum (FiniteProjection.map φ p) (FiniteProjection.map φ q))</span>
+<span><a class="line" href="#OperatorK0Functoriality-L33" id="OperatorK0Functoriality-L33"> 33</a>     rw [FiniteProjection.map_blockSum]</span>
+<span><a class="line" href="#OperatorK0Functoriality-L34" id="OperatorK0Functoriality-L34"> 34</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.StableProjectionMonoid.map_of"><a class="line" href="#OperatorK0Functoriality-L35" id="OperatorK0Functoriality-L35"> 35</a> @[simp] theorem map_of (φ : A →⋆ₐ[ℂ] B) (p : FiniteProjection A) :</span>
+<span><a class="line" href="#OperatorK0Functoriality-L36" id="OperatorK0Functoriality-L36"> 36</a>     map φ (of p) = of (FiniteProjection.map φ p) := rfl</span>
+<span><a class="line" href="#OperatorK0Functoriality-L37" id="OperatorK0Functoriality-L37"> 37</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.StableProjectionMonoid.map_id"><a class="line" href="#OperatorK0Functoriality-L38" id="OperatorK0Functoriality-L38"> 38</a> @[simp] theorem map_id : map (StarAlgHom.id ℂ A) = AddMonoidHom.id (StableProjectionMonoid A) := by</span>
+<span><a class="line" href="#OperatorK0Functoriality-L39" id="OperatorK0Functoriality-L39"> 39</a>   ext x</span>
+<span><a class="line" href="#OperatorK0Functoriality-L40" id="OperatorK0Functoriality-L40"> 40</a>   refine Quotient.inductionOn x ?_</span>
+<span><a class="line" href="#OperatorK0Functoriality-L41" id="OperatorK0Functoriality-L41"> 41</a>   intro p</span>
+<span><a class="line" href="#OperatorK0Functoriality-L42" id="OperatorK0Functoriality-L42"> 42</a>   change of (FiniteProjection.map (StarAlgHom.id ℂ A) p) = of p</span>
+<span><a class="line" href="#OperatorK0Functoriality-L43" id="OperatorK0Functoriality-L43"> 43</a>   rw [FiniteProjection.map_id]</span>
+<span><a class="line" href="#OperatorK0Functoriality-L44" id="OperatorK0Functoriality-L44"> 44</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.StableProjectionMonoid.map_comp"><a class="line" href="#OperatorK0Functoriality-L45" id="OperatorK0Functoriality-L45"> 45</a> @[simp] theorem map_comp (ψ : B →⋆ₐ[ℂ] C) (φ : A →⋆ₐ[ℂ] B) :</span>
+<span><a class="line" href="#OperatorK0Functoriality-L46" id="OperatorK0Functoriality-L46"> 46</a>     map (ψ.comp φ) = (map ψ).comp (map φ) := by</span>
+<span><a class="line" href="#OperatorK0Functoriality-L47" id="OperatorK0Functoriality-L47"> 47</a>   ext x</span>
+<span><a class="line" href="#OperatorK0Functoriality-L48" id="OperatorK0Functoriality-L48"> 48</a>   refine Quotient.inductionOn x ?_</span>
+<span><a class="line" href="#OperatorK0Functoriality-L49" id="OperatorK0Functoriality-L49"> 49</a>   intro p</span>
+<span><a class="line" href="#OperatorK0Functoriality-L50" id="OperatorK0Functoriality-L50"> 50</a>   rfl</span>
+<span><a class="line" href="#OperatorK0Functoriality-L51" id="OperatorK0Functoriality-L51"> 51</a> </span>
+<span><a class="line" href="#OperatorK0Functoriality-L52" id="OperatorK0Functoriality-L52"> 52</a> end StableProjectionMonoid</span>
+<span><a class="line" href="#OperatorK0Functoriality-L53" id="OperatorK0Functoriality-L53"> 53</a> </span>
+<span><a class="line" href="#OperatorK0Functoriality-L54" id="OperatorK0Functoriality-L54"> 54</a> /-- The homomorphism K₀(A) → K₀(B) induced by a unital complex ⋆-homomorphism. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.k0Map"><a class="line" href="#OperatorK0Functoriality-L55" id="OperatorK0Functoriality-L55"> 55</a> def k0Map (φ : A →⋆ₐ[ℂ] B) : K0 A →+ K0 B :=</span>
+<span><a class="line" href="#OperatorK0Functoriality-L56" id="OperatorK0Functoriality-L56"> 56</a>   k0Universal (k0Class.comp (StableProjectionMonoid.map φ))</span>
+<span><a class="line" href="#OperatorK0Functoriality-L57" id="OperatorK0Functoriality-L57"> 57</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.k0Map_class"><a class="line" href="#OperatorK0Functoriality-L58" id="OperatorK0Functoriality-L58"> 58</a> @[simp] theorem k0Map_class (φ : A →⋆ₐ[ℂ] B) (x : StableProjectionMonoid A) :</span>
+<span><a class="line" href="#OperatorK0Functoriality-L59" id="OperatorK0Functoriality-L59"> 59</a>     k0Map φ (k0Class x) = k0Class (StableProjectionMonoid.map φ x) :=</span>
+<span><a class="line" href="#OperatorK0Functoriality-L60" id="OperatorK0Functoriality-L60"> 60</a>   k0Universal_class _ x</span>
+<span><a class="line" href="#OperatorK0Functoriality-L61" id="OperatorK0Functoriality-L61"> 61</a> </span>
+<span><a class="line" href="#OperatorK0Functoriality-L62" id="OperatorK0Functoriality-L62"> 62</a> /-- Naturality of the canonical group-completion homomorphism. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.k0Map_comp_class"><a class="line" href="#OperatorK0Functoriality-L63" id="OperatorK0Functoriality-L63"> 63</a> theorem k0Map_comp_class (φ : A →⋆ₐ[ℂ] B) :</span>
+<span><a class="line" href="#OperatorK0Functoriality-L64" id="OperatorK0Functoriality-L64"> 64</a>     (k0Map φ).comp k0Class = k0Class.comp (StableProjectionMonoid.map φ) :=</span>
+<span><a class="line" href="#OperatorK0Functoriality-L65" id="OperatorK0Functoriality-L65"> 65</a>   k0Universal_comp _</span>
+<span><a class="line" href="#OperatorK0Functoriality-L66" id="OperatorK0Functoriality-L66"> 66</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.k0Map_projection"><a class="line" href="#OperatorK0Functoriality-L67" id="OperatorK0Functoriality-L67"> 67</a> @[simp] theorem k0Map_projection (φ : A →⋆ₐ[ℂ] B) (p : FiniteProjection A) :</span>
+<span><a class="line" href="#OperatorK0Functoriality-L68" id="OperatorK0Functoriality-L68"> 68</a>     k0Map φ (k0Projection p) = k0Projection (FiniteProjection.map φ p) :=</span>
+<span><a class="line" href="#OperatorK0Functoriality-L69" id="OperatorK0Functoriality-L69"> 69</a>   k0Map_class φ (StableProjectionMonoid.of p)</span>
+<span><a class="line" href="#OperatorK0Functoriality-L70" id="OperatorK0Functoriality-L70"> 70</a> </span>
+<span><a class="line" href="#OperatorK0Functoriality-L71" id="OperatorK0Functoriality-L71"> 71</a> /-- Homomorphisms out of K₀ are determined by their values on projection classes. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.k0Hom_ext"><a class="line" href="#OperatorK0Functoriality-L72" id="OperatorK0Functoriality-L72"> 72</a> theorem k0Hom_ext {G : Type t} [AddCommGroup G] {f g : K0 A →+ G}</span>
+<span><a class="line" href="#OperatorK0Functoriality-L73" id="OperatorK0Functoriality-L73"> 73</a>     (h : ∀ p : FiniteProjection A, f (k0Projection p) = g (k0Projection p)) : f = g := by</span>
+<span><a class="line" href="#OperatorK0Functoriality-L74" id="OperatorK0Functoriality-L74"> 74</a>   apply k0Universal.symm.injective</span>
+<span><a class="line" href="#OperatorK0Functoriality-L75" id="OperatorK0Functoriality-L75"> 75</a>   change f.comp k0Class = g.comp k0Class</span>
+<span><a class="line" href="#OperatorK0Functoriality-L76" id="OperatorK0Functoriality-L76"> 76</a>   ext x</span>
+<span><a class="line" href="#OperatorK0Functoriality-L77" id="OperatorK0Functoriality-L77"> 77</a>   refine Quotient.inductionOn x ?_</span>
+<span><a class="line" href="#OperatorK0Functoriality-L78" id="OperatorK0Functoriality-L78"> 78</a>   intro p</span>
+<span><a class="line" href="#OperatorK0Functoriality-L79" id="OperatorK0Functoriality-L79"> 79</a>   exact h p</span>
+<span><a class="line" href="#OperatorK0Functoriality-L80" id="OperatorK0Functoriality-L80"> 80</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.k0Map_id"><a class="line" href="#OperatorK0Functoriality-L81" id="OperatorK0Functoriality-L81"> 81</a> @[simp] theorem k0Map_id : k0Map (StarAlgHom.id ℂ A) = AddMonoidHom.id (K0 A) := by</span>
+<span><a class="line" href="#OperatorK0Functoriality-L82" id="OperatorK0Functoriality-L82"> 82</a>   apply k0Hom_ext</span>
+<span><a class="line" href="#OperatorK0Functoriality-L83" id="OperatorK0Functoriality-L83"> 83</a>   intro p</span>
+<span><a class="line" href="#OperatorK0Functoriality-L84" id="OperatorK0Functoriality-L84"> 84</a>   simp only [k0Map_projection, FiniteProjection.map_id, AddMonoidHom.id_apply]</span>
+<span><a class="line" href="#OperatorK0Functoriality-L85" id="OperatorK0Functoriality-L85"> 85</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.k0Map_comp"><a class="line" href="#OperatorK0Functoriality-L86" id="OperatorK0Functoriality-L86"> 86</a> @[simp] theorem k0Map_comp (ψ : B →⋆ₐ[ℂ] C) (φ : A →⋆ₐ[ℂ] B) :</span>
+<span><a class="line" href="#OperatorK0Functoriality-L87" id="OperatorK0Functoriality-L87"> 87</a>     k0Map (ψ.comp φ) = (k0Map ψ).comp (k0Map φ) := by</span>
+<span><a class="line" href="#OperatorK0Functoriality-L88" id="OperatorK0Functoriality-L88"> 88</a>   apply k0Hom_ext</span>
+<span><a class="line" href="#OperatorK0Functoriality-L89" id="OperatorK0Functoriality-L89"> 89</a>   intro p</span>
+<span><a class="line" href="#OperatorK0Functoriality-L90" id="OperatorK0Functoriality-L90"> 90</a>   simp only [k0Map_projection, FiniteProjection.map_comp, AddMonoidHom.comp_apply]</span>
+<span><a class="line" href="#OperatorK0Functoriality-L91" id="OperatorK0Functoriality-L91"> 91</a> </span>
+<span><a class="line" href="#OperatorK0Functoriality-L92" id="OperatorK0Functoriality-L92"> 92</a> /-- The induced map is the unique homomorphism with the entrywise projection-class formula. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.k0Map_unique"><a class="line" href="#OperatorK0Functoriality-L93" id="OperatorK0Functoriality-L93"> 93</a> theorem k0Map_unique (φ : A →⋆ₐ[ℂ] B) (f : K0 A →+ K0 B)</span>
+<span><a class="line" href="#OperatorK0Functoriality-L94" id="OperatorK0Functoriality-L94"> 94</a>     (h : ∀ p : FiniteProjection A, f (k0Projection p) = k0Projection (FiniteProjection.map φ p)) :</span>
+<span><a class="line" href="#OperatorK0Functoriality-L95" id="OperatorK0Functoriality-L95"> 95</a>     k0Map φ = f := by</span>
+<span><a class="line" href="#OperatorK0Functoriality-L96" id="OperatorK0Functoriality-L96"> 96</a>   apply k0Hom_ext</span>
+<span><a class="line" href="#OperatorK0Functoriality-L97" id="OperatorK0Functoriality-L97"> 97</a>   intro p</span>
+<span><a class="line" href="#OperatorK0Functoriality-L98" id="OperatorK0Functoriality-L98"> 98</a>   exact (k0Map_projection φ p).trans (h p).symm</span>
+<span><a class="line" href="#OperatorK0Functoriality-L99" id="OperatorK0Functoriality-L99"> 99</a> </span>
+<span><a class="line" href="#OperatorK0Functoriality-L100" id="OperatorK0Functoriality-L100">100</a> end BC4lean.OperatorKTheory</span>
 </pre>
 </body></html>

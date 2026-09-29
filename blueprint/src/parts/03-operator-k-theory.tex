@@ -3,7 +3,8 @@
 
 Unless stated otherwise, $A$ is a unital complex $C^*$-algebra.
 The present Lean milestone constructs the stable projection monoid $V(A)$
-and the unital group $K_0(A)$ with its universal property. Matrix unitaries,
+and the unital group $K_0(A)$ with its universal property and functoriality
+under unital complex star homomorphisms. Matrix unitaries,
 fixed-size norm homotopies, and stabilization maps are also verified.
 The stable group $K_1$, nonunital extensions, and later structural properties
 remain separate targets.
@@ -195,6 +196,69 @@ the verified commutative monoid $V(A)$. The resulting extension agrees on
 projection classes and is unique.
 \end{proof}
 
+\section{Functoriality of unital $K_0$}
+
+\begin{proposition}\label{prop:matrix-projection-map}
+\uses{prop:projection-map,prop:rectangular-equivalence-stable,prop:projection-block-sum}
+\lean{BC4lean.OperatorKTheory.matrixMap,BC4lean.OperatorKTheory.matrixProjectionMap,BC4lean.OperatorKTheory.projectionMatrix_map,BC4lean.OperatorKTheory.matrixProjectionMap_blockSum,BC4lean.OperatorKTheory.rectEquivalent_map,BC4lean.OperatorKTheory.FiniteProjection.map,BC4lean.OperatorKTheory.FiniteProjection.equivalent_map}
+Let $\phi:A\to B$ be a unital complex star homomorphism. Applying $\phi$
+entrywise sends finite matrix projections over $A$ to projections over $B$,
+preserves block sums and zero projections, and preserves rectangular equivalence.
+The finite index types are unchanged.
+\end{proposition}
+\begin{proof}
+\leanok
+The entrywise map commutes with matrix multiplication and adjoints.
+If $vv^*=p$ and $v^*v=q$, then the entrywise image of $v$ witnesses the
+corresponding equations for the images of $p$ and $q$. Zero off-diagonal
+blocks remain zero, so block sums are preserved. No injectivity of $\phi$
+is required.
+\end{proof}
+
+\begin{definition}\label{def:stable-projection-map}
+\uses{prop:matrix-projection-map,prop:stable-projection-monoid-laws}
+\lean{BC4lean.OperatorKTheory.StableProjectionMonoid.map,BC4lean.OperatorKTheory.StableProjectionMonoid.map_of,BC4lean.OperatorKTheory.StableProjectionMonoid.map_id,BC4lean.OperatorKTheory.StableProjectionMonoid.map_comp}
+\leanok
+The entrywise map descends to an additive map
+\[
+ V(\phi):V(A)\longrightarrow V(B),\qquad [p]\longmapsto[\phi(p)].
+\]
+These maps preserve identities and composition.
+\end{definition}
+
+\begin{definition}\label{def:unital-k0-map}
+\uses{def:stable-projection-map,prop:operator-k0-universal}
+\lean{BC4lean.OperatorKTheory.k0Map,BC4lean.OperatorKTheory.k0Map_class,BC4lean.OperatorKTheory.k0Map_comp_class,BC4lean.OperatorKTheory.k0Map_projection}
+\leanok
+The universal property of the Grothendieck group extends $V(\phi)$ to
+\[
+ K_0(\phi):K_0(A)\longrightarrow K_0(B),\qquad
+ K_0(\phi)([p])=[\phi(p)].
+\]
+Here $[p]$ denotes the $K_0$ class of a finite matrix projection, and
+$\phi(p)$ denotes its entrywise image. The canonical maps $V(A)\to K_0(A)$
+are natural with respect to these homomorphisms.
+\end{definition}
+
+\begin{proposition}\label{prop:unital-k0-functoriality}
+\uses{def:unital-k0-map,prop:operator-k0-universal}
+\lean{BC4lean.OperatorKTheory.k0Hom_ext,BC4lean.OperatorKTheory.k0Map_unique,BC4lean.OperatorKTheory.k0Map_id,BC4lean.OperatorKTheory.k0Map_comp}
+For unital complex star homomorphisms $\phi:A\to B$ and $\psi:B\to C$,
+\[
+ K_0(\mathrm{id}_A)=\mathrm{id}_{K_0(A)},\qquad
+ K_0(\psi\circ\phi)=K_0(\psi)\circ K_0(\phi).
+\]
+Moreover, $K_0(\phi)$ is the unique group homomorphism satisfying the
+projection-class formula above.
+\end{proposition}
+\begin{proof}
+\leanok
+The universal property implies that homomorphisms out of $K_0(A)$ are
+determined by their values on projection classes. Evaluate both sides of
+each asserted equality on such a class and use the identity and composition
+laws of the entrywise maps. This proof does not assume cancellation in $V(A)$.
+\end{proof}
+
 \section{Unitaries, norm homotopy, and $K_1$}
 
 \begin{definition}\label{def:matrix-unitary}
@@ -265,7 +329,7 @@ the preceding definitions when $A$ is unital.
 \end{definition}
 
 \begin{proposition}\label{prop:operator-k-functoriality}
-\uses{def:operator-k-theory,prop:projection-map}
+\uses{def:operator-k-theory,prop:unital-k0-functoriality}
 \notready
 Complex star homomorphisms, including nonunital ones, induce homomorphisms
 on $K_i$ that preserve identities and composition.

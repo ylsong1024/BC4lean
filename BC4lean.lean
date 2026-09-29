@@ -14,3 +14,5 @@ import BC4lean.RectangularEquivalence
 import BC4lean.StableProjectionMonoid
 import BC4lean.OperatorK0
 import BC4lean.ReducedOperatorK0
+import BC4lean.MatrixProjectionMap
+import BC4lean.OperatorK0Functoriality
