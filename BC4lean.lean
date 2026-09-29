@@ -16,3 +16,4 @@ import BC4lean.OperatorK0
 import BC4lean.ReducedOperatorK0
 import BC4lean.MatrixProjectionMap
 import BC4lean.OperatorK0Functoriality
+import BC4lean.OperatorK0Equivalence

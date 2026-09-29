@@ -24,6 +24,7 @@ code{overflow-wrap:anywhere}</style></head><body><a href="../../blueprint/">返�
 <li><a href="#ReducedOperatorK0">ReducedOperatorK0.lean</a></li>
 <li><a href="#MatrixProjectionMap">MatrixProjectionMap.lean</a></li>
 <li><a href="#OperatorK0Functoriality">OperatorK0Functoriality.lean</a></li>
+<li><a href="#OperatorK0Equivalence">OperatorK0Equivalence.lean</a></li>
 </ul></nav>
 <h2 id="GroupAlgebra">GroupAlgebra.lean</h2><p>源码 SHA-256：<code>1c6c0899fe9bc9f7860f291ba7c5573353d18a3c5809258769d689bc39da8ad4</code></p><pre>
 <span><a class="line" href="#L1" id="L1">  1</a> import Mathlib.Algebra.MonoidAlgebra.Basic</span>
@@ -1894,5 +1895,135 @@ code{overflow-wrap:anywhere}</style></head><body><a href="../../blueprint/">返�
 <span><a class="line" href="#OperatorK0Functoriality-L98" id="OperatorK0Functoriality-L98"> 98</a>   exact (k0Map_projection φ p).trans (h p).symm</span>
 <span><a class="line" href="#OperatorK0Functoriality-L99" id="OperatorK0Functoriality-L99"> 99</a> </span>
 <span><a class="line" href="#OperatorK0Functoriality-L100" id="OperatorK0Functoriality-L100">100</a> end BC4lean.OperatorKTheory</span>
+</pre>
+<h2 id="OperatorK0Equivalence">OperatorK0Equivalence.lean</h2><p>源码 SHA-256：<code>9e950900ab47ebfbfe4b9f715a551aade982f90c85b6e2d88b9ed5a56a9c0307</code></p><pre>
+<span><a class="line" href="#OperatorK0Equivalence-L1" id="OperatorK0Equivalence-L1">  1</a> import BC4lean.OperatorK0Functoriality</span>
+<span><a class="line" href="#OperatorK0Equivalence-L2" id="OperatorK0Equivalence-L2">  2</a> </span>
+<span><a class="line" href="#OperatorK0Equivalence-L3" id="OperatorK0Equivalence-L3">  3</a> /-! # Invariance of unital K₀ under star-algebra equivalence</span>
+<span><a class="line" href="#OperatorK0Equivalence-L4" id="OperatorK0Equivalence-L4">  4</a> </span>
+<span><a class="line" href="#OperatorK0Equivalence-L5" id="OperatorK0Equivalence-L5">  5</a> The forward map comes from the given equivalence and the inverse map from its</span>
+<span><a class="line" href="#OperatorK0Equivalence-L6" id="OperatorK0Equivalence-L6">  6</a> inverse. Both inverse laws follow from functoriality. The compatible star orders</span>
+<span><a class="line" href="#OperatorK0Equivalence-L7" id="OperatorK0Equivalence-L7">  7</a> remain the explicit implementation assumptions of the matrix-algebra API.</span>
+<span><a class="line" href="#OperatorK0Equivalence-L8" id="OperatorK0Equivalence-L8">  8</a> -/</span>
+<span><a class="line" href="#OperatorK0Equivalence-L9" id="OperatorK0Equivalence-L9">  9</a> </span>
+<span><a class="line" href="#OperatorK0Equivalence-L10" id="OperatorK0Equivalence-L10"> 10</a> noncomputable section</span>
+<span><a class="line" href="#OperatorK0Equivalence-L11" id="OperatorK0Equivalence-L11"> 11</a> namespace BC4lean.OperatorKTheory</span>
+<span><a class="line" href="#OperatorK0Equivalence-L12" id="OperatorK0Equivalence-L12"> 12</a> </span>
+<span><a class="line" href="#OperatorK0Equivalence-L13" id="OperatorK0Equivalence-L13"> 13</a> universe u v w</span>
+<span><a class="line" href="#OperatorK0Equivalence-L14" id="OperatorK0Equivalence-L14"> 14</a> variable {A : Type u} {B : Type v} {C : Type w}</span>
+<span><a class="line" href="#OperatorK0Equivalence-L15" id="OperatorK0Equivalence-L15"> 15</a> variable [CStarAlgebra A] [CStarAlgebra B] [CStarAlgebra C]</span>
+<span><a class="line" href="#OperatorK0Equivalence-L16" id="OperatorK0Equivalence-L16"> 16</a> variable [PartialOrder A] [StarOrderedRing A]</span>
+<span><a class="line" href="#OperatorK0Equivalence-L17" id="OperatorK0Equivalence-L17"> 17</a> variable [PartialOrder B] [StarOrderedRing B]</span>
+<span><a class="line" href="#OperatorK0Equivalence-L18" id="OperatorK0Equivalence-L18"> 18</a> variable [PartialOrder C] [StarOrderedRing C]</span>
+<span><a class="line" href="#OperatorK0Equivalence-L19" id="OperatorK0Equivalence-L19"> 19</a> </span>
+<span><a class="line" href="#OperatorK0Equivalence-L20" id="OperatorK0Equivalence-L20"> 20</a> namespace StableProjectionMonoid</span>
+<span><a class="line" href="#OperatorK0Equivalence-L21" id="OperatorK0Equivalence-L21"> 21</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.StableProjectionMonoid.map_leftInverse"><a class="line" href="#OperatorK0Equivalence-L22" id="OperatorK0Equivalence-L22"> 22</a> theorem map_leftInverse (e : A ≃⋆ₐ[ℂ] B) :</span>
+<span><a class="line" href="#OperatorK0Equivalence-L23" id="OperatorK0Equivalence-L23"> 23</a>     Function.LeftInverse (map e.symm.toStarAlgHom) (map e.toStarAlgHom) := by</span>
+<span><a class="line" href="#OperatorK0Equivalence-L24" id="OperatorK0Equivalence-L24"> 24</a>   intro x</span>
+<span><a class="line" href="#OperatorK0Equivalence-L25" id="OperatorK0Equivalence-L25"> 25</a>   have h : e.symm.toStarAlgHom.comp e.toStarAlgHom = StarAlgHom.id ℂ A := by</span>
+<span><a class="line" href="#OperatorK0Equivalence-L26" id="OperatorK0Equivalence-L26"> 26</a>     ext a</span>
+<span><a class="line" href="#OperatorK0Equivalence-L27" id="OperatorK0Equivalence-L27"> 27</a>     exact e.symm_apply_apply a</span>
+<span><a class="line" href="#OperatorK0Equivalence-L28" id="OperatorK0Equivalence-L28"> 28</a>   change ((map e.symm.toStarAlgHom).comp (map e.toStarAlgHom)) x = x</span>
+<span><a class="line" href="#OperatorK0Equivalence-L29" id="OperatorK0Equivalence-L29"> 29</a>   rw [← map_comp, h, map_id]</span>
+<span><a class="line" href="#OperatorK0Equivalence-L30" id="OperatorK0Equivalence-L30"> 30</a>   rfl</span>
+<span><a class="line" href="#OperatorK0Equivalence-L31" id="OperatorK0Equivalence-L31"> 31</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.StableProjectionMonoid.map_rightInverse"><a class="line" href="#OperatorK0Equivalence-L32" id="OperatorK0Equivalence-L32"> 32</a> theorem map_rightInverse (e : A ≃⋆ₐ[ℂ] B) :</span>
+<span><a class="line" href="#OperatorK0Equivalence-L33" id="OperatorK0Equivalence-L33"> 33</a>     Function.RightInverse (map e.symm.toStarAlgHom) (map e.toStarAlgHom) := by</span>
+<span><a class="line" href="#OperatorK0Equivalence-L34" id="OperatorK0Equivalence-L34"> 34</a>   intro x</span>
+<span><a class="line" href="#OperatorK0Equivalence-L35" id="OperatorK0Equivalence-L35"> 35</a>   have h : e.toStarAlgHom.comp e.symm.toStarAlgHom = StarAlgHom.id ℂ B := by</span>
+<span><a class="line" href="#OperatorK0Equivalence-L36" id="OperatorK0Equivalence-L36"> 36</a>     ext a</span>
+<span><a class="line" href="#OperatorK0Equivalence-L37" id="OperatorK0Equivalence-L37"> 37</a>     exact e.apply_symm_apply a</span>
+<span><a class="line" href="#OperatorK0Equivalence-L38" id="OperatorK0Equivalence-L38"> 38</a>   change ((map e.toStarAlgHom).comp (map e.symm.toStarAlgHom)) x = x</span>
+<span><a class="line" href="#OperatorK0Equivalence-L39" id="OperatorK0Equivalence-L39"> 39</a>   rw [← map_comp, h, map_id]</span>
+<span><a class="line" href="#OperatorK0Equivalence-L40" id="OperatorK0Equivalence-L40"> 40</a>   rfl</span>
+<span><a class="line" href="#OperatorK0Equivalence-L41" id="OperatorK0Equivalence-L41"> 41</a> </span>
+<span><a class="line" href="#OperatorK0Equivalence-L42" id="OperatorK0Equivalence-L42"> 42</a> /-- A unital star-algebra equivalence induces an additive equivalence of stable projection monoids. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.StableProjectionMonoid.mapEquiv"><a class="line" href="#OperatorK0Equivalence-L43" id="OperatorK0Equivalence-L43"> 43</a> def mapEquiv (e : A ≃⋆ₐ[ℂ] B) : StableProjectionMonoid A ≃+ StableProjectionMonoid B where</span>
+<span><a class="line" href="#OperatorK0Equivalence-L44" id="OperatorK0Equivalence-L44"> 44</a>   toFun := map e.toStarAlgHom</span>
+<span><a class="line" href="#OperatorK0Equivalence-L45" id="OperatorK0Equivalence-L45"> 45</a>   invFun := map e.symm.toStarAlgHom</span>
+<span><a class="line" href="#OperatorK0Equivalence-L46" id="OperatorK0Equivalence-L46"> 46</a>   left_inv := map_leftInverse e</span>
+<span><a class="line" href="#OperatorK0Equivalence-L47" id="OperatorK0Equivalence-L47"> 47</a>   right_inv := map_rightInverse e</span>
+<span><a class="line" href="#OperatorK0Equivalence-L48" id="OperatorK0Equivalence-L48"> 48</a>   map_add&#x27; := (map e.toStarAlgHom).map_add</span>
+<span><a class="line" href="#OperatorK0Equivalence-L49" id="OperatorK0Equivalence-L49"> 49</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.StableProjectionMonoid.mapEquiv_toAddMonoidHom"><a class="line" href="#OperatorK0Equivalence-L50" id="OperatorK0Equivalence-L50"> 50</a> @[simp] theorem mapEquiv_toAddMonoidHom (e : A ≃⋆ₐ[ℂ] B) :</span>
+<span><a class="line" href="#OperatorK0Equivalence-L51" id="OperatorK0Equivalence-L51"> 51</a>     (mapEquiv e).toAddMonoidHom = map e.toStarAlgHom := rfl</span>
+<span><a class="line" href="#OperatorK0Equivalence-L52" id="OperatorK0Equivalence-L52"> 52</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.StableProjectionMonoid.mapEquiv_of"><a class="line" href="#OperatorK0Equivalence-L53" id="OperatorK0Equivalence-L53"> 53</a> @[simp] theorem mapEquiv_of (e : A ≃⋆ₐ[ℂ] B) (p : FiniteProjection A) :</span>
+<span><a class="line" href="#OperatorK0Equivalence-L54" id="OperatorK0Equivalence-L54"> 54</a>     mapEquiv e (of p) = of (FiniteProjection.map e.toStarAlgHom p) := rfl</span>
+<span><a class="line" href="#OperatorK0Equivalence-L55" id="OperatorK0Equivalence-L55"> 55</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.StableProjectionMonoid.mapEquiv_refl"><a class="line" href="#OperatorK0Equivalence-L56" id="OperatorK0Equivalence-L56"> 56</a> @[simp] theorem mapEquiv_refl :</span>
+<span><a class="line" href="#OperatorK0Equivalence-L57" id="OperatorK0Equivalence-L57"> 57</a>     mapEquiv (StarAlgEquiv.refl ℂ A) = AddEquiv.refl (StableProjectionMonoid A) := by</span>
+<span><a class="line" href="#OperatorK0Equivalence-L58" id="OperatorK0Equivalence-L58"> 58</a>   ext x</span>
+<span><a class="line" href="#OperatorK0Equivalence-L59" id="OperatorK0Equivalence-L59"> 59</a>   change map (StarAlgHom.id ℂ A) x = x</span>
+<span><a class="line" href="#OperatorK0Equivalence-L60" id="OperatorK0Equivalence-L60"> 60</a>   rw [map_id]</span>
+<span><a class="line" href="#OperatorK0Equivalence-L61" id="OperatorK0Equivalence-L61"> 61</a>   rfl</span>
+<span><a class="line" href="#OperatorK0Equivalence-L62" id="OperatorK0Equivalence-L62"> 62</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.StableProjectionMonoid.mapEquiv_symm"><a class="line" href="#OperatorK0Equivalence-L63" id="OperatorK0Equivalence-L63"> 63</a> @[simp] theorem mapEquiv_symm (e : A ≃⋆ₐ[ℂ] B) : mapEquiv e.symm = (mapEquiv e).symm := by</span>
+<span><a class="line" href="#OperatorK0Equivalence-L64" id="OperatorK0Equivalence-L64"> 64</a>   ext x</span>
+<span><a class="line" href="#OperatorK0Equivalence-L65" id="OperatorK0Equivalence-L65"> 65</a>   rfl</span>
+<span><a class="line" href="#OperatorK0Equivalence-L66" id="OperatorK0Equivalence-L66"> 66</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.StableProjectionMonoid.mapEquiv_trans"><a class="line" href="#OperatorK0Equivalence-L67" id="OperatorK0Equivalence-L67"> 67</a> @[simp] theorem mapEquiv_trans (e : A ≃⋆ₐ[ℂ] B) (f : B ≃⋆ₐ[ℂ] C) :</span>
+<span><a class="line" href="#OperatorK0Equivalence-L68" id="OperatorK0Equivalence-L68"> 68</a>     mapEquiv (e.trans f) = (mapEquiv e).trans (mapEquiv f) := by</span>
+<span><a class="line" href="#OperatorK0Equivalence-L69" id="OperatorK0Equivalence-L69"> 69</a>   ext x</span>
+<span><a class="line" href="#OperatorK0Equivalence-L70" id="OperatorK0Equivalence-L70"> 70</a>   exact DFunLike.congr_fun (map_comp f.toStarAlgHom e.toStarAlgHom) x</span>
+<span><a class="line" href="#OperatorK0Equivalence-L71" id="OperatorK0Equivalence-L71"> 71</a> </span>
+<span><a class="line" href="#OperatorK0Equivalence-L72" id="OperatorK0Equivalence-L72"> 72</a> end StableProjectionMonoid</span>
+<span><a class="line" href="#OperatorK0Equivalence-L73" id="OperatorK0Equivalence-L73"> 73</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.k0Map_leftInverse"><a class="line" href="#OperatorK0Equivalence-L74" id="OperatorK0Equivalence-L74"> 74</a> theorem k0Map_leftInverse (e : A ≃⋆ₐ[ℂ] B) :</span>
+<span><a class="line" href="#OperatorK0Equivalence-L75" id="OperatorK0Equivalence-L75"> 75</a>     Function.LeftInverse (k0Map e.symm.toStarAlgHom) (k0Map e.toStarAlgHom) := by</span>
+<span><a class="line" href="#OperatorK0Equivalence-L76" id="OperatorK0Equivalence-L76"> 76</a>   intro x</span>
+<span><a class="line" href="#OperatorK0Equivalence-L77" id="OperatorK0Equivalence-L77"> 77</a>   have h : e.symm.toStarAlgHom.comp e.toStarAlgHom = StarAlgHom.id ℂ A := by</span>
+<span><a class="line" href="#OperatorK0Equivalence-L78" id="OperatorK0Equivalence-L78"> 78</a>     ext a</span>
+<span><a class="line" href="#OperatorK0Equivalence-L79" id="OperatorK0Equivalence-L79"> 79</a>     exact e.symm_apply_apply a</span>
+<span><a class="line" href="#OperatorK0Equivalence-L80" id="OperatorK0Equivalence-L80"> 80</a>   change ((k0Map e.symm.toStarAlgHom).comp (k0Map e.toStarAlgHom)) x = x</span>
+<span><a class="line" href="#OperatorK0Equivalence-L81" id="OperatorK0Equivalence-L81"> 81</a>   rw [← k0Map_comp, h, k0Map_id]</span>
+<span><a class="line" href="#OperatorK0Equivalence-L82" id="OperatorK0Equivalence-L82"> 82</a>   rfl</span>
+<span><a class="line" href="#OperatorK0Equivalence-L83" id="OperatorK0Equivalence-L83"> 83</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.k0Map_rightInverse"><a class="line" href="#OperatorK0Equivalence-L84" id="OperatorK0Equivalence-L84"> 84</a> theorem k0Map_rightInverse (e : A ≃⋆ₐ[ℂ] B) :</span>
+<span><a class="line" href="#OperatorK0Equivalence-L85" id="OperatorK0Equivalence-L85"> 85</a>     Function.RightInverse (k0Map e.symm.toStarAlgHom) (k0Map e.toStarAlgHom) := by</span>
+<span><a class="line" href="#OperatorK0Equivalence-L86" id="OperatorK0Equivalence-L86"> 86</a>   intro x</span>
+<span><a class="line" href="#OperatorK0Equivalence-L87" id="OperatorK0Equivalence-L87"> 87</a>   have h : e.toStarAlgHom.comp e.symm.toStarAlgHom = StarAlgHom.id ℂ B := by</span>
+<span><a class="line" href="#OperatorK0Equivalence-L88" id="OperatorK0Equivalence-L88"> 88</a>     ext a</span>
+<span><a class="line" href="#OperatorK0Equivalence-L89" id="OperatorK0Equivalence-L89"> 89</a>     exact e.apply_symm_apply a</span>
+<span><a class="line" href="#OperatorK0Equivalence-L90" id="OperatorK0Equivalence-L90"> 90</a>   change ((k0Map e.toStarAlgHom).comp (k0Map e.symm.toStarAlgHom)) x = x</span>
+<span><a class="line" href="#OperatorK0Equivalence-L91" id="OperatorK0Equivalence-L91"> 91</a>   rw [← k0Map_comp, h, k0Map_id]</span>
+<span><a class="line" href="#OperatorK0Equivalence-L92" id="OperatorK0Equivalence-L92"> 92</a>   rfl</span>
+<span><a class="line" href="#OperatorK0Equivalence-L93" id="OperatorK0Equivalence-L93"> 93</a> </span>
+<span><a class="line" href="#OperatorK0Equivalence-L94" id="OperatorK0Equivalence-L94"> 94</a> /-- The canonical additive equivalence on unital K₀ induced by a star-algebra equivalence. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.k0Equiv"><a class="line" href="#OperatorK0Equivalence-L95" id="OperatorK0Equivalence-L95"> 95</a> def k0Equiv (e : A ≃⋆ₐ[ℂ] B) : K0 A ≃+ K0 B where</span>
+<span><a class="line" href="#OperatorK0Equivalence-L96" id="OperatorK0Equivalence-L96"> 96</a>   toFun := k0Map e.toStarAlgHom</span>
+<span><a class="line" href="#OperatorK0Equivalence-L97" id="OperatorK0Equivalence-L97"> 97</a>   invFun := k0Map e.symm.toStarAlgHom</span>
+<span><a class="line" href="#OperatorK0Equivalence-L98" id="OperatorK0Equivalence-L98"> 98</a>   left_inv := k0Map_leftInverse e</span>
+<span><a class="line" href="#OperatorK0Equivalence-L99" id="OperatorK0Equivalence-L99"> 99</a>   right_inv := k0Map_rightInverse e</span>
+<span><a class="line" href="#OperatorK0Equivalence-L100" id="OperatorK0Equivalence-L100">100</a>   map_add&#x27; := (k0Map e.toStarAlgHom).map_add</span>
+<span><a class="line" href="#OperatorK0Equivalence-L101" id="OperatorK0Equivalence-L101">101</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.k0Equiv_toAddMonoidHom"><a class="line" href="#OperatorK0Equivalence-L102" id="OperatorK0Equivalence-L102">102</a> @[simp] theorem k0Equiv_toAddMonoidHom (e : A ≃⋆ₐ[ℂ] B) :</span>
+<span><a class="line" href="#OperatorK0Equivalence-L103" id="OperatorK0Equivalence-L103">103</a>     (k0Equiv e).toAddMonoidHom = k0Map e.toStarAlgHom := rfl</span>
+<span><a class="line" href="#OperatorK0Equivalence-L104" id="OperatorK0Equivalence-L104">104</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.k0Equiv_class"><a class="line" href="#OperatorK0Equivalence-L105" id="OperatorK0Equivalence-L105">105</a> @[simp] theorem k0Equiv_class (e : A ≃⋆ₐ[ℂ] B) (x : StableProjectionMonoid A) :</span>
+<span><a class="line" href="#OperatorK0Equivalence-L106" id="OperatorK0Equivalence-L106">106</a>     k0Equiv e (k0Class x) = k0Class (StableProjectionMonoid.mapEquiv e x) :=</span>
+<span><a class="line" href="#OperatorK0Equivalence-L107" id="OperatorK0Equivalence-L107">107</a>   k0Map_class e.toStarAlgHom x</span>
+<span><a class="line" href="#OperatorK0Equivalence-L108" id="OperatorK0Equivalence-L108">108</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.k0Equiv_projection"><a class="line" href="#OperatorK0Equivalence-L109" id="OperatorK0Equivalence-L109">109</a> @[simp] theorem k0Equiv_projection (e : A ≃⋆ₐ[ℂ] B) (p : FiniteProjection A) :</span>
+<span><a class="line" href="#OperatorK0Equivalence-L110" id="OperatorK0Equivalence-L110">110</a>     k0Equiv e (k0Projection p) = k0Projection (FiniteProjection.map e.toStarAlgHom p) :=</span>
+<span><a class="line" href="#OperatorK0Equivalence-L111" id="OperatorK0Equivalence-L111">111</a>   k0Map_projection e.toStarAlgHom p</span>
+<span><a class="line" href="#OperatorK0Equivalence-L112" id="OperatorK0Equivalence-L112">112</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.k0Equiv_refl"><a class="line" href="#OperatorK0Equivalence-L113" id="OperatorK0Equivalence-L113">113</a> @[simp] theorem k0Equiv_refl : k0Equiv (StarAlgEquiv.refl ℂ A) = AddEquiv.refl (K0 A) := by</span>
+<span><a class="line" href="#OperatorK0Equivalence-L114" id="OperatorK0Equivalence-L114">114</a>   ext x</span>
+<span><a class="line" href="#OperatorK0Equivalence-L115" id="OperatorK0Equivalence-L115">115</a>   change k0Map (StarAlgHom.id ℂ A) x = x</span>
+<span><a class="line" href="#OperatorK0Equivalence-L116" id="OperatorK0Equivalence-L116">116</a>   rw [k0Map_id]</span>
+<span><a class="line" href="#OperatorK0Equivalence-L117" id="OperatorK0Equivalence-L117">117</a>   rfl</span>
+<span><a class="line" href="#OperatorK0Equivalence-L118" id="OperatorK0Equivalence-L118">118</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.k0Equiv_symm"><a class="line" href="#OperatorK0Equivalence-L119" id="OperatorK0Equivalence-L119">119</a> @[simp] theorem k0Equiv_symm (e : A ≃⋆ₐ[ℂ] B) : k0Equiv e.symm = (k0Equiv e).symm := by</span>
+<span><a class="line" href="#OperatorK0Equivalence-L120" id="OperatorK0Equivalence-L120">120</a>   ext x</span>
+<span><a class="line" href="#OperatorK0Equivalence-L121" id="OperatorK0Equivalence-L121">121</a>   rfl</span>
+<span><a class="line" href="#OperatorK0Equivalence-L122" id="OperatorK0Equivalence-L122">122</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.k0Equiv_trans"><a class="line" href="#OperatorK0Equivalence-L123" id="OperatorK0Equivalence-L123">123</a> @[simp] theorem k0Equiv_trans (e : A ≃⋆ₐ[ℂ] B) (f : B ≃⋆ₐ[ℂ] C) :</span>
+<span><a class="line" href="#OperatorK0Equivalence-L124" id="OperatorK0Equivalence-L124">124</a>     k0Equiv (e.trans f) = (k0Equiv e).trans (k0Equiv f) := by</span>
+<span><a class="line" href="#OperatorK0Equivalence-L125" id="OperatorK0Equivalence-L125">125</a>   ext x</span>
+<span><a class="line" href="#OperatorK0Equivalence-L126" id="OperatorK0Equivalence-L126">126</a>   exact DFunLike.congr_fun (k0Map_comp f.toStarAlgHom e.toStarAlgHom) x</span>
+<span><a class="line" href="#OperatorK0Equivalence-L127" id="OperatorK0Equivalence-L127">127</a> </span>
+<span><a class="line" href="#OperatorK0Equivalence-L128" id="OperatorK0Equivalence-L128">128</a> end BC4lean.OperatorKTheory</span>
 </pre>
 </body></html>

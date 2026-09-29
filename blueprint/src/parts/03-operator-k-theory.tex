@@ -4,7 +4,8 @@
 Unless stated otherwise, $A$ is a unital complex $C^*$-algebra.
 The present Lean milestone constructs the stable projection monoid $V(A)$
 and the unital group $K_0(A)$ with its universal property and functoriality
-under unital complex star homomorphisms. Matrix unitaries,
+under unital complex star homomorphisms, including canonical additive
+isomorphisms induced by unital star-algebra isomorphisms. Matrix unitaries,
 fixed-size norm homotopies, and stabilization maps are also verified.
 The stable group $K_1$, nonunital extensions, and later structural properties
 remain separate targets.
@@ -257,6 +258,46 @@ The universal property implies that homomorphisms out of $K_0(A)$ are
 determined by their values on projection classes. Evaluate both sides of
 each asserted equality on such a class and use the identity and composition
 laws of the entrywise maps. This proof does not assume cancellation in $V(A)$.
+\end{proof}
+
+\section{Invariance under unital star-algebra isomorphism}
+
+\begin{proposition}\label{prop:stable-projection-isomorphism}
+\uses{def:stable-projection-map}
+\lean{BC4lean.OperatorKTheory.StableProjectionMonoid.map_leftInverse,BC4lean.OperatorKTheory.StableProjectionMonoid.map_rightInverse,BC4lean.OperatorKTheory.StableProjectionMonoid.mapEquiv,BC4lean.OperatorKTheory.StableProjectionMonoid.mapEquiv_of,BC4lean.OperatorKTheory.StableProjectionMonoid.mapEquiv_refl,BC4lean.OperatorKTheory.StableProjectionMonoid.mapEquiv_symm,BC4lean.OperatorKTheory.StableProjectionMonoid.mapEquiv_trans}
+A unital complex star-algebra isomorphism $e:A\to B$ induces an additive
+isomorphism $V(e):V(A)\to V(B)$ sending $[p]$ to $[e(p)]$.
+Its inverse is $V(e^{-1})$. This construction preserves identity
+isomorphisms and composition and takes inverses to inverses.
+\end{proposition}
+\begin{proof}
+\leanok
+Apply the identity and composition laws for $V$ to $e^{-1}\circ e=\mathrm{id}_A$
+and $e\circ e^{-1}=\mathrm{id}_B$. The two induced additive maps are mutual
+inverses. The projection-class formula and coherence laws follow from those
+for the entrywise maps.
+\end{proof}
+
+\begin{proposition}\label{prop:unital-k0-isomorphism}
+\uses{prop:unital-k0-functoriality,prop:stable-projection-isomorphism}
+\lean{BC4lean.OperatorKTheory.k0Map_leftInverse,BC4lean.OperatorKTheory.k0Map_rightInverse,BC4lean.OperatorKTheory.k0Equiv,BC4lean.OperatorKTheory.k0Equiv_toAddMonoidHom,BC4lean.OperatorKTheory.k0Equiv_class,BC4lean.OperatorKTheory.k0Equiv_projection,BC4lean.OperatorKTheory.k0Equiv_refl,BC4lean.OperatorKTheory.k0Equiv_symm,BC4lean.OperatorKTheory.k0Equiv_trans}
+A unital complex star-algebra isomorphism $e:A\to B$ induces a canonical
+additive isomorphism
+\[
+ K_0(e):K_0(A)\xrightarrow{\;\cong\;}K_0(B),\qquad [p]\longmapsto[e(p)],
+\]
+with inverse $K_0(e^{-1})$. The induced isomorphisms preserve identities
+and composition, and the group-completion maps $V(A)\to K_0(A)$ commute
+with these isomorphisms.
+\end{proposition}
+\begin{proof}
+\leanok
+The verified functorial laws give
+$K_0(e^{-1})K_0(e)=\mathrm{id}_{K_0(A)}$ and
+$K_0(e)K_0(e^{-1})=\mathrm{id}_{K_0(B)}$.
+These two identities supply the inverse data for a bundled additive equivalence.
+The class formula and compatibility with identity, inverse, and composition
+follow from the corresponding laws for $K_0$ homomorphisms.
 \end{proof}
 
 \section{Unitaries, norm homotopy, and $K_1$}
