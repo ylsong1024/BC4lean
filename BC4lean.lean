@@ -2,3 +2,6 @@ import BC4lean.Example
 import BC4lean.GroupAlgebra
 import BC4lean.L2Group
 import BC4lean.LeftRegularRepresentation
+import BC4lean.IntegratedRepresentation
+import BC4lean.ReducedGroupCStar
+import BC4lean.ReducedGroupCStarTrivial

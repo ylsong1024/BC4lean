@@ -10,6 +10,9 @@ code{overflow-wrap:anywhere}</style></head><body><a href="../../blueprint/">返�
 <li><a href="#GroupAlgebra">GroupAlgebra.lean</a></li>
 <li><a href="#L2Group">L2Group.lean</a></li>
 <li><a href="#LeftRegularRepresentation">LeftRegularRepresentation.lean</a></li>
+<li><a href="#IntegratedRepresentation">IntegratedRepresentation.lean</a></li>
+<li><a href="#ReducedGroupCStar">ReducedGroupCStar.lean</a></li>
+<li><a href="#ReducedGroupCStarTrivial">ReducedGroupCStarTrivial.lean</a></li>
 </ul></nav>
 <h2 id="GroupAlgebra">GroupAlgebra.lean</h2><p>源码 SHA-256：<code>1c6c0899fe9bc9f7860f291ba7c5573353d18a3c5809258769d689bc39da8ad4</code></p><pre>
 <span><a class="line" href="#L1" id="L1">  1</a> import Mathlib.Algebra.MonoidAlgebra.Basic</span>
@@ -396,5 +399,310 @@ code{overflow-wrap:anywhere}</style></head><body><a href="../../blueprint/">返�
 <span><a class="line" href="#LeftRegularRepresentation-L143" id="LeftRegularRepresentation-L143">143</a>     (regularRepresentation g : L2Group Γ →L[ℂ] L2Group Γ) ξ h = ξ (g⁻¹ * h) := rfl</span>
 <span><a class="line" href="#LeftRegularRepresentation-L144" id="LeftRegularRepresentation-L144">144</a> </span>
 <span><a class="line" href="#LeftRegularRepresentation-L145" id="LeftRegularRepresentation-L145">145</a> end BC4lean</span>
+</pre>
+<h2 id="IntegratedRepresentation">IntegratedRepresentation.lean</h2><p>源码 SHA-256：<code>6127ba4543ef7f420056752bcf1731c553a597fe59bc402b8b9af38146f48df0</code></p><pre>
+<span><a class="line" href="#IntegratedRepresentation-L1" id="IntegratedRepresentation-L1">  1</a> import BC4lean.GroupAlgebra</span>
+<span><a class="line" href="#IntegratedRepresentation-L2" id="IntegratedRepresentation-L2">  2</a> import BC4lean.LeftRegularRepresentation</span>
+<span><a class="line" href="#IntegratedRepresentation-L3" id="IntegratedRepresentation-L3">  3</a> import Mathlib.Analysis.CStarAlgebra.ContinuousLinearMap</span>
+<span><a class="line" href="#IntegratedRepresentation-L4" id="IntegratedRepresentation-L4">  4</a> </span>
+<span><a class="line" href="#IntegratedRepresentation-L5" id="IntegratedRepresentation-L5">  5</a> /-! # The integrated regular representation and reduced norm</span>
+<span><a class="line" href="#IntegratedRepresentation-L6" id="IntegratedRepresentation-L6">  6</a> </span>
+<span><a class="line" href="#IntegratedRepresentation-L7" id="IntegratedRepresentation-L7">  7</a> All groups are regarded as discrete. No countability assumption is used.</span>
+<span><a class="line" href="#IntegratedRepresentation-L8" id="IntegratedRepresentation-L8">  8</a> The algebra homomorphism is Mathlib&#x27;s linear extension of the regular operators;</span>
+<span><a class="line" href="#IntegratedRepresentation-L9" id="IntegratedRepresentation-L9">  9</a> compatibility with the group-algebra involution is proved below.</span>
+<span><a class="line" href="#IntegratedRepresentation-L10" id="IntegratedRepresentation-L10"> 10</a> -/</span>
+<span><a class="line" href="#IntegratedRepresentation-L11" id="IntegratedRepresentation-L11"> 11</a> </span>
+<span><a class="line" href="#IntegratedRepresentation-L12" id="IntegratedRepresentation-L12"> 12</a> noncomputable section</span>
+<span><a class="line" href="#IntegratedRepresentation-L13" id="IntegratedRepresentation-L13"> 13</a> </span>
+<span><a class="line" href="#IntegratedRepresentation-L14" id="IntegratedRepresentation-L14"> 14</a> namespace BC4lean</span>
+<span><a class="line" href="#IntegratedRepresentation-L15" id="IntegratedRepresentation-L15"> 15</a> </span>
+<span><a class="line" href="#IntegratedRepresentation-L16" id="IntegratedRepresentation-L16"> 16</a> variable {Γ : Type*} [Group Γ]</span>
+<span><a class="line" href="#IntegratedRepresentation-L17" id="IntegratedRepresentation-L17"> 17</a> </span>
+<span><a class="line" href="#IntegratedRepresentation-L18" id="IntegratedRepresentation-L18"> 18</a> /-- The linear extension of the regular operators to the complex group algebra. -/</span>
+<span id="doc/BC4lean.integratedRepresentation"><a class="line" href="#IntegratedRepresentation-L19" id="IntegratedRepresentation-L19"> 19</a> def integratedRepresentation : GroupAlgebra Γ →ₐ[ℂ] (L2Group Γ →L[ℂ] L2Group Γ) :=</span>
+<span><a class="line" href="#IntegratedRepresentation-L20" id="IntegratedRepresentation-L20"> 20</a>   MonoidAlgebra.lift ℂ _ Γ operatorRepresentation</span>
+<span><a class="line" href="#IntegratedRepresentation-L21" id="IntegratedRepresentation-L21"> 21</a> </span>
+<span id="doc/BC4lean.integratedRepresentation_sum"><a class="line" href="#IntegratedRepresentation-L22" id="IntegratedRepresentation-L22"> 22</a> theorem integratedRepresentation_sum (a : GroupAlgebra Γ) :</span>
+<span><a class="line" href="#IntegratedRepresentation-L23" id="IntegratedRepresentation-L23"> 23</a>     integratedRepresentation a = ∑ g ∈ a.coeff.support, a.coeff g • regularOperator g :=</span>
+<span><a class="line" href="#IntegratedRepresentation-L24" id="IntegratedRepresentation-L24"> 24</a>   MonoidAlgebra.lift_apply operatorRepresentation a</span>
+<span><a class="line" href="#IntegratedRepresentation-L25" id="IntegratedRepresentation-L25"> 25</a> </span>
+<span id="doc/BC4lean.integratedRepresentation_single"><a class="line" href="#IntegratedRepresentation-L26" id="IntegratedRepresentation-L26"> 26</a> @[simp] theorem integratedRepresentation_single (g : Γ) (z : ℂ) :</span>
+<span><a class="line" href="#IntegratedRepresentation-L27" id="IntegratedRepresentation-L27"> 27</a>     integratedRepresentation (MonoidAlgebra.single g z) = z • regularOperator g :=</span>
+<span><a class="line" href="#IntegratedRepresentation-L28" id="IntegratedRepresentation-L28"> 28</a>   MonoidAlgebra.lift_single operatorRepresentation g z</span>
+<span><a class="line" href="#IntegratedRepresentation-L29" id="IntegratedRepresentation-L29"> 29</a> </span>
+<span id="doc/BC4lean.integratedRepresentation_delta"><a class="line" href="#IntegratedRepresentation-L30" id="IntegratedRepresentation-L30"> 30</a> @[simp] theorem integratedRepresentation_delta (g : Γ) :</span>
+<span><a class="line" href="#IntegratedRepresentation-L31" id="IntegratedRepresentation-L31"> 31</a>     integratedRepresentation (GroupAlgebra.delta g) = regularOperator g := by</span>
+<span><a class="line" href="#IntegratedRepresentation-L32" id="IntegratedRepresentation-L32"> 32</a>   simp [GroupAlgebra.delta]</span>
+<span><a class="line" href="#IntegratedRepresentation-L33" id="IntegratedRepresentation-L33"> 33</a> </span>
+<span id="doc/BC4lean.integratedRepresentation_apply"><a class="line" href="#IntegratedRepresentation-L34" id="IntegratedRepresentation-L34"> 34</a> theorem integratedRepresentation_apply (a : GroupAlgebra Γ) (ξ : L2Group Γ) (h : Γ) :</span>
+<span><a class="line" href="#IntegratedRepresentation-L35" id="IntegratedRepresentation-L35"> 35</a>     integratedRepresentation a ξ h =</span>
+<span><a class="line" href="#IntegratedRepresentation-L36" id="IntegratedRepresentation-L36"> 36</a>       ∑ g ∈ a.coeff.support, a.coeff g * ξ (g⁻¹ * h) := by</span>
+<span><a class="line" href="#IntegratedRepresentation-L37" id="IntegratedRepresentation-L37"> 37</a>   rw [integratedRepresentation_sum]</span>
+<span><a class="line" href="#IntegratedRepresentation-L38" id="IntegratedRepresentation-L38"> 38</a>   simp only [sum_apply, smul_apply, lp.coeFn_sum,</span>
+<span><a class="line" href="#IntegratedRepresentation-L39" id="IntegratedRepresentation-L39"> 39</a>     lp.coeFn_smul, Finset.sum_apply, Pi.smul_apply, smul_eq_mul, regularOperator_apply]</span>
+<span><a class="line" href="#IntegratedRepresentation-L40" id="IntegratedRepresentation-L40"> 40</a> </span>
+<span id="doc/BC4lean.norm_integratedRepresentation_le"><a class="line" href="#IntegratedRepresentation-L41" id="IntegratedRepresentation-L41"> 41</a> theorem norm_integratedRepresentation_le (a : GroupAlgebra Γ) :</span>
+<span><a class="line" href="#IntegratedRepresentation-L42" id="IntegratedRepresentation-L42"> 42</a>     ‖integratedRepresentation a‖ ≤ GroupAlgebra.l1Norm a := by</span>
+<span><a class="line" href="#IntegratedRepresentation-L43" id="IntegratedRepresentation-L43"> 43</a>   rw [integratedRepresentation_sum]</span>
+<span><a class="line" href="#IntegratedRepresentation-L44" id="IntegratedRepresentation-L44"> 44</a>   calc</span>
+<span><a class="line" href="#IntegratedRepresentation-L45" id="IntegratedRepresentation-L45"> 45</a>     _ ≤ ∑ g ∈ a.coeff.support, ‖a.coeff g • regularOperator g‖ := norm_sum_le _ _</span>
+<span><a class="line" href="#IntegratedRepresentation-L46" id="IntegratedRepresentation-L46"> 46</a>     _ = GroupAlgebra.l1Norm a := by simp [GroupAlgebra.l1Norm, norm_smul]</span>
+<span><a class="line" href="#IntegratedRepresentation-L47" id="IntegratedRepresentation-L47"> 47</a> </span>
+<span id="doc/BC4lean.integratedRepresentation_star"><a class="line" href="#IntegratedRepresentation-L48" id="IntegratedRepresentation-L48"> 48</a> @[simp] theorem integratedRepresentation_star (a : GroupAlgebra Γ) :</span>
+<span><a class="line" href="#IntegratedRepresentation-L49" id="IntegratedRepresentation-L49"> 49</a>     integratedRepresentation (star a) = star (integratedRepresentation a) := by</span>
+<span><a class="line" href="#IntegratedRepresentation-L50" id="IntegratedRepresentation-L50"> 50</a>   induction a using MonoidAlgebra.induction_linear with</span>
+<span><a class="line" href="#IntegratedRepresentation-L51" id="IntegratedRepresentation-L51"> 51</a>   | zero =&gt; simp</span>
+<span><a class="line" href="#IntegratedRepresentation-L52" id="IntegratedRepresentation-L52"> 52</a>   | add a b ha hb =&gt; simp only [star_add, map_add, ha, hb]</span>
+<span><a class="line" href="#IntegratedRepresentation-L53" id="IntegratedRepresentation-L53"> 53</a>   | single g z =&gt;</span>
+<span><a class="line" href="#IntegratedRepresentation-L54" id="IntegratedRepresentation-L54"> 54</a>     change integratedRepresentation (GroupAlgebra.involution (MonoidAlgebra.single g z)) = _</span>
+<span><a class="line" href="#IntegratedRepresentation-L55" id="IntegratedRepresentation-L55"> 55</a>     simp only [GroupAlgebra.involution_single, integratedRepresentation_single,</span>
+<span><a class="line" href="#IntegratedRepresentation-L56" id="IntegratedRepresentation-L56"> 56</a>       star_smul, regularOperator_star]</span>
+<span><a class="line" href="#IntegratedRepresentation-L57" id="IntegratedRepresentation-L57"> 57</a> </span>
+<span><a class="line" href="#IntegratedRepresentation-L58" id="IntegratedRepresentation-L58"> 58</a> /-- The integrated representation as a unital complex star-algebra homomorphism. -/</span>
+<span id="doc/BC4lean.integratedStarHom"><a class="line" href="#IntegratedRepresentation-L59" id="IntegratedRepresentation-L59"> 59</a> def integratedStarHom : GroupAlgebra Γ →⋆ₐ[ℂ] (L2Group Γ →L[ℂ] L2Group Γ) where</span>
+<span><a class="line" href="#IntegratedRepresentation-L60" id="IntegratedRepresentation-L60"> 60</a>   toAlgHom := integratedRepresentation</span>
+<span><a class="line" href="#IntegratedRepresentation-L61" id="IntegratedRepresentation-L61"> 61</a>   map_star&#x27; := integratedRepresentation_star</span>
+<span><a class="line" href="#IntegratedRepresentation-L62" id="IntegratedRepresentation-L62"> 62</a> </span>
+<span id="doc/BC4lean.integratedStarHom_apply"><a class="line" href="#IntegratedRepresentation-L63" id="IntegratedRepresentation-L63"> 63</a> @[simp] theorem integratedStarHom_apply (a : GroupAlgebra Γ) :</span>
+<span><a class="line" href="#IntegratedRepresentation-L64" id="IntegratedRepresentation-L64"> 64</a>     integratedStarHom a = integratedRepresentation a := rfl</span>
+<span><a class="line" href="#IntegratedRepresentation-L65" id="IntegratedRepresentation-L65"> 65</a> </span>
+<span><a class="line" href="#IntegratedRepresentation-L66" id="IntegratedRepresentation-L66"> 66</a> /-- Coefficients are recovered by applying the operator to the identity delta vector. -/</span>
+<span id="doc/BC4lean.integratedRepresentation_delta_one"><a class="line" href="#IntegratedRepresentation-L67" id="IntegratedRepresentation-L67"> 67</a> @[simp] theorem integratedRepresentation_delta_one (a : GroupAlgebra Γ) (h : Γ) :</span>
+<span><a class="line" href="#IntegratedRepresentation-L68" id="IntegratedRepresentation-L68"> 68</a>     integratedRepresentation a (L2Group.delta 1) h = a.coeff h := by</span>
+<span><a class="line" href="#IntegratedRepresentation-L69" id="IntegratedRepresentation-L69"> 69</a>   classical</span>
+<span><a class="line" href="#IntegratedRepresentation-L70" id="IntegratedRepresentation-L70"> 70</a>   induction a using MonoidAlgebra.induction_linear with</span>
+<span><a class="line" href="#IntegratedRepresentation-L71" id="IntegratedRepresentation-L71"> 71</a>   | zero =&gt; simp</span>
+<span><a class="line" href="#IntegratedRepresentation-L72" id="IntegratedRepresentation-L72"> 72</a>   | add a b ha hb =&gt; simpa using congrArg₂ (· + ·) ha hb</span>
+<span><a class="line" href="#IntegratedRepresentation-L73" id="IntegratedRepresentation-L73"> 73</a>   | single g z =&gt;</span>
+<span><a class="line" href="#IntegratedRepresentation-L74" id="IntegratedRepresentation-L74"> 74</a>     simp [L2Group.delta_apply, Finsupp.single_apply, eq_comm]</span>
+<span><a class="line" href="#IntegratedRepresentation-L75" id="IntegratedRepresentation-L75"> 75</a> </span>
+<span id="doc/BC4lean.integratedRepresentation_injective"><a class="line" href="#IntegratedRepresentation-L76" id="IntegratedRepresentation-L76"> 76</a> theorem integratedRepresentation_injective :</span>
+<span><a class="line" href="#IntegratedRepresentation-L77" id="IntegratedRepresentation-L77"> 77</a>     Function.Injective (integratedRepresentation (Γ := Γ)) := by</span>
+<span><a class="line" href="#IntegratedRepresentation-L78" id="IntegratedRepresentation-L78"> 78</a>   intro a b hab</span>
+<span><a class="line" href="#IntegratedRepresentation-L79" id="IntegratedRepresentation-L79"> 79</a>   apply MonoidAlgebra.ext</span>
+<span><a class="line" href="#IntegratedRepresentation-L80" id="IntegratedRepresentation-L80"> 80</a>   apply Finsupp.ext</span>
+<span><a class="line" href="#IntegratedRepresentation-L81" id="IntegratedRepresentation-L81"> 81</a>   intro h</span>
+<span><a class="line" href="#IntegratedRepresentation-L82" id="IntegratedRepresentation-L82"> 82</a>   simpa using congrArg (fun T : L2Group Γ →L[ℂ] L2Group Γ =&gt; T (L2Group.delta 1) h) hab</span>
+<span><a class="line" href="#IntegratedRepresentation-L83" id="IntegratedRepresentation-L83"> 83</a> </span>
+<span><a class="line" href="#IntegratedRepresentation-L84" id="IntegratedRepresentation-L84"> 84</a> /-- The coefficient function as an ℓ²-vector; the next theorem identifies it pointwise. -/</span>
+<span id="doc/BC4lean.GroupAlgebra.toL2"><a class="line" href="#IntegratedRepresentation-L85" id="IntegratedRepresentation-L85"> 85</a> def GroupAlgebra.toL2 (a : GroupAlgebra Γ) : L2Group Γ :=</span>
+<span><a class="line" href="#IntegratedRepresentation-L86" id="IntegratedRepresentation-L86"> 86</a>   integratedRepresentation a (L2Group.delta 1)</span>
+<span><a class="line" href="#IntegratedRepresentation-L87" id="IntegratedRepresentation-L87"> 87</a> </span>
+<span id="doc/BC4lean.GroupAlgebra.toL2_apply"><a class="line" href="#IntegratedRepresentation-L88" id="IntegratedRepresentation-L88"> 88</a> @[simp] theorem GroupAlgebra.toL2_apply (a : GroupAlgebra Γ) (h : Γ) :</span>
+<span><a class="line" href="#IntegratedRepresentation-L89" id="IntegratedRepresentation-L89"> 89</a>     a.toL2 h = a.coeff h := integratedRepresentation_delta_one a h</span>
+<span><a class="line" href="#IntegratedRepresentation-L90" id="IntegratedRepresentation-L90"> 90</a> </span>
+<span id="doc/BC4lean.norm_toL2_le"><a class="line" href="#IntegratedRepresentation-L91" id="IntegratedRepresentation-L91"> 91</a> theorem norm_toL2_le (a : GroupAlgebra Γ) : ‖a.toL2‖ ≤ ‖integratedRepresentation a‖ := by</span>
+<span><a class="line" href="#IntegratedRepresentation-L92" id="IntegratedRepresentation-L92"> 92</a>   simpa only [GroupAlgebra.toL2, L2Group.norm_delta, mul_one] using</span>
+<span><a class="line" href="#IntegratedRepresentation-L93" id="IntegratedRepresentation-L93"> 93</a>     (integratedRepresentation a).le_opNorm (L2Group.delta (1 : Γ))</span>
+<span><a class="line" href="#IntegratedRepresentation-L94" id="IntegratedRepresentation-L94"> 94</a> </span>
+<span id="doc/BC4lean.norm_coeff_le"><a class="line" href="#IntegratedRepresentation-L95" id="IntegratedRepresentation-L95"> 95</a> theorem norm_coeff_le (a : GroupAlgebra Γ) (h : Γ) :</span>
+<span><a class="line" href="#IntegratedRepresentation-L96" id="IntegratedRepresentation-L96"> 96</a>     ‖a.coeff h‖ ≤ ‖integratedRepresentation a‖ := by</span>
+<span><a class="line" href="#IntegratedRepresentation-L97" id="IntegratedRepresentation-L97"> 97</a>   simpa only [GroupAlgebra.toL2_apply] using</span>
+<span><a class="line" href="#IntegratedRepresentation-L98" id="IntegratedRepresentation-L98"> 98</a>     (L2Group.norm_apply_le a.toL2 h).trans (norm_toL2_le a)</span>
+<span><a class="line" href="#IntegratedRepresentation-L99" id="IntegratedRepresentation-L99"> 99</a> </span>
+<span><a class="line" href="#IntegratedRepresentation-L100" id="IntegratedRepresentation-L100">100</a> /-- The algebraic image is exactly the finite complex span of the regular operators. -/</span>
+<span id="doc/BC4lean.integratedRepresentation_range"><a class="line" href="#IntegratedRepresentation-L101" id="IntegratedRepresentation-L101">101</a> theorem integratedRepresentation_range :</span>
+<span><a class="line" href="#IntegratedRepresentation-L102" id="IntegratedRepresentation-L102">102</a>     (integratedRepresentation (Γ := Γ)).range.toSubmodule =</span>
+<span><a class="line" href="#IntegratedRepresentation-L103" id="IntegratedRepresentation-L103">103</a>       Submodule.span ℂ (Set.range (regularOperator (Γ := Γ))) := by</span>
+<span><a class="line" href="#IntegratedRepresentation-L104" id="IntegratedRepresentation-L104">104</a>   apply le_antisymm</span>
+<span><a class="line" href="#IntegratedRepresentation-L105" id="IntegratedRepresentation-L105">105</a>   · rintro T ⟨a, rfl⟩</span>
+<span><a class="line" href="#IntegratedRepresentation-L106" id="IntegratedRepresentation-L106">106</a>     change integratedRepresentation a ∈ Submodule.span ℂ (Set.range regularOperator)</span>
+<span><a class="line" href="#IntegratedRepresentation-L107" id="IntegratedRepresentation-L107">107</a>     induction a using MonoidAlgebra.induction_linear with</span>
+<span><a class="line" href="#IntegratedRepresentation-L108" id="IntegratedRepresentation-L108">108</a>     | zero =&gt; simp</span>
+<span><a class="line" href="#IntegratedRepresentation-L109" id="IntegratedRepresentation-L109">109</a>     | add a b ha hb =&gt;</span>
+<span><a class="line" href="#IntegratedRepresentation-L110" id="IntegratedRepresentation-L110">110</a>       rw [map_add]</span>
+<span><a class="line" href="#IntegratedRepresentation-L111" id="IntegratedRepresentation-L111">111</a>       exact Submodule.add_mem _ ha hb</span>
+<span><a class="line" href="#IntegratedRepresentation-L112" id="IntegratedRepresentation-L112">112</a>     | single g z =&gt;</span>
+<span><a class="line" href="#IntegratedRepresentation-L113" id="IntegratedRepresentation-L113">113</a>       rw [integratedRepresentation_single]</span>
+<span><a class="line" href="#IntegratedRepresentation-L114" id="IntegratedRepresentation-L114">114</a>       exact Submodule.smul_mem _ z (Submodule.subset_span ⟨g, rfl⟩)</span>
+<span><a class="line" href="#IntegratedRepresentation-L115" id="IntegratedRepresentation-L115">115</a>   · apply Submodule.span_le.mpr</span>
+<span><a class="line" href="#IntegratedRepresentation-L116" id="IntegratedRepresentation-L116">116</a>     rintro T ⟨g, rfl⟩</span>
+<span><a class="line" href="#IntegratedRepresentation-L117" id="IntegratedRepresentation-L117">117</a>     exact ⟨GroupAlgebra.delta g, integratedRepresentation_delta g⟩</span>
+<span><a class="line" href="#IntegratedRepresentation-L118" id="IntegratedRepresentation-L118">118</a> </span>
+<span><a class="line" href="#IntegratedRepresentation-L119" id="IntegratedRepresentation-L119">119</a> /-- The reduced norm is the norm of the faithful regular operator. -/</span>
+<span id="doc/BC4lean.reducedNorm"><a class="line" href="#IntegratedRepresentation-L120" id="IntegratedRepresentation-L120">120</a> def reducedNorm (a : GroupAlgebra Γ) : ℝ := ‖integratedRepresentation a‖</span>
+<span><a class="line" href="#IntegratedRepresentation-L121" id="IntegratedRepresentation-L121">121</a> </span>
+<span id="doc/BC4lean.reducedNorm_nonneg"><a class="line" href="#IntegratedRepresentation-L122" id="IntegratedRepresentation-L122">122</a> theorem reducedNorm_nonneg (a : GroupAlgebra Γ) : 0 ≤ reducedNorm a := norm_nonneg _</span>
+<span><a class="line" href="#IntegratedRepresentation-L123" id="IntegratedRepresentation-L123">123</a> </span>
+<span id="doc/BC4lean.reducedNorm_eq_zero"><a class="line" href="#IntegratedRepresentation-L124" id="IntegratedRepresentation-L124">124</a> @[simp] theorem reducedNorm_eq_zero (a : GroupAlgebra Γ) : reducedNorm a = 0 ↔ a = 0 := by</span>
+<span><a class="line" href="#IntegratedRepresentation-L125" id="IntegratedRepresentation-L125">125</a>   simp only [reducedNorm, norm_eq_zero, map_eq_zero_iff _ integratedRepresentation_injective]</span>
+<span><a class="line" href="#IntegratedRepresentation-L126" id="IntegratedRepresentation-L126">126</a> </span>
+<span id="doc/BC4lean.reducedNorm_add_le"><a class="line" href="#IntegratedRepresentation-L127" id="IntegratedRepresentation-L127">127</a> theorem reducedNorm_add_le (a b : GroupAlgebra Γ) :</span>
+<span><a class="line" href="#IntegratedRepresentation-L128" id="IntegratedRepresentation-L128">128</a>     reducedNorm (a + b) ≤ reducedNorm a + reducedNorm b := by</span>
+<span><a class="line" href="#IntegratedRepresentation-L129" id="IntegratedRepresentation-L129">129</a>   simpa only [reducedNorm, map_add] using norm_add_le (integratedRepresentation a) _</span>
+<span><a class="line" href="#IntegratedRepresentation-L130" id="IntegratedRepresentation-L130">130</a> </span>
+<span id="doc/BC4lean.reducedNorm_smul"><a class="line" href="#IntegratedRepresentation-L131" id="IntegratedRepresentation-L131">131</a> theorem reducedNorm_smul (z : ℂ) (a : GroupAlgebra Γ) :</span>
+<span><a class="line" href="#IntegratedRepresentation-L132" id="IntegratedRepresentation-L132">132</a>     reducedNorm (z • a) = ‖z‖ * reducedNorm a := by</span>
+<span><a class="line" href="#IntegratedRepresentation-L133" id="IntegratedRepresentation-L133">133</a>   simp only [reducedNorm, map_smul, norm_smul]</span>
+<span><a class="line" href="#IntegratedRepresentation-L134" id="IntegratedRepresentation-L134">134</a> </span>
+<span id="doc/BC4lean.reducedNorm_mul_le"><a class="line" href="#IntegratedRepresentation-L135" id="IntegratedRepresentation-L135">135</a> theorem reducedNorm_mul_le (a b : GroupAlgebra Γ) :</span>
+<span><a class="line" href="#IntegratedRepresentation-L136" id="IntegratedRepresentation-L136">136</a>     reducedNorm (a * b) ≤ reducedNorm a * reducedNorm b := by</span>
+<span><a class="line" href="#IntegratedRepresentation-L137" id="IntegratedRepresentation-L137">137</a>   simpa only [reducedNorm, map_mul] using norm_mul_le (integratedRepresentation a) _</span>
+<span><a class="line" href="#IntegratedRepresentation-L138" id="IntegratedRepresentation-L138">138</a> </span>
+<span id="doc/BC4lean.reducedNorm_star"><a class="line" href="#IntegratedRepresentation-L139" id="IntegratedRepresentation-L139">139</a> @[simp] theorem reducedNorm_star (a : GroupAlgebra Γ) : reducedNorm (star a) = reducedNorm a := by</span>
+<span><a class="line" href="#IntegratedRepresentation-L140" id="IntegratedRepresentation-L140">140</a>   unfold reducedNorm</span>
+<span><a class="line" href="#IntegratedRepresentation-L141" id="IntegratedRepresentation-L141">141</a>   rw [integratedRepresentation_star]</span>
+<span><a class="line" href="#IntegratedRepresentation-L142" id="IntegratedRepresentation-L142">142</a>   exact norm_star (integratedRepresentation a)</span>
+<span><a class="line" href="#IntegratedRepresentation-L143" id="IntegratedRepresentation-L143">143</a> </span>
+<span id="doc/BC4lean.reducedNorm_cstar"><a class="line" href="#IntegratedRepresentation-L144" id="IntegratedRepresentation-L144">144</a> theorem reducedNorm_cstar (a : GroupAlgebra Γ) :</span>
+<span><a class="line" href="#IntegratedRepresentation-L145" id="IntegratedRepresentation-L145">145</a>     reducedNorm (star a * a) = reducedNorm a ^ 2 := by</span>
+<span><a class="line" href="#IntegratedRepresentation-L146" id="IntegratedRepresentation-L146">146</a>   unfold reducedNorm</span>
+<span><a class="line" href="#IntegratedRepresentation-L147" id="IntegratedRepresentation-L147">147</a>   rw [map_mul, integratedRepresentation_star]</span>
+<span><a class="line" href="#IntegratedRepresentation-L148" id="IntegratedRepresentation-L148">148</a>   simpa only [pow_two] using CStarRing.norm_star_mul_self (x := integratedRepresentation a)</span>
+<span><a class="line" href="#IntegratedRepresentation-L149" id="IntegratedRepresentation-L149">149</a> </span>
+<span id="doc/BC4lean.reducedNorm_delta"><a class="line" href="#IntegratedRepresentation-L150" id="IntegratedRepresentation-L150">150</a> @[simp] theorem reducedNorm_delta (g : Γ) : reducedNorm (GroupAlgebra.delta g) = 1 := by</span>
+<span><a class="line" href="#IntegratedRepresentation-L151" id="IntegratedRepresentation-L151">151</a>   simp only [reducedNorm, integratedRepresentation_delta, norm_regularOperator]</span>
+<span><a class="line" href="#IntegratedRepresentation-L152" id="IntegratedRepresentation-L152">152</a> </span>
+<span id="doc/BC4lean.reducedNorm_bounds"><a class="line" href="#IntegratedRepresentation-L153" id="IntegratedRepresentation-L153">153</a> theorem reducedNorm_bounds (a : GroupAlgebra Γ) :</span>
+<span><a class="line" href="#IntegratedRepresentation-L154" id="IntegratedRepresentation-L154">154</a>     ‖a.toL2‖ ≤ reducedNorm a ∧ reducedNorm a ≤ GroupAlgebra.l1Norm a :=</span>
+<span><a class="line" href="#IntegratedRepresentation-L155" id="IntegratedRepresentation-L155">155</a>   ⟨norm_toL2_le a, norm_integratedRepresentation_le a⟩</span>
+<span><a class="line" href="#IntegratedRepresentation-L156" id="IntegratedRepresentation-L156">156</a> </span>
+<span><a class="line" href="#IntegratedRepresentation-L157" id="IntegratedRepresentation-L157">157</a> end BC4lean</span>
+</pre>
+<h2 id="ReducedGroupCStar">ReducedGroupCStar.lean</h2><p>源码 SHA-256：<code>96917b6794dc08f3ea214d34285484632b8f7c4a1247dfd480949707cd2da173</code></p><pre>
+<span><a class="line" href="#ReducedGroupCStar-L1" id="ReducedGroupCStar-L1">  1</a> import BC4lean.IntegratedRepresentation</span>
+<span><a class="line" href="#ReducedGroupCStar-L2" id="ReducedGroupCStar-L2">  2</a> import Mathlib.Analysis.CStarAlgebra.ContinuousLinearMap</span>
+<span><a class="line" href="#ReducedGroupCStar-L3" id="ReducedGroupCStar-L3">  3</a> </span>
+<span><a class="line" href="#ReducedGroupCStar-L4" id="ReducedGroupCStar-L4">  4</a> /-! # The concrete reduced group C⋆-algebra</span>
+<span><a class="line" href="#ReducedGroupCStar-L5" id="ReducedGroupCStar-L5">  5</a> </span>
+<span><a class="line" href="#ReducedGroupCStar-L6" id="ReducedGroupCStar-L6">  6</a> The underlying set is the operator-norm closure of the integrated regular image.</span>
+<span><a class="line" href="#ReducedGroupCStar-L7" id="ReducedGroupCStar-L7">  7</a> The C⋆-algebra structure is inherited from bounded operators on ℓ²(Γ).</span>
+<span><a class="line" href="#ReducedGroupCStar-L8" id="ReducedGroupCStar-L8">  8</a> -/</span>
+<span><a class="line" href="#ReducedGroupCStar-L9" id="ReducedGroupCStar-L9">  9</a> </span>
+<span><a class="line" href="#ReducedGroupCStar-L10" id="ReducedGroupCStar-L10"> 10</a> noncomputable section</span>
+<span><a class="line" href="#ReducedGroupCStar-L11" id="ReducedGroupCStar-L11"> 11</a> </span>
+<span><a class="line" href="#ReducedGroupCStar-L12" id="ReducedGroupCStar-L12"> 12</a> namespace BC4lean</span>
+<span><a class="line" href="#ReducedGroupCStar-L13" id="ReducedGroupCStar-L13"> 13</a> </span>
+<span><a class="line" href="#ReducedGroupCStar-L14" id="ReducedGroupCStar-L14"> 14</a> variable (Γ : Type*) [Group Γ]</span>
+<span><a class="line" href="#ReducedGroupCStar-L15" id="ReducedGroupCStar-L15"> 15</a> </span>
+<span><a class="line" href="#ReducedGroupCStar-L16" id="ReducedGroupCStar-L16"> 16</a> /-- The closed star subalgebra generated by the integrated regular image. -/</span>
+<span id="doc/BC4lean.reducedAlgebra"><a class="line" href="#ReducedGroupCStar-L17" id="ReducedGroupCStar-L17"> 17</a> def reducedAlgebra : StarSubalgebra ℂ (L2Group Γ →L[ℂ] L2Group Γ) :=</span>
+<span><a class="line" href="#ReducedGroupCStar-L18" id="ReducedGroupCStar-L18"> 18</a>   (integratedStarHom (Γ := Γ)).range.topologicalClosure</span>
+<span><a class="line" href="#ReducedGroupCStar-L19" id="ReducedGroupCStar-L19"> 19</a> </span>
+<span><a class="line" href="#ReducedGroupCStar-L20" id="ReducedGroupCStar-L20"> 20</a> /-- The concrete reduced group C⋆-algebra. -/</span>
+<span id="doc/BC4lean.ReducedGroupCStar"><a class="line" href="#ReducedGroupCStar-L21" id="ReducedGroupCStar-L21"> 21</a> abbrev ReducedGroupCStar := ↥(reducedAlgebra Γ)</span>
+<span><a class="line" href="#ReducedGroupCStar-L22" id="ReducedGroupCStar-L22"> 22</a> </span>
+<span><a class="line" href="#ReducedGroupCStar-L23" id="ReducedGroupCStar-L23"> 23</a> variable {Γ}</span>
+<span><a class="line" href="#ReducedGroupCStar-L24" id="ReducedGroupCStar-L24"> 24</a> </span>
+<span id="doc/BC4lean.reducedAlgebra_coe_eq_closure_range"><a class="line" href="#ReducedGroupCStar-L25" id="ReducedGroupCStar-L25"> 25</a> theorem reducedAlgebra_coe_eq_closure_range :</span>
+<span><a class="line" href="#ReducedGroupCStar-L26" id="ReducedGroupCStar-L26"> 26</a>     (reducedAlgebra Γ : Set (L2Group Γ →L[ℂ] L2Group Γ)) =</span>
+<span><a class="line" href="#ReducedGroupCStar-L27" id="ReducedGroupCStar-L27"> 27</a>       closure (Set.range (integratedRepresentation (Γ := Γ))) := rfl</span>
+<span><a class="line" href="#ReducedGroupCStar-L28" id="ReducedGroupCStar-L28"> 28</a> </span>
+<span id="doc/BC4lean.reducedAlgebra_isClosed"><a class="line" href="#ReducedGroupCStar-L29" id="ReducedGroupCStar-L29"> 29</a> theorem reducedAlgebra_isClosed :</span>
+<span><a class="line" href="#ReducedGroupCStar-L30" id="ReducedGroupCStar-L30"> 30</a>     IsClosed (reducedAlgebra Γ : Set (L2Group Γ →L[ℂ] L2Group Γ)) :=</span>
+<span><a class="line" href="#ReducedGroupCStar-L31" id="ReducedGroupCStar-L31"> 31</a>   isClosed_closure</span>
+<span><a class="line" href="#ReducedGroupCStar-L32" id="ReducedGroupCStar-L32"> 32</a> </span>
+<span id="doc/BC4lean.reducedGroupCStarAlgebra"><a class="line" href="#ReducedGroupCStar-L33" id="ReducedGroupCStar-L33"> 33</a> instance reducedGroupCStarAlgebra : CStarAlgebra (ReducedGroupCStar Γ) :=</span>
+<span><a class="line" href="#ReducedGroupCStar-L34" id="ReducedGroupCStar-L34"> 34</a>   StarSubalgebra.cstarAlgebra _ (h_closed := reducedAlgebra_isClosed)</span>
+<span><a class="line" href="#ReducedGroupCStar-L35" id="ReducedGroupCStar-L35"> 35</a> </span>
+<span><a class="line" href="#ReducedGroupCStar-L36" id="ReducedGroupCStar-L36"> 36</a> /-- The identity regular operator has norm one, also for the trivial group. -/</span>
+<span id="doc/BC4lean.regularOperatorsNormOne"><a class="line" href="#ReducedGroupCStar-L37" id="ReducedGroupCStar-L37"> 37</a> instance regularOperatorsNormOne : NormOneClass (L2Group Γ →L[ℂ] L2Group Γ) where</span>
+<span><a class="line" href="#ReducedGroupCStar-L38" id="ReducedGroupCStar-L38"> 38</a>   norm_one := by</span>
+<span><a class="line" href="#ReducedGroupCStar-L39" id="ReducedGroupCStar-L39"> 39</a>     simpa only [regularOperator_one] using norm_regularOperator (1 : Γ)</span>
+<span><a class="line" href="#ReducedGroupCStar-L40" id="ReducedGroupCStar-L40"> 40</a> </span>
+<span id="doc/BC4lean.reducedGroupCStarNormOne"><a class="line" href="#ReducedGroupCStar-L41" id="ReducedGroupCStar-L41"> 41</a> instance reducedGroupCStarNormOne : NormOneClass (ReducedGroupCStar Γ) where</span>
+<span><a class="line" href="#ReducedGroupCStar-L42" id="ReducedGroupCStar-L42"> 42</a>   norm_one := by</span>
+<span><a class="line" href="#ReducedGroupCStar-L43" id="ReducedGroupCStar-L43"> 43</a>     change ‖(1 : L2Group Γ →L[ℂ] L2Group Γ)‖ = 1</span>
+<span><a class="line" href="#ReducedGroupCStar-L44" id="ReducedGroupCStar-L44"> 44</a>     exact norm_one</span>
+<span><a class="line" href="#ReducedGroupCStar-L45" id="ReducedGroupCStar-L45"> 45</a> </span>
+<span><a class="line" href="#ReducedGroupCStar-L46" id="ReducedGroupCStar-L46"> 46</a> /-- The canonical faithful star homomorphism with dense image. -/</span>
+<span id="doc/BC4lean.integratedToReduced"><a class="line" href="#ReducedGroupCStar-L47" id="ReducedGroupCStar-L47"> 47</a> def integratedToReduced : GroupAlgebra Γ →⋆ₐ[ℂ] ReducedGroupCStar Γ :=</span>
+<span><a class="line" href="#ReducedGroupCStar-L48" id="ReducedGroupCStar-L48"> 48</a>   integratedStarHom.codRestrict (reducedAlgebra Γ)</span>
+<span><a class="line" href="#ReducedGroupCStar-L49" id="ReducedGroupCStar-L49"> 49</a>     (fun a =&gt; subset_closure ⟨a, rfl⟩)</span>
+<span><a class="line" href="#ReducedGroupCStar-L50" id="ReducedGroupCStar-L50"> 50</a> </span>
+<span id="doc/BC4lean.integratedToReduced_coe"><a class="line" href="#ReducedGroupCStar-L51" id="ReducedGroupCStar-L51"> 51</a> @[simp] theorem integratedToReduced_coe (a : GroupAlgebra Γ) :</span>
+<span><a class="line" href="#ReducedGroupCStar-L52" id="ReducedGroupCStar-L52"> 52</a>     (integratedToReduced a : L2Group Γ →L[ℂ] L2Group Γ) =</span>
+<span><a class="line" href="#ReducedGroupCStar-L53" id="ReducedGroupCStar-L53"> 53</a>       integratedRepresentation a := rfl</span>
+<span><a class="line" href="#ReducedGroupCStar-L54" id="ReducedGroupCStar-L54"> 54</a> </span>
+<span id="doc/BC4lean.integratedToReduced_injective"><a class="line" href="#ReducedGroupCStar-L55" id="ReducedGroupCStar-L55"> 55</a> theorem integratedToReduced_injective :</span>
+<span><a class="line" href="#ReducedGroupCStar-L56" id="ReducedGroupCStar-L56"> 56</a>     Function.Injective (integratedToReduced (Γ := Γ)) := by</span>
+<span><a class="line" href="#ReducedGroupCStar-L57" id="ReducedGroupCStar-L57"> 57</a>   intro a b h</span>
+<span><a class="line" href="#ReducedGroupCStar-L58" id="ReducedGroupCStar-L58"> 58</a>   exact integratedRepresentation_injective (congrArg Subtype.val h)</span>
+<span><a class="line" href="#ReducedGroupCStar-L59" id="ReducedGroupCStar-L59"> 59</a> </span>
+<span id="doc/BC4lean.norm_integratedToReduced"><a class="line" href="#ReducedGroupCStar-L60" id="ReducedGroupCStar-L60"> 60</a> @[simp] theorem norm_integratedToReduced (a : GroupAlgebra Γ) :</span>
+<span><a class="line" href="#ReducedGroupCStar-L61" id="ReducedGroupCStar-L61"> 61</a>     ‖integratedToReduced a‖ = reducedNorm a := rfl</span>
+<span><a class="line" href="#ReducedGroupCStar-L62" id="ReducedGroupCStar-L62"> 62</a> </span>
+<span id="doc/BC4lean.denseRange_integratedToReduced"><a class="line" href="#ReducedGroupCStar-L63" id="ReducedGroupCStar-L63"> 63</a> theorem denseRange_integratedToReduced :</span>
+<span><a class="line" href="#ReducedGroupCStar-L64" id="ReducedGroupCStar-L64"> 64</a>     DenseRange (integratedToReduced (Γ := Γ)) := by</span>
+<span><a class="line" href="#ReducedGroupCStar-L65" id="ReducedGroupCStar-L65"> 65</a>   intro T</span>
+<span><a class="line" href="#ReducedGroupCStar-L66" id="ReducedGroupCStar-L66"> 66</a>   rw [closure_subtype, ← Set.range_comp]</span>
+<span><a class="line" href="#ReducedGroupCStar-L67" id="ReducedGroupCStar-L67"> 67</a>   change (T : L2Group Γ →L[ℂ] L2Group Γ) ∈</span>
+<span><a class="line" href="#ReducedGroupCStar-L68" id="ReducedGroupCStar-L68"> 68</a>     closure (Set.range (integratedRepresentation (Γ := Γ)))</span>
+<span><a class="line" href="#ReducedGroupCStar-L69" id="ReducedGroupCStar-L69"> 69</a>   rw [← reducedAlgebra_coe_eq_closure_range]</span>
+<span><a class="line" href="#ReducedGroupCStar-L70" id="ReducedGroupCStar-L70"> 70</a>   exact T.property</span>
+<span><a class="line" href="#ReducedGroupCStar-L71" id="ReducedGroupCStar-L71"> 71</a> </span>
+<span id="doc/BC4lean.regularOperator_mem_reducedAlgebra"><a class="line" href="#ReducedGroupCStar-L72" id="ReducedGroupCStar-L72"> 72</a> theorem regularOperator_mem_reducedAlgebra (g : Γ) :</span>
+<span><a class="line" href="#ReducedGroupCStar-L73" id="ReducedGroupCStar-L73"> 73</a>     regularOperator g ∈ reducedAlgebra Γ :=</span>
+<span><a class="line" href="#ReducedGroupCStar-L74" id="ReducedGroupCStar-L74"> 74</a>   subset_closure ⟨GroupAlgebra.delta g, integratedRepresentation_delta g⟩</span>
+<span><a class="line" href="#ReducedGroupCStar-L75" id="ReducedGroupCStar-L75"> 75</a> </span>
+<span id="doc/BC4lean.reducedAlgebra_coe_eq_closure_span"><a class="line" href="#ReducedGroupCStar-L76" id="ReducedGroupCStar-L76"> 76</a> theorem reducedAlgebra_coe_eq_closure_span :</span>
+<span><a class="line" href="#ReducedGroupCStar-L77" id="ReducedGroupCStar-L77"> 77</a>     (reducedAlgebra Γ : Set (L2Group Γ →L[ℂ] L2Group Γ)) =</span>
+<span><a class="line" href="#ReducedGroupCStar-L78" id="ReducedGroupCStar-L78"> 78</a>       closure (Submodule.span ℂ (Set.range (regularOperator (Γ := Γ))) :</span>
+<span><a class="line" href="#ReducedGroupCStar-L79" id="ReducedGroupCStar-L79"> 79</a>         Set (L2Group Γ →L[ℂ] L2Group Γ)) := by</span>
+<span><a class="line" href="#ReducedGroupCStar-L80" id="ReducedGroupCStar-L80"> 80</a>   rw [← integratedRepresentation_range]</span>
+<span><a class="line" href="#ReducedGroupCStar-L81" id="ReducedGroupCStar-L81"> 81</a>   rfl</span>
+<span><a class="line" href="#ReducedGroupCStar-L82" id="ReducedGroupCStar-L82"> 82</a> </span>
+<span><a class="line" href="#ReducedGroupCStar-L83" id="ReducedGroupCStar-L83"> 83</a> /-- Minimality among closed complex star subalgebras containing all regular operators. -/</span>
+<span id="doc/BC4lean.reducedAlgebra_minimal"><a class="line" href="#ReducedGroupCStar-L84" id="ReducedGroupCStar-L84"> 84</a> theorem reducedAlgebra_minimal (S : StarSubalgebra ℂ (L2Group Γ →L[ℂ] L2Group Γ))</span>
+<span><a class="line" href="#ReducedGroupCStar-L85" id="ReducedGroupCStar-L85"> 85</a>     (hS : IsClosed (S : Set (L2Group Γ →L[ℂ] L2Group Γ)))</span>
+<span><a class="line" href="#ReducedGroupCStar-L86" id="ReducedGroupCStar-L86"> 86</a>     (h : ∀ g : Γ, regularOperator g ∈ S) : reducedAlgebra Γ ≤ S := by</span>
+<span><a class="line" href="#ReducedGroupCStar-L87" id="ReducedGroupCStar-L87"> 87</a>   apply StarSubalgebra.topologicalClosure_minimal _ hS</span>
+<span><a class="line" href="#ReducedGroupCStar-L88" id="ReducedGroupCStar-L88"> 88</a>   rintro T ⟨a, rfl⟩</span>
+<span><a class="line" href="#ReducedGroupCStar-L89" id="ReducedGroupCStar-L89"> 89</a>   change integratedRepresentation a ∈ S</span>
+<span><a class="line" href="#ReducedGroupCStar-L90" id="ReducedGroupCStar-L90"> 90</a>   induction a using MonoidAlgebra.induction_linear with</span>
+<span><a class="line" href="#ReducedGroupCStar-L91" id="ReducedGroupCStar-L91"> 91</a>   | zero =&gt; simp</span>
+<span><a class="line" href="#ReducedGroupCStar-L92" id="ReducedGroupCStar-L92"> 92</a>   | add a b ha hb =&gt;</span>
+<span><a class="line" href="#ReducedGroupCStar-L93" id="ReducedGroupCStar-L93"> 93</a>     rw [map_add]</span>
+<span><a class="line" href="#ReducedGroupCStar-L94" id="ReducedGroupCStar-L94"> 94</a>     exact S.add_mem ha hb</span>
+<span><a class="line" href="#ReducedGroupCStar-L95" id="ReducedGroupCStar-L95"> 95</a>   | single g z =&gt; simpa only [integratedRepresentation_single] using S.smul_mem (h g) z</span>
+<span><a class="line" href="#ReducedGroupCStar-L96" id="ReducedGroupCStar-L96"> 96</a> </span>
+<span><a class="line" href="#ReducedGroupCStar-L97" id="ReducedGroupCStar-L97"> 97</a> /-- Countability is needed here, but not for the C⋆-algebra construction. -/</span>
+<span id="doc/BC4lean.reducedGroupCStarSeparable"><a class="line" href="#ReducedGroupCStar-L98" id="ReducedGroupCStar-L98"> 98</a> instance reducedGroupCStarSeparable [Countable Γ] : TopologicalSpace.SeparableSpace (ReducedGroupCStar Γ) := by</span>
+<span><a class="line" href="#ReducedGroupCStar-L99" id="ReducedGroupCStar-L99"> 99</a>   apply TopologicalSpace.IsSeparable.separableSpace</span>
+<span><a class="line" href="#ReducedGroupCStar-L100" id="ReducedGroupCStar-L100">100</a>   rw [reducedAlgebra_coe_eq_closure_span]</span>
+<span><a class="line" href="#ReducedGroupCStar-L101" id="ReducedGroupCStar-L101">101</a>   exact ((Set.countable_range (regularOperator (Γ := Γ))).isSeparable.span (R := ℂ)).closure</span>
+<span><a class="line" href="#ReducedGroupCStar-L102" id="ReducedGroupCStar-L102">102</a> </span>
+<span><a class="line" href="#ReducedGroupCStar-L103" id="ReducedGroupCStar-L103">103</a> end BC4lean</span>
+</pre>
+<h2 id="ReducedGroupCStarTrivial">ReducedGroupCStarTrivial.lean</h2><p>源码 SHA-256：<code>3f678a1bd54481bc533b3804cd45ddfc9bab48605ccc730ddf7368799a562df0</code></p><pre>
+<span><a class="line" href="#ReducedGroupCStarTrivial-L1" id="ReducedGroupCStarTrivial-L1">  1</a> import BC4lean.ReducedGroupCStar</span>
+<span><a class="line" href="#ReducedGroupCStarTrivial-L2" id="ReducedGroupCStarTrivial-L2">  2</a> </span>
+<span><a class="line" href="#ReducedGroupCStarTrivial-L3" id="ReducedGroupCStarTrivial-L3">  3</a> /-! # The reduced group C⋆-algebra of a trivial group -/</span>
+<span><a class="line" href="#ReducedGroupCStarTrivial-L4" id="ReducedGroupCStarTrivial-L4">  4</a> </span>
+<span><a class="line" href="#ReducedGroupCStarTrivial-L5" id="ReducedGroupCStarTrivial-L5">  5</a> noncomputable section</span>
+<span><a class="line" href="#ReducedGroupCStarTrivial-L6" id="ReducedGroupCStarTrivial-L6">  6</a> </span>
+<span><a class="line" href="#ReducedGroupCStarTrivial-L7" id="ReducedGroupCStarTrivial-L7">  7</a> namespace BC4lean</span>
+<span><a class="line" href="#ReducedGroupCStarTrivial-L8" id="ReducedGroupCStarTrivial-L8">  8</a> </span>
+<span><a class="line" href="#ReducedGroupCStarTrivial-L9" id="ReducedGroupCStarTrivial-L9">  9</a> variable {Γ : Type*} [Group Γ] [Subsingleton Γ]</span>
+<span><a class="line" href="#ReducedGroupCStarTrivial-L10" id="ReducedGroupCStarTrivial-L10"> 10</a> </span>
+<span id="doc/BC4lean.reducedAlgebra_le_scalars"><a class="line" href="#ReducedGroupCStarTrivial-L11" id="ReducedGroupCStarTrivial-L11"> 11</a> theorem reducedAlgebra_le_scalars :</span>
+<span><a class="line" href="#ReducedGroupCStarTrivial-L12" id="ReducedGroupCStarTrivial-L12"> 12</a>     reducedAlgebra Γ ≤ (StarAlgHom.ofId ℂ (L2Group Γ →L[ℂ] L2Group Γ)).range := by</span>
+<span><a class="line" href="#ReducedGroupCStarTrivial-L13" id="ReducedGroupCStarTrivial-L13"> 13</a>   apply reducedAlgebra_minimal</span>
+<span><a class="line" href="#ReducedGroupCStarTrivial-L14" id="ReducedGroupCStarTrivial-L14"> 14</a>   · exact (algebraMap_isometry (𝕜 := ℂ) (𝕜&#x27; := L2Group Γ →L[ℂ] L2Group Γ)).isClosedEmbedding.isClosed_range</span>
+<span><a class="line" href="#ReducedGroupCStarTrivial-L15" id="ReducedGroupCStarTrivial-L15"> 15</a>   · intro g</span>
+<span><a class="line" href="#ReducedGroupCStarTrivial-L16" id="ReducedGroupCStarTrivial-L16"> 16</a>     refine ⟨1, ?_⟩</span>
+<span><a class="line" href="#ReducedGroupCStarTrivial-L17" id="ReducedGroupCStarTrivial-L17"> 17</a>     rw [Subsingleton.elim g 1, regularOperator_one]</span>
+<span><a class="line" href="#ReducedGroupCStarTrivial-L18" id="ReducedGroupCStarTrivial-L18"> 18</a>     exact map_one _</span>
+<span><a class="line" href="#ReducedGroupCStarTrivial-L19" id="ReducedGroupCStarTrivial-L19"> 19</a> </span>
+<span id="doc/BC4lean.scalarToReduced_surjective"><a class="line" href="#ReducedGroupCStarTrivial-L20" id="ReducedGroupCStarTrivial-L20"> 20</a> theorem scalarToReduced_surjective :</span>
+<span><a class="line" href="#ReducedGroupCStarTrivial-L21" id="ReducedGroupCStarTrivial-L21"> 21</a>     Function.Surjective (StarAlgHom.ofId ℂ (ReducedGroupCStar Γ)) := by</span>
+<span><a class="line" href="#ReducedGroupCStarTrivial-L22" id="ReducedGroupCStarTrivial-L22"> 22</a>   intro T</span>
+<span><a class="line" href="#ReducedGroupCStarTrivial-L23" id="ReducedGroupCStarTrivial-L23"> 23</a>   obtain ⟨z, hz⟩ := reducedAlgebra_le_scalars T.property</span>
+<span><a class="line" href="#ReducedGroupCStarTrivial-L24" id="ReducedGroupCStarTrivial-L24"> 24</a>   refine ⟨z, Subtype.ext ?_⟩</span>
+<span><a class="line" href="#ReducedGroupCStarTrivial-L25" id="ReducedGroupCStarTrivial-L25"> 25</a>   exact hz</span>
+<span><a class="line" href="#ReducedGroupCStarTrivial-L26" id="ReducedGroupCStarTrivial-L26"> 26</a> </span>
+<span><a class="line" href="#ReducedGroupCStarTrivial-L27" id="ReducedGroupCStarTrivial-L27"> 27</a> /-- Canonical scalar identification for any group with one element. -/</span>
+<span id="doc/BC4lean.trivialReducedEquiv"><a class="line" href="#ReducedGroupCStarTrivial-L28" id="ReducedGroupCStarTrivial-L28"> 28</a> def trivialReducedEquiv : ℂ ≃⋆ₐ[ℂ] ReducedGroupCStar Γ :=</span>
+<span><a class="line" href="#ReducedGroupCStarTrivial-L29" id="ReducedGroupCStarTrivial-L29"> 29</a>   StarAlgEquiv.ofBijective (StarAlgHom.ofId ℂ (ReducedGroupCStar Γ))</span>
+<span><a class="line" href="#ReducedGroupCStarTrivial-L30" id="ReducedGroupCStarTrivial-L30"> 30</a>     ⟨(algebraMap_isometry (𝕜 := ℂ) (𝕜&#x27; := ReducedGroupCStar Γ)).injective,</span>
+<span><a class="line" href="#ReducedGroupCStarTrivial-L31" id="ReducedGroupCStarTrivial-L31"> 31</a>       scalarToReduced_surjective⟩</span>
+<span><a class="line" href="#ReducedGroupCStarTrivial-L32" id="ReducedGroupCStarTrivial-L32"> 32</a> </span>
+<span id="doc/BC4lean.trivialReducedEquiv_apply"><a class="line" href="#ReducedGroupCStarTrivial-L33" id="ReducedGroupCStarTrivial-L33"> 33</a> @[simp] theorem trivialReducedEquiv_apply (z : ℂ) :</span>
+<span><a class="line" href="#ReducedGroupCStarTrivial-L34" id="ReducedGroupCStarTrivial-L34"> 34</a>     trivialReducedEquiv (Γ := Γ) z = algebraMap ℂ (ReducedGroupCStar Γ) z := rfl</span>
+<span><a class="line" href="#ReducedGroupCStarTrivial-L35" id="ReducedGroupCStarTrivial-L35"> 35</a> </span>
+<span id="doc/BC4lean.trivialReducedEquiv_isometry"><a class="line" href="#ReducedGroupCStarTrivial-L36" id="ReducedGroupCStarTrivial-L36"> 36</a> theorem trivialReducedEquiv_isometry : Isometry (trivialReducedEquiv (Γ := Γ)) :=</span>
+<span><a class="line" href="#ReducedGroupCStarTrivial-L37" id="ReducedGroupCStarTrivial-L37"> 37</a>   algebraMap_isometry ℂ (ReducedGroupCStar Γ)</span>
+<span><a class="line" href="#ReducedGroupCStarTrivial-L38" id="ReducedGroupCStarTrivial-L38"> 38</a> </span>
+<span><a class="line" href="#ReducedGroupCStarTrivial-L39" id="ReducedGroupCStarTrivial-L39"> 39</a> end BC4lean</span>
 </pre>
 </body></html>

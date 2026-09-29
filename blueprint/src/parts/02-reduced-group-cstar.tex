@@ -4,9 +4,12 @@
 Throughout this section, $\Gamma$ is an arbitrary discrete group with
 identity $e$. Countability is needed only for the separability statement.
 Scalars are complex; inner products are conjugate-linear in the first
-variable and linear in the second. The first nine nodes, from the group-algebra operations through the left
-regular representation, are verified in Lean. The remaining nodes are
-mathematical statements and paper proofs without Lean verification.
+variable and linear in the second. Twenty of the twenty-one mathematical nodes in this chapter are verified
+in Lean, including the concrete reduced group $C^*$-algebra, its generating
+property, separability for countable groups, and the trivial-group case.
+The dense norm-preserving group-algebra map is also verified. The extension
+to an isometric $*$-isomorphism from the abstract norm completion remains
+unverified; the completion proposition is therefore not marked as verified.
 
 \section{The complex group algebra}
 
@@ -189,6 +192,8 @@ the adjoint, the operator norm is complete, and $\|T^*T\|=\|T\|^2$.
 This is an explicit background prerequisite.
 
 \begin{definition}[Integrated regular representation]\label{def:integrated-representation}
+\lean{BC4lean.integratedRepresentation,BC4lean.integratedRepresentation_sum,BC4lean.integratedRepresentation_single}
+\leanok
 \uses{def:group-algebra,def:left-regular-representation}
 Define the complex-linear map
 \[
@@ -199,6 +204,8 @@ This is a finite sum of bounded operators, and $\rho(\delta_g)=\lambda_g$.
 \end{definition}
 
 \begin{lemma}[Action formula and norm bound]\label{lem:integrated-action-bound}
+\lean{BC4lean.integratedRepresentation_apply,BC4lean.norm_integratedRepresentation_le}
+\leanok
 \uses{def:integrated-representation,lem:left-translation-laws}
 For $a\in\mathbb C[\Gamma]$, $\xi\in\ell^2(\Gamma)$ and $h\in\Gamma$,
 \[
@@ -207,12 +214,15 @@ For $a\in\mathbb C[\Gamma]$, $\xi\in\ell^2(\Gamma)$ and $h\in\Gamma$,
 \]
 \end{lemma}
 \begin{proof}
+\leanok
 Apply the finite operator sum to $\xi$ and evaluate at $h$.
 The operator-norm triangle inequality gives
 $\|\rho(a)\|\leq\sum_g|a(g)|\|\lambda_g\|=\|a\|_1$.
 \end{proof}
 
 \begin{proposition}[Star-homomorphism]\label{prop:integrated-star-hom}
+\lean{BC4lean.integratedStarHom,BC4lean.integratedRepresentation_star,BC4lean.integratedRepresentation_delta}
+\leanok
 \uses{def:integrated-representation,prop:group-algebra-star-laws,prop:left-translation-unitary}
 The map $\rho$ is a unital complex $*$-algebra homomorphism:
 \[
@@ -221,6 +231,7 @@ The map $\rho$ is a unital complex $*$-algebra homomorphism:
 \]
 \end{proposition}
 \begin{proof}
+\leanok
 Distribute finite sums and group terms with $gk=h$:
 \[
  \rho(a)\rho(b)=\sum_{g,k}a(g)b(k)\lambda_{gk}
@@ -236,6 +247,8 @@ Linearity is built into the definition; $\lambda_e=I$ gives unitality.
 \end{proof}
 
 \begin{proposition}[Coefficient recovery and faithfulness]\label{prop:integrated-faithful}
+\lean{BC4lean.integratedRepresentation_delta_one,BC4lean.integratedRepresentation_injective,BC4lean.GroupAlgebra.toL2,BC4lean.GroupAlgebra.toL2_apply,BC4lean.norm_toL2_le,BC4lean.norm_coeff_le}
+\leanok
 \uses{lem:integrated-action-bound,prop:l2-hilbert-basis}
 Regard $a\in\mathbb C[\Gamma]$ also as a finitely supported $\ell^2$-vector.
 Then
@@ -247,6 +260,7 @@ Then
 In particular, $\rho$ is injective.
 \end{proposition}
 \begin{proof}
+\leanok
 In $(\rho(a)\delta_e)(h)=\sum_g a(g)\delta_e(g^{-1}h)$, only $g=h$
 contributes, giving $a(h)$. Since $\|\delta_e\|_2=1$,
 $\|a\|_2=\|\rho(a)\delta_e\|_2\leq\|\rho(a)\|$.
@@ -257,11 +271,15 @@ If $\rho(a)=0$, all coefficients of $a$ vanish.
 \section{The reduced norm and operator-norm closure}
 
 \begin{definition}[Reduced norm]\label{def:reduced-norm}
+\lean{BC4lean.reducedNorm}
+\leanok
 \uses{def:integrated-representation}
 For $a\in\mathbb C[\Gamma]$, put $\|a\|_r=\|\rho(a)\|$.
 \end{definition}
 
 \begin{proposition}[Normed star-algebra]\label{prop:reduced-norm-laws}
+\lean{BC4lean.reducedNorm_nonneg,BC4lean.reducedNorm_eq_zero,BC4lean.reducedNorm_add_le,BC4lean.reducedNorm_smul,BC4lean.reducedNorm_mul_le,BC4lean.reducedNorm_star,BC4lean.reducedNorm_cstar,BC4lean.reducedNorm_delta,BC4lean.reducedNorm_bounds}
+\leanok
 \uses{def:reduced-norm,prop:integrated-faithful,prop:integrated-star-hom,lem:integrated-action-bound}
 The reduced norm is a norm, with
 \[
@@ -274,6 +292,7 @@ The reduced norm is a norm, with
 Completeness of $\mathbb C[\Gamma]$ in this norm is not asserted.
 \end{proposition}
 \begin{proof}
+\leanok
 Homogeneity and the triangle inequality come from the operator norm;
 faithfulness gives positive definiteness. The homomorphism identities
 transfer submultiplicativity, isometry of the involution, and the
@@ -281,6 +300,8 @@ $C^*$-identity from bounded operators. The remaining bounds were proved above.
 \end{proof}
 
 \begin{definition}[Reduced group C-star algebra]\label{def:reduced-group-cstar}
+\lean{BC4lean.reducedAlgebra,BC4lean.ReducedGroupCStar,BC4lean.reducedAlgebra_coe_eq_closure_range}
+\leanok
 \uses{prop:integrated-star-hom,def:reduced-norm}
 Define
 \[
@@ -292,11 +313,14 @@ not the weak or strong operator topology.
 \end{definition}
 
 \begin{proposition}[C-star structure]\label{prop:reduced-group-cstar-structure}
+\lean{BC4lean.reducedAlgebra_isClosed,BC4lean.reducedGroupCStarAlgebra,BC4lean.regularOperator_mem_reducedAlgebra}
+\leanok
 \uses{def:reduced-group-cstar}
 The inherited operations make $C_r^*(\Gamma)$ a unital complex
 $C^*$-algebra with identity $I=\lambda_e$.
 \end{proposition}
 \begin{proof}
+\leanok
 The image of $\rho$ is a unital $*$-subalgebra. Its closure is closed under
 linear combinations and adjoints by continuity.
 If $A_n\to A$ and $B_n\to B$ in the image, $(\|A_n\|)$ is bounded and
@@ -326,6 +350,8 @@ preserves multiplication, involution, and the unit.
 \end{proof}
 
 \begin{proposition}[Generated algebra]\label{prop:reduced-group-cstar-generated}
+\lean{BC4lean.integratedRepresentation_range,BC4lean.reducedAlgebra_coe_eq_closure_span,BC4lean.reducedAlgebra_minimal}
+\leanok
 \uses{def:integrated-representation,prop:reduced-group-cstar-structure}
 The algebra $C_r^*(\Gamma)$ is the norm closure of
 $\operatorname{span}_{\mathbb C}\{\lambda_g:g\in\Gamma\}$.
@@ -333,6 +359,7 @@ It is the smallest norm-closed $*$-subalgebra of
 $\mathcal B(\ell^2(\Gamma))$ containing every $\lambda_g$.
 \end{proposition}
 \begin{proof}
+\leanok
 The image of $\rho$ is exactly the finite linear span of the generators.
 Any closed $*$-subalgebra containing them contains this span and its
 closure. Conversely, $C_r^*(\Gamma)$ is such a subalgebra.
@@ -341,10 +368,13 @@ closure. Conversely, $C_r^*(\Gamma)$ is such a subalgebra.
 \section{Countability and a first calibration}
 
 \begin{proposition}[Separability]\label{prop:reduced-group-cstar-separable}
-\uses{prop:reduced-group-cstar-completion,lem:integrated-action-bound}
+\lean{BC4lean.reducedGroupCStarSeparable}
+\leanok
+\uses{prop:reduced-group-cstar-generated}
 If $\Gamma$ is countable, then $C_r^*(\Gamma)$ is separable.
 \end{proposition}
 \begin{proof}
+\leanok
 The finite sums $\sum_g q_g\lambda_g$ with $q_g\in\mathbb Q+i\mathbb Q$
 form a countable set. Approximate coefficients on any fixed finite support
 by such rationals. The bound
@@ -353,11 +383,14 @@ $\rho(\mathbb C[\Gamma])$, hence in its closure.
 \end{proof}
 
 \begin{proposition}[Trivial group]\label{prop:reduced-group-cstar-trivial}
-\uses{prop:reduced-group-cstar-completion}
+\lean{BC4lean.reducedAlgebra_le_scalars,BC4lean.scalarToReduced_surjective,BC4lean.trivialReducedEquiv,BC4lean.trivialReducedEquiv_apply,BC4lean.trivialReducedEquiv_isometry}
+\leanok
+\uses{prop:reduced-group-cstar-structure,prop:reduced-group-cstar-generated}
 For the one-element group, $z\mapsto zI$ is an isometric unital
 $*$-isomorphism $\mathbb C\to C_r^*(\{e\})$.
 \end{proposition}
 \begin{proof}
+\leanok
 Evaluation at $e$ identifies $\ell^2(\{e\})$ with $\mathbb C$.
 Then $\rho(z\delta_e)=zI$ and $\|zI\|=|z|$.
 The image is complete and hence closed, so taking its closure adds nothing.
