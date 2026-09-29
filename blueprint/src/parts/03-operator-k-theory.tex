@@ -401,6 +401,54 @@ asserted here.
 \end{definition}
 
 
+\begin{definition}\label{def:abstract-analytic-k0}
+\uses{prop:reduced-group-cstar-completion,def:operator-k0}
+\lean{BC4lean.ReducedCompletionProjectionMonoid,BC4lean.reducedCompletionProjectionAddCommMonoid,BC4lean.ReducedCompletionK0,BC4lean.reducedCompletionK0AddCommGroup,BC4lean.reducedCompletionK0Class}
+\leanok
+For a group $\Gamma$, regarded as discrete, write
+\[
+ A_r(\Gamma)=\widehat{\mathbb C[\Gamma]}^{\|\cdot\|_r}
+\]
+for the actual abstract reduced-norm completion constructed earlier.
+Equip this $C^*$-algebra with its canonical spectral order and form
+$V(A_r(\Gamma))$, $K_0(A_r(\Gamma))$, and the canonical group-completion
+map $\iota_A:V(A_r(\Gamma))\to K_0(A_r(\Gamma))$.
+These definitions use the existing matrix-projection and Grothendieck-group
+constructions applied to the abstract completion itself.
+\end{definition}
+
+\begin{proposition}\label{prop:abstract-concrete-k0}
+\uses{def:abstract-analytic-k0,def:analytic-k0,prop:unital-k0-isomorphism,prop:reduced-group-cstar-completion}
+\lean{BC4lean.reducedCompletionProjectionMap,BC4lean.reducedCompletionProjectionMap_entry,BC4lean.reducedCompletionProjectionEquiv,BC4lean.reducedCompletionProjectionEquiv_of,BC4lean.reducedCompletionProjectionEquiv_symm_of,BC4lean.reducedCompletionK0Equiv,BC4lean.reducedCompletionK0Equiv_class,BC4lean.reducedCompletionK0Equiv_symm_class,BC4lean.reducedCompletionK0Equiv_comp_class,BC4lean.reducedCompletionK0Equiv_projection,BC4lean.reducedCompletionK0Equiv_unique}
+The canonical star-algebra isomorphism
+$e_\Gamma:A_r(\Gamma)\to C_r^*(\Gamma)$ induces additive isomorphisms
+\[
+ V(e_\Gamma):V(A_r(\Gamma))\xrightarrow{\;\cong\;}V(C_r^*(\Gamma)),
+ \qquad
+ K_0(e_\Gamma):K_0(A_r(\Gamma))\xrightarrow{\;\cong\;}K_0(C_r^*(\Gamma)).
+\]
+For a finite matrix projection $p$ over $A_r(\Gamma)$, its image is represented
+by the matrix obtained by applying $e_\Gamma$ to every entry. In particular,
+$K_0(e_\Gamma)([p])=[e_\Gamma(p)]$.
+The inverse maps are induced by $e_\Gamma^{-1}$, and
+\[
+ K_0(e_\Gamma)\circ\iota_A=\iota_C\circ V(e_\Gamma),
+\]
+where $\iota_C:V(C_r^*(\Gamma))\to K_0(C_r^*(\Gamma))$ is the concrete
+model's group-completion map. This equation uniquely determines the underlying
+homomorphism $K_0(e_\Gamma)$. Countability of $\Gamma$ is not required.
+\end{proposition}
+\begin{proof}
+\leanok
+Apply the verified isomorphism-invariance constructions to the previously
+verified star-algebra equivalence $e_\Gamma$, choosing the canonical spectral
+order on both algebras. The entrywise and projection-class formulas specialize
+the general formulas. Naturality gives the displayed commuting equation, and
+extensionality on projection classes proves uniqueness.
+This identifies two models of the analytic target; it does not compute that
+target or construct the Baum--Connes assembly map.
+\end{proof}
+
 \begin{definition}\label{def:analytic-side}
 \uses{def:analytic-k0,def:operator-k-theory}
 \notready

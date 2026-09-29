@@ -25,6 +25,7 @@ code{overflow-wrap:anywhere}</style></head><body><a href="../../blueprint/">返�
 <li><a href="#MatrixProjectionMap">MatrixProjectionMap.lean</a></li>
 <li><a href="#OperatorK0Functoriality">OperatorK0Functoriality.lean</a></li>
 <li><a href="#OperatorK0Equivalence">OperatorK0Equivalence.lean</a></li>
+<li><a href="#ReducedCompletionK0">ReducedCompletionK0.lean</a></li>
 </ul></nav>
 <h2 id="GroupAlgebra">GroupAlgebra.lean</h2><p>源码 SHA-256：<code>1c6c0899fe9bc9f7860f291ba7c5573353d18a3c5809258769d689bc39da8ad4</code></p><pre>
 <span><a class="line" href="#L1" id="L1">  1</a> import Mathlib.Algebra.MonoidAlgebra.Basic</span>
@@ -2025,5 +2026,118 @@ code{overflow-wrap:anywhere}</style></head><body><a href="../../blueprint/">返�
 <span><a class="line" href="#OperatorK0Equivalence-L126" id="OperatorK0Equivalence-L126">126</a>   exact DFunLike.congr_fun (k0Map_comp f.toStarAlgHom e.toStarAlgHom) x</span>
 <span><a class="line" href="#OperatorK0Equivalence-L127" id="OperatorK0Equivalence-L127">127</a> </span>
 <span><a class="line" href="#OperatorK0Equivalence-L128" id="OperatorK0Equivalence-L128">128</a> end BC4lean.OperatorKTheory</span>
+</pre>
+<h2 id="ReducedCompletionK0">ReducedCompletionK0.lean</h2><p>源码 SHA-256：<code>f46dd10925af007c8f7fa33ec2becbc25df9a0082c739a1de12cc630f4fcb21c</code></p><pre>
+<span><a class="line" href="#ReducedCompletionK0-L1" id="ReducedCompletionK0-L1">  1</a> import BC4lean.OperatorK0Equivalence</span>
+<span><a class="line" href="#ReducedCompletionK0-L2" id="ReducedCompletionK0-L2">  2</a> import BC4lean.ReducedCompletion</span>
+<span><a class="line" href="#ReducedCompletionK0-L3" id="ReducedCompletionK0-L3">  3</a> import BC4lean.ReducedOperatorK0</span>
+<span><a class="line" href="#ReducedCompletionK0-L4" id="ReducedCompletionK0-L4">  4</a> </span>
+<span><a class="line" href="#ReducedCompletionK0-L5" id="ReducedCompletionK0-L5">  5</a> /-! # Abstract and concrete models of the degree-zero analytic target</span>
+<span><a class="line" href="#ReducedCompletionK0-L6" id="ReducedCompletionK0-L6">  6</a> </span>
+<span><a class="line" href="#ReducedCompletionK0-L7" id="ReducedCompletionK0-L7">  7</a> The actual reduced-norm completion and the concrete reduced group C⋆-algebra</span>
+<span><a class="line" href="#ReducedCompletionK0-L8" id="ReducedCompletionK0-L8">  8</a> are equipped with their canonical spectral orders. Their already verified</span>
+<span><a class="line" href="#ReducedCompletionK0-L9" id="ReducedCompletionK0-L9">  9</a> star-algebra equivalence induces the comparison on projection classes and K₀.</span>
+<span><a class="line" href="#ReducedCompletionK0-L10" id="ReducedCompletionK0-L10"> 10</a> No countability assumption, computation of K₀, or assembly theorem is used.</span>
+<span><a class="line" href="#ReducedCompletionK0-L11" id="ReducedCompletionK0-L11"> 11</a> -/</span>
+<span><a class="line" href="#ReducedCompletionK0-L12" id="ReducedCompletionK0-L12"> 12</a> </span>
+<span><a class="line" href="#ReducedCompletionK0-L13" id="ReducedCompletionK0-L13"> 13</a> noncomputable section</span>
+<span><a class="line" href="#ReducedCompletionK0-L14" id="ReducedCompletionK0-L14"> 14</a> namespace BC4lean</span>
+<span><a class="line" href="#ReducedCompletionK0-L15" id="ReducedCompletionK0-L15"> 15</a> open OperatorKTheory</span>
+<span><a class="line" href="#ReducedCompletionK0-L16" id="ReducedCompletionK0-L16"> 16</a> </span>
+<span><a class="line" href="#ReducedCompletionK0-L17" id="ReducedCompletionK0-L17"> 17</a> universe u</span>
+<span><a class="line" href="#ReducedCompletionK0-L18" id="ReducedCompletionK0-L18"> 18</a> variable (Γ : Type u) [Group Γ]</span>
+<span><a class="line" href="#ReducedCompletionK0-L19" id="ReducedCompletionK0-L19"> 19</a> </span>
+<span id="doc/BC4lean.completionSpectralOrder"><a class="line" href="#ReducedCompletionK0-L20" id="ReducedCompletionK0-L20"> 20</a> local instance completionSpectralOrder : PartialOrder (ReducedCompletion Γ) :=</span>
+<span><a class="line" href="#ReducedCompletionK0-L21" id="ReducedCompletionK0-L21"> 21</a>   CStarAlgebra.spectralOrder (ReducedCompletion Γ)</span>
+<span><a class="line" href="#ReducedCompletionK0-L22" id="ReducedCompletionK0-L22"> 22</a> </span>
+<span id="doc/BC4lean.completionSpectralOrderedRing"><a class="line" href="#ReducedCompletionK0-L23" id="ReducedCompletionK0-L23"> 23</a> local instance completionSpectralOrderedRing : StarOrderedRing (ReducedCompletion Γ) :=</span>
+<span><a class="line" href="#ReducedCompletionK0-L24" id="ReducedCompletionK0-L24"> 24</a>   CStarAlgebra.spectralOrderedRing (ReducedCompletion Γ)</span>
+<span><a class="line" href="#ReducedCompletionK0-L25" id="ReducedCompletionK0-L25"> 25</a> </span>
+<span id="doc/BC4lean.reducedSpectralOrder"><a class="line" href="#ReducedCompletionK0-L26" id="ReducedCompletionK0-L26"> 26</a> local instance reducedSpectralOrder : PartialOrder (ReducedGroupCStar Γ) :=</span>
+<span><a class="line" href="#ReducedCompletionK0-L27" id="ReducedCompletionK0-L27"> 27</a>   CStarAlgebra.spectralOrder (ReducedGroupCStar Γ)</span>
+<span><a class="line" href="#ReducedCompletionK0-L28" id="ReducedCompletionK0-L28"> 28</a> </span>
+<span id="doc/BC4lean.reducedSpectralOrderedRing"><a class="line" href="#ReducedCompletionK0-L29" id="ReducedCompletionK0-L29"> 29</a> local instance reducedSpectralOrderedRing : StarOrderedRing (ReducedGroupCStar Γ) :=</span>
+<span><a class="line" href="#ReducedCompletionK0-L30" id="ReducedCompletionK0-L30"> 30</a>   CStarAlgebra.spectralOrderedRing (ReducedGroupCStar Γ)</span>
+<span><a class="line" href="#ReducedCompletionK0-L31" id="ReducedCompletionK0-L31"> 31</a> </span>
+<span><a class="line" href="#ReducedCompletionK0-L32" id="ReducedCompletionK0-L32"> 32</a> /-- Stable projection classes in the actual abstract reduced-norm completion. -/</span>
+<span id="doc/BC4lean.ReducedCompletionProjectionMonoid"><a class="line" href="#ReducedCompletionK0-L33" id="ReducedCompletionK0-L33"> 33</a> def ReducedCompletionProjectionMonoid : Type _ := StableProjectionMonoid (ReducedCompletion Γ)</span>
+<span><a class="line" href="#ReducedCompletionK0-L34" id="ReducedCompletionK0-L34"> 34</a> </span>
+<span id="doc/BC4lean.reducedCompletionProjectionAddCommMonoid"><a class="line" href="#ReducedCompletionK0-L35" id="ReducedCompletionK0-L35"> 35</a> instance reducedCompletionProjectionAddCommMonoid :</span>
+<span><a class="line" href="#ReducedCompletionK0-L36" id="ReducedCompletionK0-L36"> 36</a>     AddCommMonoid (ReducedCompletionProjectionMonoid Γ) :=</span>
+<span><a class="line" href="#ReducedCompletionK0-L37" id="ReducedCompletionK0-L37"> 37</a>   inferInstanceAs (AddCommMonoid (StableProjectionMonoid (ReducedCompletion Γ)))</span>
+<span><a class="line" href="#ReducedCompletionK0-L38" id="ReducedCompletionK0-L38"> 38</a> </span>
+<span><a class="line" href="#ReducedCompletionK0-L39" id="ReducedCompletionK0-L39"> 39</a> /-- K₀ of the abstract reduced-norm completion, using its canonical spectral order. -/</span>
+<span id="doc/BC4lean.ReducedCompletionK0"><a class="line" href="#ReducedCompletionK0-L40" id="ReducedCompletionK0-L40"> 40</a> def ReducedCompletionK0 : Type _ := K0 (ReducedCompletion Γ)</span>
+<span><a class="line" href="#ReducedCompletionK0-L41" id="ReducedCompletionK0-L41"> 41</a> </span>
+<span id="doc/BC4lean.reducedCompletionK0AddCommGroup"><a class="line" href="#ReducedCompletionK0-L42" id="ReducedCompletionK0-L42"> 42</a> instance reducedCompletionK0AddCommGroup : AddCommGroup (ReducedCompletionK0 Γ) :=</span>
+<span><a class="line" href="#ReducedCompletionK0-L43" id="ReducedCompletionK0-L43"> 43</a>   inferInstanceAs (AddCommGroup (K0 (ReducedCompletion Γ)))</span>
+<span><a class="line" href="#ReducedCompletionK0-L44" id="ReducedCompletionK0-L44"> 44</a> </span>
+<span><a class="line" href="#ReducedCompletionK0-L45" id="ReducedCompletionK0-L45"> 45</a> /-- The group-completion map for stable projection classes in the abstract model. -/</span>
+<span id="doc/BC4lean.reducedCompletionK0Class"><a class="line" href="#ReducedCompletionK0-L46" id="ReducedCompletionK0-L46"> 46</a> def reducedCompletionK0Class : ReducedCompletionProjectionMonoid Γ →+ ReducedCompletionK0 Γ :=</span>
+<span><a class="line" href="#ReducedCompletionK0-L47" id="ReducedCompletionK0-L47"> 47</a>   k0Class</span>
+<span><a class="line" href="#ReducedCompletionK0-L48" id="ReducedCompletionK0-L48"> 48</a> </span>
+<span><a class="line" href="#ReducedCompletionK0-L49" id="ReducedCompletionK0-L49"> 49</a> /-- Apply the canonical algebra comparison entrywise to a finite matrix projection. -/</span>
+<span id="doc/BC4lean.reducedCompletionProjectionMap"><a class="line" href="#ReducedCompletionK0-L50" id="ReducedCompletionK0-L50"> 50</a> def reducedCompletionProjectionMap (p : FiniteProjection (ReducedCompletion Γ)) :</span>
+<span><a class="line" href="#ReducedCompletionK0-L51" id="ReducedCompletionK0-L51"> 51</a>     FiniteProjection (ReducedGroupCStar Γ) :=</span>
+<span><a class="line" href="#ReducedCompletionK0-L52" id="ReducedCompletionK0-L52"> 52</a>   FiniteProjection.map (reducedCompletionEquiv Γ).toStarAlgHom p</span>
+<span><a class="line" href="#ReducedCompletionK0-L53" id="ReducedCompletionK0-L53"> 53</a> </span>
+<span id="doc/BC4lean.reducedCompletionProjectionMap_entry"><a class="line" href="#ReducedCompletionK0-L54" id="ReducedCompletionK0-L54"> 54</a> @[simp] theorem reducedCompletionProjectionMap_entry (p : FiniteProjection (ReducedCompletion Γ))</span>
+<span><a class="line" href="#ReducedCompletionK0-L55" id="ReducedCompletionK0-L55"> 55</a>     (i j : p.Index) :</span>
+<span><a class="line" href="#ReducedCompletionK0-L56" id="ReducedCompletionK0-L56"> 56</a>     projectionMatrix (reducedCompletionProjectionMap Γ p).projection i j =</span>
+<span><a class="line" href="#ReducedCompletionK0-L57" id="ReducedCompletionK0-L57"> 57</a>       reducedCompletionEquiv Γ (projectionMatrix p.projection i j) := rfl</span>
+<span><a class="line" href="#ReducedCompletionK0-L58" id="ReducedCompletionK0-L58"> 58</a> </span>
+<span><a class="line" href="#ReducedCompletionK0-L59" id="ReducedCompletionK0-L59"> 59</a> /-- Canonical comparison of the stable projection monoids of the two models. -/</span>
+<span id="doc/BC4lean.reducedCompletionProjectionEquiv"><a class="line" href="#ReducedCompletionK0-L60" id="ReducedCompletionK0-L60"> 60</a> def reducedCompletionProjectionEquiv :</span>
+<span><a class="line" href="#ReducedCompletionK0-L61" id="ReducedCompletionK0-L61"> 61</a>     ReducedCompletionProjectionMonoid Γ ≃+ ReducedProjectionMonoid Γ :=</span>
+<span><a class="line" href="#ReducedCompletionK0-L62" id="ReducedCompletionK0-L62"> 62</a>   StableProjectionMonoid.mapEquiv (reducedCompletionEquiv Γ)</span>
+<span><a class="line" href="#ReducedCompletionK0-L63" id="ReducedCompletionK0-L63"> 63</a> </span>
+<span id="doc/BC4lean.reducedCompletionProjectionEquiv_of"><a class="line" href="#ReducedCompletionK0-L64" id="ReducedCompletionK0-L64"> 64</a> @[simp] theorem reducedCompletionProjectionEquiv_of (p : FiniteProjection (ReducedCompletion Γ)) :</span>
+<span><a class="line" href="#ReducedCompletionK0-L65" id="ReducedCompletionK0-L65"> 65</a>     reducedCompletionProjectionEquiv Γ (StableProjectionMonoid.of p) =</span>
+<span><a class="line" href="#ReducedCompletionK0-L66" id="ReducedCompletionK0-L66"> 66</a>       StableProjectionMonoid.of (reducedCompletionProjectionMap Γ p) :=</span>
+<span><a class="line" href="#ReducedCompletionK0-L67" id="ReducedCompletionK0-L67"> 67</a>   StableProjectionMonoid.mapEquiv_of (reducedCompletionEquiv Γ) p</span>
+<span><a class="line" href="#ReducedCompletionK0-L68" id="ReducedCompletionK0-L68"> 68</a> </span>
+<span id="doc/BC4lean.reducedCompletionProjectionEquiv_symm_of"><a class="line" href="#ReducedCompletionK0-L69" id="ReducedCompletionK0-L69"> 69</a> @[simp] theorem reducedCompletionProjectionEquiv_symm_of</span>
+<span><a class="line" href="#ReducedCompletionK0-L70" id="ReducedCompletionK0-L70"> 70</a>     (p : FiniteProjection (ReducedGroupCStar Γ)) :</span>
+<span><a class="line" href="#ReducedCompletionK0-L71" id="ReducedCompletionK0-L71"> 71</a>     (reducedCompletionProjectionEquiv Γ).symm (StableProjectionMonoid.of p) =</span>
+<span><a class="line" href="#ReducedCompletionK0-L72" id="ReducedCompletionK0-L72"> 72</a>       StableProjectionMonoid.of</span>
+<span><a class="line" href="#ReducedCompletionK0-L73" id="ReducedCompletionK0-L73"> 73</a>         (FiniteProjection.map (reducedCompletionEquiv Γ).symm.toStarAlgHom p) := rfl</span>
+<span><a class="line" href="#ReducedCompletionK0-L74" id="ReducedCompletionK0-L74"> 74</a> </span>
+<span><a class="line" href="#ReducedCompletionK0-L75" id="ReducedCompletionK0-L75"> 75</a> /-- The abstract completion gives canonically the same degree-zero analytic target. -/</span>
+<span id="doc/BC4lean.reducedCompletionK0Equiv"><a class="line" href="#ReducedCompletionK0-L76" id="ReducedCompletionK0-L76"> 76</a> def reducedCompletionK0Equiv : ReducedCompletionK0 Γ ≃+ ReducedK0 Γ :=</span>
+<span><a class="line" href="#ReducedCompletionK0-L77" id="ReducedCompletionK0-L77"> 77</a>   k0Equiv (reducedCompletionEquiv Γ)</span>
+<span><a class="line" href="#ReducedCompletionK0-L78" id="ReducedCompletionK0-L78"> 78</a> </span>
+<span id="doc/BC4lean.reducedCompletionK0Equiv_class"><a class="line" href="#ReducedCompletionK0-L79" id="ReducedCompletionK0-L79"> 79</a> @[simp] theorem reducedCompletionK0Equiv_class (x : ReducedCompletionProjectionMonoid Γ) :</span>
+<span><a class="line" href="#ReducedCompletionK0-L80" id="ReducedCompletionK0-L80"> 80</a>     reducedCompletionK0Equiv Γ (reducedCompletionK0Class Γ x) =</span>
+<span><a class="line" href="#ReducedCompletionK0-L81" id="ReducedCompletionK0-L81"> 81</a>       reducedK0Class Γ (reducedCompletionProjectionEquiv Γ x) :=</span>
+<span><a class="line" href="#ReducedCompletionK0-L82" id="ReducedCompletionK0-L82"> 82</a>   k0Equiv_class (reducedCompletionEquiv Γ) x</span>
+<span><a class="line" href="#ReducedCompletionK0-L83" id="ReducedCompletionK0-L83"> 83</a> </span>
+<span id="doc/BC4lean.reducedCompletionK0Equiv_symm_class"><a class="line" href="#ReducedCompletionK0-L84" id="ReducedCompletionK0-L84"> 84</a> @[simp] theorem reducedCompletionK0Equiv_symm_class (x : ReducedProjectionMonoid Γ) :</span>
+<span><a class="line" href="#ReducedCompletionK0-L85" id="ReducedCompletionK0-L85"> 85</a>     (reducedCompletionK0Equiv Γ).symm (reducedK0Class Γ x) =</span>
+<span><a class="line" href="#ReducedCompletionK0-L86" id="ReducedCompletionK0-L86"> 86</a>       reducedCompletionK0Class Γ ((reducedCompletionProjectionEquiv Γ).symm x) :=</span>
+<span><a class="line" href="#ReducedCompletionK0-L87" id="ReducedCompletionK0-L87"> 87</a>   k0Equiv_class (reducedCompletionEquiv Γ).symm x</span>
+<span><a class="line" href="#ReducedCompletionK0-L88" id="ReducedCompletionK0-L88"> 88</a> </span>
+<span><a class="line" href="#ReducedCompletionK0-L89" id="ReducedCompletionK0-L89"> 89</a> /-- Naturality of group completion for the abstract/concrete comparison. -/</span>
+<span id="doc/BC4lean.reducedCompletionK0Equiv_comp_class"><a class="line" href="#ReducedCompletionK0-L90" id="ReducedCompletionK0-L90"> 90</a> theorem reducedCompletionK0Equiv_comp_class :</span>
+<span><a class="line" href="#ReducedCompletionK0-L91" id="ReducedCompletionK0-L91"> 91</a>     (reducedCompletionK0Equiv Γ).toAddMonoidHom.comp (reducedCompletionK0Class Γ) =</span>
+<span><a class="line" href="#ReducedCompletionK0-L92" id="ReducedCompletionK0-L92"> 92</a>       (reducedK0Class Γ).comp (reducedCompletionProjectionEquiv Γ).toAddMonoidHom := by</span>
+<span><a class="line" href="#ReducedCompletionK0-L93" id="ReducedCompletionK0-L93"> 93</a>   ext x</span>
+<span><a class="line" href="#ReducedCompletionK0-L94" id="ReducedCompletionK0-L94"> 94</a>   exact reducedCompletionK0Equiv_class Γ x</span>
+<span><a class="line" href="#ReducedCompletionK0-L95" id="ReducedCompletionK0-L95"> 95</a> </span>
+<span id="doc/BC4lean.reducedCompletionK0Equiv_projection"><a class="line" href="#ReducedCompletionK0-L96" id="ReducedCompletionK0-L96"> 96</a> @[simp] theorem reducedCompletionK0Equiv_projection (p : FiniteProjection (ReducedCompletion Γ)) :</span>
+<span><a class="line" href="#ReducedCompletionK0-L97" id="ReducedCompletionK0-L97"> 97</a>     reducedCompletionK0Equiv Γ (reducedCompletionK0Class Γ (StableProjectionMonoid.of p)) =</span>
+<span><a class="line" href="#ReducedCompletionK0-L98" id="ReducedCompletionK0-L98"> 98</a>       reducedK0Class Γ (StableProjectionMonoid.of (reducedCompletionProjectionMap Γ p)) :=</span>
+<span><a class="line" href="#ReducedCompletionK0-L99" id="ReducedCompletionK0-L99"> 99</a>   k0Equiv_projection (reducedCompletionEquiv Γ) p</span>
+<span><a class="line" href="#ReducedCompletionK0-L100" id="ReducedCompletionK0-L100">100</a> </span>
+<span><a class="line" href="#ReducedCompletionK0-L101" id="ReducedCompletionK0-L101">101</a> /-- The comparison is uniquely determined by compatibility with projection classes. -/</span>
+<span id="doc/BC4lean.reducedCompletionK0Equiv_unique"><a class="line" href="#ReducedCompletionK0-L102" id="ReducedCompletionK0-L102">102</a> theorem reducedCompletionK0Equiv_unique (f : ReducedCompletionK0 Γ →+ ReducedK0 Γ)</span>
+<span><a class="line" href="#ReducedCompletionK0-L103" id="ReducedCompletionK0-L103">103</a>     (h : f.comp (reducedCompletionK0Class Γ) =</span>
+<span><a class="line" href="#ReducedCompletionK0-L104" id="ReducedCompletionK0-L104">104</a>       (reducedK0Class Γ).comp (reducedCompletionProjectionEquiv Γ).toAddMonoidHom) :</span>
+<span><a class="line" href="#ReducedCompletionK0-L105" id="ReducedCompletionK0-L105">105</a>     (reducedCompletionK0Equiv Γ).toAddMonoidHom = f := by</span>
+<span><a class="line" href="#ReducedCompletionK0-L106" id="ReducedCompletionK0-L106">106</a>   apply k0Hom_ext</span>
+<span><a class="line" href="#ReducedCompletionK0-L107" id="ReducedCompletionK0-L107">107</a>   intro p</span>
+<span><a class="line" href="#ReducedCompletionK0-L108" id="ReducedCompletionK0-L108">108</a>   exact (reducedCompletionK0Equiv_class Γ (StableProjectionMonoid.of p)).trans</span>
+<span><a class="line" href="#ReducedCompletionK0-L109" id="ReducedCompletionK0-L109">109</a>     (DFunLike.congr_fun h (StableProjectionMonoid.of p)).symm</span>
+<span><a class="line" href="#ReducedCompletionK0-L110" id="ReducedCompletionK0-L110">110</a> </span>
+<span><a class="line" href="#ReducedCompletionK0-L111" id="ReducedCompletionK0-L111">111</a> end BC4lean</span>
 </pre>
 </body></html>
