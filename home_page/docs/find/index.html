@@ -18,6 +18,10 @@ code{overflow-wrap:anywhere}</style></head><body><a href="../../blueprint/">返�
 <li><a href="#OperatorProjections">OperatorProjections.lean</a></li>
 <li><a href="#MatrixStabilization">MatrixStabilization.lean</a></li>
 <li><a href="#UnitaryHomotopy">UnitaryHomotopy.lean</a></li>
+<li><a href="#RectangularEquivalence">RectangularEquivalence.lean</a></li>
+<li><a href="#StableProjectionMonoid">StableProjectionMonoid.lean</a></li>
+<li><a href="#OperatorK0">OperatorK0.lean</a></li>
+<li><a href="#ReducedOperatorK0">ReducedOperatorK0.lean</a></li>
 </ul></nav>
 <h2 id="GroupAlgebra">GroupAlgebra.lean</h2><p>源码 SHA-256：<code>1c6c0899fe9bc9f7860f291ba7c5573353d18a3c5809258769d689bc39da8ad4</code></p><pre>
 <span><a class="line" href="#L1" id="L1">  1</a> import Mathlib.Algebra.MonoidAlgebra.Basic</span>
@@ -1229,5 +1233,451 @@ code{overflow-wrap:anywhere}</style></head><body><a href="../../blueprint/">返�
 <span><a class="line" href="#UnitaryHomotopy-L74" id="UnitaryHomotopy-L74"> 74</a>   Quotient.map stabilizeUnitary (fun _ _ h =&gt; unitaryHomotopic_stabilize h)</span>
 <span><a class="line" href="#UnitaryHomotopy-L75" id="UnitaryHomotopy-L75"> 75</a> </span>
 <span><a class="line" href="#UnitaryHomotopy-L76" id="UnitaryHomotopy-L76"> 76</a> end BC4lean.OperatorKTheory</span>
+</pre>
+<h2 id="RectangularEquivalence">RectangularEquivalence.lean</h2><p>源码 SHA-256：<code>64e81b38d480648be4ef60b8def7cb16a622f16290f763a4f91d959c4c1112dd</code></p><pre>
+<span><a class="line" href="#RectangularEquivalence-L1" id="RectangularEquivalence-L1">  1</a> import BC4lean.MatrixStabilization</span>
+<span><a class="line" href="#RectangularEquivalence-L2" id="RectangularEquivalence-L2">  2</a> </span>
+<span><a class="line" href="#RectangularEquivalence-L3" id="RectangularEquivalence-L3">  3</a> /-! # Murray–von Neumann equivalence across finite matrix sizes</span>
+<span><a class="line" href="#RectangularEquivalence-L4" id="RectangularEquivalence-L4">  4</a> </span>
+<span><a class="line" href="#RectangularEquivalence-L5" id="RectangularEquivalence-L5">  5</a> Rectangular witnesses compare projections without choosing an ordering of the</span>
+<span><a class="line" href="#RectangularEquivalence-L6" id="RectangularEquivalence-L6">  6</a> finite index sets. Their support identities follow from the C⋆-identity.</span>
+<span><a class="line" href="#RectangularEquivalence-L7" id="RectangularEquivalence-L7">  7</a> -/</span>
+<span><a class="line" href="#RectangularEquivalence-L8" id="RectangularEquivalence-L8">  8</a> </span>
+<span><a class="line" href="#RectangularEquivalence-L9" id="RectangularEquivalence-L9">  9</a> noncomputable section</span>
+<span><a class="line" href="#RectangularEquivalence-L10" id="RectangularEquivalence-L10"> 10</a> open scoped Matrix</span>
+<span><a class="line" href="#RectangularEquivalence-L11" id="RectangularEquivalence-L11"> 11</a> namespace BC4lean.OperatorKTheory</span>
+<span><a class="line" href="#RectangularEquivalence-L12" id="RectangularEquivalence-L12"> 12</a> </span>
+<span><a class="line" href="#RectangularEquivalence-L13" id="RectangularEquivalence-L13"> 13</a> variable {A : Type*} [CStarAlgebra A] [PartialOrder A] [StarOrderedRing A]</span>
+<span><a class="line" href="#RectangularEquivalence-L14" id="RectangularEquivalence-L14"> 14</a> variable {ι κ τ υ : Type*} [Fintype ι] [Fintype κ] [Fintype τ] [Fintype υ]</span>
+<span><a class="line" href="#RectangularEquivalence-L15" id="RectangularEquivalence-L15"> 15</a> variable [DecidableEq ι] [DecidableEq κ] [DecidableEq τ] [DecidableEq υ]</span>
+<span><a class="line" href="#RectangularEquivalence-L16" id="RectangularEquivalence-L16"> 16</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.projectionMatrix"><a class="line" href="#RectangularEquivalence-L17" id="RectangularEquivalence-L17"> 17</a> abbrev projectionMatrix (p : MatrixProjection A ι) : Matrix ι ι A :=</span>
+<span><a class="line" href="#RectangularEquivalence-L18" id="RectangularEquivalence-L18"> 18</a>   CStarMatrix.ofMatrix.symm p.val</span>
+<span><a class="line" href="#RectangularEquivalence-L19" id="RectangularEquivalence-L19"> 19</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.projectionMatrix_star"><a class="line" href="#RectangularEquivalence-L20" id="RectangularEquivalence-L20"> 20</a> @[simp] theorem projectionMatrix_star (p : MatrixProjection A ι) :</span>
+<span><a class="line" href="#RectangularEquivalence-L21" id="RectangularEquivalence-L21"> 21</a>     (projectionMatrix p)ᴴ = projectionMatrix p := p.property.isSelfAdjoint.star_eq</span>
+<span><a class="line" href="#RectangularEquivalence-L22" id="RectangularEquivalence-L22"> 22</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.projectionMatrix_mul"><a class="line" href="#RectangularEquivalence-L23" id="RectangularEquivalence-L23"> 23</a> @[simp] theorem projectionMatrix_mul (p : MatrixProjection A ι) :</span>
+<span><a class="line" href="#RectangularEquivalence-L24" id="RectangularEquivalence-L24"> 24</a>     projectionMatrix p * projectionMatrix p = projectionMatrix p := p.property.isIdempotentElem.eq</span>
+<span><a class="line" href="#RectangularEquivalence-L25" id="RectangularEquivalence-L25"> 25</a> </span>
+<span><a class="line" href="#RectangularEquivalence-L26" id="RectangularEquivalence-L26"> 26</a> /-- Initial and final projections of a rectangular partial isometry. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.RectEquivalent"><a class="line" href="#RectangularEquivalence-L27" id="RectangularEquivalence-L27"> 27</a> def RectEquivalent (p : MatrixProjection A ι) (q : MatrixProjection A κ) : Prop :=</span>
+<span><a class="line" href="#RectangularEquivalence-L28" id="RectangularEquivalence-L28"> 28</a>   ∃ v : Matrix ι κ A, v * vᴴ = projectionMatrix p ∧ vᴴ * v = projectionMatrix q</span>
+<span><a class="line" href="#RectangularEquivalence-L29" id="RectangularEquivalence-L29"> 29</a> </span>
+<span><a class="line" href="#RectangularEquivalence-L30" id="RectangularEquivalence-L30"> 30</a> /-- The right support equation is derived, rather than included in the definition. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.rectangular_right_support"><a class="line" href="#RectangularEquivalence-L31" id="RectangularEquivalence-L31"> 31</a> theorem rectangular_right_support (q : MatrixProjection A κ) (v : Matrix ι κ A)</span>
+<span><a class="line" href="#RectangularEquivalence-L32" id="RectangularEquivalence-L32"> 32</a>     (hv : vᴴ * v = projectionMatrix q) : v * projectionMatrix q = v := by</span>
+<span><a class="line" href="#RectangularEquivalence-L33" id="RectangularEquivalence-L33"> 33</a>   let V : CStarMatrix (ι ⊕ κ) (ι ⊕ κ) A :=</span>
+<span><a class="line" href="#RectangularEquivalence-L34" id="RectangularEquivalence-L34"> 34</a>     CStarMatrix.ofMatrix (Matrix.fromBlocks (0 : Matrix ι ι A) v 0 0)</span>
+<span><a class="line" href="#RectangularEquivalence-L35" id="RectangularEquivalence-L35"> 35</a>   let P : MatrixProjection A (ι ⊕ κ) := projectionBlockSum Projection.zero q</span>
+<span><a class="line" href="#RectangularEquivalence-L36" id="RectangularEquivalence-L36"> 36</a>   have hMat :</span>
+<span><a class="line" href="#RectangularEquivalence-L37" id="RectangularEquivalence-L37"> 37</a>       (Matrix.fromBlocks (0 : Matrix ι ι A) v (0 : Matrix κ ι A) (0 : Matrix κ κ A))ᴴ *</span>
+<span><a class="line" href="#RectangularEquivalence-L38" id="RectangularEquivalence-L38"> 38</a>         Matrix.fromBlocks (0 : Matrix ι ι A) v (0 : Matrix κ ι A) (0 : Matrix κ κ A) =</span>
+<span><a class="line" href="#RectangularEquivalence-L39" id="RectangularEquivalence-L39"> 39</a>         Matrix.fromBlocks (0 : Matrix ι ι A) (0 : Matrix ι κ A)</span>
+<span><a class="line" href="#RectangularEquivalence-L40" id="RectangularEquivalence-L40"> 40</a>           (0 : Matrix κ ι A) (projectionMatrix q) := by</span>
+<span><a class="line" href="#RectangularEquivalence-L41" id="RectangularEquivalence-L41"> 41</a>     simp only [Matrix.fromBlocks_conjTranspose, Matrix.conjTranspose_zero,</span>
+<span><a class="line" href="#RectangularEquivalence-L42" id="RectangularEquivalence-L42"> 42</a>       Matrix.fromBlocks_multiply, Matrix.zero_mul, Matrix.mul_zero, add_zero, hv]</span>
+<span><a class="line" href="#RectangularEquivalence-L43" id="RectangularEquivalence-L43"> 43</a>   have hV : star V * V = P.val := hMat</span>
+<span><a class="line" href="#RectangularEquivalence-L44" id="RectangularEquivalence-L44"> 44</a>   have h := Projection.right_support P V hV</span>
+<span><a class="line" href="#RectangularEquivalence-L45" id="RectangularEquivalence-L45"> 45</a>   have hMat&#x27; :</span>
+<span><a class="line" href="#RectangularEquivalence-L46" id="RectangularEquivalence-L46"> 46</a>       Matrix.fromBlocks (0 : Matrix ι ι A) v (0 : Matrix κ ι A) (0 : Matrix κ κ A) *</span>
+<span><a class="line" href="#RectangularEquivalence-L47" id="RectangularEquivalence-L47"> 47</a>         Matrix.fromBlocks (0 : Matrix ι ι A) (0 : Matrix ι κ A)</span>
+<span><a class="line" href="#RectangularEquivalence-L48" id="RectangularEquivalence-L48"> 48</a>           (0 : Matrix κ ι A) (projectionMatrix q) =</span>
+<span><a class="line" href="#RectangularEquivalence-L49" id="RectangularEquivalence-L49"> 49</a>       Matrix.fromBlocks (0 : Matrix ι ι A) v (0 : Matrix κ ι A) (0 : Matrix κ κ A) := h</span>
+<span><a class="line" href="#RectangularEquivalence-L50" id="RectangularEquivalence-L50"> 50</a>   simp only [Matrix.fromBlocks_multiply, Matrix.zero_mul, Matrix.mul_zero,</span>
+<span><a class="line" href="#RectangularEquivalence-L51" id="RectangularEquivalence-L51"> 51</a>     zero_add, add_zero] at hMat&#x27;</span>
+<span><a class="line" href="#RectangularEquivalence-L52" id="RectangularEquivalence-L52"> 52</a>   exact congrArg Matrix.toBlocks₁₂ hMat&#x27;</span>
+<span><a class="line" href="#RectangularEquivalence-L53" id="RectangularEquivalence-L53"> 53</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.rectangular_left_support"><a class="line" href="#RectangularEquivalence-L54" id="RectangularEquivalence-L54"> 54</a> theorem rectangular_left_support (p : MatrixProjection A ι) (v : Matrix ι κ A)</span>
+<span><a class="line" href="#RectangularEquivalence-L55" id="RectangularEquivalence-L55"> 55</a>     (hv : v * vᴴ = projectionMatrix p) : projectionMatrix p * v = v := by</span>
+<span><a class="line" href="#RectangularEquivalence-L56" id="RectangularEquivalence-L56"> 56</a>   have h := rectangular_right_support p vᴴ (by simpa using hv)</span>
+<span><a class="line" href="#RectangularEquivalence-L57" id="RectangularEquivalence-L57"> 57</a>   simpa using congrArg Matrix.conjTranspose h</span>
+<span><a class="line" href="#RectangularEquivalence-L58" id="RectangularEquivalence-L58"> 58</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.rectEquivalent_refl"><a class="line" href="#RectangularEquivalence-L59" id="RectangularEquivalence-L59"> 59</a> theorem rectEquivalent_refl (p : MatrixProjection A ι) : RectEquivalent p p :=</span>
+<span><a class="line" href="#RectangularEquivalence-L60" id="RectangularEquivalence-L60"> 60</a>   ⟨projectionMatrix p, by simp, by simp⟩</span>
+<span><a class="line" href="#RectangularEquivalence-L61" id="RectangularEquivalence-L61"> 61</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.rectEquivalent_symm"><a class="line" href="#RectangularEquivalence-L62" id="RectangularEquivalence-L62"> 62</a> theorem rectEquivalent_symm {p : MatrixProjection A ι} {q : MatrixProjection A κ}</span>
+<span><a class="line" href="#RectangularEquivalence-L63" id="RectangularEquivalence-L63"> 63</a>     (h : RectEquivalent p q) : RectEquivalent q p := by</span>
+<span><a class="line" href="#RectangularEquivalence-L64" id="RectangularEquivalence-L64"> 64</a>   obtain ⟨v, hv, hv&#x27;⟩ := h</span>
+<span><a class="line" href="#RectangularEquivalence-L65" id="RectangularEquivalence-L65"> 65</a>   exact ⟨vᴴ, by simpa using hv&#x27;, by simpa using hv⟩</span>
+<span><a class="line" href="#RectangularEquivalence-L66" id="RectangularEquivalence-L66"> 66</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.rectEquivalent_trans"><a class="line" href="#RectangularEquivalence-L67" id="RectangularEquivalence-L67"> 67</a> theorem rectEquivalent_trans {p : MatrixProjection A ι} {q : MatrixProjection A κ}</span>
+<span><a class="line" href="#RectangularEquivalence-L68" id="RectangularEquivalence-L68"> 68</a>     {r : MatrixProjection A τ} (h : RectEquivalent p q) (k : RectEquivalent q r) :</span>
+<span><a class="line" href="#RectangularEquivalence-L69" id="RectangularEquivalence-L69"> 69</a>     RectEquivalent p r := by</span>
+<span><a class="line" href="#RectangularEquivalence-L70" id="RectangularEquivalence-L70"> 70</a>   obtain ⟨v, hv, hv&#x27;⟩ := h</span>
+<span><a class="line" href="#RectangularEquivalence-L71" id="RectangularEquivalence-L71"> 71</a>   obtain ⟨w, hw, hw&#x27;⟩ := k</span>
+<span><a class="line" href="#RectangularEquivalence-L72" id="RectangularEquivalence-L72"> 72</a>   refine ⟨v * w, ?_, ?_⟩</span>
+<span><a class="line" href="#RectangularEquivalence-L73" id="RectangularEquivalence-L73"> 73</a>   · calc</span>
+<span><a class="line" href="#RectangularEquivalence-L74" id="RectangularEquivalence-L74"> 74</a>       (v * w) * (v * w)ᴴ = (v * (w * wᴴ)) * vᴴ := by</span>
+<span><a class="line" href="#RectangularEquivalence-L75" id="RectangularEquivalence-L75"> 75</a>         simp only [Matrix.conjTranspose_mul, Matrix.mul_assoc]</span>
+<span><a class="line" href="#RectangularEquivalence-L76" id="RectangularEquivalence-L76"> 76</a>       _ = (v * projectionMatrix q) * vᴴ := by rw [hw]</span>
+<span><a class="line" href="#RectangularEquivalence-L77" id="RectangularEquivalence-L77"> 77</a>       _ = projectionMatrix p := by rw [rectangular_right_support q v hv&#x27;, hv]</span>
+<span><a class="line" href="#RectangularEquivalence-L78" id="RectangularEquivalence-L78"> 78</a>   · calc</span>
+<span><a class="line" href="#RectangularEquivalence-L79" id="RectangularEquivalence-L79"> 79</a>       (v * w)ᴴ * (v * w) = wᴴ * ((vᴴ * v) * w) := by</span>
+<span><a class="line" href="#RectangularEquivalence-L80" id="RectangularEquivalence-L80"> 80</a>         simp only [Matrix.conjTranspose_mul, Matrix.mul_assoc]</span>
+<span><a class="line" href="#RectangularEquivalence-L81" id="RectangularEquivalence-L81"> 81</a>       _ = wᴴ * (projectionMatrix q * w) := by rw [hv&#x27;]</span>
+<span><a class="line" href="#RectangularEquivalence-L82" id="RectangularEquivalence-L82"> 82</a>       _ = projectionMatrix r := by rw [rectangular_left_support q w hw, hw&#x27;]</span>
+<span><a class="line" href="#RectangularEquivalence-L83" id="RectangularEquivalence-L83"> 83</a> </span>
+<span><a class="line" href="#RectangularEquivalence-L84" id="RectangularEquivalence-L84"> 84</a> /-- Rectangular equivalence agrees with the earlier relation at equal index types. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.rectEquivalent_iff_equivalent"><a class="line" href="#RectangularEquivalence-L85" id="RectangularEquivalence-L85"> 85</a> theorem rectEquivalent_iff_equivalent (p q : MatrixProjection A ι) :</span>
+<span><a class="line" href="#RectangularEquivalence-L86" id="RectangularEquivalence-L86"> 86</a>     RectEquivalent p q ↔ Projection.Equivalent p q := by</span>
+<span><a class="line" href="#RectangularEquivalence-L87" id="RectangularEquivalence-L87"> 87</a>   constructor</span>
+<span><a class="line" href="#RectangularEquivalence-L88" id="RectangularEquivalence-L88"> 88</a>   · rintro ⟨v, hv, hv&#x27;⟩</span>
+<span><a class="line" href="#RectangularEquivalence-L89" id="RectangularEquivalence-L89"> 89</a>     refine ⟨CStarMatrix.ofMatrix vᴴ, ?_, ?_⟩</span>
+<span><a class="line" href="#RectangularEquivalence-L90" id="RectangularEquivalence-L90"> 90</a>     · change vᴴᴴ * vᴴ = projectionMatrix p</span>
+<span><a class="line" href="#RectangularEquivalence-L91" id="RectangularEquivalence-L91"> 91</a>       simpa only [Matrix.conjTranspose_conjTranspose] using hv</span>
+<span><a class="line" href="#RectangularEquivalence-L92" id="RectangularEquivalence-L92"> 92</a>     · change vᴴ * vᴴᴴ = projectionMatrix q</span>
+<span><a class="line" href="#RectangularEquivalence-L93" id="RectangularEquivalence-L93"> 93</a>       simpa only [Matrix.conjTranspose_conjTranspose] using hv&#x27; </span>
+<span><a class="line" href="#RectangularEquivalence-L94" id="RectangularEquivalence-L94"> 94</a>   · rintro ⟨v, hv, hv&#x27;⟩</span>
+<span><a class="line" href="#RectangularEquivalence-L95" id="RectangularEquivalence-L95"> 95</a>     change (CStarMatrix.ofMatrix.symm v)ᴴ * CStarMatrix.ofMatrix.symm v = projectionMatrix p at hv</span>
+<span><a class="line" href="#RectangularEquivalence-L96" id="RectangularEquivalence-L96"> 96</a>     change CStarMatrix.ofMatrix.symm v * (CStarMatrix.ofMatrix.symm v)ᴴ = projectionMatrix q at hv&#x27;</span>
+<span><a class="line" href="#RectangularEquivalence-L97" id="RectangularEquivalence-L97"> 97</a>     exact ⟨(CStarMatrix.ofMatrix.symm v)ᴴ, by simpa using hv, by simpa using hv&#x27;⟩</span>
+<span><a class="line" href="#RectangularEquivalence-L98" id="RectangularEquivalence-L98"> 98</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.rectEquivalent_blockSum"><a class="line" href="#RectangularEquivalence-L99" id="RectangularEquivalence-L99"> 99</a> theorem rectEquivalent_blockSum {p : MatrixProjection A ι} {q : MatrixProjection A κ}</span>
+<span><a class="line" href="#RectangularEquivalence-L100" id="RectangularEquivalence-L100">100</a>     {r : MatrixProjection A τ} {s : MatrixProjection A υ}</span>
+<span><a class="line" href="#RectangularEquivalence-L101" id="RectangularEquivalence-L101">101</a>     (h : RectEquivalent p q) (k : RectEquivalent r s) :</span>
+<span><a class="line" href="#RectangularEquivalence-L102" id="RectangularEquivalence-L102">102</a>     RectEquivalent (projectionBlockSum p r) (projectionBlockSum q s) := by</span>
+<span><a class="line" href="#RectangularEquivalence-L103" id="RectangularEquivalence-L103">103</a>   obtain ⟨v, hv, hv&#x27;⟩ := h</span>
+<span><a class="line" href="#RectangularEquivalence-L104" id="RectangularEquivalence-L104">104</a>   obtain ⟨w, hw, hw&#x27;⟩ := k</span>
+<span><a class="line" href="#RectangularEquivalence-L105" id="RectangularEquivalence-L105">105</a>   refine ⟨Matrix.fromBlocks v 0 0 w, ?_, ?_⟩</span>
+<span><a class="line" href="#RectangularEquivalence-L106" id="RectangularEquivalence-L106">106</a>   · change Matrix.fromBlocks v (0 : Matrix ι υ A) (0 : Matrix τ κ A) w *</span>
+<span><a class="line" href="#RectangularEquivalence-L107" id="RectangularEquivalence-L107">107</a>       (Matrix.fromBlocks v 0 0 w)ᴴ =</span>
+<span><a class="line" href="#RectangularEquivalence-L108" id="RectangularEquivalence-L108">108</a>       Matrix.fromBlocks (projectionMatrix p) 0 0 (projectionMatrix r)</span>
+<span><a class="line" href="#RectangularEquivalence-L109" id="RectangularEquivalence-L109">109</a>     simp only [Matrix.fromBlocks_conjTranspose, Matrix.conjTranspose_zero,</span>
+<span><a class="line" href="#RectangularEquivalence-L110" id="RectangularEquivalence-L110">110</a>       Matrix.fromBlocks_multiply, Matrix.zero_mul, Matrix.mul_zero, zero_add, add_zero, hv, hw]</span>
+<span><a class="line" href="#RectangularEquivalence-L111" id="RectangularEquivalence-L111">111</a>   · change (Matrix.fromBlocks v (0 : Matrix ι υ A) (0 : Matrix τ κ A) w)ᴴ *</span>
+<span><a class="line" href="#RectangularEquivalence-L112" id="RectangularEquivalence-L112">112</a>       Matrix.fromBlocks v 0 0 w =</span>
+<span><a class="line" href="#RectangularEquivalence-L113" id="RectangularEquivalence-L113">113</a>       Matrix.fromBlocks (projectionMatrix q) 0 0 (projectionMatrix s)</span>
+<span><a class="line" href="#RectangularEquivalence-L114" id="RectangularEquivalence-L114">114</a>     simp only [Matrix.fromBlocks_conjTranspose, Matrix.conjTranspose_zero,</span>
+<span><a class="line" href="#RectangularEquivalence-L115" id="RectangularEquivalence-L115">115</a>       Matrix.fromBlocks_multiply, Matrix.zero_mul, Matrix.mul_zero, zero_add, add_zero, hv&#x27;, hw&#x27;]</span>
+<span><a class="line" href="#RectangularEquivalence-L116" id="RectangularEquivalence-L116">116</a> </span>
+<span><a class="line" href="#RectangularEquivalence-L117" id="RectangularEquivalence-L117">117</a> /-- A change of finite matrix indices does not change the equivalence class. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.rectEquivalent_of_reindex"><a class="line" href="#RectangularEquivalence-L118" id="RectangularEquivalence-L118">118</a> theorem rectEquivalent_of_reindex (p : MatrixProjection A ι) (q : MatrixProjection A κ)</span>
+<span><a class="line" href="#RectangularEquivalence-L119" id="RectangularEquivalence-L119">119</a>     (e : κ ≃ ι) (hq : projectionMatrix q = (projectionMatrix p).submatrix e e) :</span>
+<span><a class="line" href="#RectangularEquivalence-L120" id="RectangularEquivalence-L120">120</a>     RectEquivalent p q := by</span>
+<span><a class="line" href="#RectangularEquivalence-L121" id="RectangularEquivalence-L121">121</a>   refine ⟨(projectionMatrix p).submatrix id e, ?_, ?_⟩</span>
+<span><a class="line" href="#RectangularEquivalence-L122" id="RectangularEquivalence-L122">122</a>   · simp only [Matrix.conjTranspose_submatrix, projectionMatrix_star,</span>
+<span><a class="line" href="#RectangularEquivalence-L123" id="RectangularEquivalence-L123">123</a>       Matrix.submatrix_mul_equiv, projectionMatrix_mul, Matrix.submatrix_id_id]</span>
+<span><a class="line" href="#RectangularEquivalence-L124" id="RectangularEquivalence-L124">124</a>   · rw [Matrix.conjTranspose_submatrix, projectionMatrix_star]</span>
+<span><a class="line" href="#RectangularEquivalence-L125" id="RectangularEquivalence-L125">125</a>     change (projectionMatrix p).submatrix e (Equiv.refl ι) *</span>
+<span><a class="line" href="#RectangularEquivalence-L126" id="RectangularEquivalence-L126">126</a>       (projectionMatrix p).submatrix (Equiv.refl ι) e = projectionMatrix q</span>
+<span><a class="line" href="#RectangularEquivalence-L127" id="RectangularEquivalence-L127">127</a>     rw [Matrix.submatrix_mul_equiv, projectionMatrix_mul, ← hq]</span>
+<span><a class="line" href="#RectangularEquivalence-L128" id="RectangularEquivalence-L128">128</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.rectEquivalent_zero"><a class="line" href="#RectangularEquivalence-L129" id="RectangularEquivalence-L129">129</a> theorem rectEquivalent_zero : RectEquivalent (Projection.zero : MatrixProjection A ι)</span>
+<span><a class="line" href="#RectangularEquivalence-L130" id="RectangularEquivalence-L130">130</a>     (Projection.zero : MatrixProjection A κ) := by</span>
+<span><a class="line" href="#RectangularEquivalence-L131" id="RectangularEquivalence-L131">131</a>   refine ⟨0, ?_, ?_⟩ &lt;;&gt; simp only [Matrix.conjTranspose_zero, Matrix.zero_mul] &lt;;&gt; rfl</span>
+<span><a class="line" href="#RectangularEquivalence-L132" id="RectangularEquivalence-L132">132</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.rectEquivalent_block_comm"><a class="line" href="#RectangularEquivalence-L133" id="RectangularEquivalence-L133">133</a> theorem rectEquivalent_block_comm (p : MatrixProjection A ι) (q : MatrixProjection A κ) :</span>
+<span><a class="line" href="#RectangularEquivalence-L134" id="RectangularEquivalence-L134">134</a>     RectEquivalent (projectionBlockSum p q) (projectionBlockSum q p) := by</span>
+<span><a class="line" href="#RectangularEquivalence-L135" id="RectangularEquivalence-L135">135</a>   apply rectEquivalent_of_reindex _ _ (Equiv.sumComm κ ι)</span>
+<span><a class="line" href="#RectangularEquivalence-L136" id="RectangularEquivalence-L136">136</a>   ext i j</span>
+<span><a class="line" href="#RectangularEquivalence-L137" id="RectangularEquivalence-L137">137</a>   cases i &lt;;&gt; cases j &lt;;&gt; rfl</span>
+<span><a class="line" href="#RectangularEquivalence-L138" id="RectangularEquivalence-L138">138</a> </span>
+<span><a class="line" href="#RectangularEquivalence-L139" id="RectangularEquivalence-L139">139</a> /-- Adding a zero block does not change the rectangular equivalence class. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.rectEquivalent_stabilize"><a class="line" href="#RectangularEquivalence-L140" id="RectangularEquivalence-L140">140</a> theorem rectEquivalent_stabilize (p : MatrixProjection A ι) :</span>
+<span><a class="line" href="#RectangularEquivalence-L141" id="RectangularEquivalence-L141">141</a>     RectEquivalent p (stabilizeProjection (κ := κ) p) := by</span>
+<span><a class="line" href="#RectangularEquivalence-L142" id="RectangularEquivalence-L142">142</a>   have h : RectEquivalent (projectionBlockSum p (Projection.zero : MatrixProjection A κ))</span>
+<span><a class="line" href="#RectangularEquivalence-L143" id="RectangularEquivalence-L143">143</a>       (projectionBlockSum p (Projection.zero : MatrixProjection A Empty)) :=</span>
+<span><a class="line" href="#RectangularEquivalence-L144" id="RectangularEquivalence-L144">144</a>     rectEquivalent_blockSum (rectEquivalent_refl p) rectEquivalent_zero</span>
+<span><a class="line" href="#RectangularEquivalence-L145" id="RectangularEquivalence-L145">145</a>   have k : RectEquivalent p (projectionBlockSum p (Projection.zero : MatrixProjection A Empty)) := by</span>
+<span><a class="line" href="#RectangularEquivalence-L146" id="RectangularEquivalence-L146">146</a>     apply rectEquivalent_of_reindex _ _ (Equiv.sumEmpty ι Empty)</span>
+<span><a class="line" href="#RectangularEquivalence-L147" id="RectangularEquivalence-L147">147</a>     ext i j</span>
+<span><a class="line" href="#RectangularEquivalence-L148" id="RectangularEquivalence-L148">148</a>     rcases i with i | i</span>
+<span><a class="line" href="#RectangularEquivalence-L149" id="RectangularEquivalence-L149">149</a>     · rcases j with j | j</span>
+<span><a class="line" href="#RectangularEquivalence-L150" id="RectangularEquivalence-L150">150</a>       · rfl</span>
+<span><a class="line" href="#RectangularEquivalence-L151" id="RectangularEquivalence-L151">151</a>       · exact j.elim</span>
+<span><a class="line" href="#RectangularEquivalence-L152" id="RectangularEquivalence-L152">152</a>     · exact i.elim</span>
+<span><a class="line" href="#RectangularEquivalence-L153" id="RectangularEquivalence-L153">153</a>   exact rectEquivalent_trans k (rectEquivalent_symm h)</span>
+<span><a class="line" href="#RectangularEquivalence-L154" id="RectangularEquivalence-L154">154</a> </span>
+<span><a class="line" href="#RectangularEquivalence-L155" id="RectangularEquivalence-L155">155</a> /-- Rectangular witnesses are equivalent to ordinary equivalence in a common</span>
+<span><a class="line" href="#RectangularEquivalence-L156" id="RectangularEquivalence-L156">156</a> matrix algebra after the two projections are placed in disjoint corners. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.rectEquivalent_iff_padded"><a class="line" href="#RectangularEquivalence-L157" id="RectangularEquivalence-L157">157</a> theorem rectEquivalent_iff_padded (p : MatrixProjection A ι) (q : MatrixProjection A κ) :</span>
+<span><a class="line" href="#RectangularEquivalence-L158" id="RectangularEquivalence-L158">158</a>     RectEquivalent p q ↔ Projection.Equivalent</span>
+<span><a class="line" href="#RectangularEquivalence-L159" id="RectangularEquivalence-L159">159</a>       (projectionBlockSum p (Projection.zero : MatrixProjection A κ))</span>
+<span><a class="line" href="#RectangularEquivalence-L160" id="RectangularEquivalence-L160">160</a>       (projectionBlockSum (Projection.zero : MatrixProjection A ι) q) := by</span>
+<span><a class="line" href="#RectangularEquivalence-L161" id="RectangularEquivalence-L161">161</a>   have hp := rectEquivalent_stabilize (κ := κ) p</span>
+<span><a class="line" href="#RectangularEquivalence-L162" id="RectangularEquivalence-L162">162</a>   have hq := rectEquivalent_trans (rectEquivalent_stabilize (κ := ι) q)</span>
+<span><a class="line" href="#RectangularEquivalence-L163" id="RectangularEquivalence-L163">163</a>     (rectEquivalent_block_comm q (Projection.zero : MatrixProjection A ι))</span>
+<span><a class="line" href="#RectangularEquivalence-L164" id="RectangularEquivalence-L164">164</a>   rw [← rectEquivalent_iff_equivalent]</span>
+<span><a class="line" href="#RectangularEquivalence-L165" id="RectangularEquivalence-L165">165</a>   constructor</span>
+<span><a class="line" href="#RectangularEquivalence-L166" id="RectangularEquivalence-L166">166</a>   · intro h</span>
+<span><a class="line" href="#RectangularEquivalence-L167" id="RectangularEquivalence-L167">167</a>     exact rectEquivalent_trans (rectEquivalent_trans (rectEquivalent_symm hp) h) hq</span>
+<span><a class="line" href="#RectangularEquivalence-L168" id="RectangularEquivalence-L168">168</a>   · intro h</span>
+<span><a class="line" href="#RectangularEquivalence-L169" id="RectangularEquivalence-L169">169</a>     exact rectEquivalent_trans (rectEquivalent_trans hp h) (rectEquivalent_symm hq)</span>
+<span><a class="line" href="#RectangularEquivalence-L170" id="RectangularEquivalence-L170">170</a> </span>
+<span><a class="line" href="#RectangularEquivalence-L171" id="RectangularEquivalence-L171">171</a> end BC4lean.OperatorKTheory</span>
+</pre>
+<h2 id="StableProjectionMonoid">StableProjectionMonoid.lean</h2><p>源码 SHA-256：<code>e61cd47688e2e352293eb0a933f93b06d5fdd59275359faf87e6858386e8c6a6</code></p><pre>
+<span><a class="line" href="#StableProjectionMonoid-L1" id="StableProjectionMonoid-L1">  1</a> import BC4lean.RectangularEquivalence</span>
+<span><a class="line" href="#StableProjectionMonoid-L2" id="StableProjectionMonoid-L2">  2</a> </span>
+<span><a class="line" href="#StableProjectionMonoid-L3" id="StableProjectionMonoid-L3">  3</a> /-! # The stable projection monoid</span>
+<span><a class="line" href="#StableProjectionMonoid-L4" id="StableProjectionMonoid-L4">  4</a> </span>
+<span><a class="line" href="#StableProjectionMonoid-L5" id="StableProjectionMonoid-L5">  5</a> Objects are projections indexed by arbitrary small finite types. Rectangular</span>
+<span><a class="line" href="#StableProjectionMonoid-L6" id="StableProjectionMonoid-L6">  6</a> Murray–von Neumann witnesses make the quotient independent of the index type.</span>
+<span><a class="line" href="#StableProjectionMonoid-L7" id="StableProjectionMonoid-L7">  7</a> Addition is actual matrix block sum, not a freely imposed relation.</span>
+<span><a class="line" href="#StableProjectionMonoid-L8" id="StableProjectionMonoid-L8">  8</a> -/</span>
+<span><a class="line" href="#StableProjectionMonoid-L9" id="StableProjectionMonoid-L9">  9</a> </span>
+<span><a class="line" href="#StableProjectionMonoid-L10" id="StableProjectionMonoid-L10"> 10</a> noncomputable section</span>
+<span><a class="line" href="#StableProjectionMonoid-L11" id="StableProjectionMonoid-L11"> 11</a> open scoped Matrix</span>
+<span><a class="line" href="#StableProjectionMonoid-L12" id="StableProjectionMonoid-L12"> 12</a> namespace BC4lean.OperatorKTheory</span>
+<span><a class="line" href="#StableProjectionMonoid-L13" id="StableProjectionMonoid-L13"> 13</a> </span>
+<span><a class="line" href="#StableProjectionMonoid-L14" id="StableProjectionMonoid-L14"> 14</a> universe u</span>
+<span><a class="line" href="#StableProjectionMonoid-L15" id="StableProjectionMonoid-L15"> 15</a> variable {A : Type u} [CStarAlgebra A] [PartialOrder A] [StarOrderedRing A]</span>
+<span><a class="line" href="#StableProjectionMonoid-L16" id="StableProjectionMonoid-L16"> 16</a> </span>
+<span><a class="line" href="#StableProjectionMonoid-L17" id="StableProjectionMonoid-L17"> 17</a> /-- A finite matrix projection, with its finite index type recorded. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteProjection"><a class="line" href="#StableProjectionMonoid-L18" id="StableProjectionMonoid-L18"> 18</a> structure FiniteProjection (A : Type u) [CStarAlgebra A] [PartialOrder A] [StarOrderedRing A] where</span>
+<span><a class="line" href="#StableProjectionMonoid-L19" id="StableProjectionMonoid-L19"> 19</a>   Index : Type</span>
+<span><a class="line" href="#StableProjectionMonoid-L20" id="StableProjectionMonoid-L20"> 20</a>   [indexFintype : Fintype Index]</span>
+<span><a class="line" href="#StableProjectionMonoid-L21" id="StableProjectionMonoid-L21"> 21</a>   [indexDecidableEq : DecidableEq Index]</span>
+<span><a class="line" href="#StableProjectionMonoid-L22" id="StableProjectionMonoid-L22"> 22</a>   projection : MatrixProjection A Index</span>
+<span><a class="line" href="#StableProjectionMonoid-L23" id="StableProjectionMonoid-L23"> 23</a> </span>
+<span><a class="line" href="#StableProjectionMonoid-L24" id="StableProjectionMonoid-L24"> 24</a> attribute [instance] FiniteProjection.indexFintype FiniteProjection.indexDecidableEq</span>
+<span><a class="line" href="#StableProjectionMonoid-L25" id="StableProjectionMonoid-L25"> 25</a> </span>
+<span><a class="line" href="#StableProjectionMonoid-L26" id="StableProjectionMonoid-L26"> 26</a> namespace FiniteProjection</span>
+<span><a class="line" href="#StableProjectionMonoid-L27" id="StableProjectionMonoid-L27"> 27</a> </span>
+<span><a class="line" href="#StableProjectionMonoid-L28" id="StableProjectionMonoid-L28"> 28</a> /-- Record the index type of a matrix projection. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteProjection.ofProjection"><a class="line" href="#StableProjectionMonoid-L29" id="StableProjectionMonoid-L29"> 29</a> def ofProjection {ι : Type} [Fintype ι] [DecidableEq ι] (p : MatrixProjection A ι) :</span>
+<span><a class="line" href="#StableProjectionMonoid-L30" id="StableProjectionMonoid-L30"> 30</a>     FiniteProjection A where</span>
+<span><a class="line" href="#StableProjectionMonoid-L31" id="StableProjectionMonoid-L31"> 31</a>   Index := ι</span>
+<span><a class="line" href="#StableProjectionMonoid-L32" id="StableProjectionMonoid-L32"> 32</a>   projection := p</span>
+<span><a class="line" href="#StableProjectionMonoid-L33" id="StableProjectionMonoid-L33"> 33</a> </span>
+<span><a class="line" href="#StableProjectionMonoid-L34" id="StableProjectionMonoid-L34"> 34</a> /-- Every object can be represented using a standard finite ordinal. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteProjection.toFin"><a class="line" href="#StableProjectionMonoid-L35" id="StableProjectionMonoid-L35"> 35</a> def toFin (p : FiniteProjection A) : FiniteProjection A where</span>
+<span><a class="line" href="#StableProjectionMonoid-L36" id="StableProjectionMonoid-L36"> 36</a>   Index := Fin (Fintype.card p.Index)</span>
+<span><a class="line" href="#StableProjectionMonoid-L37" id="StableProjectionMonoid-L37"> 37</a>   projection := Projection.map</span>
+<span><a class="line" href="#StableProjectionMonoid-L38" id="StableProjectionMonoid-L38"> 38</a>     (CStarMatrix.reindexₐ ℂ A (Fintype.equivFin p.Index)).toStarAlgHom p.projection</span>
+<span><a class="line" href="#StableProjectionMonoid-L39" id="StableProjectionMonoid-L39"> 39</a> </span>
+<span><a class="line" href="#StableProjectionMonoid-L40" id="StableProjectionMonoid-L40"> 40</a> /-- Block sum of finite matrix projections. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteProjection.blockSum"><a class="line" href="#StableProjectionMonoid-L41" id="StableProjectionMonoid-L41"> 41</a> def blockSum (p q : FiniteProjection A) : FiniteProjection A where</span>
+<span><a class="line" href="#StableProjectionMonoid-L42" id="StableProjectionMonoid-L42"> 42</a>   Index := p.Index ⊕ q.Index</span>
+<span><a class="line" href="#StableProjectionMonoid-L43" id="StableProjectionMonoid-L43"> 43</a>   projection := projectionBlockSum p.projection q.projection</span>
+<span><a class="line" href="#StableProjectionMonoid-L44" id="StableProjectionMonoid-L44"> 44</a> </span>
+<span><a class="line" href="#StableProjectionMonoid-L45" id="StableProjectionMonoid-L45"> 45</a> /-- The empty matrix represents zero. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteProjection.zero"><a class="line" href="#StableProjectionMonoid-L46" id="StableProjectionMonoid-L46"> 46</a> def zero : FiniteProjection A where</span>
+<span><a class="line" href="#StableProjectionMonoid-L47" id="StableProjectionMonoid-L47"> 47</a>   Index := Empty</span>
+<span><a class="line" href="#StableProjectionMonoid-L48" id="StableProjectionMonoid-L48"> 48</a>   projection := Projection.zero</span>
+<span><a class="line" href="#StableProjectionMonoid-L49" id="StableProjectionMonoid-L49"> 49</a> </span>
+<span><a class="line" href="#StableProjectionMonoid-L50" id="StableProjectionMonoid-L50"> 50</a> /-- Equivalence compares different sizes using a rectangular partial isometry. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteProjection.Equivalent"><a class="line" href="#StableProjectionMonoid-L51" id="StableProjectionMonoid-L51"> 51</a> def Equivalent (p q : FiniteProjection A) : Prop := RectEquivalent p.projection q.projection</span>
+<span><a class="line" href="#StableProjectionMonoid-L52" id="StableProjectionMonoid-L52"> 52</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteProjection.equivalent_refl"><a class="line" href="#StableProjectionMonoid-L53" id="StableProjectionMonoid-L53"> 53</a> theorem equivalent_refl (p : FiniteProjection A) : Equivalent p p :=</span>
+<span><a class="line" href="#StableProjectionMonoid-L54" id="StableProjectionMonoid-L54"> 54</a>   rectEquivalent_refl p.projection</span>
+<span><a class="line" href="#StableProjectionMonoid-L55" id="StableProjectionMonoid-L55"> 55</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteProjection.equivalent_symm"><a class="line" href="#StableProjectionMonoid-L56" id="StableProjectionMonoid-L56"> 56</a> theorem equivalent_symm {p q : FiniteProjection A} (h : Equivalent p q) : Equivalent q p :=</span>
+<span><a class="line" href="#StableProjectionMonoid-L57" id="StableProjectionMonoid-L57"> 57</a>   rectEquivalent_symm h</span>
+<span><a class="line" href="#StableProjectionMonoid-L58" id="StableProjectionMonoid-L58"> 58</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteProjection.equivalent_trans"><a class="line" href="#StableProjectionMonoid-L59" id="StableProjectionMonoid-L59"> 59</a> theorem equivalent_trans {p q r : FiniteProjection A}</span>
+<span><a class="line" href="#StableProjectionMonoid-L60" id="StableProjectionMonoid-L60"> 60</a>     (h : Equivalent p q) (k : Equivalent q r) : Equivalent p r := rectEquivalent_trans h k</span>
+<span><a class="line" href="#StableProjectionMonoid-L61" id="StableProjectionMonoid-L61"> 61</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteProjection.equivalent_toFin"><a class="line" href="#StableProjectionMonoid-L62" id="StableProjectionMonoid-L62"> 62</a> theorem equivalent_toFin (p : FiniteProjection A) : Equivalent p p.toFin := by</span>
+<span><a class="line" href="#StableProjectionMonoid-L63" id="StableProjectionMonoid-L63"> 63</a>   apply rectEquivalent_of_reindex _ _ (Fintype.equivFin p.Index).symm</span>
+<span><a class="line" href="#StableProjectionMonoid-L64" id="StableProjectionMonoid-L64"> 64</a>   rfl</span>
+<span><a class="line" href="#StableProjectionMonoid-L65" id="StableProjectionMonoid-L65"> 65</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteProjection.equivalent_zero"><a class="line" href="#StableProjectionMonoid-L66" id="StableProjectionMonoid-L66"> 66</a> theorem equivalent_zero {ι : Type} [Fintype ι] [DecidableEq ι] :</span>
+<span><a class="line" href="#StableProjectionMonoid-L67" id="StableProjectionMonoid-L67"> 67</a>     Equivalent (ofProjection (Projection.zero : MatrixProjection A ι)) zero :=</span>
+<span><a class="line" href="#StableProjectionMonoid-L68" id="StableProjectionMonoid-L68"> 68</a>   rectEquivalent_zero</span>
+<span><a class="line" href="#StableProjectionMonoid-L69" id="StableProjectionMonoid-L69"> 69</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteProjection.setoid"><a class="line" href="#StableProjectionMonoid-L70" id="StableProjectionMonoid-L70"> 70</a> def setoid : Setoid (FiniteProjection A) where</span>
+<span><a class="line" href="#StableProjectionMonoid-L71" id="StableProjectionMonoid-L71"> 71</a>   r := Equivalent</span>
+<span><a class="line" href="#StableProjectionMonoid-L72" id="StableProjectionMonoid-L72"> 72</a>   iseqv := ⟨equivalent_refl, equivalent_symm, equivalent_trans⟩</span>
+<span><a class="line" href="#StableProjectionMonoid-L73" id="StableProjectionMonoid-L73"> 73</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteProjection.blockSum_congr"><a class="line" href="#StableProjectionMonoid-L74" id="StableProjectionMonoid-L74"> 74</a> theorem blockSum_congr {p q r s : FiniteProjection A}</span>
+<span><a class="line" href="#StableProjectionMonoid-L75" id="StableProjectionMonoid-L75"> 75</a>     (h : Equivalent p q) (k : Equivalent r s) : Equivalent (blockSum p r) (blockSum q s) :=</span>
+<span><a class="line" href="#StableProjectionMonoid-L76" id="StableProjectionMonoid-L76"> 76</a>   rectEquivalent_blockSum h k</span>
+<span><a class="line" href="#StableProjectionMonoid-L77" id="StableProjectionMonoid-L77"> 77</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteProjection.blockSum_comm"><a class="line" href="#StableProjectionMonoid-L78" id="StableProjectionMonoid-L78"> 78</a> theorem blockSum_comm (p q : FiniteProjection A) :</span>
+<span><a class="line" href="#StableProjectionMonoid-L79" id="StableProjectionMonoid-L79"> 79</a>     Equivalent (blockSum p q) (blockSum q p) := by</span>
+<span><a class="line" href="#StableProjectionMonoid-L80" id="StableProjectionMonoid-L80"> 80</a>   apply rectEquivalent_of_reindex _ _ (Equiv.sumComm q.Index p.Index)</span>
+<span><a class="line" href="#StableProjectionMonoid-L81" id="StableProjectionMonoid-L81"> 81</a>   ext i j</span>
+<span><a class="line" href="#StableProjectionMonoid-L82" id="StableProjectionMonoid-L82"> 82</a>   cases i &lt;;&gt; cases j &lt;;&gt; rfl</span>
+<span><a class="line" href="#StableProjectionMonoid-L83" id="StableProjectionMonoid-L83"> 83</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteProjection.blockSum_assoc"><a class="line" href="#StableProjectionMonoid-L84" id="StableProjectionMonoid-L84"> 84</a> theorem blockSum_assoc (p q r : FiniteProjection A) :</span>
+<span><a class="line" href="#StableProjectionMonoid-L85" id="StableProjectionMonoid-L85"> 85</a>     Equivalent (blockSum (blockSum p q) r) (blockSum p (blockSum q r)) := by</span>
+<span><a class="line" href="#StableProjectionMonoid-L86" id="StableProjectionMonoid-L86"> 86</a>   apply rectEquivalent_of_reindex _ _ (Equiv.sumAssoc p.Index q.Index r.Index).symm</span>
+<span><a class="line" href="#StableProjectionMonoid-L87" id="StableProjectionMonoid-L87"> 87</a>   ext i j</span>
+<span><a class="line" href="#StableProjectionMonoid-L88" id="StableProjectionMonoid-L88"> 88</a>   rcases i with i | (i | i) &lt;;&gt; rcases j with j | (j | j) &lt;;&gt; rfl</span>
+<span><a class="line" href="#StableProjectionMonoid-L89" id="StableProjectionMonoid-L89"> 89</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteProjection.zero_blockSum"><a class="line" href="#StableProjectionMonoid-L90" id="StableProjectionMonoid-L90"> 90</a> theorem zero_blockSum (p : FiniteProjection A) : Equivalent (blockSum zero p) p := by</span>
+<span><a class="line" href="#StableProjectionMonoid-L91" id="StableProjectionMonoid-L91"> 91</a>   apply equivalent_symm</span>
+<span><a class="line" href="#StableProjectionMonoid-L92" id="StableProjectionMonoid-L92"> 92</a>   apply rectEquivalent_of_reindex _ _ (Equiv.emptySum Empty p.Index)</span>
+<span><a class="line" href="#StableProjectionMonoid-L93" id="StableProjectionMonoid-L93"> 93</a>   ext i j</span>
+<span><a class="line" href="#StableProjectionMonoid-L94" id="StableProjectionMonoid-L94"> 94</a>   rcases i with i | i</span>
+<span><a class="line" href="#StableProjectionMonoid-L95" id="StableProjectionMonoid-L95"> 95</a>   · exact i.elim</span>
+<span><a class="line" href="#StableProjectionMonoid-L96" id="StableProjectionMonoid-L96"> 96</a>   · rcases j with j | j</span>
+<span><a class="line" href="#StableProjectionMonoid-L97" id="StableProjectionMonoid-L97"> 97</a>     · exact j.elim</span>
+<span><a class="line" href="#StableProjectionMonoid-L98" id="StableProjectionMonoid-L98"> 98</a>     · rfl</span>
+<span><a class="line" href="#StableProjectionMonoid-L99" id="StableProjectionMonoid-L99"> 99</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.FiniteProjection.blockSum_zero"><a class="line" href="#StableProjectionMonoid-L100" id="StableProjectionMonoid-L100">100</a> theorem blockSum_zero (p : FiniteProjection A) : Equivalent (blockSum p zero) p :=</span>
+<span><a class="line" href="#StableProjectionMonoid-L101" id="StableProjectionMonoid-L101">101</a>   equivalent_trans (blockSum_comm p zero) (zero_blockSum p)</span>
+<span><a class="line" href="#StableProjectionMonoid-L102" id="StableProjectionMonoid-L102">102</a> </span>
+<span><a class="line" href="#StableProjectionMonoid-L103" id="StableProjectionMonoid-L103">103</a> end FiniteProjection</span>
+<span><a class="line" href="#StableProjectionMonoid-L104" id="StableProjectionMonoid-L104">104</a> </span>
+<span><a class="line" href="#StableProjectionMonoid-L105" id="StableProjectionMonoid-L105">105</a> /-- Stable Murray–von Neumann classes of finite matrix projections. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.StableProjectionMonoid"><a class="line" href="#StableProjectionMonoid-L106" id="StableProjectionMonoid-L106">106</a> abbrev StableProjectionMonoid (A : Type u) [CStarAlgebra A]</span>
+<span><a class="line" href="#StableProjectionMonoid-L107" id="StableProjectionMonoid-L107">107</a>     [PartialOrder A] [StarOrderedRing A] := Quotient (FiniteProjection.setoid (A := A))</span>
+<span><a class="line" href="#StableProjectionMonoid-L108" id="StableProjectionMonoid-L108">108</a> </span>
+<span><a class="line" href="#StableProjectionMonoid-L109" id="StableProjectionMonoid-L109">109</a> namespace StableProjectionMonoid</span>
+<span><a class="line" href="#StableProjectionMonoid-L110" id="StableProjectionMonoid-L110">110</a> </span>
+<span><a class="line" href="#StableProjectionMonoid-L111" id="StableProjectionMonoid-L111">111</a> /-- The class represented by a finite matrix projection. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.StableProjectionMonoid.of"><a class="line" href="#StableProjectionMonoid-L112" id="StableProjectionMonoid-L112">112</a> def of (p : FiniteProjection A) : StableProjectionMonoid A := Quotient.mk _ p</span>
+<span><a class="line" href="#StableProjectionMonoid-L113" id="StableProjectionMonoid-L113">113</a> </span>
+<span><a class="line" href="#StableProjectionMonoid-L114" id="StableProjectionMonoid-L114">114</a> instance : Zero (StableProjectionMonoid A) := ⟨of FiniteProjection.zero⟩</span>
+<span><a class="line" href="#StableProjectionMonoid-L115" id="StableProjectionMonoid-L115">115</a> </span>
+<span><a class="line" href="#StableProjectionMonoid-L116" id="StableProjectionMonoid-L116">116</a> instance : Add (StableProjectionMonoid A) :=</span>
+<span><a class="line" href="#StableProjectionMonoid-L117" id="StableProjectionMonoid-L117">117</a>   ⟨Quotient.map₂ FiniteProjection.blockSum (fun _ _ h _ _ k =&gt;</span>
+<span><a class="line" href="#StableProjectionMonoid-L118" id="StableProjectionMonoid-L118">118</a>     FiniteProjection.blockSum_congr h k)⟩</span>
+<span><a class="line" href="#StableProjectionMonoid-L119" id="StableProjectionMonoid-L119">119</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.StableProjectionMonoid.of_blockSum"><a class="line" href="#StableProjectionMonoid-L120" id="StableProjectionMonoid-L120">120</a> @[simp] theorem of_blockSum (p q : FiniteProjection A) :</span>
+<span><a class="line" href="#StableProjectionMonoid-L121" id="StableProjectionMonoid-L121">121</a>     of (FiniteProjection.blockSum p q) = of p + of q := rfl</span>
+<span><a class="line" href="#StableProjectionMonoid-L122" id="StableProjectionMonoid-L122">122</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.StableProjectionMonoid.of_eq_of_equivalent"><a class="line" href="#StableProjectionMonoid-L123" id="StableProjectionMonoid-L123">123</a> theorem of_eq_of_equivalent {p q : FiniteProjection A} (h : FiniteProjection.Equivalent p q) :</span>
+<span><a class="line" href="#StableProjectionMonoid-L124" id="StableProjectionMonoid-L124">124</a>     of p = of q := Quotient.sound h</span>
+<span><a class="line" href="#StableProjectionMonoid-L125" id="StableProjectionMonoid-L125">125</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.StableProjectionMonoid.of_eq_iff"><a class="line" href="#StableProjectionMonoid-L126" id="StableProjectionMonoid-L126">126</a> theorem of_eq_iff (p q : FiniteProjection A) :</span>
+<span><a class="line" href="#StableProjectionMonoid-L127" id="StableProjectionMonoid-L127">127</a>     of p = of q ↔ FiniteProjection.Equivalent p q := Quotient.eq</span>
+<span><a class="line" href="#StableProjectionMonoid-L128" id="StableProjectionMonoid-L128">128</a> </span>
+<span><a class="line" href="#StableProjectionMonoid-L129" id="StableProjectionMonoid-L129">129</a> /-- Block sum gives an additive commutative monoid on the stable classes. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.StableProjectionMonoid.instAddCommMonoid"><a class="line" href="#StableProjectionMonoid-L130" id="StableProjectionMonoid-L130">130</a> instance instAddCommMonoid : AddCommMonoid (StableProjectionMonoid A) where</span>
+<span><a class="line" href="#StableProjectionMonoid-L131" id="StableProjectionMonoid-L131">131</a>   add_assoc a b c := Quotient.inductionOn₃ a b c fun p q r =&gt;</span>
+<span><a class="line" href="#StableProjectionMonoid-L132" id="StableProjectionMonoid-L132">132</a>     Quotient.sound (FiniteProjection.blockSum_assoc p q r)</span>
+<span><a class="line" href="#StableProjectionMonoid-L133" id="StableProjectionMonoid-L133">133</a>   zero_add a := Quotient.inductionOn a fun p =&gt; Quotient.sound (FiniteProjection.zero_blockSum p)</span>
+<span><a class="line" href="#StableProjectionMonoid-L134" id="StableProjectionMonoid-L134">134</a>   add_zero a := Quotient.inductionOn a fun p =&gt; Quotient.sound (FiniteProjection.blockSum_zero p)</span>
+<span><a class="line" href="#StableProjectionMonoid-L135" id="StableProjectionMonoid-L135">135</a>   add_comm a b := Quotient.inductionOn₂ a b fun p q =&gt;</span>
+<span><a class="line" href="#StableProjectionMonoid-L136" id="StableProjectionMonoid-L136">136</a>     Quotient.sound (FiniteProjection.blockSum_comm p q)</span>
+<span><a class="line" href="#StableProjectionMonoid-L137" id="StableProjectionMonoid-L137">137</a>   nsmul := nsmulRec</span>
+<span><a class="line" href="#StableProjectionMonoid-L138" id="StableProjectionMonoid-L138">138</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.StableProjectionMonoid.of_zeroProjection"><a class="line" href="#StableProjectionMonoid-L139" id="StableProjectionMonoid-L139">139</a> @[simp] theorem of_zeroProjection {ι : Type} [Fintype ι] [DecidableEq ι] :</span>
+<span><a class="line" href="#StableProjectionMonoid-L140" id="StableProjectionMonoid-L140">140</a>     of (FiniteProjection.ofProjection (Projection.zero : MatrixProjection A ι)) = 0 :=</span>
+<span><a class="line" href="#StableProjectionMonoid-L141" id="StableProjectionMonoid-L141">141</a>   Quotient.sound FiniteProjection.equivalent_zero</span>
+<span><a class="line" href="#StableProjectionMonoid-L142" id="StableProjectionMonoid-L142">142</a> </span>
+<span><a class="line" href="#StableProjectionMonoid-L143" id="StableProjectionMonoid-L143">143</a> /-- The quotient really identifies zero-padding of a projection. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.StableProjectionMonoid.of_stabilize"><a class="line" href="#StableProjectionMonoid-L144" id="StableProjectionMonoid-L144">144</a> theorem of_stabilize {ι κ : Type} [Fintype ι] [Fintype κ]</span>
+<span><a class="line" href="#StableProjectionMonoid-L145" id="StableProjectionMonoid-L145">145</a>     [DecidableEq ι] [DecidableEq κ] (p : MatrixProjection A ι) :</span>
+<span><a class="line" href="#StableProjectionMonoid-L146" id="StableProjectionMonoid-L146">146</a>     of (FiniteProjection.ofProjection (stabilizeProjection (κ := κ) p)) =</span>
+<span><a class="line" href="#StableProjectionMonoid-L147" id="StableProjectionMonoid-L147">147</a>       of (FiniteProjection.ofProjection p) :=</span>
+<span><a class="line" href="#StableProjectionMonoid-L148" id="StableProjectionMonoid-L148">148</a>   Quotient.sound (rectEquivalent_symm (rectEquivalent_stabilize p))</span>
+<span><a class="line" href="#StableProjectionMonoid-L149" id="StableProjectionMonoid-L149">149</a> </span>
+<span><a class="line" href="#StableProjectionMonoid-L150" id="StableProjectionMonoid-L150">150</a> /-- Allowing arbitrary small finite index types adds no extra classes. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.StableProjectionMonoid.exists_finRepresentative"><a class="line" href="#StableProjectionMonoid-L151" id="StableProjectionMonoid-L151">151</a> theorem exists_finRepresentative (x : StableProjectionMonoid A) :</span>
+<span><a class="line" href="#StableProjectionMonoid-L152" id="StableProjectionMonoid-L152">152</a>     ∃ (n : ℕ) (p : MatrixProjection A (Fin n)), of (FiniteProjection.ofProjection p) = x := by</span>
+<span><a class="line" href="#StableProjectionMonoid-L153" id="StableProjectionMonoid-L153">153</a>   refine Quotient.inductionOn x ?_</span>
+<span><a class="line" href="#StableProjectionMonoid-L154" id="StableProjectionMonoid-L154">154</a>   intro p</span>
+<span><a class="line" href="#StableProjectionMonoid-L155" id="StableProjectionMonoid-L155">155</a>   exact ⟨Fintype.card p.Index, p.toFin.projection,</span>
+<span><a class="line" href="#StableProjectionMonoid-L156" id="StableProjectionMonoid-L156">156</a>     Quotient.sound (FiniteProjection.equivalent_symm (FiniteProjection.equivalent_toFin p))⟩</span>
+<span><a class="line" href="#StableProjectionMonoid-L157" id="StableProjectionMonoid-L157">157</a> </span>
+<span><a class="line" href="#StableProjectionMonoid-L158" id="StableProjectionMonoid-L158">158</a> end StableProjectionMonoid</span>
+<span><a class="line" href="#StableProjectionMonoid-L159" id="StableProjectionMonoid-L159">159</a> end BC4lean.OperatorKTheory</span>
+</pre>
+<h2 id="OperatorK0">OperatorK0.lean</h2><p>源码 SHA-256：<code>bf4d9c7370788493ac0339b6bb884700db599ec86a87e5c5f147abe95e1492d6</code></p><pre>
+<span><a class="line" href="#OperatorK0-L1" id="OperatorK0-L1">  1</a> import BC4lean.StableProjectionMonoid</span>
+<span><a class="line" href="#OperatorK0-L2" id="OperatorK0-L2">  2</a> import Mathlib.GroupTheory.MonoidLocalization.GrothendieckGroup</span>
+<span><a class="line" href="#OperatorK0-L3" id="OperatorK0-L3">  3</a> </span>
+<span><a class="line" href="#OperatorK0-L4" id="OperatorK0-L4">  4</a> /-! # Unital operator K₀ as a Grothendieck group</span>
+<span><a class="line" href="#OperatorK0-L5" id="OperatorK0-L5">  5</a> </span>
+<span><a class="line" href="#OperatorK0-L6" id="OperatorK0-L6">  6</a> The input is the verified stable projection monoid. No cancellation or</span>
+<span><a class="line" href="#OperatorK0-L7" id="OperatorK0-L7">  7</a> injectivity of its canonical map to the group completion is assumed.</span>
+<span><a class="line" href="#OperatorK0-L8" id="OperatorK0-L8">  8</a> -/</span>
+<span><a class="line" href="#OperatorK0-L9" id="OperatorK0-L9">  9</a> </span>
+<span><a class="line" href="#OperatorK0-L10" id="OperatorK0-L10"> 10</a> noncomputable section</span>
+<span><a class="line" href="#OperatorK0-L11" id="OperatorK0-L11"> 11</a> namespace BC4lean.OperatorKTheory</span>
+<span><a class="line" href="#OperatorK0-L12" id="OperatorK0-L12"> 12</a> </span>
+<span><a class="line" href="#OperatorK0-L13" id="OperatorK0-L13"> 13</a> universe u v</span>
+<span><a class="line" href="#OperatorK0-L14" id="OperatorK0-L14"> 14</a> variable {A : Type u} [CStarAlgebra A] [PartialOrder A] [StarOrderedRing A]</span>
+<span><a class="line" href="#OperatorK0-L15" id="OperatorK0-L15"> 15</a> </span>
+<span><a class="line" href="#OperatorK0-L16" id="OperatorK0-L16"> 16</a> /-- The unital operator K₀ group, obtained by group-completing V(A). -/</span>
+<span id="doc/BC4lean.OperatorKTheory.K0"><a class="line" href="#OperatorK0-L17" id="OperatorK0-L17"> 17</a> abbrev K0 (A : Type u) [CStarAlgebra A] [PartialOrder A] [StarOrderedRing A] :=</span>
+<span><a class="line" href="#OperatorK0-L18" id="OperatorK0-L18"> 18</a>   Algebra.GrothendieckAddGroup (StableProjectionMonoid A)</span>
+<span><a class="line" href="#OperatorK0-L19" id="OperatorK0-L19"> 19</a> </span>
+<span><a class="line" href="#OperatorK0-L20" id="OperatorK0-L20"> 20</a> /-- The canonical additive map from stable projection classes to K₀. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.k0Class"><a class="line" href="#OperatorK0-L21" id="OperatorK0-L21"> 21</a> def k0Class : StableProjectionMonoid A →+ K0 A := Algebra.GrothendieckAddGroup.of</span>
+<span><a class="line" href="#OperatorK0-L22" id="OperatorK0-L22"> 22</a> </span>
+<span><a class="line" href="#OperatorK0-L23" id="OperatorK0-L23"> 23</a> /-- The K₀ class of a finite matrix projection. -/</span>
+<span id="doc/BC4lean.OperatorKTheory.k0Projection"><a class="line" href="#OperatorK0-L24" id="OperatorK0-L24"> 24</a> def k0Projection (p : FiniteProjection A) : K0 A := k0Class (StableProjectionMonoid.of p)</span>
+<span><a class="line" href="#OperatorK0-L25" id="OperatorK0-L25"> 25</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.k0Projection_zero"><a class="line" href="#OperatorK0-L26" id="OperatorK0-L26"> 26</a> @[simp] theorem k0Projection_zero : k0Projection (FiniteProjection.zero : FiniteProjection A) = 0 :=</span>
+<span><a class="line" href="#OperatorK0-L27" id="OperatorK0-L27"> 27</a>   map_zero k0Class</span>
+<span><a class="line" href="#OperatorK0-L28" id="OperatorK0-L28"> 28</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.k0Projection_blockSum"><a class="line" href="#OperatorK0-L29" id="OperatorK0-L29"> 29</a> @[simp] theorem k0Projection_blockSum (p q : FiniteProjection A) :</span>
+<span><a class="line" href="#OperatorK0-L30" id="OperatorK0-L30"> 30</a>     k0Projection (FiniteProjection.blockSum p q) = k0Projection p + k0Projection q := by</span>
+<span><a class="line" href="#OperatorK0-L31" id="OperatorK0-L31"> 31</a>   simp only [k0Projection, StableProjectionMonoid.of_blockSum, map_add]</span>
+<span><a class="line" href="#OperatorK0-L32" id="OperatorK0-L32"> 32</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.k0Projection_eq_of_equivalent"><a class="line" href="#OperatorK0-L33" id="OperatorK0-L33"> 33</a> theorem k0Projection_eq_of_equivalent {p q : FiniteProjection A}</span>
+<span><a class="line" href="#OperatorK0-L34" id="OperatorK0-L34"> 34</a>     (h : FiniteProjection.Equivalent p q) : k0Projection p = k0Projection q :=</span>
+<span><a class="line" href="#OperatorK0-L35" id="OperatorK0-L35"> 35</a>   congrArg k0Class (StableProjectionMonoid.of_eq_of_equivalent h)</span>
+<span><a class="line" href="#OperatorK0-L36" id="OperatorK0-L36"> 36</a> </span>
+<span><a class="line" href="#OperatorK0-L37" id="OperatorK0-L37"> 37</a> /-- Every additive map from V(A) to an abelian group extends uniquely to K₀(A). -/</span>
+<span id="doc/BC4lean.OperatorKTheory.k0Universal"><a class="line" href="#OperatorK0-L38" id="OperatorK0-L38"> 38</a> def k0Universal {G : Type v} [AddCommGroup G] :</span>
+<span><a class="line" href="#OperatorK0-L39" id="OperatorK0-L39"> 39</a>     (StableProjectionMonoid A →+ G) ≃ (K0 A →+ G) := Algebra.GrothendieckAddGroup.lift</span>
+<span><a class="line" href="#OperatorK0-L40" id="OperatorK0-L40"> 40</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.k0Universal_comp"><a class="line" href="#OperatorK0-L41" id="OperatorK0-L41"> 41</a> @[simp] theorem k0Universal_comp {G : Type v} [AddCommGroup G]</span>
+<span><a class="line" href="#OperatorK0-L42" id="OperatorK0-L42"> 42</a>     (f : StableProjectionMonoid A →+ G) : (k0Universal f).comp k0Class = f :=</span>
+<span><a class="line" href="#OperatorK0-L43" id="OperatorK0-L43"> 43</a>   k0Universal.left_inv f</span>
+<span><a class="line" href="#OperatorK0-L44" id="OperatorK0-L44"> 44</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.k0Universal_class"><a class="line" href="#OperatorK0-L45" id="OperatorK0-L45"> 45</a> @[simp] theorem k0Universal_class {G : Type v} [AddCommGroup G]</span>
+<span><a class="line" href="#OperatorK0-L46" id="OperatorK0-L46"> 46</a>     (f : StableProjectionMonoid A →+ G) (x : StableProjectionMonoid A) :</span>
+<span><a class="line" href="#OperatorK0-L47" id="OperatorK0-L47"> 47</a>     k0Universal f (k0Class x) = f x := DFunLike.congr_fun (k0Universal_comp f) x</span>
+<span><a class="line" href="#OperatorK0-L48" id="OperatorK0-L48"> 48</a> </span>
+<span id="doc/BC4lean.OperatorKTheory.k0Universal_unique"><a class="line" href="#OperatorK0-L49" id="OperatorK0-L49"> 49</a> theorem k0Universal_unique {G : Type v} [AddCommGroup G]</span>
+<span><a class="line" href="#OperatorK0-L50" id="OperatorK0-L50"> 50</a>     (f : StableProjectionMonoid A →+ G) (g : K0 A →+ G)</span>
+<span><a class="line" href="#OperatorK0-L51" id="OperatorK0-L51"> 51</a>     (h : g.comp k0Class = f) : k0Universal f = g := by</span>
+<span><a class="line" href="#OperatorK0-L52" id="OperatorK0-L52"> 52</a>   apply k0Universal.symm.injective</span>
+<span><a class="line" href="#OperatorK0-L53" id="OperatorK0-L53"> 53</a>   exact (k0Universal.left_inv f).trans h.symm</span>
+<span><a class="line" href="#OperatorK0-L54" id="OperatorK0-L54"> 54</a> </span>
+<span><a class="line" href="#OperatorK0-L55" id="OperatorK0-L55"> 55</a> end BC4lean.OperatorKTheory</span>
+</pre>
+<h2 id="ReducedOperatorK0">ReducedOperatorK0.lean</h2><p>源码 SHA-256：<code>06b9ab3abc14445efde6e19e43a22cbe74174054d6d99dee277a5a77fbf55ec1</code></p><pre>
+<span><a class="line" href="#ReducedOperatorK0-L1" id="ReducedOperatorK0-L1">  1</a> import BC4lean.OperatorK0</span>
+<span><a class="line" href="#ReducedOperatorK0-L2" id="ReducedOperatorK0-L2">  2</a> import BC4lean.ReducedGroupCStar</span>
+<span><a class="line" href="#ReducedOperatorK0-L3" id="ReducedOperatorK0-L3">  3</a> import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Basic</span>
+<span><a class="line" href="#ReducedOperatorK0-L4" id="ReducedOperatorK0-L4">  4</a> </span>
+<span><a class="line" href="#ReducedOperatorK0-L5" id="ReducedOperatorK0-L5">  5</a> /-! # The degree-zero analytic target</span>
+<span><a class="line" href="#ReducedOperatorK0-L6" id="ReducedOperatorK0-L6">  6</a> </span>
+<span><a class="line" href="#ReducedOperatorK0-L7" id="ReducedOperatorK0-L7">  7</a> The reduced group C⋆-algebra carries its canonical spectral order. This makes</span>
+<span><a class="line" href="#ReducedOperatorK0-L8" id="ReducedOperatorK0-L8">  8</a> its stable projection monoid and unital operator K₀ available for every group.</span>
+<span><a class="line" href="#ReducedOperatorK0-L9" id="ReducedOperatorK0-L9">  9</a> No assembly map, K₁ construction, or computation of these groups is asserted.</span>
+<span><a class="line" href="#ReducedOperatorK0-L10" id="ReducedOperatorK0-L10"> 10</a> -/</span>
+<span><a class="line" href="#ReducedOperatorK0-L11" id="ReducedOperatorK0-L11"> 11</a> </span>
+<span><a class="line" href="#ReducedOperatorK0-L12" id="ReducedOperatorK0-L12"> 12</a> noncomputable section</span>
+<span><a class="line" href="#ReducedOperatorK0-L13" id="ReducedOperatorK0-L13"> 13</a> namespace BC4lean</span>
+<span><a class="line" href="#ReducedOperatorK0-L14" id="ReducedOperatorK0-L14"> 14</a> </span>
+<span><a class="line" href="#ReducedOperatorK0-L15" id="ReducedOperatorK0-L15"> 15</a> universe u v</span>
+<span><a class="line" href="#ReducedOperatorK0-L16" id="ReducedOperatorK0-L16"> 16</a> variable (Γ : Type u) [Group Γ]</span>
+<span><a class="line" href="#ReducedOperatorK0-L17" id="ReducedOperatorK0-L17"> 17</a> </span>
+<span><a class="line" href="#ReducedOperatorK0-L18" id="ReducedOperatorK0-L18"> 18</a> /-- Stable projection classes for the reduced group C⋆-algebra, with spectral order. -/</span>
+<span id="doc/BC4lean.ReducedProjectionMonoid"><a class="line" href="#ReducedOperatorK0-L19" id="ReducedOperatorK0-L19"> 19</a> def ReducedProjectionMonoid : Type _ :=</span>
+<span><a class="line" href="#ReducedOperatorK0-L20" id="ReducedOperatorK0-L20"> 20</a>   letI := CStarAlgebra.spectralOrder (ReducedGroupCStar Γ)</span>
+<span><a class="line" href="#ReducedOperatorK0-L21" id="ReducedOperatorK0-L21"> 21</a>   letI := CStarAlgebra.spectralOrderedRing (ReducedGroupCStar Γ)</span>
+<span><a class="line" href="#ReducedOperatorK0-L22" id="ReducedOperatorK0-L22"> 22</a>   OperatorKTheory.StableProjectionMonoid (ReducedGroupCStar Γ)</span>
+<span><a class="line" href="#ReducedOperatorK0-L23" id="ReducedOperatorK0-L23"> 23</a> </span>
+<span id="doc/BC4lean.reducedProjectionAddCommMonoid"><a class="line" href="#ReducedOperatorK0-L24" id="ReducedOperatorK0-L24"> 24</a> instance reducedProjectionAddCommMonoid : AddCommMonoid (ReducedProjectionMonoid Γ) := by</span>
+<span><a class="line" href="#ReducedOperatorK0-L25" id="ReducedOperatorK0-L25"> 25</a>   letI := CStarAlgebra.spectralOrder (ReducedGroupCStar Γ)</span>
+<span><a class="line" href="#ReducedOperatorK0-L26" id="ReducedOperatorK0-L26"> 26</a>   letI := CStarAlgebra.spectralOrderedRing (ReducedGroupCStar Γ)</span>
+<span><a class="line" href="#ReducedOperatorK0-L27" id="ReducedOperatorK0-L27"> 27</a>   exact inferInstanceAs (AddCommMonoid (OperatorKTheory.StableProjectionMonoid (ReducedGroupCStar Γ)))</span>
+<span><a class="line" href="#ReducedOperatorK0-L28" id="ReducedOperatorK0-L28"> 28</a> </span>
+<span><a class="line" href="#ReducedOperatorK0-L29" id="ReducedOperatorK0-L29"> 29</a> /-- The degree-zero analytic target K₀(Cᵣ*(Γ)), using the canonical spectral order. -/</span>
+<span id="doc/BC4lean.ReducedK0"><a class="line" href="#ReducedOperatorK0-L30" id="ReducedOperatorK0-L30"> 30</a> def ReducedK0 : Type _ :=</span>
+<span><a class="line" href="#ReducedOperatorK0-L31" id="ReducedOperatorK0-L31"> 31</a>   letI := CStarAlgebra.spectralOrder (ReducedGroupCStar Γ)</span>
+<span><a class="line" href="#ReducedOperatorK0-L32" id="ReducedOperatorK0-L32"> 32</a>   letI := CStarAlgebra.spectralOrderedRing (ReducedGroupCStar Γ)</span>
+<span><a class="line" href="#ReducedOperatorK0-L33" id="ReducedOperatorK0-L33"> 33</a>   OperatorKTheory.K0 (ReducedGroupCStar Γ)</span>
+<span><a class="line" href="#ReducedOperatorK0-L34" id="ReducedOperatorK0-L34"> 34</a> </span>
+<span id="doc/BC4lean.reducedK0AddCommGroup"><a class="line" href="#ReducedOperatorK0-L35" id="ReducedOperatorK0-L35"> 35</a> instance reducedK0AddCommGroup : AddCommGroup (ReducedK0 Γ) := by</span>
+<span><a class="line" href="#ReducedOperatorK0-L36" id="ReducedOperatorK0-L36"> 36</a>   letI := CStarAlgebra.spectralOrder (ReducedGroupCStar Γ)</span>
+<span><a class="line" href="#ReducedOperatorK0-L37" id="ReducedOperatorK0-L37"> 37</a>   letI := CStarAlgebra.spectralOrderedRing (ReducedGroupCStar Γ)</span>
+<span><a class="line" href="#ReducedOperatorK0-L38" id="ReducedOperatorK0-L38"> 38</a>   exact inferInstanceAs (AddCommGroup (OperatorKTheory.K0 (ReducedGroupCStar Γ)))</span>
+<span><a class="line" href="#ReducedOperatorK0-L39" id="ReducedOperatorK0-L39"> 39</a> </span>
+<span><a class="line" href="#ReducedOperatorK0-L40" id="ReducedOperatorK0-L40"> 40</a> /-- The canonical map from projection classes to the degree-zero analytic group. -/</span>
+<span id="doc/BC4lean.reducedK0Class"><a class="line" href="#ReducedOperatorK0-L41" id="ReducedOperatorK0-L41"> 41</a> def reducedK0Class : ReducedProjectionMonoid Γ →+ ReducedK0 Γ := by</span>
+<span><a class="line" href="#ReducedOperatorK0-L42" id="ReducedOperatorK0-L42"> 42</a>   letI := CStarAlgebra.spectralOrder (ReducedGroupCStar Γ)</span>
+<span><a class="line" href="#ReducedOperatorK0-L43" id="ReducedOperatorK0-L43"> 43</a>   letI := CStarAlgebra.spectralOrderedRing (ReducedGroupCStar Γ)</span>
+<span><a class="line" href="#ReducedOperatorK0-L44" id="ReducedOperatorK0-L44"> 44</a>   exact OperatorKTheory.k0Class</span>
+<span><a class="line" href="#ReducedOperatorK0-L45" id="ReducedOperatorK0-L45"> 45</a> </span>
+<span><a class="line" href="#ReducedOperatorK0-L46" id="ReducedOperatorK0-L46"> 46</a> /-- The universal property specialized to the reduced group algebra. -/</span>
+<span id="doc/BC4lean.reducedK0Universal"><a class="line" href="#ReducedOperatorK0-L47" id="ReducedOperatorK0-L47"> 47</a> def reducedK0Universal {G : Type v} [AddCommGroup G] :</span>
+<span><a class="line" href="#ReducedOperatorK0-L48" id="ReducedOperatorK0-L48"> 48</a>     (ReducedProjectionMonoid Γ →+ G) ≃ (ReducedK0 Γ →+ G) := by</span>
+<span><a class="line" href="#ReducedOperatorK0-L49" id="ReducedOperatorK0-L49"> 49</a>   letI := CStarAlgebra.spectralOrder (ReducedGroupCStar Γ)</span>
+<span><a class="line" href="#ReducedOperatorK0-L50" id="ReducedOperatorK0-L50"> 50</a>   letI := CStarAlgebra.spectralOrderedRing (ReducedGroupCStar Γ)</span>
+<span><a class="line" href="#ReducedOperatorK0-L51" id="ReducedOperatorK0-L51"> 51</a>   exact OperatorKTheory.k0Universal</span>
+<span><a class="line" href="#ReducedOperatorK0-L52" id="ReducedOperatorK0-L52"> 52</a> </span>
+<span><a class="line" href="#ReducedOperatorK0-L53" id="ReducedOperatorK0-L53"> 53</a> end BC4lean</span>
 </pre>
 </body></html>

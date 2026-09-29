@@ -10,3 +10,7 @@ import BC4lean.ReducedCompletion
 import BC4lean.OperatorProjections
 import BC4lean.MatrixStabilization
 import BC4lean.UnitaryHomotopy
+import BC4lean.RectangularEquivalence
+import BC4lean.StableProjectionMonoid
+import BC4lean.OperatorK0
+import BC4lean.ReducedOperatorK0

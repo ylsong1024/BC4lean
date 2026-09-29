@@ -2,9 +2,11 @@
 \label{ch:operator-k-theory}
 
 Unless stated otherwise, $A$ is a unital complex $C^*$-algebra.
-The present Lean milestone constructs projections, fixed-size equivalence
-classes, matrix block sums, and norm homotopies of matrix unitaries.
-The stable quotients and the groups $K_0$ and $K_1$ remain separate targets.
+The present Lean milestone constructs the stable projection monoid $V(A)$
+and the unital group $K_0(A)$ with its universal property. Matrix unitaries,
+fixed-size norm homotopies, and stabilization maps are also verified.
+The stable group $K_1$, nonunital extensions, and later structural properties
+remain separate targets.
 
 \section{Projections and Murray--von Neumann equivalence}
 
@@ -91,27 +93,107 @@ If $v$ and $w$ are the respective witnesses, use $v\oplus w$.
 Block multiplication and adjoints give both defining equations.
 \end{proof}
 
-\begin{definition}\label{def:stable-projection-monoid}
-\uses{prop:projection-block-sum}
-\notready
-On the disjoint union of the $P_n(A)$, identify $p\in P_n(A)$ and
-$q\in P_m(A)$ when, for some $N\geq n,m$,
+\begin{definition}\label{def:rectangular-projection-equivalence}
+\uses{def:cstar-matrix-projection}
+\lean{BC4lean.OperatorKTheory.projectionMatrix,BC4lean.OperatorKTheory.RectEquivalent}
+\leanok
+For finite index sets $I,J$, projections $p\in M_I(A)$ and $q\in M_J(A)$
+are rectangularly equivalent if there is $v\in M_{I,J}(A)$ with
 \[
- p\oplus 0_{N-n}\sim q\oplus 0_{N-m}\quad\text{in }M_N(A).
+ vv^*=p,\qquad v^*v=q.
 \]
-Construct this stable quotient $V(A)$ and prove that block sum gives a
-commutative monoid, independently of representatives and finite-index
-identifications. Its zero is the class of a zero projection.
+Unlike the earlier relation in one fixed algebra, this relation can compare
+different matrix sizes directly.
 \end{definition}
 
-\begin{definition}\label{def:operator-k0}
-\uses{def:stable-projection-monoid}
-\notready
-Define $K_0(A)$ as the Grothendieck group of $V(A)$, with its canonical map
-$V(A)\to K_0(A)$. Prove its universal property for monoid maps from $V(A)$
-to abelian groups. Do not assume that the canonical map is injective:
-cancellation in $V(A)$ is not a standing hypothesis.
+\begin{proposition}\label{prop:rectangular-equivalence-stable}
+\uses{def:rectangular-projection-equivalence,prop:partial-isometry-support,prop:projection-block-sum}
+\lean{BC4lean.OperatorKTheory.rectangular_right_support,BC4lean.OperatorKTheory.rectangular_left_support,BC4lean.OperatorKTheory.rectEquivalent_refl,BC4lean.OperatorKTheory.rectEquivalent_symm,BC4lean.OperatorKTheory.rectEquivalent_trans,BC4lean.OperatorKTheory.rectEquivalent_stabilize,BC4lean.OperatorKTheory.rectEquivalent_of_reindex,BC4lean.OperatorKTheory.rectEquivalent_iff_padded}
+Rectangular equivalence is an equivalence relation on finite matrix projections
+of varying sizes. It is unchanged by reindexing and zero-padding. Moreover,
+\[
+ p\sim_{\mathrm{rect}}q
+ \quad\Longleftrightarrow\quad
+ p\oplus0_J\sim 0_I\oplus q\quad\text{in }M_{I\sqcup J}(A),
+\]
+where the relation on the right is ordinary Murray--von Neumann equivalence.
+Thus rectangular witnesses give a model for stable projection equivalence.
+\end{proposition}
+\begin{proof}
+\leanok
+Embed a rectangular matrix as an off-diagonal block in $M_{I\sqcup J}(A)$.
+The square-matrix support lemma gives $vq=v$ from $v^*v=q$ and, by taking
+adjoints, $pv=v$ from $vv^*=p$. These identities prove transitivity using
+the product of rectangular witnesses. Reindexing uses submatrices along
+bijections. Zero projections of any sizes are equivalent using the zero
+rectangular matrix; block sum and reindexing then give zero-padding invariance.
+Combine these equivalences with the fixed-size equivalence relation to obtain
+the displayed common-corner characterization.
+\end{proof}
+
+\begin{definition}\label{def:stable-projection-monoid}
+\uses{prop:rectangular-equivalence-stable}
+\lean{BC4lean.OperatorKTheory.FiniteProjection,BC4lean.OperatorKTheory.FiniteProjection.Equivalent,BC4lean.OperatorKTheory.FiniteProjection.setoid,BC4lean.OperatorKTheory.StableProjectionMonoid,BC4lean.OperatorKTheory.StableProjectionMonoid.of,BC4lean.OperatorKTheory.StableProjectionMonoid.of_eq_iff}
+\leanok
+Let $V(A)$ be finite matrix projections modulo rectangular equivalence.
+The Lean objects record a small finite index type, its finite structure,
+and a projection. The relation is the existence of an actual rectangular
+partial-isometry witness; block-sum relations are not imposed separately.
 \end{definition}
+
+\begin{proposition}\label{prop:stable-projection-monoid-laws}
+\uses{def:stable-projection-monoid,prop:projection-block-sum}
+\lean{BC4lean.OperatorKTheory.rectEquivalent_blockSum,BC4lean.OperatorKTheory.FiniteProjection.blockSum_congr,BC4lean.OperatorKTheory.FiniteProjection.blockSum_assoc,BC4lean.OperatorKTheory.FiniteProjection.blockSum_comm,BC4lean.OperatorKTheory.FiniteProjection.zero_blockSum,BC4lean.OperatorKTheory.StableProjectionMonoid.instAddCommMonoid,BC4lean.OperatorKTheory.StableProjectionMonoid.of_zeroProjection,BC4lean.OperatorKTheory.StableProjectionMonoid.of_stabilize}
+Block sum makes $V(A)$ an additive commutative monoid. Any zero projection
+represents its zero, and $[p\oplus0]=[p]$.
+\end{proposition}
+\begin{proof}
+\leanok
+Block sums of rectangular witnesses prove independence of representatives.
+The associativity and block-switching bijections of finite index sets prove
+associativity and commutativity in the quotient. The empty matrix gives the
+identity. Zero-padding invariance follows from rectangular equivalence.
+\end{proof}
+
+\begin{proposition}\label{prop:stable-projection-finite-representative}
+\uses{def:stable-projection-monoid}
+\lean{BC4lean.OperatorKTheory.FiniteProjection.toFin,BC4lean.OperatorKTheory.FiniteProjection.equivalent_toFin,BC4lean.OperatorKTheory.StableProjectionMonoid.exists_finRepresentative}
+Every class in $V(A)$ has a representative indexed by
+$\{0,\ldots,n-1\}$ for some $n\geq0$.
+\end{proposition}
+\begin{proof}
+\leanok
+Reindex a projection using the bijection from its finite index type to the
+standard finite ordinal of the same cardinality. Reindexing preserves its class.
+\end{proof}
+
+\begin{definition}\label{def:operator-k0}
+\uses{prop:stable-projection-monoid-laws}
+\lean{BC4lean.OperatorKTheory.K0,BC4lean.OperatorKTheory.k0Class,BC4lean.OperatorKTheory.k0Projection,BC4lean.OperatorKTheory.k0Projection_zero,BC4lean.OperatorKTheory.k0Projection_blockSum,BC4lean.OperatorKTheory.k0Projection_eq_of_equivalent}
+\leanok
+Define the unital group $K_0(A)$ as the Grothendieck group of $V(A)$.
+The canonical additive map $V(A)\to K_0(A)$ sends a matrix projection to
+its $K_0$ class and sends block sum to addition.
+Cancellation in $V(A)$ is not assumed, and injectivity of this canonical map
+is not asserted.
+\end{definition}
+
+\begin{proposition}\label{prop:operator-k0-universal}
+\uses{def:operator-k0}
+\lean{BC4lean.OperatorKTheory.k0Universal,BC4lean.OperatorKTheory.k0Universal_comp,BC4lean.OperatorKTheory.k0Universal_class,BC4lean.OperatorKTheory.k0Universal_unique}
+For every abelian group $G$, composition with the canonical map induces a
+bijection
+\[
+ \operatorname{Hom}_{\mathrm{Ab}}(K_0(A),G)
+ \simeq \operatorname{Hom}_{\mathrm{Mon}}(V(A),G).
+\]
+\end{proposition}
+\begin{proof}
+\leanok
+Apply the universal property of Mathlib's additive Grothendieck group to
+the verified commutative monoid $V(A)$. The resulting extension agrees on
+projection classes and is unique.
+\end{proof}
 
 \section{Unitaries, norm homotopy, and $K_1$}
 
@@ -201,14 +283,27 @@ merely by being part of the usual theory.
 
 \section{The analytic target}
 
+\begin{definition}\label{def:analytic-k0}
+\uses{def:reduced-group-cstar,def:operator-k0,prop:operator-k0-universal}
+\lean{BC4lean.ReducedProjectionMonoid,BC4lean.reducedProjectionAddCommMonoid,BC4lean.ReducedK0,BC4lean.reducedK0AddCommGroup,BC4lean.reducedK0Class,BC4lean.reducedK0Universal}
+\leanok
+For a discrete group $\Gamma$, equip the already constructed algebra
+$C_r^*(\Gamma)$ with its canonical spectral order. Define the abelian group
+$K_0(C_r^*(\Gamma))$ by the preceding unital construction, together with
+its projection-class map and universal property. Countability is not needed
+for this construction. No computation of this group or assembly map is
+asserted here.
+\end{definition}
+
+
 \begin{definition}\label{def:analytic-side}
-\uses{def:reduced-group-cstar,def:operator-k-theory}
+\uses{def:analytic-k0,def:operator-k-theory}
 \notready
 For a countable discrete group $\Gamma$, the analytic target of the
 coefficient-free reduced Baum--Connes assembly map is
 \[
  K_i(C_r^*(\Gamma)),\qquad i=0,1.
 \]
-The reduced algebra has already been constructed. Instantiating the
-$K$-theory functors and connecting them to the assembly map remain to be done.
+The degree-zero group has been constructed above. The degree-one group,
+the required functorial interfaces, and the assembly map remain to be constructed.
 \end{definition}
