@@ -34,3 +34,5 @@ import BC4lean.UnitaryStableConjugation
 import BC4lean.ProjectionHomotopy
 import BC4lean.StarHomotopy
 import BC4lean.OperatorKHomotopy
+import BC4lean.ProperActions
+import BC4lean.ProperFixedPoints

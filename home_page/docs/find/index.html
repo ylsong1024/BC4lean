@@ -42,6 +42,8 @@ code{overflow-wrap:anywhere}</style></head><body><a href="../../blueprint/">返�
 <li><a href="#ProjectionHomotopy">ProjectionHomotopy.lean</a></li>
 <li><a href="#StarHomotopy">StarHomotopy.lean</a></li>
 <li><a href="#OperatorKHomotopy">OperatorKHomotopy.lean</a></li>
+<li><a href="#ProperActions">ProperActions.lean</a></li>
+<li><a href="#ProperFixedPoints">ProperFixedPoints.lean</a></li>
 </ul></nav>
 <h2 id="GroupAlgebra">GroupAlgebra.lean</h2><p>源码 SHA-256：<code>1c6c0899fe9bc9f7860f291ba7c5573353d18a3c5809258769d689bc39da8ad4</code></p><pre>
 <span><a class="line" href="#L1" id="L1">  1</a> import Mathlib.Algebra.MonoidAlgebra.Basic</span>
@@ -3769,5 +3771,175 @@ code{overflow-wrap:anywhere}</style></head><body><a href="../../blueprint/">返�
 <span><a class="line" href="#OperatorKHomotopy-L70" id="OperatorKHomotopy-L70"> 70</a>   exact DFunLike.congr_fun (k1Map_homotopy h.unitization) x.val</span>
 <span><a class="line" href="#OperatorKHomotopy-L71" id="OperatorKHomotopy-L71"> 71</a> end Nonunital</span>
 <span><a class="line" href="#OperatorKHomotopy-L72" id="OperatorKHomotopy-L72"> 72</a> end BC4lean.OperatorKTheory</span>
+</pre>
+<h2 id="ProperActions">ProperActions.lean</h2><p>源码 SHA-256：<code>b0eebca03ad3cab0dda38aad1dafc667edfb67196ea5d8c3042bb5b0bad4a9eb</code></p><pre>
+<span><a class="line" href="#ProperActions-L1" id="ProperActions-L1">  1</a> import Mathlib.Topology.Algebra.ProperAction.CompactlyGenerated</span>
+<span><a class="line" href="#ProperActions-L2" id="ProperActions-L2">  2</a> </span>
+<span><a class="line" href="#ProperActions-L3" id="ProperActions-L3">  3</a> /-! # Proper actions of discrete groups</span>
+<span><a class="line" href="#ProperActions-L4" id="ProperActions-L4">  4</a> </span>
+<span><a class="line" href="#ProperActions-L5" id="ProperActions-L5">  5</a> We use Mathlib&#x27;s `ProperSMul`, defined by properness of the action-pair map.</span>
+<span><a class="line" href="#ProperActions-L6" id="ProperActions-L6">  6</a> The compact-transporter criterion requires a locally compact Hausdorff space;</span>
+<span><a class="line" href="#ProperActions-L7" id="ProperActions-L7">  7</a> finite stabilizers are proved as a consequence, not used as a definition.</span>
+<span><a class="line" href="#ProperActions-L8" id="ProperActions-L8">  8</a> -/</span>
+<span><a class="line" href="#ProperActions-L9" id="ProperActions-L9">  9</a> namespace BC4lean.ProperActions</span>
+<span><a class="line" href="#ProperActions-L10" id="ProperActions-L10"> 10</a> open scoped Pointwise</span>
+<span><a class="line" href="#ProperActions-L11" id="ProperActions-L11"> 11</a> </span>
+<span><a class="line" href="#ProperActions-L12" id="ProperActions-L12"> 12</a> variable {Γ X : Type*} [Group Γ] [TopologicalSpace Γ]</span>
+<span><a class="line" href="#ProperActions-L13" id="ProperActions-L13"> 13</a> variable [TopologicalSpace X] [MulAction Γ X]</span>
+<span><a class="line" href="#ProperActions-L14" id="ProperActions-L14"> 14</a> </span>
+<span><a class="line" href="#ProperActions-L15" id="ProperActions-L15"> 15</a> /-- The map whose properness defines a proper action. -/</span>
+<span id="doc/BC4lean.ProperActions.actionMap"><a class="line" href="#ProperActions-L16" id="ProperActions-L16"> 16</a> def actionMap : Γ × X → X × X := fun p =&gt; (p.1 • p.2, p.2)</span>
+<span><a class="line" href="#ProperActions-L17" id="ProperActions-L17"> 17</a> </span>
+<span><a class="line" href="#ProperActions-L18" id="ProperActions-L18"> 18</a> /-- The project uses precisely Mathlib&#x27;s proper-action predicate. -/</span>
+<span id="doc/BC4lean.ProperActions.proper_iff_actionMap"><a class="line" href="#ProperActions-L19" id="ProperActions-L19"> 19</a> theorem proper_iff_actionMap : ProperSMul Γ X ↔ IsProperMap (actionMap (Γ := Γ) (X := X)) :=</span>
+<span><a class="line" href="#ProperActions-L20" id="ProperActions-L20"> 20</a>   properSMul_iff Γ X</span>
+<span><a class="line" href="#ProperActions-L21" id="ProperActions-L21"> 21</a> </span>
+<span><a class="line" href="#ProperActions-L22" id="ProperActions-L22"> 22</a> /-- Group elements moving one set to meet another. -/</span>
+<span id="doc/BC4lean.ProperActions.transporter"><a class="line" href="#ProperActions-L23" id="ProperActions-L23"> 23</a> def transporter (K L : Set X) : Set Γ := {g | (g • K ∩ L).Nonempty}</span>
+<span><a class="line" href="#ProperActions-L24" id="ProperActions-L24"> 24</a> </span>
+<span><a class="line" href="#ProperActions-L25" id="ProperActions-L25"> 25</a> /-- A proper discrete-group action has finite compact transporters. -/</span>
+<span id="doc/BC4lean.ProperActions.finite_transporter"><a class="line" href="#ProperActions-L26" id="ProperActions-L26"> 26</a> theorem finite_transporter [DiscreteTopology Γ] [ProperSMul Γ X]</span>
+<span><a class="line" href="#ProperActions-L27" id="ProperActions-L27"> 27</a>     {K L : Set X} (hK : IsCompact K) (hL : IsCompact L) :</span>
+<span><a class="line" href="#ProperActions-L28" id="ProperActions-L28"> 28</a>     (transporter (Γ := Γ) K L).Finite :=</span>
+<span><a class="line" href="#ProperActions-L29" id="ProperActions-L29"> 29</a>   isCompact_iff_finite.mp (ProperSMul.isCompact_setOfPred_inter_nonempty hK hL)</span>
+<span><a class="line" href="#ProperActions-L30" id="ProperActions-L30"> 30</a> </span>
+<span><a class="line" href="#ProperActions-L31" id="ProperActions-L31"> 31</a> /-- Properness implies finite stabilizers without a local compactness hypothesis. -/</span>
+<span id="doc/BC4lean.ProperActions.finite_stabilizer"><a class="line" href="#ProperActions-L32" id="ProperActions-L32"> 32</a> theorem finite_stabilizer [DiscreteTopology Γ] [ProperSMul Γ X] (x : X) :</span>
+<span><a class="line" href="#ProperActions-L33" id="ProperActions-L33"> 33</a>     (MulAction.stabilizer Γ x : Set Γ).Finite := by</span>
+<span><a class="line" href="#ProperActions-L34" id="ProperActions-L34"> 34</a>   apply (finite_transporter (Γ := Γ) (K := {x}) (L := {x})</span>
+<span><a class="line" href="#ProperActions-L35" id="ProperActions-L35"> 35</a>     isCompact_singleton isCompact_singleton).subset</span>
+<span><a class="line" href="#ProperActions-L36" id="ProperActions-L36"> 36</a>   intro g hg</span>
+<span><a class="line" href="#ProperActions-L37" id="ProperActions-L37"> 37</a>   refine ⟨g • x, Set.smul_mem_smul_set (Set.mem_singleton x), ?_⟩</span>
+<span><a class="line" href="#ProperActions-L38" id="ProperActions-L38"> 38</a>   exact Set.mem_singleton_iff.mpr (MulAction.mem_stabilizer_iff.mp hg)</span>
+<span><a class="line" href="#ProperActions-L39" id="ProperActions-L39"> 39</a> </span>
+<span><a class="line" href="#ProperActions-L40" id="ProperActions-L40"> 40</a> /-- A proper action has a Hausdorff orbit space. -/</span>
+<span id="doc/BC4lean.ProperActions.orbitSpace_t2"><a class="line" href="#ProperActions-L41" id="ProperActions-L41"> 41</a> theorem orbitSpace_t2 [ProperSMul Γ X] : T2Space (Quotient (MulAction.orbitRel Γ X)) :=</span>
+<span><a class="line" href="#ProperActions-L42" id="ProperActions-L42"> 42</a>   inferInstance</span>
+<span><a class="line" href="#ProperActions-L43" id="ProperActions-L43"> 43</a> </span>
+<span><a class="line" href="#ProperActions-L44" id="ProperActions-L44"> 44</a> omit [TopologicalSpace Γ] in</span>
+<span><a class="line" href="#ProperActions-L45" id="ProperActions-L45"> 45</a> /-- An orbit space of a locally compact space is locally compact for a continuous action. -/</span>
+<span id="doc/BC4lean.ProperActions.orbitSpace_locallyCompact"><a class="line" href="#ProperActions-L46" id="ProperActions-L46"> 46</a> theorem orbitSpace_locallyCompact [ContinuousConstSMul Γ X] [LocallyCompactSpace X] :</span>
+<span><a class="line" href="#ProperActions-L47" id="ProperActions-L47"> 47</a>     LocallyCompactSpace (Quotient (MulAction.orbitRel Γ X)) :=</span>
+<span><a class="line" href="#ProperActions-L48" id="ProperActions-L48"> 48</a>   MulAction.isOpenQuotientMap_quotientMk.locallyCompactSpace</span>
+<span><a class="line" href="#ProperActions-L49" id="ProperActions-L49"> 49</a> </span>
+<span><a class="line" href="#ProperActions-L50" id="ProperActions-L50"> 50</a> /-- Restricting a proper discrete-group action to any subgroup preserves properness. -/</span>
+<span id="doc/BC4lean.ProperActions.proper_subgroup"><a class="line" href="#ProperActions-L51" id="ProperActions-L51"> 51</a> theorem proper_subgroup [DiscreteTopology Γ] [ProperSMul Γ X] (H : Subgroup Γ) :</span>
+<span><a class="line" href="#ProperActions-L52" id="ProperActions-L52"> 52</a>     ProperSMul H X :=</span>
+<span><a class="line" href="#ProperActions-L53" id="ProperActions-L53"> 53</a>   properSMul_of_isClosedEmbedding H.subtype</span>
+<span><a class="line" href="#ProperActions-L54" id="ProperActions-L54"> 54</a>     (isClosed_discrete (H : Set Γ)).isClosedEmbedding_subtypeVal (fun _ _ =&gt; rfl)</span>
+<span><a class="line" href="#ProperActions-L55" id="ProperActions-L55"> 55</a> </span>
+<span><a class="line" href="#ProperActions-L56" id="ProperActions-L56"> 56</a> /-- A proper action on a nonempty compact space forces a discrete group to be finite. -/</span>
+<span id="doc/BC4lean.ProperActions.finite_group_of_compact"><a class="line" href="#ProperActions-L57" id="ProperActions-L57"> 57</a> theorem finite_group_of_compact [DiscreteTopology Γ] [ProperSMul Γ X]</span>
+<span><a class="line" href="#ProperActions-L58" id="ProperActions-L58"> 58</a>     [CompactSpace X] [Nonempty X] : Finite Γ := by</span>
+<span><a class="line" href="#ProperActions-L59" id="ProperActions-L59"> 59</a>   have h : (Set.univ : Set Γ).Finite := by</span>
+<span><a class="line" href="#ProperActions-L60" id="ProperActions-L60"> 60</a>     simpa [transporter] using</span>
+<span><a class="line" href="#ProperActions-L61" id="ProperActions-L61"> 61</a>       (finite_transporter (Γ := Γ) (X := X) isCompact_univ isCompact_univ)</span>
+<span><a class="line" href="#ProperActions-L62" id="ProperActions-L62"> 62</a>   exact Set.finite_univ_iff.mp h</span>
+<span><a class="line" href="#ProperActions-L63" id="ProperActions-L63"> 63</a> </span>
+<span><a class="line" href="#ProperActions-L64" id="ProperActions-L64"> 64</a> section LocallyCompact</span>
+<span><a class="line" href="#ProperActions-L65" id="ProperActions-L65"> 65</a> variable [LocallyCompactSpace X] [T2Space X] [ContinuousSMul Γ X]</span>
+<span><a class="line" href="#ProperActions-L66" id="ProperActions-L66"> 66</a> </span>
+<span><a class="line" href="#ProperActions-L67" id="ProperActions-L67"> 67</a> /-- On a locally compact Hausdorff space, properness is compactness of compact preimages. -/</span>
+<span id="doc/BC4lean.ProperActions.proper_iff_compact_preimages"><a class="line" href="#ProperActions-L68" id="ProperActions-L68"> 68</a> theorem proper_iff_compact_preimages : ProperSMul Γ X ↔</span>
+<span><a class="line" href="#ProperActions-L69" id="ProperActions-L69"> 69</a>     ∀ {K : Set (X × X)}, IsCompact K →</span>
+<span><a class="line" href="#ProperActions-L70" id="ProperActions-L70"> 70</a>       IsCompact ((actionMap (Γ := Γ) (X := X)) ⁻¹&#x27; K) := by</span>
+<span><a class="line" href="#ProperActions-L71" id="ProperActions-L71"> 71</a>   rw [proper_iff_actionMap, isProperMap_iff_isCompact_preimage]</span>
+<span><a class="line" href="#ProperActions-L72" id="ProperActions-L72"> 72</a>   exact and_iff_right (continuous_smul.prodMk continuous_snd)</span>
+<span><a class="line" href="#ProperActions-L73" id="ProperActions-L73"> 73</a> </span>
+<span><a class="line" href="#ProperActions-L74" id="ProperActions-L74"> 74</a> /-- The compact-transporter characterization of proper discrete-group actions. -/</span>
+<span id="doc/BC4lean.ProperActions.proper_iff_finite_transporters"><a class="line" href="#ProperActions-L75" id="ProperActions-L75"> 75</a> theorem proper_iff_finite_transporters [DiscreteTopology Γ] : ProperSMul Γ X ↔</span>
+<span><a class="line" href="#ProperActions-L76" id="ProperActions-L76"> 76</a>     ∀ {K L : Set X}, IsCompact K → IsCompact L → (transporter (Γ := Γ) K L).Finite := by</span>
+<span><a class="line" href="#ProperActions-L77" id="ProperActions-L77"> 77</a>   rw [MulAction.properSMul_iff_isCompact_setOfPred_inter_nonempty]</span>
+<span><a class="line" href="#ProperActions-L78" id="ProperActions-L78"> 78</a>   simp only [transporter, isCompact_iff_finite]</span>
+<span><a class="line" href="#ProperActions-L79" id="ProperActions-L79"> 79</a> </span>
+<span><a class="line" href="#ProperActions-L80" id="ProperActions-L80"> 80</a> /-- Every continuous action of a finite discrete group on an LCH space is proper. -/</span>
+<span id="doc/BC4lean.ProperActions.proper_of_finite"><a class="line" href="#ProperActions-L81" id="ProperActions-L81"> 81</a> theorem proper_of_finite [DiscreteTopology Γ] [Finite Γ] : ProperSMul Γ X :=</span>
+<span><a class="line" href="#ProperActions-L82" id="ProperActions-L82"> 82</a>   proper_iff_finite_transporters.mpr (fun _ _ =&gt; Set.toFinite _)</span>
+<span><a class="line" href="#ProperActions-L83" id="ProperActions-L83"> 83</a> end LocallyCompact</span>
+<span><a class="line" href="#ProperActions-L84" id="ProperActions-L84"> 84</a> </span>
+<span><a class="line" href="#ProperActions-L85" id="ProperActions-L85"> 85</a> /-- Left translation is proper for every topological group, in particular a discrete one. -/</span>
+<span id="doc/BC4lean.ProperActions.proper_leftTranslation"><a class="line" href="#ProperActions-L86" id="ProperActions-L86"> 86</a> theorem proper_leftTranslation [IsTopologicalGroup Γ] : ProperSMul Γ Γ :=</span>
+<span><a class="line" href="#ProperActions-L87" id="ProperActions-L87"> 87</a>   inferInstance</span>
+<span><a class="line" href="#ProperActions-L88" id="ProperActions-L88"> 88</a> </span>
+<span><a class="line" href="#ProperActions-L89" id="ProperActions-L89"> 89</a> end BC4lean.ProperActions</span>
+</pre>
+<h2 id="ProperFixedPoints">ProperFixedPoints.lean</h2><p>源码 SHA-256：<code>c81d7199622a28f862a8973980c1438010386ff359ca0ef7e1fc461b59329c90</code></p><pre>
+<span><a class="line" href="#ProperFixedPoints-L1" id="ProperFixedPoints-L1">  1</a> import BC4lean.ProperActions</span>
+<span><a class="line" href="#ProperFixedPoints-L2" id="ProperFixedPoints-L2">  2</a> </span>
+<span><a class="line" href="#ProperFixedPoints-L3" id="ProperFixedPoints-L3">  3</a> /-! # Subgroup fixed points of proper discrete-group actions</span>
+<span><a class="line" href="#ProperFixedPoints-L4" id="ProperFixedPoints-L4">  4</a> </span>
+<span><a class="line" href="#ProperFixedPoints-L5" id="ProperFixedPoints-L5">  5</a> The empty-fixed-point condition for infinite subgroups follows from properness.</span>
+<span><a class="line" href="#ProperFixedPoints-L6" id="ProperFixedPoints-L6">  6</a> Contractibility of fixed points for finite subgroups is additional data, not a</span>
+<span><a class="line" href="#ProperFixedPoints-L7" id="ProperFixedPoints-L7">  7</a> consequence of properness.</span>
+<span><a class="line" href="#ProperFixedPoints-L8" id="ProperFixedPoints-L8">  8</a> -/</span>
+<span><a class="line" href="#ProperFixedPoints-L9" id="ProperFixedPoints-L9">  9</a> namespace BC4lean.ProperActions</span>
+<span><a class="line" href="#ProperFixedPoints-L10" id="ProperFixedPoints-L10"> 10</a> </span>
+<span><a class="line" href="#ProperFixedPoints-L11" id="ProperFixedPoints-L11"> 11</a> variable {Γ X : Type*} [Group Γ] [MulAction Γ X]</span>
+<span><a class="line" href="#ProperFixedPoints-L12" id="ProperFixedPoints-L12"> 12</a> </span>
+<span><a class="line" href="#ProperFixedPoints-L13" id="ProperFixedPoints-L13"> 13</a> /-- The fixed-point space carries the subspace topology when `X` is topological. -/</span>
+<span id="doc/BC4lean.ProperActions.FixedPointSpace"><a class="line" href="#ProperFixedPoints-L14" id="ProperFixedPoints-L14"> 14</a> abbrev FixedPointSpace (H : Subgroup Γ) (X : Type*) [MulAction Γ X] :=</span>
+<span><a class="line" href="#ProperFixedPoints-L15" id="ProperFixedPoints-L15"> 15</a>   ↥(MulAction.fixedPoints H X)</span>
+<span><a class="line" href="#ProperFixedPoints-L16" id="ProperFixedPoints-L16"> 16</a> </span>
+<span><a class="line" href="#ProperFixedPoints-L17" id="ProperFixedPoints-L17"> 17</a> /-- A point is fixed by a subgroup exactly when that subgroup lies in its stabilizer. -/</span>
+<span id="doc/BC4lean.ProperActions.mem_fixedPoints_iff_le_stabilizer"><a class="line" href="#ProperFixedPoints-L18" id="ProperFixedPoints-L18"> 18</a> theorem mem_fixedPoints_iff_le_stabilizer (H : Subgroup Γ) (x : X) :</span>
+<span><a class="line" href="#ProperFixedPoints-L19" id="ProperFixedPoints-L19"> 19</a>     x ∈ MulAction.fixedPoints H X ↔ H ≤ MulAction.stabilizer Γ x := by</span>
+<span><a class="line" href="#ProperFixedPoints-L20" id="ProperFixedPoints-L20"> 20</a>   constructor</span>
+<span><a class="line" href="#ProperFixedPoints-L21" id="ProperFixedPoints-L21"> 21</a>   · intro hx g hg</span>
+<span><a class="line" href="#ProperFixedPoints-L22" id="ProperFixedPoints-L22"> 22</a>     exact hx ⟨g, hg⟩</span>
+<span><a class="line" href="#ProperFixedPoints-L23" id="ProperFixedPoints-L23"> 23</a>   · intro hx g</span>
+<span><a class="line" href="#ProperFixedPoints-L24" id="ProperFixedPoints-L24"> 24</a>     exact hx g.property</span>
+<span><a class="line" href="#ProperFixedPoints-L25" id="ProperFixedPoints-L25"> 25</a> </span>
+<span><a class="line" href="#ProperFixedPoints-L26" id="ProperFixedPoints-L26"> 26</a> /-- Passing to a smaller subgroup enlarges the fixed-point set. -/</span>
+<span id="doc/BC4lean.ProperActions.fixedPoints_antitone"><a class="line" href="#ProperFixedPoints-L27" id="ProperFixedPoints-L27"> 27</a> theorem fixedPoints_antitone {H K : Subgroup Γ} (hHK : H ≤ K) :</span>
+<span><a class="line" href="#ProperFixedPoints-L28" id="ProperFixedPoints-L28"> 28</a>     MulAction.fixedPoints K X ⊆ MulAction.fixedPoints H X := by</span>
+<span><a class="line" href="#ProperFixedPoints-L29" id="ProperFixedPoints-L29"> 29</a>   intro x hx</span>
+<span><a class="line" href="#ProperFixedPoints-L30" id="ProperFixedPoints-L30"> 30</a>   exact (mem_fixedPoints_iff_le_stabilizer H x).mpr</span>
+<span><a class="line" href="#ProperFixedPoints-L31" id="ProperFixedPoints-L31"> 31</a>     (hHK.trans ((mem_fixedPoints_iff_le_stabilizer K x).mp hx))</span>
+<span><a class="line" href="#ProperFixedPoints-L32" id="ProperFixedPoints-L32"> 32</a> </span>
+<span><a class="line" href="#ProperFixedPoints-L33" id="ProperFixedPoints-L33"> 33</a> /-- Every point is fixed by the trivial subgroup. -/</span>
+<span id="doc/BC4lean.ProperActions.fixedPoints_bot"><a class="line" href="#ProperFixedPoints-L34" id="ProperFixedPoints-L34"> 34</a> theorem fixedPoints_bot : MulAction.fixedPoints (⊥ : Subgroup Γ) X = Set.univ := by</span>
+<span><a class="line" href="#ProperFixedPoints-L35" id="ProperFixedPoints-L35"> 35</a>   ext x</span>
+<span><a class="line" href="#ProperFixedPoints-L36" id="ProperFixedPoints-L36"> 36</a>   simp</span>
+<span><a class="line" href="#ProperFixedPoints-L37" id="ProperFixedPoints-L37"> 37</a> </span>
+<span><a class="line" href="#ProperFixedPoints-L38" id="ProperFixedPoints-L38"> 38</a> section Topology</span>
+<span><a class="line" href="#ProperFixedPoints-L39" id="ProperFixedPoints-L39"> 39</a> variable [TopologicalSpace X] [ContinuousConstSMul Γ X] [T2Space X]</span>
+<span><a class="line" href="#ProperFixedPoints-L40" id="ProperFixedPoints-L40"> 40</a> </span>
+<span><a class="line" href="#ProperFixedPoints-L41" id="ProperFixedPoints-L41"> 41</a> /-- Fixed-point sets of subgroups are closed in a Hausdorff space. -/</span>
+<span id="doc/BC4lean.ProperActions.isClosed_fixedPoints"><a class="line" href="#ProperFixedPoints-L42" id="ProperFixedPoints-L42"> 42</a> theorem isClosed_fixedPoints (H : Subgroup Γ) : IsClosed (MulAction.fixedPoints H X) := by</span>
+<span><a class="line" href="#ProperFixedPoints-L43" id="ProperFixedPoints-L43"> 43</a>   rw [MulAction.fixed_eq_iInter_fixedBy]</span>
+<span><a class="line" href="#ProperFixedPoints-L44" id="ProperFixedPoints-L44"> 44</a>   apply isClosed_iInter</span>
+<span><a class="line" href="#ProperFixedPoints-L45" id="ProperFixedPoints-L45"> 45</a>   intro h</span>
+<span><a class="line" href="#ProperFixedPoints-L46" id="ProperFixedPoints-L46"> 46</a>   exact isClosed_eq (continuous_const_smul (h : Γ)) continuous_id</span>
+<span><a class="line" href="#ProperFixedPoints-L47" id="ProperFixedPoints-L47"> 47</a> </span>
+<span><a class="line" href="#ProperFixedPoints-L48" id="ProperFixedPoints-L48"> 48</a> /-- Subgroup fixed-point spaces of LCH spaces are locally compact. -/</span>
+<span id="doc/BC4lean.ProperActions.fixedPointSpace_locallyCompact"><a class="line" href="#ProperFixedPoints-L49" id="ProperFixedPoints-L49"> 49</a> theorem fixedPointSpace_locallyCompact [LocallyCompactSpace X] (H : Subgroup Γ) :</span>
+<span><a class="line" href="#ProperFixedPoints-L50" id="ProperFixedPoints-L50"> 50</a>     LocallyCompactSpace (FixedPointSpace H X) :=</span>
+<span><a class="line" href="#ProperFixedPoints-L51" id="ProperFixedPoints-L51"> 51</a>   (isClosed_fixedPoints (X := X) H).locallyCompactSpace</span>
+<span><a class="line" href="#ProperFixedPoints-L52" id="ProperFixedPoints-L52"> 52</a> end Topology</span>
+<span><a class="line" href="#ProperFixedPoints-L53" id="ProperFixedPoints-L53"> 53</a> </span>
+<span><a class="line" href="#ProperFixedPoints-L54" id="ProperFixedPoints-L54"> 54</a> section Proper</span>
+<span><a class="line" href="#ProperFixedPoints-L55" id="ProperFixedPoints-L55"> 55</a> variable [TopologicalSpace Γ] [DiscreteTopology Γ] [TopologicalSpace X] [ProperSMul Γ X]</span>
+<span><a class="line" href="#ProperFixedPoints-L56" id="ProperFixedPoints-L56"> 56</a> </span>
+<span><a class="line" href="#ProperFixedPoints-L57" id="ProperFixedPoints-L57"> 57</a> /-- A subgroup fixing a point in a proper discrete-group action is finite. -/</span>
+<span id="doc/BC4lean.ProperActions.finite_subgroup_of_fixedPoint"><a class="line" href="#ProperFixedPoints-L58" id="ProperFixedPoints-L58"> 58</a> theorem finite_subgroup_of_fixedPoint {H : Subgroup Γ} {x : X}</span>
+<span><a class="line" href="#ProperFixedPoints-L59" id="ProperFixedPoints-L59"> 59</a>     (hx : x ∈ MulAction.fixedPoints H X) : (H : Set Γ).Finite :=</span>
+<span><a class="line" href="#ProperFixedPoints-L60" id="ProperFixedPoints-L60"> 60</a>   (finite_stabilizer (Γ := Γ) x).subset</span>
+<span><a class="line" href="#ProperFixedPoints-L61" id="ProperFixedPoints-L61"> 61</a>     ((mem_fixedPoints_iff_le_stabilizer H x).mp hx)</span>
+<span><a class="line" href="#ProperFixedPoints-L62" id="ProperFixedPoints-L62"> 62</a> </span>
+<span><a class="line" href="#ProperFixedPoints-L63" id="ProperFixedPoints-L63"> 63</a> /-- Infinite subgroups have empty fixed-point sets in proper discrete-group actions. -/</span>
+<span id="doc/BC4lean.ProperActions.fixedPoints_eq_empty_of_infinite"><a class="line" href="#ProperFixedPoints-L64" id="ProperFixedPoints-L64"> 64</a> theorem fixedPoints_eq_empty_of_infinite (H : Subgroup Γ) [Infinite H] :</span>
+<span><a class="line" href="#ProperFixedPoints-L65" id="ProperFixedPoints-L65"> 65</a>     MulAction.fixedPoints H X = ∅ := by</span>
+<span><a class="line" href="#ProperFixedPoints-L66" id="ProperFixedPoints-L66"> 66</a>   apply Set.eq_empty_iff_forall_notMem.mpr</span>
+<span><a class="line" href="#ProperFixedPoints-L67" id="ProperFixedPoints-L67"> 67</a>   intro x hx</span>
+<span><a class="line" href="#ProperFixedPoints-L68" id="ProperFixedPoints-L68"> 68</a>   have : Finite H := (finite_subgroup_of_fixedPoint hx).to_subtype</span>
+<span><a class="line" href="#ProperFixedPoints-L69" id="ProperFixedPoints-L69"> 69</a>   exact not_finite H</span>
+<span><a class="line" href="#ProperFixedPoints-L70" id="ProperFixedPoints-L70"> 70</a> </span>
+<span><a class="line" href="#ProperFixedPoints-L71" id="ProperFixedPoints-L71"> 71</a> /-- The topological fixed-point space is empty for an infinite subgroup. -/</span>
+<span id="doc/BC4lean.ProperActions.fixedPointSpace_isEmpty"><a class="line" href="#ProperFixedPoints-L72" id="ProperFixedPoints-L72"> 72</a> theorem fixedPointSpace_isEmpty (H : Subgroup Γ) [Infinite H] :</span>
+<span><a class="line" href="#ProperFixedPoints-L73" id="ProperFixedPoints-L73"> 73</a>     IsEmpty (FixedPointSpace H X) :=</span>
+<span><a class="line" href="#ProperFixedPoints-L74" id="ProperFixedPoints-L74"> 74</a>   Set.isEmpty_coe_sort.mpr (fixedPoints_eq_empty_of_infinite H)</span>
+<span><a class="line" href="#ProperFixedPoints-L75" id="ProperFixedPoints-L75"> 75</a> end Proper</span>
+<span><a class="line" href="#ProperFixedPoints-L76" id="ProperFixedPoints-L76"> 76</a> </span>
+<span><a class="line" href="#ProperFixedPoints-L77" id="ProperFixedPoints-L77"> 77</a> end BC4lean.ProperActions</span>
 </pre>
 </body></html>

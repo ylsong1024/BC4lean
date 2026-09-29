@@ -1,23 +1,178 @@
 \chapter{Proper actions and the universal proper space}
 \label{ch:proper-actions}
 
-\section{Proper actions and equivariant CW complexes}
+This chapter begins with the verified topology of proper discrete-group
+actions and their subgroup fixed-point spaces. Equivariant CW structures,
+the existence and universal property of $\underline E\Gamma$, and the
+directed system of cocompact pieces remain formalization targets.
+
+\section{Proper actions and compact transporters}
+
 \begin{definition}\label{def:proper-action}
-\notready
-For a continuous action on a locally compact Hausdorff space $X$, properness
-means that $(g,x)\mapsto(gx,x)$ from $\Gamma\times X$ to $X\times X$
-is proper. Develop proper $\Gamma$-CW complexes and equivariant homotopies.
-Finite stabilizers alone do not replace properness for arbitrary actions.
+\lean{BC4lean.ProperActions.actionMap,BC4lean.ProperActions.proper_iff_actionMap}
+\leanok
+For a topological group $\Gamma$ acting on a topological space $X$, the
+action is proper when
+\[
+ \alpha:\Gamma\times X\longrightarrow X\times X,
+ \qquad \alpha(g,x)=(gx,x)
+\]
+is a proper map. This is exactly Mathlib's \texttt{ProperSMul} predicate;
+it includes continuity of the action. In the applications below $\Gamma$
+is discrete. Finite stabilizers alone do not replace properness.
 \end{definition}
 
-\section{A model for $\underline E\Gamma$}
-\begin{definition}\label{def:universal-proper-space}
+\begin{definition}\label{def:compact-transporter}
+\lean{BC4lean.ProperActions.transporter}
+\leanok
+For subsets $K,L\subseteq X$, define the transporter
+\[
+ T(K,L)=\{g\in\Gamma:gK\cap L\ne\varnothing\}.
+\]
+\end{definition}
+
+\begin{proposition}\label{prop:compact-transporter-criterion}
+\uses{def:proper-action,def:compact-transporter}
+\lean{BC4lean.ProperActions.finite_transporter,BC4lean.ProperActions.proper_iff_finite_transporters,BC4lean.ProperActions.proper_iff_compact_preimages}
+For a proper action of a discrete group, $T(K,L)$ is finite whenever
+$K,L$ are compact. If $X$ is locally compact Hausdorff and the action is
+continuous, the converse holds. Under these hypotheses properness is also
+equivalent to compactness of $\alpha^{-1}(C)$ for every compact
+$C\subseteq X\times X$.
+\end{proposition}
+\begin{proof}
+\leanok
+The first projection maps the compact set $\alpha^{-1}(L\times K)$
+onto $T(K,L)$. Compact subsets of a discrete space are finite.
+Conversely, for compact $C\subseteq X\times X$, its coordinate projections
+are compact. The inverse image of $C$ is a closed subset of the product
+of a finite transporter and the second coordinate projection.
+The pinned Mathlib proper-map and compact-transporter criteria formalize
+these implications on locally compact Hausdorff spaces.
+\end{proof}
+
+\begin{proposition}\label{prop:proper-finite-stabilizers}
+\uses{prop:compact-transporter-criterion}
+\lean{BC4lean.ProperActions.finite_stabilizer}
+Every point stabilizer $\Gamma_x$ in a proper discrete-group action is
+finite. This implication does not require local compactness of $X$.
+\end{proposition}
+\begin{proof}
+\leanok
+The stabilizer is $T(\{x\},\{x\})$, and singletons are compact.
+\end{proof}
+
+\begin{proposition}\label{prop:proper-orbit-space}
 \uses{def:proper-action}
+\lean{BC4lean.ProperActions.orbitSpace_t2,BC4lean.ProperActions.orbitSpace_locallyCompact}
+A proper action has Hausdorff orbit space $X/\Gamma$. If $X$ is locally
+compact, then $X/\Gamma$ is locally compact as well.
+\end{proposition}
+\begin{proof}
+\leanok
+Use Mathlib's Hausdorff quotient theorem for proper actions. The orbit
+projection is an open quotient map for a continuous group action, and
+local compactness descends through an open quotient map.
+\end{proof}
+
+\begin{proposition}\label{prop:proper-subgroup-restriction}
+\uses{def:proper-action}
+\lean{BC4lean.ProperActions.proper_subgroup}
+Restricting a proper discrete-group action to any subgroup preserves
+properness.
+\end{proposition}
+\begin{proof}
+\leanok
+Every subgroup of a discrete group is closed. Apply the proper-action
+restriction theorem for a closed embedding of groups.
+\end{proof}
+
+\begin{proposition}\label{prop:proper-action-examples}
+\uses{prop:compact-transporter-criterion}
+\lean{BC4lean.ProperActions.proper_of_finite,BC4lean.ProperActions.proper_leftTranslation,BC4lean.ProperActions.finite_group_of_compact}
+Every continuous action of a finite discrete group on a locally compact
+Hausdorff space is proper. Left translation of a topological group on
+itself is proper. If a discrete group acts properly on a nonempty compact
+space, the group is finite.
+\end{proposition}
+\begin{proof}
+\leanok
+For a finite group every transporter is finite. For left translation,
+$(g,x)\mapsto(gx,x)$ is a homeomorphism with inverse
+$(y,x)\mapsto(yx^{-1},x)$. For the last assertion,
+$T(X,X)=\Gamma$ is finite by compactness and nonemptiness.
+\end{proof}
+
+\section{Subgroup fixed-point spaces}
+
+\begin{definition}\label{def:subgroup-fixed-point-space}
+\lean{BC4lean.ProperActions.FixedPointSpace}
+\leanok
+For a subgroup $H\leq\Gamma$, let
+\[
+ X^H=\{x\in X: hx=x\text{ for every }h\in H\}
+\]
+with the subspace topology. The Lean definition uses Mathlib's existing
+\texttt{MulAction.fixedPoints}.
+\end{definition}
+
+\begin{proposition}\label{prop:fixed-point-subgroup-laws}
+\uses{def:subgroup-fixed-point-space}
+\lean{BC4lean.ProperActions.mem_fixedPoints_iff_le_stabilizer,BC4lean.ProperActions.fixedPoints_antitone,BC4lean.ProperActions.fixedPoints_bot}
+A point $x$ lies in $X^H$ exactly when $H\leq\Gamma_x$.
+If $H\leq K$, then $X^K\subseteq X^H$, and $X^{\{1\}}=X$.
+\end{proposition}
+\begin{proof}
+\leanok
+Unfold the fixed-point and stabilizer conditions and use subgroup inclusion.
+\end{proof}
+
+\begin{proposition}\label{prop:fixed-point-space-closed}
+\uses{def:subgroup-fixed-point-space}
+\lean{BC4lean.ProperActions.isClosed_fixedPoints,BC4lean.ProperActions.fixedPointSpace_locallyCompact}
+For an action by continuous translations on a Hausdorff space, $X^H$
+is closed for every subgroup $H$. If $X$ is locally compact, so is $X^H$.
+\end{proposition}
+\begin{proof}
+\leanok
+The fixed-point set is the intersection, over $h\in H$, of the closed
+equalizers of $x\mapsto hx$ and $x\mapsto x$. Closed subspaces of locally
+compact spaces are locally compact.
+\end{proof}
+
+\begin{proposition}\label{prop:proper-infinite-fixed-points}
+\uses{prop:proper-finite-stabilizers,prop:fixed-point-subgroup-laws}
+\lean{BC4lean.ProperActions.finite_subgroup_of_fixedPoint,BC4lean.ProperActions.fixedPoints_eq_empty_of_infinite,BC4lean.ProperActions.fixedPointSpace_isEmpty}
+For a proper discrete-group action, any subgroup fixing a point is finite.
+Consequently $X^H=\varnothing$ whenever $H$ is infinite.
+\end{proposition}
+\begin{proof}
+\leanok
+If $x\in X^H$, then $H$ is a subgroup of the finite group $\Gamma_x$.
+\end{proof}
+
+Properness does not imply contractibility of fixed-point spaces for finite
+subgroups. That is additional structure required of a universal proper model.
+
+\section{Equivariant CW complexes and a model for $\underline E\Gamma$}
+
+\begin{definition}\label{def:equivariant-cw-complex}
+\uses{def:proper-action}
+\notready
+Develop $\Gamma$-CW complexes by equivariant cell attachment, with cells
+$\Gamma/H\times D^n$, together with equivariant maps and homotopies.
+For the proper theory the cell stabilizers $H$ are finite. Establish the
+connection between this cellular condition and topological properness.
+\end{definition}
+
+\begin{definition}\label{def:universal-proper-space}
+\uses{def:equivariant-cw-complex,def:subgroup-fixed-point-space,prop:proper-infinite-fixed-points}
 \notready
 A universal proper $\Gamma$-CW complex has contractible fixed-point space
 for every finite subgroup and empty fixed-point space for every infinite
 subgroup. Develop existence, the universal property, and uniqueness up to
-equivariant homotopy.
+equivariant homotopy. Only the empty-fixed-point consequence of properness
+has been verified above; no universal proper model is constructed here.
 \end{definition}
 
 \section{Cocompact pieces and model choices}
