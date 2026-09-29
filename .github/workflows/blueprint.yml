@@ -35,7 +35,7 @@ jobs:
           .venv/bin/pip install leanblueprint plastexshowmore
       - name: Build blueprint HTML
         working-directory: blueprint/src
-        run: '${{ github.workspace }}/.venv/bin/plastex -c plastex.cfg web.tex'
+        run: '${{ github.workspace }}/.venv/bin/python build_web.py'
       - name: Build existing homepage
         uses: actions/jekyll-build-pages@v1
         with:

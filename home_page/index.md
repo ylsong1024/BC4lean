@@ -5,11 +5,3 @@
 # layout: home
 usemathjax: true
 ---
-
-Useful links:
-
-* [Zulip chat for Lean](https://leanprover.zulipchat.com/) for coordination
-* [Blueprint]({{ site.url }}/blueprint/)
-* [Blueprint as pdf]({{ site.url }}/blueprint.pdf)
-* [Reduced group C*-algebra dependency graph]({{ site.url }}/blueprint/dep_graph_chapter_2.html)
-* [Doc pages for this repository]({{ site.url }}/docs/)
