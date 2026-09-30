@@ -47,6 +47,11 @@ code{overflow-wrap:anywhere}</style></head><body><a href="../../blueprint/">返�
 <li><a href="#EquivariantMaps">EquivariantMaps.lean</a></li>
 <li><a href="#EquivariantHomotopy">EquivariantHomotopy.lean</a></li>
 <li><a href="#EquivariantHomotopyEquiv">EquivariantHomotopyEquiv.lean</a></li>
+<li><a href="#OrbitFixedPoints">OrbitFixedPoints.lean</a></li>
+<li><a href="#ProperOrbitCells">ProperOrbitCells.lean</a></li>
+<li><a href="#HomotopyTerminal">HomotopyTerminal.lean</a></li>
+<li><a href="#FixedPointCriterion">FixedPointCriterion.lean</a></li>
+<li><a href="#CocompactPieces">CocompactPieces.lean</a></li>
 </ul></nav>
 <h2 id="GroupAlgebra">GroupAlgebra.lean</h2><p>源码 SHA-256：<code>1c6c0899fe9bc9f7860f291ba7c5573353d18a3c5809258769d689bc39da8ad4</code></p><pre>
 <span><a class="line" href="#L1" id="L1">  1</a> import Mathlib.Algebra.MonoidAlgebra.Basic</span>
@@ -4221,5 +4226,483 @@ code{overflow-wrap:anywhere}</style></head><body><a href="../../blueprint/">返�
 <span><a class="line" href="#EquivariantHomotopyEquiv-L68" id="EquivariantHomotopyEquiv-L68"> 68</a> </span>
 <span><a class="line" href="#EquivariantHomotopyEquiv-L69" id="EquivariantHomotopyEquiv-L69"> 69</a> end EquivariantHomotopyEquiv</span>
 <span><a class="line" href="#EquivariantHomotopyEquiv-L70" id="EquivariantHomotopyEquiv-L70"> 70</a> end BC4lean.ProperActions</span>
+</pre>
+<h2 id="OrbitFixedPoints">OrbitFixedPoints.lean</h2><p>源码 SHA-256：<code>89b1af04865bdc9ef351dba80008ef0c7eb4109eddab8e4e44bbb1ed886ed905</code></p><pre>
+<span><a class="line" href="#OrbitFixedPoints-L1" id="OrbitFixedPoints-L1">  1</a> import BC4lean.EquivariantMaps</span>
+<span><a class="line" href="#OrbitFixedPoints-L2" id="OrbitFixedPoints-L2">  2</a> import Mathlib.Topology.Algebra.Group.Quotient</span>
+<span><a class="line" href="#OrbitFixedPoints-L3" id="OrbitFixedPoints-L3">  3</a> </span>
+<span><a class="line" href="#OrbitFixedPoints-L4" id="OrbitFixedPoints-L4">  4</a> /-! # Maps from homogeneous orbits</span>
+<span><a class="line" href="#OrbitFixedPoints-L5" id="OrbitFixedPoints-L5">  5</a> </span>
+<span><a class="line" href="#OrbitFixedPoints-L6" id="OrbitFixedPoints-L6">  6</a> Evaluation at the identity coset identifies continuous equivariant maps out of</span>
+<span><a class="line" href="#OrbitFixedPoints-L7" id="OrbitFixedPoints-L7">  7</a> `Γ ⧸ H` with `H`-fixed points. No normality or finiteness hypothesis on `H` is used.</span>
+<span><a class="line" href="#OrbitFixedPoints-L8" id="OrbitFixedPoints-L8">  8</a> -/</span>
+<span><a class="line" href="#OrbitFixedPoints-L9" id="OrbitFixedPoints-L9">  9</a> namespace BC4lean.ProperActions</span>
+<span><a class="line" href="#OrbitFixedPoints-L10" id="OrbitFixedPoints-L10"> 10</a> </span>
+<span><a class="line" href="#OrbitFixedPoints-L11" id="OrbitFixedPoints-L11"> 11</a> variable {Γ X Y : Type*} [Group Γ] [TopologicalSpace Γ] [DiscreteTopology Γ]</span>
+<span><a class="line" href="#OrbitFixedPoints-L12" id="OrbitFixedPoints-L12"> 12</a> variable [TopologicalSpace X] [MulAction Γ X]</span>
+<span><a class="line" href="#OrbitFixedPoints-L13" id="OrbitFixedPoints-L13"> 13</a> variable [TopologicalSpace Y] [MulAction Γ Y]</span>
+<span><a class="line" href="#OrbitFixedPoints-L14" id="OrbitFixedPoints-L14"> 14</a> </span>
+<span><a class="line" href="#OrbitFixedPoints-L15" id="OrbitFixedPoints-L15"> 15</a> omit [TopologicalSpace Γ] [DiscreteTopology Γ] in</span>
+<span><a class="line" href="#OrbitFixedPoints-L16" id="OrbitFixedPoints-L16"> 16</a> /-- The identity coset is fixed by the subgroup defining the orbit. -/</span>
+<span id="doc/BC4lean.ProperActions.subgroup_fixes_identity_coset"><a class="line" href="#OrbitFixedPoints-L17" id="OrbitFixedPoints-L17"> 17</a> theorem subgroup_fixes_identity_coset (H : Subgroup Γ) (h : H) :</span>
+<span><a class="line" href="#OrbitFixedPoints-L18" id="OrbitFixedPoints-L18"> 18</a>     (h : Γ) • (QuotientGroup.mk 1 : Γ ⧸ H) = QuotientGroup.mk 1 := by</span>
+<span><a class="line" href="#OrbitFixedPoints-L19" id="OrbitFixedPoints-L19"> 19</a>   change QuotientGroup.mk ((h : Γ) * 1) = (QuotientGroup.mk 1 : Γ ⧸ H)</span>
+<span><a class="line" href="#OrbitFixedPoints-L20" id="OrbitFixedPoints-L20"> 20</a>   rw [mul_one, QuotientGroup.eq]</span>
+<span><a class="line" href="#OrbitFixedPoints-L21" id="OrbitFixedPoints-L21"> 21</a>   simpa only [mul_one] using H.inv_mem h.property</span>
+<span><a class="line" href="#OrbitFixedPoints-L22" id="OrbitFixedPoints-L22"> 22</a> </span>
+<span><a class="line" href="#OrbitFixedPoints-L23" id="OrbitFixedPoints-L23"> 23</a> /-- Descend `g ↦ g • x` to the orbit when `x` is `H`-fixed. -/</span>
+<span id="doc/BC4lean.ProperActions.orbitMap"><a class="line" href="#OrbitFixedPoints-L24" id="OrbitFixedPoints-L24"> 24</a> def orbitMap (H : Subgroup Γ) (x : FixedPointSpace H X) : EquivariantMap Γ (Γ ⧸ H) X where</span>
+<span><a class="line" href="#OrbitFixedPoints-L25" id="OrbitFixedPoints-L25"> 25</a>   toFun := Quotient.lift (fun g : Γ =&gt; g • (x : X)) (by</span>
+<span><a class="line" href="#OrbitFixedPoints-L26" id="OrbitFixedPoints-L26"> 26</a>     intro a b hab</span>
+<span><a class="line" href="#OrbitFixedPoints-L27" id="OrbitFixedPoints-L27"> 27</a>     have hab&#x27; : a⁻¹ * b ∈ H := QuotientGroup.leftRel_apply.mp hab</span>
+<span><a class="line" href="#OrbitFixedPoints-L28" id="OrbitFixedPoints-L28"> 28</a>     have hx := x.property ⟨a⁻¹ * b, hab&#x27;⟩</span>
+<span><a class="line" href="#OrbitFixedPoints-L29" id="OrbitFixedPoints-L29"> 29</a>     change (a⁻¹ * b) • (x : X) = x at hx</span>
+<span><a class="line" href="#OrbitFixedPoints-L30" id="OrbitFixedPoints-L30"> 30</a>     have := congrArg (fun z : X =&gt; a • z) hx</span>
+<span><a class="line" href="#OrbitFixedPoints-L31" id="OrbitFixedPoints-L31"> 31</a>     simpa [mul_smul] using this.symm)</span>
+<span><a class="line" href="#OrbitFixedPoints-L32" id="OrbitFixedPoints-L32"> 32</a>   continuous_toFun := by</span>
+<span><a class="line" href="#OrbitFixedPoints-L33" id="OrbitFixedPoints-L33"> 33</a>     let : DiscreteTopology (Γ ⧸ H) := QuotientGroup.discreteTopology (isOpen_discrete _)</span>
+<span><a class="line" href="#OrbitFixedPoints-L34" id="OrbitFixedPoints-L34"> 34</a>     exact continuous_of_discreteTopology</span>
+<span><a class="line" href="#OrbitFixedPoints-L35" id="OrbitFixedPoints-L35"> 35</a>   map_smul&#x27; g q := by</span>
+<span><a class="line" href="#OrbitFixedPoints-L36" id="OrbitFixedPoints-L36"> 36</a>     induction q using QuotientGroup.induction_on with</span>
+<span><a class="line" href="#OrbitFixedPoints-L37" id="OrbitFixedPoints-L37"> 37</a>     | H a =&gt; exact mul_smul g a (x : X)</span>
+<span><a class="line" href="#OrbitFixedPoints-L38" id="OrbitFixedPoints-L38"> 38</a> </span>
+<span id="doc/BC4lean.ProperActions.orbitMap_mk"><a class="line" href="#OrbitFixedPoints-L39" id="OrbitFixedPoints-L39"> 39</a> @[simp] theorem orbitMap_mk (H : Subgroup Γ) (x : FixedPointSpace H X) (g : Γ) :</span>
+<span><a class="line" href="#OrbitFixedPoints-L40" id="OrbitFixedPoints-L40"> 40</a>     orbitMap H x (QuotientGroup.mk g) = g • (x : X) := rfl</span>
+<span><a class="line" href="#OrbitFixedPoints-L41" id="OrbitFixedPoints-L41"> 41</a> </span>
+<span><a class="line" href="#OrbitFixedPoints-L42" id="OrbitFixedPoints-L42"> 42</a> /-- Evaluation at the identity coset has values in the fixed-point subspace. -/</span>
+<span id="doc/BC4lean.ProperActions.orbitEvaluation"><a class="line" href="#OrbitFixedPoints-L43" id="OrbitFixedPoints-L43"> 43</a> def orbitEvaluation (H : Subgroup Γ) (f : EquivariantMap Γ (Γ ⧸ H) X) :</span>
+<span><a class="line" href="#OrbitFixedPoints-L44" id="OrbitFixedPoints-L44"> 44</a>     FixedPointSpace H X :=</span>
+<span><a class="line" href="#OrbitFixedPoints-L45" id="OrbitFixedPoints-L45"> 45</a>   ⟨f (QuotientGroup.mk 1), fun h =&gt; by</span>
+<span><a class="line" href="#OrbitFixedPoints-L46" id="OrbitFixedPoints-L46"> 46</a>     change (h : Γ) • f (QuotientGroup.mk 1) = f (QuotientGroup.mk 1)</span>
+<span><a class="line" href="#OrbitFixedPoints-L47" id="OrbitFixedPoints-L47"> 47</a>     rw [← f.map_smul, subgroup_fixes_identity_coset]⟩</span>
+<span><a class="line" href="#OrbitFixedPoints-L48" id="OrbitFixedPoints-L48"> 48</a> </span>
+<span><a class="line" href="#OrbitFixedPoints-L49" id="OrbitFixedPoints-L49"> 49</a> omit [DiscreteTopology Γ] in</span>
+<span id="doc/BC4lean.ProperActions.orbitEvaluation_val"><a class="line" href="#OrbitFixedPoints-L50" id="OrbitFixedPoints-L50"> 50</a> @[simp] theorem orbitEvaluation_val (H : Subgroup Γ) (f : EquivariantMap Γ (Γ ⧸ H) X) :</span>
+<span><a class="line" href="#OrbitFixedPoints-L51" id="OrbitFixedPoints-L51"> 51</a>     (orbitEvaluation H f : X) = f (QuotientGroup.mk 1) := rfl</span>
+<span><a class="line" href="#OrbitFixedPoints-L52" id="OrbitFixedPoints-L52"> 52</a> </span>
+<span><a class="line" href="#OrbitFixedPoints-L53" id="OrbitFixedPoints-L53"> 53</a> /-- The orbit/fixed-point correspondence for continuous equivariant maps. -/</span>
+<span id="doc/BC4lean.ProperActions.orbitFixedPointEquiv"><a class="line" href="#OrbitFixedPoints-L54" id="OrbitFixedPoints-L54"> 54</a> def orbitFixedPointEquiv (H : Subgroup Γ) :</span>
+<span><a class="line" href="#OrbitFixedPoints-L55" id="OrbitFixedPoints-L55"> 55</a>     EquivariantMap Γ (Γ ⧸ H) X ≃ FixedPointSpace H X where</span>
+<span><a class="line" href="#OrbitFixedPoints-L56" id="OrbitFixedPoints-L56"> 56</a>   toFun := orbitEvaluation H</span>
+<span><a class="line" href="#OrbitFixedPoints-L57" id="OrbitFixedPoints-L57"> 57</a>   invFun := orbitMap H</span>
+<span><a class="line" href="#OrbitFixedPoints-L58" id="OrbitFixedPoints-L58"> 58</a>   left_inv f := by</span>
+<span><a class="line" href="#OrbitFixedPoints-L59" id="OrbitFixedPoints-L59"> 59</a>     ext q</span>
+<span><a class="line" href="#OrbitFixedPoints-L60" id="OrbitFixedPoints-L60"> 60</a>     induction q using QuotientGroup.induction_on with</span>
+<span><a class="line" href="#OrbitFixedPoints-L61" id="OrbitFixedPoints-L61"> 61</a>     | H g =&gt;</span>
+<span><a class="line" href="#OrbitFixedPoints-L62" id="OrbitFixedPoints-L62"> 62</a>       change g • f (QuotientGroup.mk 1) = f (QuotientGroup.mk g)</span>
+<span><a class="line" href="#OrbitFixedPoints-L63" id="OrbitFixedPoints-L63"> 63</a>       rw [← f.map_smul]</span>
+<span><a class="line" href="#OrbitFixedPoints-L64" id="OrbitFixedPoints-L64"> 64</a>       congr 1</span>
+<span><a class="line" href="#OrbitFixedPoints-L65" id="OrbitFixedPoints-L65"> 65</a>       change QuotientGroup.mk (g * 1) = (QuotientGroup.mk g : Γ ⧸ H)</span>
+<span><a class="line" href="#OrbitFixedPoints-L66" id="OrbitFixedPoints-L66"> 66</a>       rw [mul_one]</span>
+<span><a class="line" href="#OrbitFixedPoints-L67" id="OrbitFixedPoints-L67"> 67</a>   right_inv x := by</span>
+<span><a class="line" href="#OrbitFixedPoints-L68" id="OrbitFixedPoints-L68"> 68</a>     apply Subtype.ext</span>
+<span><a class="line" href="#OrbitFixedPoints-L69" id="OrbitFixedPoints-L69"> 69</a>     exact one_smul Γ (x : X)</span>
+<span><a class="line" href="#OrbitFixedPoints-L70" id="OrbitFixedPoints-L70"> 70</a> </span>
+<span><a class="line" href="#OrbitFixedPoints-L71" id="OrbitFixedPoints-L71"> 71</a> /-- The correspondence commutes with postcomposition. -/</span>
+<span id="doc/BC4lean.ProperActions.orbitFixedPointEquiv_natural"><a class="line" href="#OrbitFixedPoints-L72" id="OrbitFixedPoints-L72"> 72</a> theorem orbitFixedPointEquiv_natural (H : Subgroup Γ)</span>
+<span><a class="line" href="#OrbitFixedPoints-L73" id="OrbitFixedPoints-L73"> 73</a>     (f : EquivariantMap Γ (Γ ⧸ H) X) (g : EquivariantMap Γ X Y) :</span>
+<span><a class="line" href="#OrbitFixedPoints-L74" id="OrbitFixedPoints-L74"> 74</a>     orbitFixedPointEquiv H (g.comp f) = g.fixedPointsMap H (orbitFixedPointEquiv H f) := rfl</span>
+<span><a class="line" href="#OrbitFixedPoints-L75" id="OrbitFixedPoints-L75"> 75</a> </span>
+<span><a class="line" href="#OrbitFixedPoints-L76" id="OrbitFixedPoints-L76"> 76</a> end BC4lean.ProperActions</span>
+</pre>
+<h2 id="ProperOrbitCells">ProperOrbitCells.lean</h2><p>源码 SHA-256：<code>829ce4e3bd4da88a2f66af0f06a97a46f7fce18601157fd56a03a146b41407b1</code></p><pre>
+<span><a class="line" href="#ProperOrbitCells-L1" id="ProperOrbitCells-L1">  1</a> import BC4lean.OrbitFixedPoints</span>
+<span><a class="line" href="#ProperOrbitCells-L2" id="ProperOrbitCells-L2">  2</a> import Mathlib.Topology.AlexandrovDiscrete</span>
+<span><a class="line" href="#ProperOrbitCells-L3" id="ProperOrbitCells-L3">  3</a> </span>
+<span><a class="line" href="#ProperOrbitCells-L4" id="ProperOrbitCells-L4">  4</a> /-! # Proper homogeneous orbits and orbit cells -/</span>
+<span><a class="line" href="#ProperOrbitCells-L5" id="ProperOrbitCells-L5">  5</a> namespace BC4lean.ProperActions</span>
+<span><a class="line" href="#ProperOrbitCells-L6" id="ProperOrbitCells-L6">  6</a> open scoped Pointwise</span>
+<span><a class="line" href="#ProperOrbitCells-L7" id="ProperOrbitCells-L7">  7</a> </span>
+<span><a class="line" href="#ProperOrbitCells-L8" id="ProperOrbitCells-L8">  8</a> variable {Γ X Y : Type*} [Group Γ] [TopologicalSpace Γ] [DiscreteTopology Γ]</span>
+<span><a class="line" href="#ProperOrbitCells-L9" id="ProperOrbitCells-L9">  9</a> </span>
+<span><a class="line" href="#ProperOrbitCells-L10" id="ProperOrbitCells-L10"> 10</a> /-- For a finite subgroup of a discrete group, the coset projection is proper. -/</span>
+<span id="doc/BC4lean.ProperActions.proper_cosetProjection"><a class="line" href="#ProperOrbitCells-L11" id="ProperOrbitCells-L11"> 11</a> theorem proper_cosetProjection (H : Subgroup Γ) [Finite H] :</span>
+<span><a class="line" href="#ProperOrbitCells-L12" id="ProperOrbitCells-L12"> 12</a>     IsProperMap (QuotientGroup.mk : Γ → Γ ⧸ H) := by</span>
+<span><a class="line" href="#ProperOrbitCells-L13" id="ProperOrbitCells-L13"> 13</a>   let : DiscreteTopology (Γ ⧸ H) := QuotientGroup.discreteTopology (isOpen_discrete _)</span>
+<span><a class="line" href="#ProperOrbitCells-L14" id="ProperOrbitCells-L14"> 14</a>   apply isProperMap_iff_isClosedMap_and_compact_fibers.mpr</span>
+<span><a class="line" href="#ProperOrbitCells-L15" id="ProperOrbitCells-L15"> 15</a>   refine ⟨continuous_of_discreteTopology, fun _ _ =&gt; isClosed_discrete _, ?_⟩</span>
+<span><a class="line" href="#ProperOrbitCells-L16" id="ProperOrbitCells-L16"> 16</a>   intro q</span>
+<span><a class="line" href="#ProperOrbitCells-L17" id="ProperOrbitCells-L17"> 17</a>   induction q using QuotientGroup.induction_on with | H g =&gt;</span>
+<span><a class="line" href="#ProperOrbitCells-L18" id="ProperOrbitCells-L18"> 18</a>     apply Set.Finite.isCompact</span>
+<span><a class="line" href="#ProperOrbitCells-L19" id="ProperOrbitCells-L19"> 19</a>     apply (Set.finite_range (fun h : H =&gt; g * (h : Γ))).subset</span>
+<span><a class="line" href="#ProperOrbitCells-L20" id="ProperOrbitCells-L20"> 20</a>     intro a ha</span>
+<span><a class="line" href="#ProperOrbitCells-L21" id="ProperOrbitCells-L21"> 21</a>     have hga : g⁻¹ * a ∈ H := QuotientGroup.eq.mp (Set.mem_singleton_iff.mp ha).symm</span>
+<span><a class="line" href="#ProperOrbitCells-L22" id="ProperOrbitCells-L22"> 22</a>     exact ⟨⟨g⁻¹ * a, hga⟩, mul_inv_cancel_left g a⟩</span>
+<span><a class="line" href="#ProperOrbitCells-L23" id="ProperOrbitCells-L23"> 23</a> </span>
+<span><a class="line" href="#ProperOrbitCells-L24" id="ProperOrbitCells-L24"> 24</a> /-- A homogeneous orbit with finite stabilizer is a proper discrete-group space. -/</span>
+<span id="doc/BC4lean.ProperActions.proper_orbit"><a class="line" href="#ProperOrbitCells-L25" id="ProperOrbitCells-L25"> 25</a> theorem proper_orbit (H : Subgroup Γ) [Finite H] : ProperSMul Γ (Γ ⧸ H) := by</span>
+<span><a class="line" href="#ProperOrbitCells-L26" id="ProperOrbitCells-L26"> 26</a>   apply MulAction.properSMul_of_proper_orbitMap (x := (QuotientGroup.mk 1 : Γ ⧸ H))</span>
+<span><a class="line" href="#ProperOrbitCells-L27" id="ProperOrbitCells-L27"> 27</a>   simpa only [MulAction.Quotient.smul_mk, smul_eq_mul, mul_one] using proper_cosetProjection H</span>
+<span><a class="line" href="#ProperOrbitCells-L28" id="ProperOrbitCells-L28"> 28</a> </span>
+<span><a class="line" href="#ProperOrbitCells-L29" id="ProperOrbitCells-L29"> 29</a> /-- Properness of the homogeneous orbit is equivalent to finiteness of its stabilizer. -/</span>
+<span id="doc/BC4lean.ProperActions.proper_orbit_iff"><a class="line" href="#ProperOrbitCells-L30" id="ProperOrbitCells-L30"> 30</a> theorem proper_orbit_iff (H : Subgroup Γ) : ProperSMul Γ (Γ ⧸ H) ↔ Finite H := by</span>
+<span><a class="line" href="#ProperOrbitCells-L31" id="ProperOrbitCells-L31"> 31</a>   constructor</span>
+<span><a class="line" href="#ProperOrbitCells-L32" id="ProperOrbitCells-L32"> 32</a>   · intro h</span>
+<span><a class="line" href="#ProperOrbitCells-L33" id="ProperOrbitCells-L33"> 33</a>     let := h</span>
+<span><a class="line" href="#ProperOrbitCells-L34" id="ProperOrbitCells-L34"> 34</a>     exact (finite_subgroup_of_fixedPoint (H := H)</span>
+<span><a class="line" href="#ProperOrbitCells-L35" id="ProperOrbitCells-L35"> 35</a>       (x := (QuotientGroup.mk 1 : Γ ⧸ H)) (subgroup_fixes_identity_coset H)).to_subtype</span>
+<span><a class="line" href="#ProperOrbitCells-L36" id="ProperOrbitCells-L36"> 36</a>   · intro h</span>
+<span><a class="line" href="#ProperOrbitCells-L37" id="ProperOrbitCells-L37"> 37</a>     let := h</span>
+<span><a class="line" href="#ProperOrbitCells-L38" id="ProperOrbitCells-L38"> 38</a>     exact proper_orbit H</span>
+<span><a class="line" href="#ProperOrbitCells-L39" id="ProperOrbitCells-L39"> 39</a> </span>
+<span><a class="line" href="#ProperOrbitCells-L40" id="ProperOrbitCells-L40"> 40</a> variable [TopologicalSpace X] [MulAction Γ X] [ContinuousSMul Γ X]</span>
+<span><a class="line" href="#ProperOrbitCells-L41" id="ProperOrbitCells-L41"> 41</a> variable [LocallyCompactSpace X] [T2Space X]</span>
+<span><a class="line" href="#ProperOrbitCells-L42" id="ProperOrbitCells-L42"> 42</a> variable [TopologicalSpace Y] [MulAction Γ Y] [ProperSMul Γ Y]</span>
+<span><a class="line" href="#ProperOrbitCells-L43" id="ProperOrbitCells-L43"> 43</a> </span>
+<span><a class="line" href="#ProperOrbitCells-L44" id="ProperOrbitCells-L44"> 44</a> /-- An equivariant map to a proper space forces properness of an LCH source. -/</span>
+<span id="doc/BC4lean.ProperActions.proper_of_equivariantMap"><a class="line" href="#ProperOrbitCells-L45" id="ProperOrbitCells-L45"> 45</a> theorem proper_of_equivariantMap (f : EquivariantMap Γ X Y) : ProperSMul Γ X := by</span>
+<span><a class="line" href="#ProperOrbitCells-L46" id="ProperOrbitCells-L46"> 46</a>   apply proper_iff_finite_transporters.mpr</span>
+<span><a class="line" href="#ProperOrbitCells-L47" id="ProperOrbitCells-L47"> 47</a>   intro K L hK hL</span>
+<span><a class="line" href="#ProperOrbitCells-L48" id="ProperOrbitCells-L48"> 48</a>   apply (finite_transporter (Γ := Γ) (hK.image f.continuous) (hL.image f.continuous)).subset</span>
+<span><a class="line" href="#ProperOrbitCells-L49" id="ProperOrbitCells-L49"> 49</a>   intro g hg</span>
+<span><a class="line" href="#ProperOrbitCells-L50" id="ProperOrbitCells-L50"> 50</a>   obtain ⟨y, hy, hyL⟩ := hg</span>
+<span><a class="line" href="#ProperOrbitCells-L51" id="ProperOrbitCells-L51"> 51</a>   obtain ⟨x, hx, hxy⟩ := hy</span>
+<span><a class="line" href="#ProperOrbitCells-L52" id="ProperOrbitCells-L52"> 52</a>   refine ⟨f y, ?_, ⟨y, hyL, rfl⟩⟩</span>
+<span><a class="line" href="#ProperOrbitCells-L53" id="ProperOrbitCells-L53"> 53</a>   refine ⟨f x, ⟨x, hx, rfl⟩, ?_⟩</span>
+<span><a class="line" href="#ProperOrbitCells-L54" id="ProperOrbitCells-L54"> 54</a>   change g • f x = f y</span>
+<span><a class="line" href="#ProperOrbitCells-L55" id="ProperOrbitCells-L55"> 55</a>   exact (f.map_smul g x).symm.trans (congrArg f hxy)</span>
+<span><a class="line" href="#ProperOrbitCells-L56" id="ProperOrbitCells-L56"> 56</a> </span>
+<span><a class="line" href="#ProperOrbitCells-L57" id="ProperOrbitCells-L57"> 57</a> /-- An orbit cell, with the group acting only on its homogeneous-orbit factor.</span>
+<span><a class="line" href="#ProperOrbitCells-L58" id="ProperOrbitCells-L58"> 58</a> Taking `D` to be a disk gives the cells used in equivariant CW constructions. -/</span>
+<span id="doc/BC4lean.ProperActions.OrbitCell"><a class="line" href="#ProperOrbitCells-L59" id="ProperOrbitCells-L59"> 59</a> def OrbitCell (H : Subgroup Γ) (D : Type*) := (Γ ⧸ H) × D</span>
+<span><a class="line" href="#ProperOrbitCells-L60" id="ProperOrbitCells-L60"> 60</a> </span>
+<span><a class="line" href="#ProperOrbitCells-L61" id="ProperOrbitCells-L61"> 61</a> namespace OrbitCell</span>
+<span><a class="line" href="#ProperOrbitCells-L62" id="ProperOrbitCells-L62"> 62</a> variable (H : Subgroup Γ) (D : Type*) [TopologicalSpace D]</span>
+<span><a class="line" href="#ProperOrbitCells-L63" id="ProperOrbitCells-L63"> 63</a> </span>
+<span id="doc/BC4lean.ProperActions.OrbitCell.instTopologicalSpace"><a class="line" href="#ProperOrbitCells-L64" id="ProperOrbitCells-L64"> 64</a> instance instTopologicalSpace : TopologicalSpace (OrbitCell H D) :=</span>
+<span><a class="line" href="#ProperOrbitCells-L65" id="ProperOrbitCells-L65"> 65</a>   inferInstanceAs (TopologicalSpace ((Γ ⧸ H) × D))</span>
+<span><a class="line" href="#ProperOrbitCells-L66" id="ProperOrbitCells-L66"> 66</a> </span>
+<span id="doc/BC4lean.ProperActions.OrbitCell.instMulAction"><a class="line" href="#ProperOrbitCells-L67" id="ProperOrbitCells-L67"> 67</a> instance instMulAction : MulAction Γ (OrbitCell H D) where</span>
+<span><a class="line" href="#ProperOrbitCells-L68" id="ProperOrbitCells-L68"> 68</a>   smul g p := (g • p.1, p.2)</span>
+<span><a class="line" href="#ProperOrbitCells-L69" id="ProperOrbitCells-L69"> 69</a>   one_smul p := Prod.ext (one_smul Γ p.1) rfl</span>
+<span><a class="line" href="#ProperOrbitCells-L70" id="ProperOrbitCells-L70"> 70</a>   mul_smul g h p := Prod.ext (mul_smul g h p.1) rfl</span>
+<span><a class="line" href="#ProperOrbitCells-L71" id="ProperOrbitCells-L71"> 71</a> </span>
+<span id="doc/BC4lean.ProperActions.OrbitCell.instContinuousSMul"><a class="line" href="#ProperOrbitCells-L72" id="ProperOrbitCells-L72"> 72</a> instance instContinuousSMul : ContinuousSMul Γ (OrbitCell H D) where</span>
+<span><a class="line" href="#ProperOrbitCells-L73" id="ProperOrbitCells-L73"> 73</a>   continuous_smul :=</span>
+<span><a class="line" href="#ProperOrbitCells-L74" id="ProperOrbitCells-L74"> 74</a>     (continuous_fst.smul continuous_snd.fst).prodMk continuous_snd.snd</span>
+<span><a class="line" href="#ProperOrbitCells-L75" id="ProperOrbitCells-L75"> 75</a> </span>
+<span id="doc/BC4lean.ProperActions.OrbitCell.instLocallyCompactSpace"><a class="line" href="#ProperOrbitCells-L76" id="ProperOrbitCells-L76"> 76</a> instance instLocallyCompactSpace [LocallyCompactSpace D] :</span>
+<span><a class="line" href="#ProperOrbitCells-L77" id="ProperOrbitCells-L77"> 77</a>     LocallyCompactSpace (OrbitCell H D) := by</span>
+<span><a class="line" href="#ProperOrbitCells-L78" id="ProperOrbitCells-L78"> 78</a>   let : DiscreteTopology (Γ ⧸ H) := QuotientGroup.discreteTopology (isOpen_discrete _)</span>
+<span><a class="line" href="#ProperOrbitCells-L79" id="ProperOrbitCells-L79"> 79</a>   exact inferInstanceAs (LocallyCompactSpace ((Γ ⧸ H) × D))</span>
+<span><a class="line" href="#ProperOrbitCells-L80" id="ProperOrbitCells-L80"> 80</a> </span>
+<span id="doc/BC4lean.ProperActions.OrbitCell.instT2Space"><a class="line" href="#ProperOrbitCells-L81" id="ProperOrbitCells-L81"> 81</a> instance instT2Space [T2Space D] : T2Space (OrbitCell H D) := by</span>
+<span><a class="line" href="#ProperOrbitCells-L82" id="ProperOrbitCells-L82"> 82</a>   let : DiscreteTopology (Γ ⧸ H) := QuotientGroup.discreteTopology (isOpen_discrete _)</span>
+<span><a class="line" href="#ProperOrbitCells-L83" id="ProperOrbitCells-L83"> 83</a>   exact inferInstanceAs (T2Space ((Γ ⧸ H) × D))</span>
+<span><a class="line" href="#ProperOrbitCells-L84" id="ProperOrbitCells-L84"> 84</a> </span>
+<span><a class="line" href="#ProperOrbitCells-L85" id="ProperOrbitCells-L85"> 85</a> /-- Projection onto the homogeneous-orbit factor. -/</span>
+<span id="doc/BC4lean.ProperActions.OrbitCell.projection"><a class="line" href="#ProperOrbitCells-L86" id="ProperOrbitCells-L86"> 86</a> def projection : EquivariantMap Γ (OrbitCell H D) (Γ ⧸ H) where</span>
+<span><a class="line" href="#ProperOrbitCells-L87" id="ProperOrbitCells-L87"> 87</a>   toFun p := p.1</span>
+<span><a class="line" href="#ProperOrbitCells-L88" id="ProperOrbitCells-L88"> 88</a>   continuous_toFun := continuous_fst</span>
+<span><a class="line" href="#ProperOrbitCells-L89" id="ProperOrbitCells-L89"> 89</a>   map_smul&#x27; _ _ := rfl</span>
+<span><a class="line" href="#ProperOrbitCells-L90" id="ProperOrbitCells-L90"> 90</a> </span>
+<span><a class="line" href="#ProperOrbitCells-L91" id="ProperOrbitCells-L91"> 91</a> /-- Orbit cells with finite stabilizer and LCH parameter are proper. -/</span>
+<span id="doc/BC4lean.ProperActions.OrbitCell.proper"><a class="line" href="#ProperOrbitCells-L92" id="ProperOrbitCells-L92"> 92</a> theorem proper [Finite H] [LocallyCompactSpace D] [T2Space D] :</span>
+<span><a class="line" href="#ProperOrbitCells-L93" id="ProperOrbitCells-L93"> 93</a>     ProperSMul Γ (OrbitCell H D) := by</span>
+<span><a class="line" href="#ProperOrbitCells-L94" id="ProperOrbitCells-L94"> 94</a>   let := proper_orbit H</span>
+<span><a class="line" href="#ProperOrbitCells-L95" id="ProperOrbitCells-L95"> 95</a>   exact proper_of_equivariantMap (projection H D)</span>
+<span><a class="line" href="#ProperOrbitCells-L96" id="ProperOrbitCells-L96"> 96</a> </span>
+<span><a class="line" href="#ProperOrbitCells-L97" id="ProperOrbitCells-L97"> 97</a> end OrbitCell</span>
+<span><a class="line" href="#ProperOrbitCells-L98" id="ProperOrbitCells-L98"> 98</a> end BC4lean.ProperActions</span>
+</pre>
+<h2 id="HomotopyTerminal">HomotopyTerminal.lean</h2><p>源码 SHA-256：<code>051f80906db2d1159c31d709be2ca798bd3f15d88a3336e46216a46743f3386b</code></p><pre>
+<span><a class="line" href="#HomotopyTerminal-L1" id="HomotopyTerminal-L1">  1</a> import BC4lean.EquivariantHomotopyEquiv</span>
+<span><a class="line" href="#HomotopyTerminal-L2" id="HomotopyTerminal-L2">  2</a> </span>
+<span><a class="line" href="#HomotopyTerminal-L3" id="HomotopyTerminal-L3">  3</a> /-! # Uniqueness from a homotopy-universal mapping property</span>
+<span><a class="line" href="#HomotopyTerminal-L4" id="HomotopyTerminal-L4">  4</a> </span>
+<span><a class="line" href="#HomotopyTerminal-L5" id="HomotopyTerminal-L5">  5</a> These lemmas isolate the uniqueness argument. They do not assert that a space</span>
+<span><a class="line" href="#HomotopyTerminal-L6" id="HomotopyTerminal-L6">  6</a> with this mapping property exists, or derive it from fixed-point contractibility.</span>
+<span><a class="line" href="#HomotopyTerminal-L7" id="HomotopyTerminal-L7">  7</a> -/</span>
+<span><a class="line" href="#HomotopyTerminal-L8" id="HomotopyTerminal-L8">  8</a> namespace BC4lean.ProperActions</span>
+<span><a class="line" href="#HomotopyTerminal-L9" id="HomotopyTerminal-L9">  9</a> </span>
+<span><a class="line" href="#HomotopyTerminal-L10" id="HomotopyTerminal-L10"> 10</a> variable {Γ X Y Z : Type*} [Group Γ]</span>
+<span><a class="line" href="#HomotopyTerminal-L11" id="HomotopyTerminal-L11"> 11</a> variable [TopologicalSpace X] [TopologicalSpace Y] [TopologicalSpace Z]</span>
+<span><a class="line" href="#HomotopyTerminal-L12" id="HomotopyTerminal-L12"> 12</a> variable [MulAction Γ X] [MulAction Γ Y] [MulAction Γ Z]</span>
+<span><a class="line" href="#HomotopyTerminal-L13" id="HomotopyTerminal-L13"> 13</a> </span>
+<span><a class="line" href="#HomotopyTerminal-L14" id="HomotopyTerminal-L14"> 14</a> /-- Maps from a specified source exist and are unique up to equivariant homotopy. -/</span>
+<span id="doc/BC4lean.ProperActions.HomotopyTerminalFor"><a class="line" href="#HomotopyTerminal-L15" id="HomotopyTerminal-L15"> 15</a> def HomotopyTerminalFor (Γ X Y : Type*) [Group Γ]</span>
+<span><a class="line" href="#HomotopyTerminal-L16" id="HomotopyTerminal-L16"> 16</a>     [TopologicalSpace X] [TopologicalSpace Y] [MulAction Γ X] [MulAction Γ Y] : Prop :=</span>
+<span><a class="line" href="#HomotopyTerminal-L17" id="HomotopyTerminal-L17"> 17</a>   Nonempty (EquivariantMap Γ X Y) ∧</span>
+<span><a class="line" href="#HomotopyTerminal-L18" id="HomotopyTerminal-L18"> 18</a>     ∀ f g : EquivariantMap Γ X Y, EquivariantlyHomotopic f g</span>
+<span><a class="line" href="#HomotopyTerminal-L19" id="HomotopyTerminal-L19"> 19</a> </span>
+<span><a class="line" href="#HomotopyTerminal-L20" id="HomotopyTerminal-L20"> 20</a> /-- The universal-property uniqueness argument, with its four premises explicit. -/</span>
+<span id="doc/BC4lean.ProperActions.homotopyTerminal_unique"><a class="line" href="#HomotopyTerminal-L21" id="HomotopyTerminal-L21"> 21</a> theorem homotopyTerminal_unique</span>
+<span><a class="line" href="#HomotopyTerminal-L22" id="HomotopyTerminal-L22"> 22</a>     (hXY : HomotopyTerminalFor Γ X Y) (hYX : HomotopyTerminalFor Γ Y X)</span>
+<span><a class="line" href="#HomotopyTerminal-L23" id="HomotopyTerminal-L23"> 23</a>     (hXX : HomotopyTerminalFor Γ X X) (hYY : HomotopyTerminalFor Γ Y Y) :</span>
+<span><a class="line" href="#HomotopyTerminal-L24" id="HomotopyTerminal-L24"> 24</a>     Nonempty (EquivariantHomotopyEquiv Γ X Y) := by</span>
+<span><a class="line" href="#HomotopyTerminal-L25" id="HomotopyTerminal-L25"> 25</a>   obtain ⟨f⟩ := hXY.1</span>
+<span><a class="line" href="#HomotopyTerminal-L26" id="HomotopyTerminal-L26"> 26</a>   obtain ⟨g⟩ := hYX.1</span>
+<span><a class="line" href="#HomotopyTerminal-L27" id="HomotopyTerminal-L27"> 27</a>   exact ⟨⟨f, g, hXX.2 _ _, hYY.2 _ _⟩⟩</span>
+<span><a class="line" href="#HomotopyTerminal-L28" id="HomotopyTerminal-L28"> 28</a> </span>
+<span><a class="line" href="#HomotopyTerminal-L29" id="HomotopyTerminal-L29"> 29</a> /-- Homotopy-terminal targets can be replaced by equivariantly homotopy-equivalent targets. -/</span>
+<span id="doc/BC4lean.ProperActions.HomotopyTerminalFor.of_equiv"><a class="line" href="#HomotopyTerminal-L30" id="HomotopyTerminal-L30"> 30</a> theorem HomotopyTerminalFor.of_equiv (h : HomotopyTerminalFor Γ X Y)</span>
+<span><a class="line" href="#HomotopyTerminal-L31" id="HomotopyTerminal-L31"> 31</a>     (e : EquivariantHomotopyEquiv Γ Y Z) : HomotopyTerminalFor Γ X Z := by</span>
+<span><a class="line" href="#HomotopyTerminal-L32" id="HomotopyTerminal-L32"> 32</a>   constructor</span>
+<span><a class="line" href="#HomotopyTerminal-L33" id="HomotopyTerminal-L33"> 33</a>   · obtain ⟨f⟩ := h.1</span>
+<span><a class="line" href="#HomotopyTerminal-L34" id="HomotopyTerminal-L34"> 34</a>     exact ⟨e.toMap.comp f⟩</span>
+<span><a class="line" href="#HomotopyTerminal-L35" id="HomotopyTerminal-L35"> 35</a>   · intro f g</span>
+<span><a class="line" href="#HomotopyTerminal-L36" id="HomotopyTerminal-L36"> 36</a>     have hf : EquivariantlyHomotopic (e.toMap.comp (e.invMap.comp f)) f := by</span>
+<span><a class="line" href="#HomotopyTerminal-L37" id="HomotopyTerminal-L37"> 37</a>       simpa only [← EquivariantMap.comp_assoc, EquivariantMap.id_comp]</span>
+<span><a class="line" href="#HomotopyTerminal-L38" id="HomotopyTerminal-L38"> 38</a>         using e.right_inv.comp (EquivariantlyHomotopic.refl f)</span>
+<span><a class="line" href="#HomotopyTerminal-L39" id="HomotopyTerminal-L39"> 39</a>     have hg : EquivariantlyHomotopic (e.toMap.comp (e.invMap.comp g)) g := by</span>
+<span><a class="line" href="#HomotopyTerminal-L40" id="HomotopyTerminal-L40"> 40</a>       simpa only [← EquivariantMap.comp_assoc, EquivariantMap.id_comp]</span>
+<span><a class="line" href="#HomotopyTerminal-L41" id="HomotopyTerminal-L41"> 41</a>         using e.right_inv.comp (EquivariantlyHomotopic.refl g)</span>
+<span><a class="line" href="#HomotopyTerminal-L42" id="HomotopyTerminal-L42"> 42</a>     exact hf.symm.trans (((EquivariantlyHomotopic.refl e.toMap).comp</span>
+<span><a class="line" href="#HomotopyTerminal-L43" id="HomotopyTerminal-L43"> 43</a>       (h.2 (e.invMap.comp f) (e.invMap.comp g))).trans hg)</span>
+<span><a class="line" href="#HomotopyTerminal-L44" id="HomotopyTerminal-L44"> 44</a> </span>
+<span><a class="line" href="#HomotopyTerminal-L45" id="HomotopyTerminal-L45"> 45</a> /-- Uniqueness also identifies all subgroup fixed-point homotopy types. -/</span>
+<span id="doc/BC4lean.ProperActions.homotopyTerminal_fixedPoints_unique"><a class="line" href="#HomotopyTerminal-L46" id="HomotopyTerminal-L46"> 46</a> theorem homotopyTerminal_fixedPoints_unique</span>
+<span><a class="line" href="#HomotopyTerminal-L47" id="HomotopyTerminal-L47"> 47</a>     (hXY : HomotopyTerminalFor Γ X Y) (hYX : HomotopyTerminalFor Γ Y X)</span>
+<span><a class="line" href="#HomotopyTerminal-L48" id="HomotopyTerminal-L48"> 48</a>     (hXX : HomotopyTerminalFor Γ X X) (hYY : HomotopyTerminalFor Γ Y Y)</span>
+<span><a class="line" href="#HomotopyTerminal-L49" id="HomotopyTerminal-L49"> 49</a>     (H : Subgroup Γ) :</span>
+<span><a class="line" href="#HomotopyTerminal-L50" id="HomotopyTerminal-L50"> 50</a>     Nonempty (ContinuousMap.HomotopyEquiv (FixedPointSpace H X) (FixedPointSpace H Y)) := by</span>
+<span><a class="line" href="#HomotopyTerminal-L51" id="HomotopyTerminal-L51"> 51</a>   obtain ⟨e⟩ := homotopyTerminal_unique hXY hYX hXX hYY</span>
+<span><a class="line" href="#HomotopyTerminal-L52" id="HomotopyTerminal-L52"> 52</a>   exact ⟨e.fixedPoints H⟩</span>
+<span><a class="line" href="#HomotopyTerminal-L53" id="HomotopyTerminal-L53"> 53</a> </span>
+<span><a class="line" href="#HomotopyTerminal-L54" id="HomotopyTerminal-L54"> 54</a> end BC4lean.ProperActions</span>
+</pre>
+<h2 id="FixedPointCriterion">FixedPointCriterion.lean</h2><p>源码 SHA-256：<code>42ed97a4a4e236029d4ae40ab5b9d74ddb5cd35e6d7000971085773701577843</code></p><pre>
+<span><a class="line" href="#FixedPointCriterion-L1" id="FixedPointCriterion-L1">  1</a> import BC4lean.HomotopyTerminal</span>
+<span><a class="line" href="#FixedPointCriterion-L2" id="FixedPointCriterion-L2">  2</a> import Mathlib.Topology.Homotopy.Contractible</span>
+<span><a class="line" href="#FixedPointCriterion-L3" id="FixedPointCriterion-L3">  3</a> </span>
+<span><a class="line" href="#FixedPointCriterion-L4" id="FixedPointCriterion-L4">  4</a> /-! # The fixed-point criterion and the finite-group point model</span>
+<span><a class="line" href="#FixedPointCriterion-L5" id="FixedPointCriterion-L5">  5</a> </span>
+<span><a class="line" href="#FixedPointCriterion-L6" id="FixedPointCriterion-L6">  6</a> This predicate records the fixed-point condition on a prospective model. It is</span>
+<span><a class="line" href="#FixedPointCriterion-L7" id="FixedPointCriterion-L7">  7</a> not a definition of an equivariant CW complex, nor a proof of the general model</span>
+<span><a class="line" href="#FixedPointCriterion-L8" id="FixedPointCriterion-L8">  8</a> existence or of the cellular universal mapping theorem.</span>
+<span><a class="line" href="#FixedPointCriterion-L9" id="FixedPointCriterion-L9">  9</a> -/</span>
+<span><a class="line" href="#FixedPointCriterion-L10" id="FixedPointCriterion-L10"> 10</a> namespace BC4lean.ProperActions</span>
+<span><a class="line" href="#FixedPointCriterion-L11" id="FixedPointCriterion-L11"> 11</a> </span>
+<span><a class="line" href="#FixedPointCriterion-L12" id="FixedPointCriterion-L12"> 12</a> /-- The fixed-point condition expected of a universal proper model. -/</span>
+<span id="doc/BC4lean.ProperActions.FixedPointCriterion"><a class="line" href="#FixedPointCriterion-L13" id="FixedPointCriterion-L13"> 13</a> def FixedPointCriterion (Γ X : Type*) [Group Γ] [TopologicalSpace X] [MulAction Γ X] : Prop :=</span>
+<span><a class="line" href="#FixedPointCriterion-L14" id="FixedPointCriterion-L14"> 14</a>   (∀ H : Subgroup Γ, Finite H → ContractibleSpace (FixedPointSpace H X)) ∧</span>
+<span><a class="line" href="#FixedPointCriterion-L15" id="FixedPointCriterion-L15"> 15</a>   (∀ H : Subgroup Γ, Infinite H → IsEmpty (FixedPointSpace H X))</span>
+<span><a class="line" href="#FixedPointCriterion-L16" id="FixedPointCriterion-L16"> 16</a> </span>
+<span><a class="line" href="#FixedPointCriterion-L17" id="FixedPointCriterion-L17"> 17</a> variable {Γ X Y : Type*} [Group Γ] [TopologicalSpace X] [TopologicalSpace Y]</span>
+<span><a class="line" href="#FixedPointCriterion-L18" id="FixedPointCriterion-L18"> 18</a> variable [MulAction Γ X] [MulAction Γ Y]</span>
+<span><a class="line" href="#FixedPointCriterion-L19" id="FixedPointCriterion-L19"> 19</a> </span>
+<span><a class="line" href="#FixedPointCriterion-L20" id="FixedPointCriterion-L20"> 20</a> /-- The fixed-point criterion is invariant under equivariant homotopy equivalence. -/</span>
+<span id="doc/BC4lean.ProperActions.FixedPointCriterion.of_equiv"><a class="line" href="#FixedPointCriterion-L21" id="FixedPointCriterion-L21"> 21</a> theorem FixedPointCriterion.of_equiv (h : FixedPointCriterion Γ X)</span>
+<span><a class="line" href="#FixedPointCriterion-L22" id="FixedPointCriterion-L22"> 22</a>     (e : EquivariantHomotopyEquiv Γ X Y) : FixedPointCriterion Γ Y := by</span>
+<span><a class="line" href="#FixedPointCriterion-L23" id="FixedPointCriterion-L23"> 23</a>   constructor</span>
+<span><a class="line" href="#FixedPointCriterion-L24" id="FixedPointCriterion-L24"> 24</a>   · intro H hH</span>
+<span><a class="line" href="#FixedPointCriterion-L25" id="FixedPointCriterion-L25"> 25</a>     exact (e.fixedPoints H).contractibleSpace_iff.mp (h.1 H hH)</span>
+<span><a class="line" href="#FixedPointCriterion-L26" id="FixedPointCriterion-L26"> 26</a>   · intro H hH</span>
+<span><a class="line" href="#FixedPointCriterion-L27" id="FixedPointCriterion-L27"> 27</a>     let := h.2 H hH</span>
+<span><a class="line" href="#FixedPointCriterion-L28" id="FixedPointCriterion-L28"> 28</a>     exact ⟨fun y =&gt; isEmptyElim (e.invMap.fixedPointsMap H y)⟩</span>
+<span><a class="line" href="#FixedPointCriterion-L29" id="FixedPointCriterion-L29"> 29</a> </span>
+<span><a class="line" href="#FixedPointCriterion-L30" id="FixedPointCriterion-L30"> 30</a> /-- A one-point space carrying the trivial action. -/</span>
+<span id="doc/BC4lean.ProperActions.Point"><a class="line" href="#FixedPointCriterion-L31" id="FixedPointCriterion-L31"> 31</a> def Point := Unit</span>
+<span><a class="line" href="#FixedPointCriterion-L32" id="FixedPointCriterion-L32"> 32</a> </span>
+<span><a class="line" href="#FixedPointCriterion-L33" id="FixedPointCriterion-L33"> 33</a> namespace Point</span>
+<span id="doc/BC4lean.ProperActions.Point.instUnique"><a class="line" href="#FixedPointCriterion-L34" id="FixedPointCriterion-L34"> 34</a> instance instUnique : Unique Point := inferInstanceAs (Unique Unit)</span>
+<span id="doc/BC4lean.ProperActions.Point.instTopologicalSpace"><a class="line" href="#FixedPointCriterion-L35" id="FixedPointCriterion-L35"> 35</a> instance instTopologicalSpace : TopologicalSpace Point := ⊥</span>
+<span id="doc/BC4lean.ProperActions.Point.instDiscreteTopology"><a class="line" href="#FixedPointCriterion-L36" id="FixedPointCriterion-L36"> 36</a> instance instDiscreteTopology : DiscreteTopology Point := ⟨rfl⟩</span>
+<span id="doc/BC4lean.ProperActions.Point.instMulAction"><a class="line" href="#FixedPointCriterion-L37" id="FixedPointCriterion-L37"> 37</a> instance instMulAction : MulAction Γ Point where</span>
+<span><a class="line" href="#FixedPointCriterion-L38" id="FixedPointCriterion-L38"> 38</a>   smul _ x := x</span>
+<span><a class="line" href="#FixedPointCriterion-L39" id="FixedPointCriterion-L39"> 39</a>   one_smul _ := rfl</span>
+<span><a class="line" href="#FixedPointCriterion-L40" id="FixedPointCriterion-L40"> 40</a>   mul_smul _ _ _ := rfl</span>
+<span><a class="line" href="#FixedPointCriterion-L41" id="FixedPointCriterion-L41"> 41</a> </span>
+<span><a class="line" href="#FixedPointCriterion-L42" id="FixedPointCriterion-L42"> 42</a> /-- Every fixed-point space of the trivial one-point action is contractible. -/</span>
+<span id="doc/BC4lean.ProperActions.Point.fixedPoints_contractible"><a class="line" href="#FixedPointCriterion-L43" id="FixedPointCriterion-L43"> 43</a> theorem fixedPoints_contractible (H : Subgroup Γ) :</span>
+<span><a class="line" href="#FixedPointCriterion-L44" id="FixedPointCriterion-L44"> 44</a>     ContractibleSpace (FixedPointSpace H Point) := by</span>
+<span><a class="line" href="#FixedPointCriterion-L45" id="FixedPointCriterion-L45"> 45</a>   let : Nonempty (FixedPointSpace H Point) := ⟨⟨default, fun _ =&gt; rfl⟩⟩</span>
+<span><a class="line" href="#FixedPointCriterion-L46" id="FixedPointCriterion-L46"> 46</a>   infer_instance</span>
+<span><a class="line" href="#FixedPointCriterion-L47" id="FixedPointCriterion-L47"> 47</a> </span>
+<span><a class="line" href="#FixedPointCriterion-L48" id="FixedPointCriterion-L48"> 48</a> /-- For finite groups the point satisfies the full fixed-point criterion. -/</span>
+<span id="doc/BC4lean.ProperActions.Point.fixedPointCriterion"><a class="line" href="#FixedPointCriterion-L49" id="FixedPointCriterion-L49"> 49</a> theorem fixedPointCriterion [Finite Γ] : FixedPointCriterion Γ Point := by</span>
+<span><a class="line" href="#FixedPointCriterion-L50" id="FixedPointCriterion-L50"> 50</a>   refine ⟨fun H _ =&gt; fixedPoints_contractible H, ?_⟩</span>
+<span><a class="line" href="#FixedPointCriterion-L51" id="FixedPointCriterion-L51"> 51</a>   intro H hH</span>
+<span><a class="line" href="#FixedPointCriterion-L52" id="FixedPointCriterion-L52"> 52</a>   let := hH</span>
+<span><a class="line" href="#FixedPointCriterion-L53" id="FixedPointCriterion-L53"> 53</a>   exact False.elim (not_finite H)</span>
+<span><a class="line" href="#FixedPointCriterion-L54" id="FixedPointCriterion-L54"> 54</a> </span>
+<span><a class="line" href="#FixedPointCriterion-L55" id="FixedPointCriterion-L55"> 55</a> /-- The point has the required mapping property for every source. -/</span>
+<span id="doc/BC4lean.ProperActions.Point.homotopyTerminal"><a class="line" href="#FixedPointCriterion-L56" id="FixedPointCriterion-L56"> 56</a> theorem homotopyTerminal (Γ X : Type*) [Group Γ] [TopologicalSpace X] [MulAction Γ X] :</span>
+<span><a class="line" href="#FixedPointCriterion-L57" id="FixedPointCriterion-L57"> 57</a>     HomotopyTerminalFor Γ X Point := by</span>
+<span><a class="line" href="#FixedPointCriterion-L58" id="FixedPointCriterion-L58"> 58</a>   constructor</span>
+<span><a class="line" href="#FixedPointCriterion-L59" id="FixedPointCriterion-L59"> 59</a>   · exact ⟨{ toFun := fun _ =&gt; default, continuous_toFun := continuous_const,</span>
+<span><a class="line" href="#FixedPointCriterion-L60" id="FixedPointCriterion-L60"> 60</a>              map_smul&#x27; := fun _ _ =&gt; rfl }⟩</span>
+<span><a class="line" href="#FixedPointCriterion-L61" id="FixedPointCriterion-L61"> 61</a>   · intro f g</span>
+<span><a class="line" href="#FixedPointCriterion-L62" id="FixedPointCriterion-L62"> 62</a>     have : f = g := EquivariantMap.ext (fun _ =&gt; Subsingleton.elim _ _)</span>
+<span><a class="line" href="#FixedPointCriterion-L63" id="FixedPointCriterion-L63"> 63</a>     subst g</span>
+<span><a class="line" href="#FixedPointCriterion-L64" id="FixedPointCriterion-L64"> 64</a>     exact EquivariantlyHomotopic.refl f</span>
+<span><a class="line" href="#FixedPointCriterion-L65" id="FixedPointCriterion-L65"> 65</a> </span>
+<span><a class="line" href="#FixedPointCriterion-L66" id="FixedPointCriterion-L66"> 66</a> /-- The one-point action of a finite discrete group is proper. -/</span>
+<span id="doc/BC4lean.ProperActions.Point.proper"><a class="line" href="#FixedPointCriterion-L67" id="FixedPointCriterion-L67"> 67</a> theorem proper [TopologicalSpace Γ] [DiscreteTopology Γ] [Finite Γ] :</span>
+<span><a class="line" href="#FixedPointCriterion-L68" id="FixedPointCriterion-L68"> 68</a>     ProperSMul Γ Point := by</span>
+<span><a class="line" href="#FixedPointCriterion-L69" id="FixedPointCriterion-L69"> 69</a>   let : ContinuousSMul Γ Point := ⟨continuous_of_discreteTopology⟩</span>
+<span><a class="line" href="#FixedPointCriterion-L70" id="FixedPointCriterion-L70"> 70</a>   exact proper_of_finite</span>
+<span><a class="line" href="#FixedPointCriterion-L71" id="FixedPointCriterion-L71"> 71</a> </span>
+<span><a class="line" href="#FixedPointCriterion-L72" id="FixedPointCriterion-L72"> 72</a> end Point</span>
+<span><a class="line" href="#FixedPointCriterion-L73" id="FixedPointCriterion-L73"> 73</a> end BC4lean.ProperActions</span>
+</pre>
+<h2 id="CocompactPieces">CocompactPieces.lean</h2><p>源码 SHA-256：<code>abd7fa7802d96e2e4dcdfd85cb4ed2d2d4ccd0d0ba26058b403173277aed32c9</code></p><pre>
+<span><a class="line" href="#CocompactPieces-L1" id="CocompactPieces-L1">  1</a> import BC4lean.EquivariantMaps</span>
+<span><a class="line" href="#CocompactPieces-L2" id="CocompactPieces-L2">  2</a> import Mathlib.Topology.Maps.OpenQuotient</span>
+<span><a class="line" href="#CocompactPieces-L3" id="CocompactPieces-L3">  3</a> </span>
+<span><a class="line" href="#CocompactPieces-L4" id="CocompactPieces-L4">  4</a> /-! # Closed invariant cocompact pieces of a given proper space</span>
+<span><a class="line" href="#CocompactPieces-L5" id="CocompactPieces-L5">  5</a> </span>
+<span><a class="line" href="#CocompactPieces-L6" id="CocompactPieces-L6">  6</a> The indexing construction below is conditional on the ambient space. It does</span>
+<span><a class="line" href="#CocompactPieces-L7" id="CocompactPieces-L7">  7</a> not construct a universal proper space or select a locally compact model.</span>
+<span><a class="line" href="#CocompactPieces-L8" id="CocompactPieces-L8">  8</a> -/</span>
+<span><a class="line" href="#CocompactPieces-L9" id="CocompactPieces-L9">  9</a> namespace BC4lean.ProperActions</span>
+<span><a class="line" href="#CocompactPieces-L10" id="CocompactPieces-L10"> 10</a> open Topology</span>
+<span><a class="line" href="#CocompactPieces-L11" id="CocompactPieces-L11"> 11</a> </span>
+<span><a class="line" href="#CocompactPieces-L12" id="CocompactPieces-L12"> 12</a> variable {Γ X : Type*} [Group Γ] [TopologicalSpace X] [MulAction Γ X]</span>
+<span><a class="line" href="#CocompactPieces-L13" id="CocompactPieces-L13"> 13</a> </span>
+<span><a class="line" href="#CocompactPieces-L14" id="CocompactPieces-L14"> 14</a> /-- An invariant subset with the induced topology and action. -/</span>
+<span id="doc/BC4lean.ProperActions.InvariantSubset"><a class="line" href="#CocompactPieces-L15" id="CocompactPieces-L15"> 15</a> structure InvariantSubset (Γ X : Type*) [Group Γ] [MulAction Γ X] where</span>
+<span><a class="line" href="#CocompactPieces-L16" id="CocompactPieces-L16"> 16</a>   carrier : Set X</span>
+<span><a class="line" href="#CocompactPieces-L17" id="CocompactPieces-L17"> 17</a>   smul_mem : ∀ (g : Γ) {x : X}, x ∈ carrier → g • x ∈ carrier</span>
+<span><a class="line" href="#CocompactPieces-L18" id="CocompactPieces-L18"> 18</a> </span>
+<span><a class="line" href="#CocompactPieces-L19" id="CocompactPieces-L19"> 19</a> namespace InvariantSubset</span>
+<span id="doc/BC4lean.ProperActions.InvariantSubset.instSetLike"><a class="line" href="#CocompactPieces-L20" id="CocompactPieces-L20"> 20</a> instance instSetLike : SetLike (InvariantSubset Γ X) X where</span>
+<span><a class="line" href="#CocompactPieces-L21" id="CocompactPieces-L21"> 21</a>   coe := carrier</span>
+<span><a class="line" href="#CocompactPieces-L22" id="CocompactPieces-L22"> 22</a>   coe_injective := by rintro ⟨s, hs⟩ ⟨t, ht⟩ rfl; rfl</span>
+<span><a class="line" href="#CocompactPieces-L23" id="CocompactPieces-L23"> 23</a> </span>
+<span id="doc/BC4lean.ProperActions.InvariantSubset.instPartialOrder"><a class="line" href="#CocompactPieces-L24" id="CocompactPieces-L24"> 24</a> instance instPartialOrder : PartialOrder (InvariantSubset Γ X) := .ofSetLike _ _</span>
+<span><a class="line" href="#CocompactPieces-L25" id="CocompactPieces-L25"> 25</a> </span>
+<span id="doc/BC4lean.ProperActions.InvariantSubset.instMulAction"><a class="line" href="#CocompactPieces-L26" id="CocompactPieces-L26"> 26</a> instance instMulAction (s : InvariantSubset Γ X) : MulAction Γ s where</span>
+<span><a class="line" href="#CocompactPieces-L27" id="CocompactPieces-L27"> 27</a>   smul g x := ⟨g • x.val, s.smul_mem g x.property⟩</span>
+<span><a class="line" href="#CocompactPieces-L28" id="CocompactPieces-L28"> 28</a>   one_smul x := Subtype.ext (one_smul Γ x.val)</span>
+<span><a class="line" href="#CocompactPieces-L29" id="CocompactPieces-L29"> 29</a>   mul_smul g h x := Subtype.ext (mul_smul g h x.val)</span>
+<span><a class="line" href="#CocompactPieces-L30" id="CocompactPieces-L30"> 30</a> </span>
+<span><a class="line" href="#CocompactPieces-L31" id="CocompactPieces-L31"> 31</a> omit [TopologicalSpace X] in</span>
+<span id="doc/BC4lean.ProperActions.InvariantSubset.coe_smul"><a class="line" href="#CocompactPieces-L32" id="CocompactPieces-L32"> 32</a> @[simp] theorem coe_smul (s : InvariantSubset Γ X) (g : Γ) (x : s) :</span>
+<span><a class="line" href="#CocompactPieces-L33" id="CocompactPieces-L33"> 33</a>     ((g • x : s) : X) = g • (x : X) := rfl</span>
+<span><a class="line" href="#CocompactPieces-L34" id="CocompactPieces-L34"> 34</a> </span>
+<span id="doc/BC4lean.ProperActions.InvariantSubset.instContinuousConstSMul"><a class="line" href="#CocompactPieces-L35" id="CocompactPieces-L35"> 35</a> instance instContinuousConstSMul (s : InvariantSubset Γ X) [ContinuousConstSMul Γ X] :</span>
+<span><a class="line" href="#CocompactPieces-L36" id="CocompactPieces-L36"> 36</a>     ContinuousConstSMul Γ s where</span>
+<span><a class="line" href="#CocompactPieces-L37" id="CocompactPieces-L37"> 37</a>   continuous_const_smul g := (continuous_const_smul g).subtype_map (fun _ hx =&gt; s.smul_mem g hx)</span>
+<span><a class="line" href="#CocompactPieces-L38" id="CocompactPieces-L38"> 38</a> </span>
+<span><a class="line" href="#CocompactPieces-L39" id="CocompactPieces-L39"> 39</a> /-- Inclusion of an invariant subset is equivariant. -/</span>
+<span id="doc/BC4lean.ProperActions.InvariantSubset.inclusion"><a class="line" href="#CocompactPieces-L40" id="CocompactPieces-L40"> 40</a> def inclusion (s : InvariantSubset Γ X) : EquivariantMap Γ s X where</span>
+<span><a class="line" href="#CocompactPieces-L41" id="CocompactPieces-L41"> 41</a>   toFun := Subtype.val</span>
+<span><a class="line" href="#CocompactPieces-L42" id="CocompactPieces-L42"> 42</a>   continuous_toFun := continuous_subtype_val</span>
+<span><a class="line" href="#CocompactPieces-L43" id="CocompactPieces-L43"> 43</a>   map_smul&#x27; _ _ := rfl</span>
+<span><a class="line" href="#CocompactPieces-L44" id="CocompactPieces-L44"> 44</a> </span>
+<span><a class="line" href="#CocompactPieces-L45" id="CocompactPieces-L45"> 45</a> /-- The map from the intrinsic orbit space to the ambient orbit space. -/</span>
+<span id="doc/BC4lean.ProperActions.InvariantSubset.orbitInclusion"><a class="line" href="#CocompactPieces-L46" id="CocompactPieces-L46"> 46</a> def orbitInclusion (s : InvariantSubset Γ X) :</span>
+<span><a class="line" href="#CocompactPieces-L47" id="CocompactPieces-L47"> 47</a>     Quotient (MulAction.orbitRel Γ s) → Quotient (MulAction.orbitRel Γ X) :=</span>
+<span><a class="line" href="#CocompactPieces-L48" id="CocompactPieces-L48"> 48</a>   Quotient.map Subtype.val (by</span>
+<span><a class="line" href="#CocompactPieces-L49" id="CocompactPieces-L49"> 49</a>     intro a b h</span>
+<span><a class="line" href="#CocompactPieces-L50" id="CocompactPieces-L50"> 50</a>     obtain ⟨g, hg⟩ := h</span>
+<span><a class="line" href="#CocompactPieces-L51" id="CocompactPieces-L51"> 51</a>     exact ⟨g, congrArg Subtype.val hg⟩)</span>
+<span><a class="line" href="#CocompactPieces-L52" id="CocompactPieces-L52"> 52</a> </span>
+<span><a class="line" href="#CocompactPieces-L53" id="CocompactPieces-L53"> 53</a> omit [TopologicalSpace X] in</span>
+<span id="doc/BC4lean.ProperActions.InvariantSubset.orbitInclusion_injective"><a class="line" href="#CocompactPieces-L54" id="CocompactPieces-L54"> 54</a> theorem orbitInclusion_injective (s : InvariantSubset Γ X) :</span>
+<span><a class="line" href="#CocompactPieces-L55" id="CocompactPieces-L55"> 55</a>     Function.Injective s.orbitInclusion := by</span>
+<span><a class="line" href="#CocompactPieces-L56" id="CocompactPieces-L56"> 56</a>   intro a b</span>
+<span><a class="line" href="#CocompactPieces-L57" id="CocompactPieces-L57"> 57</a>   induction a using Quotient.inductionOn with | _ a =&gt;</span>
+<span><a class="line" href="#CocompactPieces-L58" id="CocompactPieces-L58"> 58</a>     induction b using Quotient.inductionOn with | _ b =&gt;</span>
+<span><a class="line" href="#CocompactPieces-L59" id="CocompactPieces-L59"> 59</a>       intro h</span>
+<span><a class="line" href="#CocompactPieces-L60" id="CocompactPieces-L60"> 60</a>       apply Quotient.sound</span>
+<span><a class="line" href="#CocompactPieces-L61" id="CocompactPieces-L61"> 61</a>       obtain ⟨g, hg⟩ := Quotient.exact h</span>
+<span><a class="line" href="#CocompactPieces-L62" id="CocompactPieces-L62"> 62</a>       exact ⟨g, Subtype.ext hg⟩</span>
+<span><a class="line" href="#CocompactPieces-L63" id="CocompactPieces-L63"> 63</a> </span>
+<span><a class="line" href="#CocompactPieces-L64" id="CocompactPieces-L64"> 64</a> /-- An invariant subspace&#x27;s intrinsic orbit topology is its ambient subspace topology. -/</span>
+<span id="doc/BC4lean.ProperActions.InvariantSubset.orbitInclusion_isEmbedding"><a class="line" href="#CocompactPieces-L65" id="CocompactPieces-L65"> 65</a> theorem orbitInclusion_isEmbedding (s : InvariantSubset Γ X)</span>
+<span><a class="line" href="#CocompactPieces-L66" id="CocompactPieces-L66"> 66</a>     [ContinuousConstSMul Γ X] : IsEmbedding s.orbitInclusion := by</span>
+<span><a class="line" href="#CocompactPieces-L67" id="CocompactPieces-L67"> 67</a>   apply isEmbedding_of_isOpenQuotientMap_of_isInducing</span>
+<span><a class="line" href="#CocompactPieces-L68" id="CocompactPieces-L68"> 68</a>     (Subtype.val : s → X) s.orbitInclusion</span>
+<span><a class="line" href="#CocompactPieces-L69" id="CocompactPieces-L69"> 69</a>     (Quotient.mk (MulAction.orbitRel Γ s)) (Quotient.mk (MulAction.orbitRel Γ X))</span>
+<span><a class="line" href="#CocompactPieces-L70" id="CocompactPieces-L70"> 70</a>     rfl IsInducing.subtypeVal isQuotientMap_quot_mk</span>
+<span><a class="line" href="#CocompactPieces-L71" id="CocompactPieces-L71"> 71</a>     MulAction.isOpenQuotientMap_quotientMk s.orbitInclusion_injective</span>
+<span><a class="line" href="#CocompactPieces-L72" id="CocompactPieces-L72"> 72</a>   rintro x ⟨_, ⟨y, rfl⟩, h⟩</span>
+<span><a class="line" href="#CocompactPieces-L73" id="CocompactPieces-L73"> 73</a>   obtain ⟨g, hg⟩ := Quotient.exact h.symm</span>
+<span><a class="line" href="#CocompactPieces-L74" id="CocompactPieces-L74"> 74</a>   exact ⟨⟨x, hg ▸ s.smul_mem g y.property⟩, rfl⟩</span>
+<span><a class="line" href="#CocompactPieces-L75" id="CocompactPieces-L75"> 75</a> </span>
+<span><a class="line" href="#CocompactPieces-L76" id="CocompactPieces-L76"> 76</a> omit [TopologicalSpace X] in</span>
+<span id="doc/BC4lean.ProperActions.InvariantSubset.range_orbitInclusion"><a class="line" href="#CocompactPieces-L77" id="CocompactPieces-L77"> 77</a> theorem range_orbitInclusion (s : InvariantSubset Γ X) :</span>
+<span><a class="line" href="#CocompactPieces-L78" id="CocompactPieces-L78"> 78</a>     Set.range s.orbitInclusion = Quotient.mk (MulAction.orbitRel Γ X) &#x27;&#x27; (s : Set X) := by</span>
+<span><a class="line" href="#CocompactPieces-L79" id="CocompactPieces-L79"> 79</a>   ext q</span>
+<span><a class="line" href="#CocompactPieces-L80" id="CocompactPieces-L80"> 80</a>   constructor</span>
+<span><a class="line" href="#CocompactPieces-L81" id="CocompactPieces-L81"> 81</a>   · rintro ⟨a, rfl⟩</span>
+<span><a class="line" href="#CocompactPieces-L82" id="CocompactPieces-L82"> 82</a>     induction a using Quotient.inductionOn with | _ a =&gt; exact ⟨a, a.property, rfl⟩</span>
+<span><a class="line" href="#CocompactPieces-L83" id="CocompactPieces-L83"> 83</a>   · rintro ⟨x, hx, rfl⟩</span>
+<span><a class="line" href="#CocompactPieces-L84" id="CocompactPieces-L84"> 84</a>     exact ⟨Quotient.mk _ ⟨x, hx⟩, rfl⟩</span>
+<span><a class="line" href="#CocompactPieces-L85" id="CocompactPieces-L85"> 85</a> </span>
+<span><a class="line" href="#CocompactPieces-L86" id="CocompactPieces-L86"> 86</a> /-- Compactness in the ambient quotient is equivalent to compactness of the intrinsic quotient. -/</span>
+<span id="doc/BC4lean.ProperActions.InvariantSubset.compactSpace_orbit_iff"><a class="line" href="#CocompactPieces-L87" id="CocompactPieces-L87"> 87</a> theorem compactSpace_orbit_iff (s : InvariantSubset Γ X) [ContinuousConstSMul Γ X] :</span>
+<span><a class="line" href="#CocompactPieces-L88" id="CocompactPieces-L88"> 88</a>     CompactSpace (Quotient (MulAction.orbitRel Γ s)) ↔</span>
+<span><a class="line" href="#CocompactPieces-L89" id="CocompactPieces-L89"> 89</a>       IsCompact (Quotient.mk (MulAction.orbitRel Γ X) &#x27;&#x27; (s : Set X)) := by</span>
+<span><a class="line" href="#CocompactPieces-L90" id="CocompactPieces-L90"> 90</a>   rw [← s.range_orbitInclusion, ← Set.image_univ,</span>
+<span><a class="line" href="#CocompactPieces-L91" id="CocompactPieces-L91"> 91</a>     ← s.orbitInclusion_isEmbedding.isCompact_iff, isCompact_univ_iff]</span>
+<span><a class="line" href="#CocompactPieces-L92" id="CocompactPieces-L92"> 92</a> </span>
+<span><a class="line" href="#CocompactPieces-L93" id="CocompactPieces-L93"> 93</a> end InvariantSubset</span>
+<span><a class="line" href="#CocompactPieces-L94" id="CocompactPieces-L94"> 94</a> </span>
+<span><a class="line" href="#CocompactPieces-L95" id="CocompactPieces-L95"> 95</a> /-- Closed invariant subsets with compact quotient, encoded through the ambient orbit space. -/</span>
+<span id="doc/BC4lean.ProperActions.CocompactPiece"><a class="line" href="#CocompactPieces-L96" id="CocompactPieces-L96"> 96</a> structure CocompactPiece (Γ X : Type*) [Group Γ] [TopologicalSpace X] [MulAction Γ X]</span>
+<span><a class="line" href="#CocompactPieces-L97" id="CocompactPieces-L97"> 97</a>     extends InvariantSubset Γ X where</span>
+<span><a class="line" href="#CocompactPieces-L98" id="CocompactPieces-L98"> 98</a>   isClosed_carrier : IsClosed carrier</span>
+<span><a class="line" href="#CocompactPieces-L99" id="CocompactPieces-L99"> 99</a>   isCompact_image : IsCompact (Quotient.mk (MulAction.orbitRel Γ X) &#x27;&#x27; carrier)</span>
+<span><a class="line" href="#CocompactPieces-L100" id="CocompactPieces-L100">100</a> </span>
+<span><a class="line" href="#CocompactPieces-L101" id="CocompactPieces-L101">101</a> namespace CocompactPiece</span>
+<span id="doc/BC4lean.ProperActions.CocompactPiece.instSetLike"><a class="line" href="#CocompactPieces-L102" id="CocompactPieces-L102">102</a> instance instSetLike : SetLike (CocompactPiece Γ X) X where</span>
+<span><a class="line" href="#CocompactPieces-L103" id="CocompactPieces-L103">103</a>   coe s := s.carrier</span>
+<span><a class="line" href="#CocompactPieces-L104" id="CocompactPieces-L104">104</a>   coe_injective := by rintro ⟨⟨s, hs⟩, hc, hk⟩ ⟨⟨t, ht⟩, hd, hl⟩ rfl; rfl</span>
+<span id="doc/BC4lean.ProperActions.CocompactPiece.instPartialOrder"><a class="line" href="#CocompactPieces-L105" id="CocompactPieces-L105">105</a> instance instPartialOrder : PartialOrder (CocompactPiece Γ X) := .ofSetLike _ _</span>
+<span><a class="line" href="#CocompactPieces-L106" id="CocompactPieces-L106">106</a> </span>
+<span><a class="line" href="#CocompactPieces-L107" id="CocompactPieces-L107">107</a> /-- The empty piece ensures that the indexing type is nonempty. -/</span>
+<span id="doc/BC4lean.ProperActions.CocompactPiece.empty"><a class="line" href="#CocompactPieces-L108" id="CocompactPieces-L108">108</a> def empty : CocompactPiece Γ X where</span>
+<span><a class="line" href="#CocompactPieces-L109" id="CocompactPieces-L109">109</a>   carrier := ∅</span>
+<span><a class="line" href="#CocompactPieces-L110" id="CocompactPieces-L110">110</a>   smul_mem _ _ hx := False.elim hx</span>
+<span><a class="line" href="#CocompactPieces-L111" id="CocompactPieces-L111">111</a>   isClosed_carrier := isClosed_empty</span>
+<span><a class="line" href="#CocompactPieces-L112" id="CocompactPieces-L112">112</a>   isCompact_image := by simp</span>
+<span><a class="line" href="#CocompactPieces-L113" id="CocompactPieces-L113">113</a> </span>
+<span><a class="line" href="#CocompactPieces-L114" id="CocompactPieces-L114">114</a> /-- Finite unions provide upper bounds in the cocompact indexing system. -/</span>
+<span id="doc/BC4lean.ProperActions.CocompactPiece.union"><a class="line" href="#CocompactPieces-L115" id="CocompactPieces-L115">115</a> def union (s t : CocompactPiece Γ X) : CocompactPiece Γ X where</span>
+<span><a class="line" href="#CocompactPieces-L116" id="CocompactPieces-L116">116</a>   carrier := s.carrier ∪ t.carrier</span>
+<span><a class="line" href="#CocompactPieces-L117" id="CocompactPieces-L117">117</a>   smul_mem g _ hx := hx.elim (fun h =&gt; Or.inl (s.smul_mem g h))</span>
+<span><a class="line" href="#CocompactPieces-L118" id="CocompactPieces-L118">118</a>     (fun h =&gt; Or.inr (t.smul_mem g h))</span>
+<span><a class="line" href="#CocompactPieces-L119" id="CocompactPieces-L119">119</a>   isClosed_carrier := s.isClosed_carrier.union t.isClosed_carrier</span>
+<span><a class="line" href="#CocompactPieces-L120" id="CocompactPieces-L120">120</a>   isCompact_image := by</span>
+<span><a class="line" href="#CocompactPieces-L121" id="CocompactPieces-L121">121</a>     rw [Set.image_union]</span>
+<span><a class="line" href="#CocompactPieces-L122" id="CocompactPieces-L122">122</a>     exact s.isCompact_image.union t.isCompact_image</span>
+<span><a class="line" href="#CocompactPieces-L123" id="CocompactPieces-L123">123</a> </span>
+<span id="doc/BC4lean.ProperActions.CocompactPiece.le_union_left"><a class="line" href="#CocompactPieces-L124" id="CocompactPieces-L124">124</a> theorem le_union_left (s t : CocompactPiece Γ X) : s ≤ s.union t := Set.subset_union_left</span>
+<span id="doc/BC4lean.ProperActions.CocompactPiece.le_union_right"><a class="line" href="#CocompactPieces-L125" id="CocompactPieces-L125">125</a> theorem le_union_right (s t : CocompactPiece Γ X) : t ≤ s.union t := Set.subset_union_right</span>
+<span><a class="line" href="#CocompactPieces-L126" id="CocompactPieces-L126">126</a> </span>
+<span id="doc/BC4lean.ProperActions.CocompactPiece.directed"><a class="line" href="#CocompactPieces-L127" id="CocompactPieces-L127">127</a> theorem directed : Directed (· ≤ · : CocompactPiece Γ X → CocompactPiece Γ X → Prop)</span>
+<span><a class="line" href="#CocompactPieces-L128" id="CocompactPieces-L128">128</a>     (fun s =&gt; s) := fun s t =&gt; ⟨s.union t, le_union_left s t, le_union_right s t⟩</span>
+<span><a class="line" href="#CocompactPieces-L129" id="CocompactPieces-L129">129</a> </span>
+<span><a class="line" href="#CocompactPieces-L130" id="CocompactPieces-L130">130</a> /-- Every piece has compact intrinsic orbit space. -/</span>
+<span id="doc/BC4lean.ProperActions.CocompactPiece.compactSpace_orbit"><a class="line" href="#CocompactPieces-L131" id="CocompactPieces-L131">131</a> theorem compactSpace_orbit (s : CocompactPiece Γ X) [ContinuousConstSMul Γ X] :</span>
+<span><a class="line" href="#CocompactPieces-L132" id="CocompactPieces-L132">132</a>     CompactSpace (Quotient (MulAction.orbitRel Γ s.toInvariantSubset)) :=</span>
+<span><a class="line" href="#CocompactPieces-L133" id="CocompactPieces-L133">133</a>   s.toInvariantSubset.compactSpace_orbit_iff.mpr s.isCompact_image</span>
+<span><a class="line" href="#CocompactPieces-L134" id="CocompactPieces-L134">134</a> </span>
+<span><a class="line" href="#CocompactPieces-L135" id="CocompactPieces-L135">135</a> /-- Closed pieces of a locally compact ambient space are locally compact. -/</span>
+<span id="doc/BC4lean.ProperActions.CocompactPiece.locallyCompact"><a class="line" href="#CocompactPieces-L136" id="CocompactPieces-L136">136</a> theorem locallyCompact (s : CocompactPiece Γ X) [LocallyCompactSpace X] :</span>
+<span><a class="line" href="#CocompactPieces-L137" id="CocompactPieces-L137">137</a>     LocallyCompactSpace s.toInvariantSubset := s.isClosed_carrier.locallyCompactSpace</span>
+<span><a class="line" href="#CocompactPieces-L138" id="CocompactPieces-L138">138</a> </span>
+<span><a class="line" href="#CocompactPieces-L139" id="CocompactPieces-L139">139</a> /-- Compact subsets generate closed cocompact invariant pieces in a proper space. -/</span>
+<span id="doc/BC4lean.ProperActions.CocompactPiece.ofCompact"><a class="line" href="#CocompactPieces-L140" id="CocompactPieces-L140">140</a> def ofCompact [TopologicalSpace Γ] [ProperSMul Γ X]</span>
+<span><a class="line" href="#CocompactPieces-L141" id="CocompactPieces-L141">141</a>     (K : Set X) (hK : IsCompact K) : CocompactPiece Γ X where</span>
+<span><a class="line" href="#CocompactPieces-L142" id="CocompactPieces-L142">142</a>   carrier := Quotient.mk (MulAction.orbitRel Γ X) ⁻¹&#x27;</span>
+<span><a class="line" href="#CocompactPieces-L143" id="CocompactPieces-L143">143</a>     (Quotient.mk (MulAction.orbitRel Γ X) &#x27;&#x27; K)</span>
+<span><a class="line" href="#CocompactPieces-L144" id="CocompactPieces-L144">144</a>   smul_mem g x hx := by</span>
+<span><a class="line" href="#CocompactPieces-L145" id="CocompactPieces-L145">145</a>     change Quotient.mk (MulAction.orbitRel Γ X) (g • x) ∈</span>
+<span><a class="line" href="#CocompactPieces-L146" id="CocompactPieces-L146">146</a>       Quotient.mk (MulAction.orbitRel Γ X) &#x27;&#x27; K</span>
+<span><a class="line" href="#CocompactPieces-L147" id="CocompactPieces-L147">147</a>     have he (x : X) : Quotient.mk (MulAction.orbitRel Γ X) (g • x) =</span>
+<span><a class="line" href="#CocompactPieces-L148" id="CocompactPieces-L148">148</a>         Quotient.mk (MulAction.orbitRel Γ X) x := Quotient.sound ⟨g, rfl⟩</span>
+<span><a class="line" href="#CocompactPieces-L149" id="CocompactPieces-L149">149</a>     rw [he]</span>
+<span><a class="line" href="#CocompactPieces-L150" id="CocompactPieces-L150">150</a>     exact hx</span>
+<span><a class="line" href="#CocompactPieces-L151" id="CocompactPieces-L151">151</a>   isClosed_carrier := (hK.image (show Continuous (Quotient.mk (MulAction.orbitRel Γ X)) from continuous_quot_mk)).isClosed.preimage continuous_quot_mk</span>
+<span><a class="line" href="#CocompactPieces-L152" id="CocompactPieces-L152">152</a>   isCompact_image := by</span>
+<span><a class="line" href="#CocompactPieces-L153" id="CocompactPieces-L153">153</a>     rw [Set.image_preimage_eq _ Quotient.mk_surjective]</span>
+<span><a class="line" href="#CocompactPieces-L154" id="CocompactPieces-L154">154</a>     exact hK.image continuous_quot_mk</span>
+<span><a class="line" href="#CocompactPieces-L155" id="CocompactPieces-L155">155</a> </span>
+<span id="doc/BC4lean.ProperActions.CocompactPiece.subset_ofCompact"><a class="line" href="#CocompactPieces-L156" id="CocompactPieces-L156">156</a> theorem subset_ofCompact [TopologicalSpace Γ] [ProperSMul Γ X]</span>
+<span><a class="line" href="#CocompactPieces-L157" id="CocompactPieces-L157">157</a>     (K : Set X) (hK : IsCompact K) : K ⊆ (ofCompact (Γ := Γ) K hK : Set X) :=</span>
+<span><a class="line" href="#CocompactPieces-L158" id="CocompactPieces-L158">158</a>   fun x hx =&gt; ⟨x, hx, rfl⟩</span>
+<span><a class="line" href="#CocompactPieces-L159" id="CocompactPieces-L159">159</a> </span>
+<span><a class="line" href="#CocompactPieces-L160" id="CocompactPieces-L160">160</a> /-- Every point belongs to a closed cocompact invariant piece. -/</span>
+<span id="doc/BC4lean.ProperActions.CocompactPiece.covers"><a class="line" href="#CocompactPieces-L161" id="CocompactPieces-L161">161</a> theorem covers [TopologicalSpace Γ] [ProperSMul Γ X] (x : X) :</span>
+<span><a class="line" href="#CocompactPieces-L162" id="CocompactPieces-L162">162</a>     ∃ s : CocompactPiece Γ X, x ∈ s :=</span>
+<span><a class="line" href="#CocompactPieces-L163" id="CocompactPieces-L163">163</a>   ⟨ofCompact {x} isCompact_singleton,</span>
+<span><a class="line" href="#CocompactPieces-L164" id="CocompactPieces-L164">164</a>     subset_ofCompact (Γ := Γ) {x} isCompact_singleton (Set.mem_singleton x)⟩</span>
+<span><a class="line" href="#CocompactPieces-L165" id="CocompactPieces-L165">165</a> </span>
+<span><a class="line" href="#CocompactPieces-L166" id="CocompactPieces-L166">166</a> end CocompactPiece</span>
+<span><a class="line" href="#CocompactPieces-L167" id="CocompactPieces-L167">167</a> end BC4lean.ProperActions</span>
 </pre>
 </body></html>

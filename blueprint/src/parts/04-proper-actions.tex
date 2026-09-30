@@ -3,9 +3,12 @@
 
 This chapter begins with the verified topology of proper discrete-group
 actions and their subgroup fixed-point spaces. Continuous equivariant maps,
-homotopies, and their fixed-point restrictions are also verified. Equivariant CW structures,
-the existence and universal property of $\underline E\Gamma$, and the
-directed system of cocompact pieces remain formalization targets.
+homotopies, and their fixed-point restrictions are also verified. The results below
+add homogeneous orbits, proper orbit cells, the fixed-point criterion, a finite-group
+point model, conditional uniqueness, and directed cocompact pieces for a given space.
+Equivariant CW attachment, the general existence and universal property of
+$\underline E\Gamma$, and the locally compact second-countable model choice
+remain formalization targets.
 
 \section{Proper actions and compact transporters}
 
@@ -259,10 +262,194 @@ three operations. Restrict both maps and both inverse homotopies to the
 fixed-point spaces, using the proved identity and composition laws.
 \end{proof}
 
+\section{Homogeneous orbits and orbit cells}
+
+\begin{proposition}\label{prop:orbit-fixed-point-correspondence}
+\uses{def:equivariant-map,def:subgroup-fixed-point-space}
+\lean{BC4lean.ProperActions.orbitFixedPointEquiv,BC4lean.ProperActions.orbitFixedPointEquiv_natural}
+For a discrete group $\Gamma$, any subgroup $H$, and any $\Gamma$-space $X$,
+evaluation at $H\in\Gamma/H$ is a bijection
+\[
+ \operatorname{Map}_\Gamma(\Gamma/H,X)\cong X^H
+\]
+for continuous equivariant maps. Its inverse sends $x$ to $gH\mapsto gx$.
+The bijection is natural under continuous equivariant maps in $X$.
+No normality or finiteness hypothesis on $H$ is required.
+\end{proposition}
+\begin{proof}
+\leanok
+The fixed-point condition makes the orbit map independent of the coset
+representative. The orbit is discrete, so the descended map is continuous.
+Equivariance determines a map by its value at the identity coset.
+\end{proof}
+
+\begin{proposition}\label{prop:proper-homogeneous-orbits}
+\uses{prop:proper-finite-stabilizers,prop:orbit-fixed-point-correspondence}
+\lean{BC4lean.ProperActions.proper_cosetProjection,BC4lean.ProperActions.proper_orbit_iff}
+The left action on $\Gamma/H$ is proper if and only if $H$ is finite.
+When $H$ is finite, the projection $\Gamma\to\Gamma/H$ is a proper map.
+\end{proposition}
+\begin{proof}
+\leanok
+Fibers of the coset projection are finite translates of $H$. A continuous
+map between discrete spaces is closed, so this projection is proper.
+The proper-orbit-map criterion gives properness of the action.
+Conversely, $H$ fixes the identity coset and hence must be finite.
+\end{proof}
+
+\begin{definition}\label{def:orbit-cell}
+\uses{def:equivariant-map}
+\lean{BC4lean.ProperActions.OrbitCell,BC4lean.ProperActions.OrbitCell.projection}
+\leanok
+For a subgroup $H$ and a space $D$, the orbit cell is
+$\Gamma/H\times D$ with action $g(q,d)=(gq,d)$ and the product topology.
+Projection onto $\Gamma/H$ is continuous and equivariant.
+Taking $D$ to be a disk gives the cell shape for the intended CW construction;
+cell attachment is a separate target below.
+\end{definition}
+
+\begin{proposition}\label{prop:proper-orbit-cells}
+\uses{def:orbit-cell,prop:proper-homogeneous-orbits,prop:compact-transporter-criterion}
+\lean{BC4lean.ProperActions.proper_of_equivariantMap,BC4lean.ProperActions.OrbitCell.proper}
+A continuous equivariant map from a locally compact Hausdorff
+$\Gamma$-space to a proper $\Gamma$-space implies properness of the source.
+In particular, $\Gamma/H\times D$ is proper if $H$ is finite and $D$ is
+locally compact Hausdorff.
+\end{proposition}
+\begin{proof}
+\leanok
+The transporter of two compact subsets of the source is contained in
+the transporter of their compact images. Apply the finite-transporter
+criterion, and then apply the result to the orbit-cell projection.
+\end{proof}
+
+\section{The fixed-point criterion and uniqueness}
+
+\begin{definition}\label{def:proper-model-fixed-point-criterion}
+\uses{def:subgroup-fixed-point-space}
+\lean{BC4lean.ProperActions.FixedPointCriterion}
+\leanok
+The fixed-point criterion for a prospective model $E$ requires $E^H$ to
+be contractible for every finite subgroup $H$ and empty for every infinite
+subgroup $H$. This predicate alone does not supply an equivariant CW
+structure or a proof of the universal mapping property.
+\end{definition}
+
+\begin{proposition}\label{prop:fixed-point-criterion-invariance}
+\uses{def:proper-model-fixed-point-criterion,prop:fixed-point-homotopy-equivalence}
+\lean{BC4lean.ProperActions.FixedPointCriterion.of_equiv}
+The fixed-point criterion is preserved by equivariant homotopy equivalence.
+\end{proposition}
+\begin{proof}
+\leanok
+Restrict an equivariant homotopy equivalence to each subgroup's fixed
+points. Contractibility is invariant under homotopy equivalence, and the
+inverse map transfers emptiness.
+\end{proof}
+
+\begin{definition}\label{def:homotopy-terminal-for}
+\uses{def:equivariant-map,def:equivariant-homotopy}
+\lean{BC4lean.ProperActions.HomotopyTerminalFor}
+\leanok
+For a specified source $X$ and target $Y$, the homotopy-terminal mapping
+condition says that a continuous equivariant map $X\to Y$ exists and any
+two such maps are equivariantly homotopic.
+\end{definition}
+
+\begin{proposition}\label{prop:conditional-universal-model-uniqueness}
+\uses{def:homotopy-terminal-for,def:equivariant-homotopy-equivalence}
+\lean{BC4lean.ProperActions.homotopyTerminal_unique,BC4lean.ProperActions.homotopyTerminal_fixedPoints_unique,BC4lean.ProperActions.HomotopyTerminalFor.of_equiv}
+Suppose the homotopy-terminal mapping condition holds for each of the
+four ordered pairs $(X,X),(X,Y),(Y,X),(Y,Y)$. Then $X$ and $Y$ are
+equivariantly homotopy equivalent, and their $H$-fixed-point spaces are
+homotopy equivalent for every subgroup $H$. The mapping condition is
+preserved when its target is replaced by an equivariantly homotopy-equivalent space.
+These are conditional statements; they do not establish the mapping
+condition for a general model satisfying the fixed-point criterion.
+\end{proposition}
+\begin{proof}
+\leanok
+Choose maps in both directions. Uniqueness up to homotopy for the two
+endomorphism spaces identifies the composites with the identity maps.
+For replacement of the target, compose with the equivalence and its
+inverse and use their equivariant homotopies.
+\end{proof}
+
+\begin{proposition}\label{prop:finite-group-point-model}
+\uses{def:proper-model-fixed-point-criterion,def:homotopy-terminal-for,prop:proper-action-examples}
+\lean{BC4lean.ProperActions.Point.fixedPointCriterion,BC4lean.ProperActions.Point.homotopyTerminal,BC4lean.ProperActions.Point.proper}
+For a finite discrete group, the trivial action on a point is proper and
+satisfies the fixed-point criterion. For every $\Gamma$-space $X$, maps
+from $X$ to this point exist and are unique, hence unique up to
+equivariant homotopy. This verifies the topological and mapping claims
+for the finite-group point model; a formal CW structure is not asserted here.
+\end{proposition}
+\begin{proof}
+\leanok
+Every subgroup is finite, and each fixed-point space is a point. A
+finite discrete group acts properly on a locally compact Hausdorff point.
+The constant map is the unique equivariant map to the point.
+\end{proof}
+
+\section{Cocompact indexing for a given ambient space}
+
+\begin{proposition}\label{prop:invariant-subspace-orbit-embedding}
+\uses{def:equivariant-map}
+\lean{BC4lean.ProperActions.InvariantSubset.orbitInclusion_isEmbedding,BC4lean.ProperActions.InvariantSubset.compactSpace_orbit_iff}
+For a continuous $\Gamma$-action on $E$ and an invariant subset $X$ with
+its subspace topology, $X/\Gamma\to E/\Gamma$ is a topological embedding.
+Thus $X/\Gamma$ is compact if and only if the image of $X$ in $E/\Gamma$
+is compact. No closedness or properness is needed for this assertion.
+\end{proposition}
+\begin{proof}
+\leanok
+The orbit projection is an open quotient map. Apply Mathlib's
+subquotient embedding theorem to the invariant inclusion $X\hookrightarrow E$.
+\end{proof}
+
+\begin{definition}\label{def:closed-cocompact-piece}
+\uses{prop:invariant-subspace-orbit-embedding}
+\lean{BC4lean.ProperActions.CocompactPiece}
+\leanok
+For a given $\Gamma$-space $E$, a closed cocompact piece is a closed
+invariant subset $X\subseteq E$ whose image in $E/\Gamma$ is compact.
+For continuous actions, this is equivalent to compactness of its
+intrinsic quotient $X/\Gamma$. Pieces are ordered by inclusion.
+\end{definition}
+
+\begin{proposition}\label{prop:cocompact-pieces-directed}
+\uses{def:closed-cocompact-piece}
+\lean{BC4lean.ProperActions.CocompactPiece.empty,BC4lean.ProperActions.CocompactPiece.union,BC4lean.ProperActions.CocompactPiece.directed,BC4lean.ProperActions.CocompactPiece.compactSpace_orbit,BC4lean.ProperActions.CocompactPiece.locallyCompact}
+The closed cocompact pieces form a nonempty directed indexing system:
+the empty set is a piece, and $X\cup Y$ is a common upper bound.
+For continuous actions every piece has compact intrinsic quotient.
+If $E$ is locally compact, every piece is locally compact.
+\end{proposition}
+\begin{proof}
+\leanok
+A finite union of closed invariant sets is closed and invariant, and
+its image is the finite union of the compact images. Closed subspaces
+inherit local compactness.
+\end{proof}
+
+\begin{proposition}\label{prop:cocompact-pieces-cover}
+\uses{def:closed-cocompact-piece,prop:proper-orbit-space}
+\lean{BC4lean.ProperActions.CocompactPiece.ofCompact,BC4lean.ProperActions.CocompactPiece.subset_ofCompact,BC4lean.ProperActions.CocompactPiece.covers}
+For a proper $\Gamma$-space $E$, every compact subset $K\subseteq E$
+is contained in a closed cocompact invariant piece, namely its saturation
+$q^{-1}(q(K))$, where $q:E\to E/\Gamma$. In particular the pieces cover $E$.
+\end{proposition}
+\begin{proof}
+\leanok
+The compact image $q(K)$ is closed in the Hausdorff orbit space. Its
+preimage is closed and invariant, and its quotient image is exactly
+$q(K)$. Apply this construction to singletons for the covering assertion.
+\end{proof}
+
 \section{Equivariant CW complexes and a model for $\underline E\Gamma$}
 
 \begin{definition}\label{def:equivariant-cw-complex}
-\uses{def:proper-action,def:equivariant-map,def:equivariant-homotopy}
+\uses{def:proper-action,def:equivariant-map,def:equivariant-homotopy,def:orbit-cell,prop:proper-orbit-cells}
 \notready
 Using the preceding maps and homotopies, develop $\Gamma$-CW complexes by
 equivariant cell attachment, with cells $\Gamma/H\times D^n$.
@@ -271,20 +458,26 @@ connection between this cellular condition and topological properness.
 \end{definition}
 
 \begin{definition}\label{def:universal-proper-space}
-\uses{def:equivariant-cw-complex,def:subgroup-fixed-point-space,prop:proper-infinite-fixed-points}
+\uses{def:equivariant-cw-complex,def:proper-model-fixed-point-criterion,prop:conditional-universal-model-uniqueness,prop:proper-infinite-fixed-points}
 \notready
 A universal proper $\Gamma$-CW complex has contractible fixed-point space
 for every finite subgroup and empty fixed-point space for every infinite
 subgroup. Develop existence, the universal property, and uniqueness up to
-equivariant homotopy. Only the empty-fixed-point consequence of properness
-has been verified above; no universal proper model is constructed here.
+equivariant homotopy. The fixed-point predicate, the finite-group point case, and the conditional
+uniqueness argument have been verified above. General model existence and the
+cellular implication from the fixed-point criterion to the mapping property
+have not been verified.
 \end{definition}
 
 \section{Cocompact pieces and model choices}
 \begin{definition}\label{def:cocompact-pieces}
-\uses{def:universal-proper-space}
+\uses{def:universal-proper-space,def:closed-cocompact-piece,prop:cocompact-pieces-directed,prop:cocompact-pieces-cover}
 \notready
 Choose a suitable locally compact second-countable model $E$ for
 $\underline E\Gamma$. Index its closed invariant subsets $X$ with compact
 quotient $X/\Gamma$. Justify the model choice and the directed indexing system.
 \end{definition}
+
+The preceding cocompact indexing construction is verified for a given ambient
+space. What remains in this target is the justified choice and construction of
+a locally compact second-countable universal proper model.
