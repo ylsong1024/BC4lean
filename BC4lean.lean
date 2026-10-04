@@ -46,3 +46,6 @@ import BC4lean.FixedPointCriterion
 import BC4lean.CocompactPieces
 import BC4lean.EquivariantCW
 import BC4lean.OrbitCellMaps
+import BC4lean.DiskExtension
+import BC4lean.OrbitCellExtension
+import BC4lean.CellularExtension

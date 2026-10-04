@@ -54,6 +54,9 @@ code{overflow-wrap:anywhere}</style></head><body><a href="../../blueprint/">返�
 <li><a href="#CocompactPieces">CocompactPieces.lean</a></li>
 <li><a href="#EquivariantCW">EquivariantCW.lean</a></li>
 <li><a href="#OrbitCellMaps">OrbitCellMaps.lean</a></li>
+<li><a href="#DiskExtension">DiskExtension.lean</a></li>
+<li><a href="#OrbitCellExtension">OrbitCellExtension.lean</a></li>
+<li><a href="#CellularExtension">CellularExtension.lean</a></li>
 </ul></nav>
 <h2 id="GroupAlgebra">GroupAlgebra.lean</h2><p>源码 SHA-256：<code>1c6c0899fe9bc9f7860f291ba7c5573353d18a3c5809258769d689bc39da8ad4</code></p><pre>
 <span><a class="line" href="#L1" id="L1">  1</a> import Mathlib.Algebra.MonoidAlgebra.Basic</span>
@@ -4957,5 +4960,240 @@ code{overflow-wrap:anywhere}</style></head><body><a href="../../blueprint/">返�
 <span><a class="line" href="#OrbitCellMaps-L84" id="OrbitCellMaps-L84"> 84</a>     rw [he, hu]</span>
 <span><a class="line" href="#OrbitCellMaps-L85" id="OrbitCellMaps-L85"> 85</a> </span>
 <span><a class="line" href="#OrbitCellMaps-L86" id="OrbitCellMaps-L86"> 86</a> end BC4lean.ProperActions</span>
+</pre>
+<h2 id="DiskExtension">DiskExtension.lean</h2><p>源码 SHA-256：<code>57fde0d5e6c94ac4e1e1cc48174e410fd808f9332008ef5b682f8e58fa95efe3</code></p><pre>
+<span><a class="line" href="#DiskExtension-L1" id="DiskExtension-L1">  1</a> import Mathlib.Topology.Homotopy.Contractible</span>
+<span><a class="line" href="#DiskExtension-L2" id="DiskExtension-L2">  2</a> import Mathlib.Topology.Category.TopCat.Sphere</span>
+<span><a class="line" href="#DiskExtension-L3" id="DiskExtension-L3">  3</a> </span>
+<span><a class="line" href="#DiskExtension-L4" id="DiskExtension-L4">  4</a> /-!</span>
+<span><a class="line" href="#DiskExtension-L5" id="DiskExtension-L5">  5</a> # Extension from the boundary of a disk</span>
+<span><a class="line" href="#DiskExtension-L6" id="DiskExtension-L6">  6</a> </span>
+<span><a class="line" href="#DiskExtension-L7" id="DiskExtension-L7">  7</a> A null-homotopic map from a unit sphere extends over the closed unit ball.</span>
+<span><a class="line" href="#DiskExtension-L8" id="DiskExtension-L8">  8</a> The proof descends the null-homotopy through the radial quotient map.</span>
+<span><a class="line" href="#DiskExtension-L9" id="DiskExtension-L9">  9</a> -/</span>
+<span><a class="line" href="#DiskExtension-L10" id="DiskExtension-L10"> 10</a> </span>
+<span><a class="line" href="#DiskExtension-L11" id="DiskExtension-L11"> 11</a> noncomputable section</span>
+<span><a class="line" href="#DiskExtension-L12" id="DiskExtension-L12"> 12</a> </span>
+<span><a class="line" href="#DiskExtension-L13" id="DiskExtension-L13"> 13</a> open Metric</span>
+<span><a class="line" href="#DiskExtension-L14" id="DiskExtension-L14"> 14</a> open scoped unitInterval</span>
+<span><a class="line" href="#DiskExtension-L15" id="DiskExtension-L15"> 15</a> </span>
+<span><a class="line" href="#DiskExtension-L16" id="DiskExtension-L16"> 16</a> namespace BC4lean.ProperActions</span>
+<span><a class="line" href="#DiskExtension-L17" id="DiskExtension-L17"> 17</a> </span>
+<span><a class="line" href="#DiskExtension-L18" id="DiskExtension-L18"> 18</a> universe u</span>
+<span><a class="line" href="#DiskExtension-L19" id="DiskExtension-L19"> 19</a> </span>
+<span><a class="line" href="#DiskExtension-L20" id="DiskExtension-L20"> 20</a> variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]</span>
+<span><a class="line" href="#DiskExtension-L21" id="DiskExtension-L21"> 21</a> </span>
+<span><a class="line" href="#DiskExtension-L22" id="DiskExtension-L22"> 22</a> /-- Inclusion of the unit sphere into the closed unit ball. -/</span>
+<span id="doc/BC4lean.ProperActions.sphereInclusion"><a class="line" href="#DiskExtension-L23" id="DiskExtension-L23"> 23</a> def sphereInclusion : C(sphere (0 : E) 1, closedBall (0 : E) 1) :=</span>
+<span><a class="line" href="#DiskExtension-L24" id="DiskExtension-L24"> 24</a>   ⟨fun x =&gt; ⟨x.1, le_of_eq x.2⟩, continuous_subtype_val.subtype_mk _⟩</span>
+<span><a class="line" href="#DiskExtension-L25" id="DiskExtension-L25"> 25</a> </span>
+<span><a class="line" href="#DiskExtension-L26" id="DiskExtension-L26"> 26</a> /-- The radial map from the cylinder on the unit sphere to the unit ball. -/</span>
+<span id="doc/BC4lean.ProperActions.radialMap"><a class="line" href="#DiskExtension-L27" id="DiskExtension-L27"> 27</a> def radialMap : C(I × sphere (0 : E) 1, closedBall (0 : E) 1) := by</span>
+<span><a class="line" href="#DiskExtension-L28" id="DiskExtension-L28"> 28</a>   refine ⟨fun p =&gt; ⟨(p.1 : ℝ) • p.2.1, ?_⟩, ?_⟩</span>
+<span><a class="line" href="#DiskExtension-L29" id="DiskExtension-L29"> 29</a>   · rw [mem_closedBall, dist_zero_right, norm_smul, Real.norm_eq_abs,</span>
+<span><a class="line" href="#DiskExtension-L30" id="DiskExtension-L30"> 30</a>       abs_of_nonneg p.1.2.1, norm_eq_of_mem_sphere, mul_one]</span>
+<span><a class="line" href="#DiskExtension-L31" id="DiskExtension-L31"> 31</a>     exact p.1.2.2</span>
+<span><a class="line" href="#DiskExtension-L32" id="DiskExtension-L32"> 32</a>   · exact ((continuous_subtype_val.comp continuous_fst).smul</span>
+<span><a class="line" href="#DiskExtension-L33" id="DiskExtension-L33"> 33</a>       (continuous_subtype_val.comp continuous_snd)).subtype_mk _</span>
+<span><a class="line" href="#DiskExtension-L34" id="DiskExtension-L34"> 34</a> </span>
+<span><a class="line" href="#DiskExtension-L35" id="DiskExtension-L35"> 35</a> /-- The radial coordinate is recovered by taking the norm. -/</span>
+<span id="doc/BC4lean.ProperActions.radialMap_norm"><a class="line" href="#DiskExtension-L36" id="DiskExtension-L36"> 36</a> theorem radialMap_norm (p : I × sphere (0 : E) 1) :</span>
+<span><a class="line" href="#DiskExtension-L37" id="DiskExtension-L37"> 37</a>     ‖(radialMap p : E)‖ = (p.1 : ℝ) := by</span>
+<span><a class="line" href="#DiskExtension-L38" id="DiskExtension-L38"> 38</a>   have hs : ‖p.2.1‖ = 1 := by simpa only [mem_sphere, dist_zero_right] using p.2.2</span>
+<span><a class="line" href="#DiskExtension-L39" id="DiskExtension-L39"> 39</a>   simp [radialMap, norm_smul, Real.norm_eq_abs, abs_of_nonneg p.1.2.1, hs]</span>
+<span><a class="line" href="#DiskExtension-L40" id="DiskExtension-L40"> 40</a> </span>
+<span><a class="line" href="#DiskExtension-L41" id="DiskExtension-L41"> 41</a> /-- If the sphere is nonempty, every point of the ball has radial coordinates. -/</span>
+<span id="doc/BC4lean.ProperActions.radialMap_surjective"><a class="line" href="#DiskExtension-L42" id="DiskExtension-L42"> 42</a> theorem radialMap_surjective [Nonempty (sphere (0 : E) 1)] :</span>
+<span><a class="line" href="#DiskExtension-L43" id="DiskExtension-L43"> 43</a>     Function.Surjective (radialMap (E := E)) := by</span>
+<span><a class="line" href="#DiskExtension-L44" id="DiskExtension-L44"> 44</a>   intro x</span>
+<span><a class="line" href="#DiskExtension-L45" id="DiskExtension-L45"> 45</a>   by_cases hx : x.1 = 0</span>
+<span><a class="line" href="#DiskExtension-L46" id="DiskExtension-L46"> 46</a>   · obtain ⟨s⟩ := ‹Nonempty (sphere (0 : E) 1)›</span>
+<span><a class="line" href="#DiskExtension-L47" id="DiskExtension-L47"> 47</a>     exact ⟨(0, s), Subtype.ext (by simp [radialMap, hx])⟩</span>
+<span><a class="line" href="#DiskExtension-L48" id="DiskExtension-L48"> 48</a>   · have hn : ‖x.1‖ ≠ 0 := norm_ne_zero_iff.mpr hx</span>
+<span><a class="line" href="#DiskExtension-L49" id="DiskExtension-L49"> 49</a>     let s : sphere (0 : E) 1 := ⟨‖x.1‖⁻¹ • x.1, by</span>
+<span><a class="line" href="#DiskExtension-L50" id="DiskExtension-L50"> 50</a>       simp [norm_smul, hn]⟩</span>
+<span><a class="line" href="#DiskExtension-L51" id="DiskExtension-L51"> 51</a>     refine ⟨(⟨‖x.1‖, norm_nonneg _, by simpa only [mem_closedBall, dist_zero_right] using x.2⟩, s), ?_⟩</span>
+<span><a class="line" href="#DiskExtension-L52" id="DiskExtension-L52"> 52</a>     apply Subtype.ext</span>
+<span><a class="line" href="#DiskExtension-L53" id="DiskExtension-L53"> 53</a>     change ‖x.1‖ • (‖x.1‖⁻¹ • x.1) = x.1</span>
+<span><a class="line" href="#DiskExtension-L54" id="DiskExtension-L54"> 54</a>     simp [smul_smul, hn]</span>
+<span><a class="line" href="#DiskExtension-L55" id="DiskExtension-L55"> 55</a> </span>
+<span><a class="line" href="#DiskExtension-L56" id="DiskExtension-L56"> 56</a> /-- The radial cylinder is a quotient presentation of the ball. -/</span>
+<span id="doc/BC4lean.ProperActions.radialMap_isQuotientMap"><a class="line" href="#DiskExtension-L57" id="DiskExtension-L57"> 57</a> theorem radialMap_isQuotientMap [ProperSpace E] [Nonempty (sphere (0 : E) 1)] :</span>
+<span><a class="line" href="#DiskExtension-L58" id="DiskExtension-L58"> 58</a>     Topology.IsQuotientMap (radialMap (E := E)) :=</span>
+<span><a class="line" href="#DiskExtension-L59" id="DiskExtension-L59"> 59</a>   .of_surjective_continuous radialMap_surjective radialMap.continuous</span>
+<span><a class="line" href="#DiskExtension-L60" id="DiskExtension-L60"> 60</a> </span>
+<span><a class="line" href="#DiskExtension-L61" id="DiskExtension-L61"> 61</a> variable {Y : Type*} [TopologicalSpace Y]</span>
+<span><a class="line" href="#DiskExtension-L62" id="DiskExtension-L62"> 62</a> </span>
+<span><a class="line" href="#DiskExtension-L63" id="DiskExtension-L63"> 63</a> /-- A homotopy starting at a constant is constant on the radial fibers. -/</span>
+<span id="doc/BC4lean.ProperActions.homotopy_factorsThrough_radialMap"><a class="line" href="#DiskExtension-L64" id="DiskExtension-L64"> 64</a> theorem homotopy_factorsThrough_radialMap {y : Y} {f : C(sphere (0 : E) 1, Y)}</span>
+<span><a class="line" href="#DiskExtension-L65" id="DiskExtension-L65"> 65</a>     (H : (ContinuousMap.const _ y).Homotopy f) :</span>
+<span><a class="line" href="#DiskExtension-L66" id="DiskExtension-L66"> 66</a>     Function.FactorsThrough H (radialMap (E := E)) := by</span>
+<span><a class="line" href="#DiskExtension-L67" id="DiskExtension-L67"> 67</a>   intro p q hpq</span>
+<span><a class="line" href="#DiskExtension-L68" id="DiskExtension-L68"> 68</a>   have ht : p.1 = q.1 := Subtype.ext (by</span>
+<span><a class="line" href="#DiskExtension-L69" id="DiskExtension-L69"> 69</a>     simpa only [radialMap_norm] using congrArg (fun x : closedBall (0 : E) 1 =&gt; ‖x.1‖) hpq)</span>
+<span><a class="line" href="#DiskExtension-L70" id="DiskExtension-L70"> 70</a>   by_cases hzero : p.1 = 0</span>
+<span><a class="line" href="#DiskExtension-L71" id="DiskExtension-L71"> 71</a>   · have hzq : q.1 = 0 := ht.symm.trans hzero</span>
+<span><a class="line" href="#DiskExtension-L72" id="DiskExtension-L72"> 72</a>     change H (p.1, p.2) = H (q.1, q.2)</span>
+<span><a class="line" href="#DiskExtension-L73" id="DiskExtension-L73"> 73</a>     rw [hzero, hzq, H.apply_zero, H.apply_zero]</span>
+<span><a class="line" href="#DiskExtension-L74" id="DiskExtension-L74"> 74</a>     rfl</span>
+<span><a class="line" href="#DiskExtension-L75" id="DiskExtension-L75"> 75</a>   · have hn : (p.1 : ℝ) ≠ 0 := fun h =&gt; hzero (Subtype.ext h)</span>
+<span><a class="line" href="#DiskExtension-L76" id="DiskExtension-L76"> 76</a>     have hs : p.2 = q.2 := by</span>
+<span><a class="line" href="#DiskExtension-L77" id="DiskExtension-L77"> 77</a>       apply Subtype.ext</span>
+<span><a class="line" href="#DiskExtension-L78" id="DiskExtension-L78"> 78</a>       have h := congrArg (fun x : closedBall (0 : E) 1 =&gt; x.1) hpq</span>
+<span><a class="line" href="#DiskExtension-L79" id="DiskExtension-L79"> 79</a>       change (p.1 : ℝ) • p.2.1 = (q.1 : ℝ) • q.2.1 at h</span>
+<span><a class="line" href="#DiskExtension-L80" id="DiskExtension-L80"> 80</a>       rw [← ht] at h</span>
+<span><a class="line" href="#DiskExtension-L81" id="DiskExtension-L81"> 81</a>       exact (smul_right_injective E hn) h</span>
+<span><a class="line" href="#DiskExtension-L82" id="DiskExtension-L82"> 82</a>     exact congrArg H (Prod.ext ht hs)</span>
+<span><a class="line" href="#DiskExtension-L83" id="DiskExtension-L83"> 83</a> </span>
+<span><a class="line" href="#DiskExtension-L84" id="DiskExtension-L84"> 84</a> /-- A null-homotopic sphere map extends over the closed ball. -/</span>
+<span id="doc/BC4lean.ProperActions.nullhomotopic_extends_ball"><a class="line" href="#DiskExtension-L85" id="DiskExtension-L85"> 85</a> theorem nullhomotopic_extends_ball [ProperSpace E]</span>
+<span><a class="line" href="#DiskExtension-L86" id="DiskExtension-L86"> 86</a>     (f : C(sphere (0 : E) 1, Y)) (hf : f.Nullhomotopic) :</span>
+<span><a class="line" href="#DiskExtension-L87" id="DiskExtension-L87"> 87</a>     ∃ F : C(closedBall (0 : E) 1, Y), F.comp sphereInclusion = f := by</span>
+<span><a class="line" href="#DiskExtension-L88" id="DiskExtension-L88"> 88</a>   classical</span>
+<span><a class="line" href="#DiskExtension-L89" id="DiskExtension-L89"> 89</a>   obtain ⟨y, ⟨H⟩⟩ := hf</span>
+<span><a class="line" href="#DiskExtension-L90" id="DiskExtension-L90"> 90</a>   cases isEmpty_or_nonempty (sphere (0 : E) 1) with</span>
+<span><a class="line" href="#DiskExtension-L91" id="DiskExtension-L91"> 91</a>   | inl h =&gt;</span>
+<span><a class="line" href="#DiskExtension-L92" id="DiskExtension-L92"> 92</a>     exact ⟨ContinuousMap.const _ y, ContinuousMap.ext (fun x =&gt; isEmptyElim x)⟩</span>
+<span><a class="line" href="#DiskExtension-L93" id="DiskExtension-L93"> 93</a>   | inr h =&gt;</span>
+<span><a class="line" href="#DiskExtension-L94" id="DiskExtension-L94"> 94</a>     let q := radialMap_isQuotientMap (E := E)</span>
+<span><a class="line" href="#DiskExtension-L95" id="DiskExtension-L95"> 95</a>     let F := q.lift H.symm.toContinuousMap (homotopy_factorsThrough_radialMap H.symm)</span>
+<span><a class="line" href="#DiskExtension-L96" id="DiskExtension-L96"> 96</a>     refine ⟨F, ContinuousMap.ext fun s =&gt; ?_⟩</span>
+<span><a class="line" href="#DiskExtension-L97" id="DiskExtension-L97"> 97</a>     have h := ContinuousMap.congr_fun (q.lift_comp H.symm.toContinuousMap</span>
+<span><a class="line" href="#DiskExtension-L98" id="DiskExtension-L98"> 98</a>       (homotopy_factorsThrough_radialMap H.symm)) (1, s)</span>
+<span><a class="line" href="#DiskExtension-L99" id="DiskExtension-L99"> 99</a>     change F (radialMap (1, s)) = H.symm (1, s) at h</span>
+<span><a class="line" href="#DiskExtension-L100" id="DiskExtension-L100">100</a>     rw [H.symm.apply_one] at h</span>
+<span><a class="line" href="#DiskExtension-L101" id="DiskExtension-L101">101</a>     have he : radialMap (1, s) = sphereInclusion s := Subtype.ext (one_smul ℝ s.1)</span>
+<span><a class="line" href="#DiskExtension-L102" id="DiskExtension-L102">102</a>     rw [he] at h</span>
+<span><a class="line" href="#DiskExtension-L103" id="DiskExtension-L103">103</a>     exact h</span>
+<span><a class="line" href="#DiskExtension-L104" id="DiskExtension-L104">104</a> </span>
+<span><a class="line" href="#DiskExtension-L105" id="DiskExtension-L105">105</a> /-- Every sphere map into a contractible space extends over the ball. -/</span>
+<span id="doc/BC4lean.ProperActions.contractible_extends_ball"><a class="line" href="#DiskExtension-L106" id="DiskExtension-L106">106</a> theorem contractible_extends_ball [ProperSpace E] [ContractibleSpace Y]</span>
+<span><a class="line" href="#DiskExtension-L107" id="DiskExtension-L107">107</a>     (f : C(sphere (0 : E) 1, Y)) :</span>
+<span><a class="line" href="#DiskExtension-L108" id="DiskExtension-L108">108</a>     ∃ F : C(closedBall (0 : E) 1, Y), F.comp sphereInclusion = f := by</span>
+<span><a class="line" href="#DiskExtension-L109" id="DiskExtension-L109">109</a>   apply nullhomotopic_extends_ball f</span>
+<span><a class="line" href="#DiskExtension-L110" id="DiskExtension-L110">110</a>   simpa using (id_nullhomotopic Y).comp_left f</span>
+<span><a class="line" href="#DiskExtension-L111" id="DiskExtension-L111">111</a> </span>
+<span><a class="line" href="#DiskExtension-L112" id="DiskExtension-L112">112</a> /-- Every map from the boundary of a Euclidean disk into a contractible space extends. -/</span>
+<span id="doc/BC4lean.ProperActions.contractible_extends_disk"><a class="line" href="#DiskExtension-L113" id="DiskExtension-L113">113</a> theorem contractible_extends_disk {Y : Type*} [TopologicalSpace Y] [ContractibleSpace Y]</span>
+<span><a class="line" href="#DiskExtension-L114" id="DiskExtension-L114">114</a>     (n : ℕ) (f : C(TopCat.diskBoundary.{u} n, Y)) :</span>
+<span><a class="line" href="#DiskExtension-L115" id="DiskExtension-L115">115</a>     ∃ F : C(TopCat.disk.{u} n, Y), F.comp (TopCat.diskBoundaryInclusion n).hom = f := by</span>
+<span><a class="line" href="#DiskExtension-L116" id="DiskExtension-L116">116</a>   let s : TopCat.diskBoundary.{u} n ≃ₜ sphere (0 : EuclideanSpace ℝ (Fin n)) 1 :=</span>
+<span><a class="line" href="#DiskExtension-L117" id="DiskExtension-L117">117</a>     Homeomorph.ulift</span>
+<span><a class="line" href="#DiskExtension-L118" id="DiskExtension-L118">118</a>   let d : TopCat.disk.{u} n ≃ₜ closedBall (0 : EuclideanSpace ℝ (Fin n)) 1 :=</span>
+<span><a class="line" href="#DiskExtension-L119" id="DiskExtension-L119">119</a>     Homeomorph.ulift</span>
+<span><a class="line" href="#DiskExtension-L120" id="DiskExtension-L120">120</a>   obtain ⟨F, hF⟩ := contractible_extends_ball (f.comp ⟨s.symm, s.symm.continuous⟩)</span>
+<span><a class="line" href="#DiskExtension-L121" id="DiskExtension-L121">121</a>   refine ⟨F.comp ⟨d, d.continuous⟩, ContinuousMap.ext fun x =&gt; ?_⟩</span>
+<span><a class="line" href="#DiskExtension-L122" id="DiskExtension-L122">122</a>   exact ContinuousMap.congr_fun hF x.down</span>
+<span><a class="line" href="#DiskExtension-L123" id="DiskExtension-L123">123</a> </span>
+<span><a class="line" href="#DiskExtension-L124" id="DiskExtension-L124">124</a> end BC4lean.ProperActions</span>
+</pre>
+<h2 id="OrbitCellExtension">OrbitCellExtension.lean</h2><p>源码 SHA-256：<code>d96b38c4b837e7ccddd84d23d4cbb602f44629a8ff472e8cc86f1db10306d2ea</code></p><pre>
+<span><a class="line" href="#OrbitCellExtension-L1" id="OrbitCellExtension-L1">  1</a> import BC4lean.DiskExtension</span>
+<span><a class="line" href="#OrbitCellExtension-L2" id="OrbitCellExtension-L2">  2</a> import BC4lean.OrbitCellMaps</span>
+<span><a class="line" href="#OrbitCellExtension-L3" id="OrbitCellExtension-L3">  3</a> import BC4lean.FixedPointCriterion</span>
+<span><a class="line" href="#OrbitCellExtension-L4" id="OrbitCellExtension-L4">  4</a> </span>
+<span><a class="line" href="#OrbitCellExtension-L5" id="OrbitCellExtension-L5">  5</a> /-!</span>
+<span><a class="line" href="#OrbitCellExtension-L6" id="OrbitCellExtension-L6">  6</a> # Extension over equivariant disk cells</span>
+<span><a class="line" href="#OrbitCellExtension-L7" id="OrbitCellExtension-L7">  7</a> </span>
+<span><a class="line" href="#OrbitCellExtension-L8" id="OrbitCellExtension-L8">  8</a> Contractibility of the H-fixed points gives extension over a Γ/H-cell.</span>
+<span><a class="line" href="#OrbitCellExtension-L9" id="OrbitCellExtension-L9">  9</a> This is the single-cell extension step, not yet the full cellular mapping theorem.</span>
+<span><a class="line" href="#OrbitCellExtension-L10" id="OrbitCellExtension-L10"> 10</a> -/</span>
+<span><a class="line" href="#OrbitCellExtension-L11" id="OrbitCellExtension-L11"> 11</a> </span>
+<span><a class="line" href="#OrbitCellExtension-L12" id="OrbitCellExtension-L12"> 12</a> namespace BC4lean.ProperActions</span>
+<span><a class="line" href="#OrbitCellExtension-L13" id="OrbitCellExtension-L13"> 13</a> </span>
+<span><a class="line" href="#OrbitCellExtension-L14" id="OrbitCellExtension-L14"> 14</a> universe u v</span>
+<span><a class="line" href="#OrbitCellExtension-L15" id="OrbitCellExtension-L15"> 15</a> </span>
+<span><a class="line" href="#OrbitCellExtension-L16" id="OrbitCellExtension-L16"> 16</a> variable {Γ : Type u} {X : Type v} [Group Γ] [TopologicalSpace Γ] [DiscreteTopology Γ]</span>
+<span><a class="line" href="#OrbitCellExtension-L17" id="OrbitCellExtension-L17"> 17</a> variable [TopologicalSpace X] [MulAction Γ X] [ContinuousConstSMul Γ X]</span>
+<span><a class="line" href="#OrbitCellExtension-L18" id="OrbitCellExtension-L18"> 18</a> </span>
+<span><a class="line" href="#OrbitCellExtension-L19" id="OrbitCellExtension-L19"> 19</a> /-- A map on the boundary of an orbit cell extends when the fixed-point target is contractible. -/</span>
+<span id="doc/BC4lean.ProperActions.orbitCell_extends_of_contractible"><a class="line" href="#OrbitCellExtension-L20" id="OrbitCellExtension-L20"> 20</a> theorem orbitCell_extends_of_contractible (H : Subgroup Γ)</span>
+<span><a class="line" href="#OrbitCellExtension-L21" id="OrbitCellExtension-L21"> 21</a>     [ContractibleSpace (FixedPointSpace H X)] (n : ℕ)</span>
+<span><a class="line" href="#OrbitCellExtension-L22" id="OrbitCellExtension-L22"> 22</a>     (f : EquivariantMap Γ (OrbitCell H (TopCat.diskBoundary.{u} n)) X) :</span>
+<span><a class="line" href="#OrbitCellExtension-L23" id="OrbitCellExtension-L23"> 23</a>     ∃ F : EquivariantMap Γ (OrbitCell H (TopCat.disk.{u} n)) X,</span>
+<span><a class="line" href="#OrbitCellExtension-L24" id="OrbitCellExtension-L24"> 24</a>       F.comp (OrbitCell.boundaryInclusion H n) = f := by</span>
+<span><a class="line" href="#OrbitCellExtension-L25" id="OrbitCellExtension-L25"> 25</a>   apply (orbitCell_extension_iff H (TopCat.diskBoundaryInclusion n).hom f).mpr</span>
+<span><a class="line" href="#OrbitCellExtension-L26" id="OrbitCellExtension-L26"> 26</a>   exact contractible_extends_disk n (cellEvaluation H f)</span>
+<span><a class="line" href="#OrbitCellExtension-L27" id="OrbitCellExtension-L27"> 27</a> </span>
+<span><a class="line" href="#OrbitCellExtension-L28" id="OrbitCellExtension-L28"> 28</a> /-- The fixed-point criterion supplies extension for each finite-isotropy orbit cell. -/</span>
+<span id="doc/BC4lean.ProperActions.FixedPointCriterion.orbitCell_extends"><a class="line" href="#OrbitCellExtension-L29" id="OrbitCellExtension-L29"> 29</a> theorem FixedPointCriterion.orbitCell_extends (h : FixedPointCriterion Γ X)</span>
+<span><a class="line" href="#OrbitCellExtension-L30" id="OrbitCellExtension-L30"> 30</a>     (H : Subgroup Γ) [Finite H] (n : ℕ)</span>
+<span><a class="line" href="#OrbitCellExtension-L31" id="OrbitCellExtension-L31"> 31</a>     (f : EquivariantMap Γ (OrbitCell H (TopCat.diskBoundary.{u} n)) X) :</span>
+<span><a class="line" href="#OrbitCellExtension-L32" id="OrbitCellExtension-L32"> 32</a>     ∃ F : EquivariantMap Γ (OrbitCell H (TopCat.disk.{u} n)) X,</span>
+<span><a class="line" href="#OrbitCellExtension-L33" id="OrbitCellExtension-L33"> 33</a>       F.comp (OrbitCell.boundaryInclusion H n) = f := by</span>
+<span><a class="line" href="#OrbitCellExtension-L34" id="OrbitCellExtension-L34"> 34</a>   let := h.1 H inferInstance</span>
+<span><a class="line" href="#OrbitCellExtension-L35" id="OrbitCellExtension-L35"> 35</a>   exact orbitCell_extends_of_contractible H n f</span>
+<span><a class="line" href="#OrbitCellExtension-L36" id="OrbitCellExtension-L36"> 36</a> </span>
+<span><a class="line" href="#OrbitCellExtension-L37" id="OrbitCellExtension-L37"> 37</a> end BC4lean.ProperActions</span>
+</pre>
+<h2 id="CellularExtension">CellularExtension.lean</h2><p>源码 SHA-256：<code>6b3b2f58b2bdebef65374362441418dfcc95116f4c5159d53b124bc49dd87a0e</code></p><pre>
+<span><a class="line" href="#CellularExtension-L1" id="CellularExtension-L1">  1</a> import BC4lean.OrbitCellExtension</span>
+<span><a class="line" href="#CellularExtension-L2" id="CellularExtension-L2">  2</a> import Mathlib.CategoryTheory.SmallObject.TransfiniteCompositionLifting</span>
+<span><a class="line" href="#CellularExtension-L3" id="CellularExtension-L3">  3</a> </span>
+<span><a class="line" href="#CellularExtension-L4" id="CellularExtension-L4">  4</a> /-!</span>
+<span><a class="line" href="#CellularExtension-L5" id="CellularExtension-L5">  5</a> # Extension over equivariant CW complexes</span>
+<span><a class="line" href="#CellularExtension-L6" id="CellularExtension-L6">  6</a> </span>
+<span><a class="line" href="#CellularExtension-L7" id="CellularExtension-L7">  7</a> The single-cell extension property is preserved by coproducts, pushouts and</span>
+<span><a class="line" href="#CellularExtension-L8" id="CellularExtension-L8">  8</a> sequential colimits. Thus maps into a target with contractible finite-subgroup</span>
+<span><a class="line" href="#CellularExtension-L9" id="CellularExtension-L9">  9</a> fixed points extend over a relative equivariant CW complex.</span>
+<span><a class="line" href="#CellularExtension-L10" id="CellularExtension-L10"> 10</a> -/</span>
+<span><a class="line" href="#CellularExtension-L11" id="CellularExtension-L11"> 11</a> </span>
+<span><a class="line" href="#CellularExtension-L12" id="CellularExtension-L12"> 12</a> namespace BC4lean.ProperActions</span>
+<span><a class="line" href="#CellularExtension-L13" id="CellularExtension-L13"> 13</a> </span>
+<span><a class="line" href="#CellularExtension-L14" id="CellularExtension-L14"> 14</a> open CategoryTheory CategoryTheory.Limits</span>
+<span><a class="line" href="#CellularExtension-L15" id="CellularExtension-L15"> 15</a> </span>
+<span><a class="line" href="#CellularExtension-L16" id="CellularExtension-L16"> 16</a> universe u</span>
+<span><a class="line" href="#CellularExtension-L17" id="CellularExtension-L17"> 17</a> </span>
+<span><a class="line" href="#CellularExtension-L18" id="CellularExtension-L18"> 18</a> variable {Γ : Type u} [Group Γ] [TopologicalSpace Γ] [DiscreteTopology Γ]</span>
+<span><a class="line" href="#CellularExtension-L19" id="CellularExtension-L19"> 19</a> variable {X : Type u} [TopologicalSpace X] [MulAction Γ X] [ContinuousConstSMul Γ X]</span>
+<span><a class="line" href="#CellularExtension-L20" id="CellularExtension-L20"> 20</a> </span>
+<span><a class="line" href="#CellularExtension-L21" id="CellularExtension-L21"> 21</a> /-- Each generating orbit cell lifts against the map from the target to a point. -/</span>
+<span id="doc/BC4lean.ProperActions.basicCell_hasLiftingProperty"><a class="line" href="#CellularExtension-L22" id="CellularExtension-L22"> 22</a> theorem basicCell_hasLiftingProperty (h : FixedPointCriterion Γ X)</span>
+<span><a class="line" href="#CellularExtension-L23" id="CellularExtension-L23"> 23</a>     (n : ℕ) (H : FiniteIsotropy Γ) :</span>
+<span><a class="line" href="#CellularExtension-L24" id="CellularExtension-L24"> 24</a>     HasLiftingProperty (equivariantBasicCell n H) (terminal.from (topologicalAction Γ X)) := by</span>
+<span><a class="line" href="#CellularExtension-L25" id="CellularExtension-L25"> 25</a>   constructor</span>
+<span><a class="line" href="#CellularExtension-L26" id="CellularExtension-L26"> 26</a>   intro a b sq</span>
+<span><a class="line" href="#CellularExtension-L27" id="CellularExtension-L27"> 27</a>   let : Finite H.val := H.property</span>
+<span><a class="line" href="#CellularExtension-L28" id="CellularExtension-L28"> 28</a>   obtain ⟨F, hF⟩ := h.orbitCell_extends H.val n (EquivariantMap.ofActionHom a)</span>
+<span><a class="line" href="#CellularExtension-L29" id="CellularExtension-L29"> 29</a>   refine ⟨⟨{ l := F.toActionHom, fac_left := ?_, fac_right := ?_ }⟩⟩</span>
+<span><a class="line" href="#CellularExtension-L30" id="CellularExtension-L30"> 30</a>   · have hf := congrArg EquivariantMap.toActionHom hF</span>
+<span><a class="line" href="#CellularExtension-L31" id="CellularExtension-L31"> 31</a>     exact hf.trans (EquivariantMap.actionHomEquiv.apply_symm_apply a)</span>
+<span><a class="line" href="#CellularExtension-L32" id="CellularExtension-L32"> 32</a>   · exact terminalIsTerminal.hom_ext _ _</span>
+<span><a class="line" href="#CellularExtension-L33" id="CellularExtension-L33"> 33</a> </span>
+<span><a class="line" href="#CellularExtension-L34" id="CellularExtension-L34"> 34</a> /-- The cellwise lifting property persists across the full relative CW structure. -/</span>
+<span id="doc/BC4lean.ProperActions.RelativeEquivariantCWComplex.hasLiftingProperty"><a class="line" href="#CellularExtension-L35" id="CellularExtension-L35"> 35</a> theorem RelativeEquivariantCWComplex.hasLiftingProperty</span>
+<span><a class="line" href="#CellularExtension-L36" id="CellularExtension-L36"> 36</a>     {A B : Action TopCat.{u} Γ} {i : A ⟶ B}</span>
+<span><a class="line" href="#CellularExtension-L37" id="CellularExtension-L37"> 37</a>     (c : RelativeEquivariantCWComplex i) (h : FixedPointCriterion Γ X) :</span>
+<span><a class="line" href="#CellularExtension-L38" id="CellularExtension-L38"> 38</a>     HasLiftingProperty i (terminal.from (topologicalAction Γ X)) := by</span>
+<span><a class="line" href="#CellularExtension-L39" id="CellularExtension-L39"> 39</a>   let W := MorphismProperty.ofHoms (fun p : ℕ × FiniteIsotropy Γ =&gt;</span>
+<span><a class="line" href="#CellularExtension-L40" id="CellularExtension-L40"> 40</a>     equivariantBasicCell p.1 p.2)</span>
+<span><a class="line" href="#CellularExtension-L41" id="CellularExtension-L41"> 41</a>   have hc : ∀ s : c.Cells, W (equivariantBasicCell s.j s.i) :=</span>
+<span><a class="line" href="#CellularExtension-L42" id="CellularExtension-L42"> 42</a>     fun s =&gt; MorphismProperty.ofHoms.mk (s.j, s.i)</span>
+<span><a class="line" href="#CellularExtension-L43" id="CellularExtension-L43"> 43</a>   have hr : W.rlp (terminal.from (topologicalAction Γ X)) := by</span>
+<span><a class="line" href="#CellularExtension-L44" id="CellularExtension-L44"> 44</a>     intro A B f hf</span>
+<span><a class="line" href="#CellularExtension-L45" id="CellularExtension-L45"> 45</a>     cases hf with</span>
+<span><a class="line" href="#CellularExtension-L46" id="CellularExtension-L46"> 46</a>     | mk p =&gt; exact basicCell_hasLiftingProperty h p.1 p.2</span>
+<span><a class="line" href="#CellularExtension-L47" id="CellularExtension-L47"> 47</a>   exact W.transfiniteCompositionsOfShape_pushouts_coproducts_le_llp_rlp ℕ i</span>
+<span><a class="line" href="#CellularExtension-L48" id="CellularExtension-L48"> 48</a>     ⟨c.transfiniteCompositionOfShape&#x27; hc⟩ _ hr</span>
+<span><a class="line" href="#CellularExtension-L49" id="CellularExtension-L49"> 49</a> </span>
+<span><a class="line" href="#CellularExtension-L50" id="CellularExtension-L50"> 50</a> /-- Maps into a target satisfying the fixed-point criterion extend over relative CW complexes. -/</span>
+<span id="doc/BC4lean.ProperActions.RelativeEquivariantCWComplex.extend"><a class="line" href="#CellularExtension-L51" id="CellularExtension-L51"> 51</a> theorem RelativeEquivariantCWComplex.extend</span>
+<span><a class="line" href="#CellularExtension-L52" id="CellularExtension-L52"> 52</a>     {A B : Action TopCat.{u} Γ} {i : A ⟶ B}</span>
+<span><a class="line" href="#CellularExtension-L53" id="CellularExtension-L53"> 53</a>     (c : RelativeEquivariantCWComplex i) (h : FixedPointCriterion Γ X)</span>
+<span><a class="line" href="#CellularExtension-L54" id="CellularExtension-L54"> 54</a>     (f : A ⟶ topologicalAction Γ X) :</span>
+<span><a class="line" href="#CellularExtension-L55" id="CellularExtension-L55"> 55</a>     ∃ F : B ⟶ topologicalAction Γ X, i ≫ F = f := by</span>
+<span><a class="line" href="#CellularExtension-L56" id="CellularExtension-L56"> 56</a>   let := c.hasLiftingProperty h</span>
+<span><a class="line" href="#CellularExtension-L57" id="CellularExtension-L57"> 57</a>   let sq : CommSq f i (terminal.from (topologicalAction Γ X)) (terminal.from B) :=</span>
+<span><a class="line" href="#CellularExtension-L58" id="CellularExtension-L58"> 58</a>     ⟨terminalIsTerminal.hom_ext _ _⟩</span>
+<span><a class="line" href="#CellularExtension-L59" id="CellularExtension-L59"> 59</a>   exact ⟨sq.lift, sq.fac_left⟩</span>
+<span><a class="line" href="#CellularExtension-L60" id="CellularExtension-L60"> 60</a> </span>
+<span><a class="line" href="#CellularExtension-L61" id="CellularExtension-L61"> 61</a> /-- Every equivariant CW complex admits a map into a target satisfying the fixed-point criterion. -/</span>
+<span id="doc/BC4lean.ProperActions.EquivariantCWComplex.nonempty_map"><a class="line" href="#CellularExtension-L62" id="CellularExtension-L62"> 62</a> theorem EquivariantCWComplex.nonempty_map</span>
+<span><a class="line" href="#CellularExtension-L63" id="CellularExtension-L63"> 63</a>     {A : Action TopCat.{u} Γ} (c : EquivariantCWComplex A) (h : FixedPointCriterion Γ X) :</span>
+<span><a class="line" href="#CellularExtension-L64" id="CellularExtension-L64"> 64</a>     Nonempty (A ⟶ topologicalAction Γ X) := by</span>
+<span><a class="line" href="#CellularExtension-L65" id="CellularExtension-L65"> 65</a>   obtain ⟨F, _⟩ := c.extend h (initial.to _)</span>
+<span><a class="line" href="#CellularExtension-L66" id="CellularExtension-L66"> 66</a>   exact ⟨F⟩</span>
+<span><a class="line" href="#CellularExtension-L67" id="CellularExtension-L67"> 67</a> </span>
+<span><a class="line" href="#CellularExtension-L68" id="CellularExtension-L68"> 68</a> end BC4lean.ProperActions</span>
 </pre>
 </body></html>

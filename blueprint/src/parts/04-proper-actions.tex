@@ -514,6 +514,56 @@ are inverse and commute with parameter restriction, giving the extension
 criterion. Existence of the ordinary fixed-point extensions is not asserted here.
 \end{proof}
 
+
+\begin{proposition}\label{prop:contractible-disk-extension}
+\lean{BC4lean.ProperActions.nullhomotopic_extends_ball,BC4lean.ProperActions.contractible_extends_disk}
+Every continuous map $f:\partial D^n\to Y$ into a contractible space $Y$
+extends to a continuous map $F:D^n\to Y$, including when $n=0$.
+More generally, a null-homotopic map from the unit sphere of a proper real
+normed vector space extends over its closed unit ball.
+\end{proposition}
+\begin{proof}
+\leanok
+For a nonempty unit sphere, the radial map $(t,s)\mapsto ts$ from its cylinder
+onto the closed unit ball is a continuous surjection from a compact space to a
+Hausdorff space, hence a quotient map. A reversed null-homotopy is constant
+on its fibers: only the zero-radius fiber is collapsed. Descending this
+homotopy gives the extension. For an empty sphere use the constant map at
+the point supplied by the null-homotopy.
+\end{proof}
+
+\begin{proposition}\label{prop:contractible-orbit-cell-extension}
+\uses{prop:contractible-disk-extension,prop:orbit-cell-extension-reduction,def:proper-model-fixed-point-criterion}
+\lean{BC4lean.ProperActions.orbitCell_extends_of_contractible,BC4lean.ProperActions.FixedPointCriterion.orbitCell_extends}
+If $X^H$ is contractible, every continuous equivariant map
+$\Gamma/H\times\partial D^n\to X$ extends to $\Gamma/H\times D^n$.
+In particular, a target satisfying the fixed-point criterion has this
+extension property for every finite subgroup $H$.
+\end{proposition}
+\begin{proof}
+\leanok
+Evaluate on the identity-coset slice, extend the resulting map into $X^H$
+over the disk, and apply the inverse orbit/fixed-point correspondence.
+\end{proof}
+
+\begin{proposition}\label{prop:equivariant-cellular-extension}
+\uses{def:equivariant-cellular-data,prop:contractible-orbit-cell-extension}
+\lean{BC4lean.ProperActions.RelativeEquivariantCWComplex.extend,BC4lean.ProperActions.EquivariantCWComplex.nonempty_map}
+Let $A\to B$ have a relative equivariant CW structure with finite cell
+stabilizers, and let $X$ satisfy the fixed-point criterion. Every continuous
+equivariant map $A\to X$ extends to $B\to X$.
+Consequently every equivariant CW complex admits a continuous equivariant
+map to $X$. No uniqueness up to equivariant homotopy is asserted here.
+\end{proposition}
+\begin{proof}
+\leanok
+The map $X\to *$ has the right lifting property against each generating
+orbit boundary inclusion. The corresponding left lifting property is
+preserved by coproducts, pushouts, and sequential compositions.
+Apply it to the relative CW structure. For the final assertion take $A$
+to be the initial, empty action.
+\end{proof}
+
 \section{Equivariant CW complexes and a model for $\underline E\Gamma$}
 
 \begin{definition}\label{def:equivariant-cw-complex}
@@ -526,15 +576,15 @@ connection between this cellular condition and topological properness.
 \end{definition}
 
 \begin{definition}\label{def:universal-proper-space}
-\uses{def:equivariant-cw-complex,def:proper-model-fixed-point-criterion,prop:conditional-universal-model-uniqueness,prop:proper-infinite-fixed-points}
+\uses{def:equivariant-cw-complex,def:proper-model-fixed-point-criterion,prop:conditional-universal-model-uniqueness,prop:proper-infinite-fixed-points,prop:equivariant-cellular-extension}
 \notready
 A universal proper $\Gamma$-CW complex has contractible fixed-point space
 for every finite subgroup and empty fixed-point space for every infinite
 subgroup. Develop existence, the universal property, and uniqueness up to
 equivariant homotopy. The fixed-point predicate, the finite-group point case, and the conditional
-uniqueness argument have been verified above. General model existence and the
-cellular implication from the fixed-point criterion to the mapping property
-have not been verified.
+uniqueness argument have been verified above. Existence of maps from equivariant CW complexes into a target satisfying
+the fixed-point criterion is now verified. General model existence and
+uniqueness of these maps up to equivariant homotopy remain unverified.
 \end{definition}
 
 \section{Cocompact pieces and model choices}
