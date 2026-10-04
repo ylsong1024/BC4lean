@@ -446,10 +446,78 @@ preimage is closed and invariant, and its quotient image is exactly
 $q(K)$. Apply this construction to singletons for the covering assertion.
 \end{proof}
 
+\section{Categorical equivariant cell attachments}
+
+\begin{definition}\label{def:equivariant-cellular-data}
+\uses{def:equivariant-map,def:orbit-cell}
+\lean{BC4lean.ProperActions.topologicalAction,BC4lean.ProperActions.EquivariantMap.actionHomEquiv,BC4lean.ProperActions.equivariantBasicCell,BC4lean.ProperActions.RelativeEquivariantCWComplex,BC4lean.ProperActions.EquivariantCWComplex}
+\leanok
+In the category of topological $\Gamma$-actions, use the boundary inclusions
+$\Gamma/H\times\partial D^n\to\Gamma/H\times D^n$, indexed by finite subgroups
+$H$, as the generating cells at stage $n$. A relative equivariant CW structure
+is a sequential relative cell complex for this family: its data contain the
+coproducts, pushout squares, skeleta, and colimit witnesses. An equivariant CW
+structure starts from the initial, empty action. The categorical morphisms
+between actions obtained from $\Gamma$-spaces correspond exactly to the
+continuous equivariant maps defined above.
+
+These are cellular data. Topological properness of the resulting colimit is
+not assumed in this definition and remains to be proved.
+\end{definition}
+
+\begin{proposition}\label{prop:orbit-boundary-cell-properties}
+\uses{def:equivariant-cellular-data,prop:proper-orbit-cells}
+\lean{BC4lean.ProperActions.OrbitCell.boundaryInclusion_injective,BC4lean.ProperActions.OrbitCell.disk_proper,BC4lean.ProperActions.OrbitCell.boundary_proper}
+Every orbit boundary inclusion is injective. For finite $H$, both
+$\Gamma/H\times D^n$ and $\Gamma/H\times\partial D^n$ are proper
+$\Gamma$-spaces, including when $n=0$.
+\end{proposition}
+\begin{proof}
+\leanok
+The inclusion preserves the coset coordinate and is the usual injective
+boundary inclusion in the second coordinate. The disk and its boundary are
+compact Hausdorff, so the previously verified orbit-cell properness theorem
+applies.
+\end{proof}
+
+\begin{proposition}\label{prop:equivariant-cellular-map-ext}
+\uses{def:equivariant-cellular-data}
+\lean{BC4lean.ProperActions.RelativeEquivariantCWComplex.hom_ext}
+For a relative equivariant CW structure $X\to Y$, two equivariant continuous
+maps $Y\to Z$ are equal if they agree on $X$ and on every characteristic cell
+map into $Y$.
+\end{proposition}
+\begin{proof}
+\leanok
+Apply the morphism extensionality theorem for relative cell complexes, using
+the pushout universal property at successor stages and the colimit universal
+property for the resulting cellular object.
+\end{proof}
+
+\begin{proposition}\label{prop:orbit-cell-extension-reduction}
+\uses{def:equivariant-cellular-data,prop:orbit-fixed-point-correspondence,def:subgroup-fixed-point-space}
+\lean{BC4lean.ProperActions.orbitCellMapEquiv,BC4lean.ProperActions.cellEvaluation_comp,BC4lean.ProperActions.orbitCell_extension_iff}
+Let $H$ be any subgroup and let the action on the parameter spaces $D,E$ be
+trivial. For a target $\Gamma$-space $X$, evaluation on the identity-coset slice
+gives a bijection between continuous equivariant maps
+$\Gamma/H\times D\to X$ and continuous maps $D\to X^H$.
+For a continuous map $i:D\to E$, a map on $\Gamma/H\times D$ extends across
+$\mathrm{id}\times i$ if and only if its fixed-point slice extends across $i$.
+This is a bijection of sets of maps, not a claimed homeomorphism of mapping spaces.
+\end{proposition}
+\begin{proof}
+\leanok
+The inverse sends $u:D\to X^H$ to $(gH,d)\mapsto g\,u(d)$.
+Fixed-point membership makes it well-defined, and the discrete coset factor
+reduces continuity to continuity on each slice. Evaluation and this construction
+are inverse and commute with parameter restriction, giving the extension
+criterion. Existence of the ordinary fixed-point extensions is not asserted here.
+\end{proof}
+
 \section{Equivariant CW complexes and a model for $\underline E\Gamma$}
 
 \begin{definition}\label{def:equivariant-cw-complex}
-\uses{def:proper-action,def:equivariant-map,def:equivariant-homotopy,def:orbit-cell,prop:proper-orbit-cells}
+\uses{def:proper-action,def:equivariant-map,def:equivariant-homotopy,def:orbit-cell,prop:proper-orbit-cells,def:equivariant-cellular-data,prop:orbit-boundary-cell-properties}
 \notready
 Using the preceding maps and homotopies, develop $\Gamma$-CW complexes by
 equivariant cell attachment, with cells $\Gamma/H\times D^n$.

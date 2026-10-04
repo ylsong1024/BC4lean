@@ -52,6 +52,8 @@ code{overflow-wrap:anywhere}</style></head><body><a href="../../blueprint/">返�
 <li><a href="#HomotopyTerminal">HomotopyTerminal.lean</a></li>
 <li><a href="#FixedPointCriterion">FixedPointCriterion.lean</a></li>
 <li><a href="#CocompactPieces">CocompactPieces.lean</a></li>
+<li><a href="#EquivariantCW">EquivariantCW.lean</a></li>
+<li><a href="#OrbitCellMaps">OrbitCellMaps.lean</a></li>
 </ul></nav>
 <h2 id="GroupAlgebra">GroupAlgebra.lean</h2><p>源码 SHA-256：<code>1c6c0899fe9bc9f7860f291ba7c5573353d18a3c5809258769d689bc39da8ad4</code></p><pre>
 <span><a class="line" href="#L1" id="L1">  1</a> import Mathlib.Algebra.MonoidAlgebra.Basic</span>
@@ -4704,5 +4706,256 @@ code{overflow-wrap:anywhere}</style></head><body><a href="../../blueprint/">返�
 <span><a class="line" href="#CocompactPieces-L165" id="CocompactPieces-L165">165</a> </span>
 <span><a class="line" href="#CocompactPieces-L166" id="CocompactPieces-L166">166</a> end CocompactPiece</span>
 <span><a class="line" href="#CocompactPieces-L167" id="CocompactPieces-L167">167</a> end BC4lean.ProperActions</span>
+</pre>
+<h2 id="EquivariantCW">EquivariantCW.lean</h2><p>源码 SHA-256：<code>f40e168898fb1e020c96942dc5543ccd8c969cc3be6ced729d59f8eea8b88030</code></p><pre>
+<span><a class="line" href="#EquivariantCW-L1" id="EquivariantCW-L1">  1</a> import BC4lean.ProperOrbitCells</span>
+<span><a class="line" href="#EquivariantCW-L2" id="EquivariantCW-L2">  2</a> import Mathlib.Topology.CWComplex.Abstract.Basic</span>
+<span><a class="line" href="#EquivariantCW-L3" id="EquivariantCW-L3">  3</a> import Mathlib.CategoryTheory.Action.Limits</span>
+<span><a class="line" href="#EquivariantCW-L4" id="EquivariantCW-L4">  4</a> </span>
+<span><a class="line" href="#EquivariantCW-L5" id="EquivariantCW-L5">  5</a> /-! # Equivariant cell attachments</span>
+<span><a class="line" href="#EquivariantCW-L6" id="EquivariantCW-L6">  6</a> </span>
+<span><a class="line" href="#EquivariantCW-L7" id="EquivariantCW-L7">  7</a> This module realizes the orbit boundary inclusions in `Action TopCat Γ`</span>
+<span><a class="line" href="#EquivariantCW-L8" id="EquivariantCW-L8">  8</a> and specializes Mathlib&#x27;s relative cell complex structure to them. The cells</span>
+<span><a class="line" href="#EquivariantCW-L9" id="EquivariantCW-L9">  9</a> have finite isotropy. Properness of arbitrary cellular colimits and the</span>
+<span><a class="line" href="#EquivariantCW-L10" id="EquivariantCW-L10"> 10</a> universal proper-space existence and mapping theorems are separate results;</span>
+<span><a class="line" href="#EquivariantCW-L11" id="EquivariantCW-L11"> 11</a> they are not fields or axioms of the definitions below.</span>
+<span><a class="line" href="#EquivariantCW-L12" id="EquivariantCW-L12"> 12</a> -/</span>
+<span><a class="line" href="#EquivariantCW-L13" id="EquivariantCW-L13"> 13</a> </span>
+<span><a class="line" href="#EquivariantCW-L14" id="EquivariantCW-L14"> 14</a> open CategoryTheory CategoryTheory.Limits</span>
+<span><a class="line" href="#EquivariantCW-L15" id="EquivariantCW-L15"> 15</a> </span>
+<span><a class="line" href="#EquivariantCW-L16" id="EquivariantCW-L16"> 16</a> namespace BC4lean.ProperActions</span>
+<span><a class="line" href="#EquivariantCW-L17" id="EquivariantCW-L17"> 17</a> </span>
+<span><a class="line" href="#EquivariantCW-L18" id="EquivariantCW-L18"> 18</a> universe u v</span>
+<span><a class="line" href="#EquivariantCW-L19" id="EquivariantCW-L19"> 19</a> </span>
+<span><a class="line" href="#EquivariantCW-L20" id="EquivariantCW-L20"> 20</a> /-- Bundle an action with continuous translations as an action in `TopCat`. -/</span>
+<span id="doc/BC4lean.ProperActions.topologicalAction"><a class="line" href="#EquivariantCW-L21" id="EquivariantCW-L21"> 21</a> def topologicalAction (Γ : Type u) (X : Type v) [Group Γ] [TopologicalSpace X]</span>
+<span><a class="line" href="#EquivariantCW-L22" id="EquivariantCW-L22"> 22</a>     [MulAction Γ X] [ContinuousConstSMul Γ X] : Action TopCat.{v} Γ where</span>
+<span><a class="line" href="#EquivariantCW-L23" id="EquivariantCW-L23"> 23</a>   V := TopCat.of X</span>
+<span><a class="line" href="#EquivariantCW-L24" id="EquivariantCW-L24"> 24</a>   ρ :=</span>
+<span><a class="line" href="#EquivariantCW-L25" id="EquivariantCW-L25"> 25</a>     { toFun := fun g =&gt; TopCat.ofHom ⟨fun x =&gt; g • x, continuous_const_smul g⟩</span>
+<span><a class="line" href="#EquivariantCW-L26" id="EquivariantCW-L26"> 26</a>       map_one&#x27; := by</span>
+<span><a class="line" href="#EquivariantCW-L27" id="EquivariantCW-L27"> 27</a>         apply TopCat.hom_ext</span>
+<span><a class="line" href="#EquivariantCW-L28" id="EquivariantCW-L28"> 28</a>         apply ContinuousMap.ext</span>
+<span><a class="line" href="#EquivariantCW-L29" id="EquivariantCW-L29"> 29</a>         intro x</span>
+<span><a class="line" href="#EquivariantCW-L30" id="EquivariantCW-L30"> 30</a>         exact one_smul Γ x</span>
+<span><a class="line" href="#EquivariantCW-L31" id="EquivariantCW-L31"> 31</a>       map_mul&#x27; := by</span>
+<span><a class="line" href="#EquivariantCW-L32" id="EquivariantCW-L32"> 32</a>         intro g h</span>
+<span><a class="line" href="#EquivariantCW-L33" id="EquivariantCW-L33"> 33</a>         apply TopCat.hom_ext</span>
+<span><a class="line" href="#EquivariantCW-L34" id="EquivariantCW-L34"> 34</a>         apply ContinuousMap.ext</span>
+<span><a class="line" href="#EquivariantCW-L35" id="EquivariantCW-L35"> 35</a>         intro x</span>
+<span><a class="line" href="#EquivariantCW-L36" id="EquivariantCW-L36"> 36</a>         exact mul_smul g h x }</span>
+<span><a class="line" href="#EquivariantCW-L37" id="EquivariantCW-L37"> 37</a> </span>
+<span><a class="line" href="#EquivariantCW-L38" id="EquivariantCW-L38"> 38</a> namespace EquivariantMap</span>
+<span><a class="line" href="#EquivariantCW-L39" id="EquivariantCW-L39"> 39</a> </span>
+<span><a class="line" href="#EquivariantCW-L40" id="EquivariantCW-L40"> 40</a> variable {Γ : Type u} {X Y Z : Type v} [Group Γ]</span>
+<span><a class="line" href="#EquivariantCW-L41" id="EquivariantCW-L41"> 41</a> variable [TopologicalSpace X] [TopologicalSpace Y] [TopologicalSpace Z]</span>
+<span><a class="line" href="#EquivariantCW-L42" id="EquivariantCW-L42"> 42</a> variable [MulAction Γ X] [MulAction Γ Y] [MulAction Γ Z]</span>
+<span><a class="line" href="#EquivariantCW-L43" id="EquivariantCW-L43"> 43</a> variable [ContinuousConstSMul Γ X] [ContinuousConstSMul Γ Y] [ContinuousConstSMul Γ Z]</span>
+<span><a class="line" href="#EquivariantCW-L44" id="EquivariantCW-L44"> 44</a> </span>
+<span><a class="line" href="#EquivariantCW-L45" id="EquivariantCW-L45"> 45</a> /-- A bundled continuous equivariant map gives a morphism of topological actions. -/</span>
+<span id="doc/BC4lean.ProperActions.EquivariantMap.toActionHom"><a class="line" href="#EquivariantCW-L46" id="EquivariantCW-L46"> 46</a> def toActionHom (f : EquivariantMap Γ X Y) :</span>
+<span><a class="line" href="#EquivariantCW-L47" id="EquivariantCW-L47"> 47</a>     topologicalAction Γ X ⟶ topologicalAction Γ Y where</span>
+<span><a class="line" href="#EquivariantCW-L48" id="EquivariantCW-L48"> 48</a>   hom := TopCat.ofHom f.toContinuousMap</span>
+<span><a class="line" href="#EquivariantCW-L49" id="EquivariantCW-L49"> 49</a>   comm g := by ext x; exact f.map_smul g x</span>
+<span><a class="line" href="#EquivariantCW-L50" id="EquivariantCW-L50"> 50</a> </span>
+<span id="doc/BC4lean.ProperActions.EquivariantMap.toActionHom_apply"><a class="line" href="#EquivariantCW-L51" id="EquivariantCW-L51"> 51</a> @[simp] theorem toActionHom_apply (f : EquivariantMap Γ X Y) (x : X) :</span>
+<span><a class="line" href="#EquivariantCW-L52" id="EquivariantCW-L52"> 52</a>     f.toActionHom.hom x = f x := rfl</span>
+<span><a class="line" href="#EquivariantCW-L53" id="EquivariantCW-L53"> 53</a> </span>
+<span id="doc/BC4lean.ProperActions.EquivariantMap.toActionHom_id"><a class="line" href="#EquivariantCW-L54" id="EquivariantCW-L54"> 54</a> @[simp] theorem toActionHom_id :</span>
+<span><a class="line" href="#EquivariantCW-L55" id="EquivariantCW-L55"> 55</a>     (id (Γ := Γ) (X := X)).toActionHom = 𝟙 (topologicalAction Γ X) := rfl</span>
+<span><a class="line" href="#EquivariantCW-L56" id="EquivariantCW-L56"> 56</a> </span>
+<span id="doc/BC4lean.ProperActions.EquivariantMap.toActionHom_comp"><a class="line" href="#EquivariantCW-L57" id="EquivariantCW-L57"> 57</a> @[simp] theorem toActionHom_comp (g : EquivariantMap Γ Y Z) (f : EquivariantMap Γ X Y) :</span>
+<span><a class="line" href="#EquivariantCW-L58" id="EquivariantCW-L58"> 58</a>     (g.comp f).toActionHom = f.toActionHom ≫ g.toActionHom := rfl</span>
+<span><a class="line" href="#EquivariantCW-L59" id="EquivariantCW-L59"> 59</a> </span>
+<span><a class="line" href="#EquivariantCW-L60" id="EquivariantCW-L60"> 60</a> /-- Recover the pointwise equivariant-map API from a categorical morphism. -/</span>
+<span id="doc/BC4lean.ProperActions.EquivariantMap.ofActionHom"><a class="line" href="#EquivariantCW-L61" id="EquivariantCW-L61"> 61</a> def ofActionHom (f : topologicalAction Γ X ⟶ topologicalAction Γ Y) :</span>
+<span><a class="line" href="#EquivariantCW-L62" id="EquivariantCW-L62"> 62</a>     EquivariantMap Γ X Y where</span>
+<span><a class="line" href="#EquivariantCW-L63" id="EquivariantCW-L63"> 63</a>   toContinuousMap := f.hom.hom</span>
+<span><a class="line" href="#EquivariantCW-L64" id="EquivariantCW-L64"> 64</a>   map_smul&#x27; g x := congrArg (fun k : TopCat.of X ⟶ TopCat.of Y =&gt; k x) (f.comm g)</span>
+<span><a class="line" href="#EquivariantCW-L65" id="EquivariantCW-L65"> 65</a> </span>
+<span><a class="line" href="#EquivariantCW-L66" id="EquivariantCW-L66"> 66</a> /-- The categorical and pointwise descriptions have exactly the same morphisms. -/</span>
+<span id="doc/BC4lean.ProperActions.EquivariantMap.actionHomEquiv"><a class="line" href="#EquivariantCW-L67" id="EquivariantCW-L67"> 67</a> def actionHomEquiv :</span>
+<span><a class="line" href="#EquivariantCW-L68" id="EquivariantCW-L68"> 68</a>     EquivariantMap Γ X Y ≃ (topologicalAction Γ X ⟶ topologicalAction Γ Y) where</span>
+<span><a class="line" href="#EquivariantCW-L69" id="EquivariantCW-L69"> 69</a>   toFun := toActionHom</span>
+<span><a class="line" href="#EquivariantCW-L70" id="EquivariantCW-L70"> 70</a>   invFun := ofActionHom</span>
+<span><a class="line" href="#EquivariantCW-L71" id="EquivariantCW-L71"> 71</a>   left_inv f := by ext x; rfl</span>
+<span><a class="line" href="#EquivariantCW-L72" id="EquivariantCW-L72"> 72</a>   right_inv f := by apply Action.Hom.ext; rfl</span>
+<span><a class="line" href="#EquivariantCW-L73" id="EquivariantCW-L73"> 73</a> </span>
+<span><a class="line" href="#EquivariantCW-L74" id="EquivariantCW-L74"> 74</a> end EquivariantMap</span>
+<span><a class="line" href="#EquivariantCW-L75" id="EquivariantCW-L75"> 75</a> </span>
+<span><a class="line" href="#EquivariantCW-L76" id="EquivariantCW-L76"> 76</a> variable {Γ : Type u} [Group Γ] [TopologicalSpace Γ] [DiscreteTopology Γ]</span>
+<span><a class="line" href="#EquivariantCW-L77" id="EquivariantCW-L77"> 77</a> </span>
+<span><a class="line" href="#EquivariantCW-L78" id="EquivariantCW-L78"> 78</a> namespace OrbitCell</span>
+<span><a class="line" href="#EquivariantCW-L79" id="EquivariantCW-L79"> 79</a> </span>
+<span><a class="line" href="#EquivariantCW-L80" id="EquivariantCW-L80"> 80</a> /-- Map the parameter of an orbit cell, leaving its coset coordinate unchanged. -/</span>
+<span id="doc/BC4lean.ProperActions.OrbitCell.map"><a class="line" href="#EquivariantCW-L81" id="EquivariantCW-L81"> 81</a> def map {D E : Type v} [TopologicalSpace D] [TopologicalSpace E]</span>
+<span><a class="line" href="#EquivariantCW-L82" id="EquivariantCW-L82"> 82</a>     (H : Subgroup Γ) (f : C(D, E)) : EquivariantMap Γ (OrbitCell H D) (OrbitCell H E) where</span>
+<span><a class="line" href="#EquivariantCW-L83" id="EquivariantCW-L83"> 83</a>   toFun p := (p.1, f p.2)</span>
+<span><a class="line" href="#EquivariantCW-L84" id="EquivariantCW-L84"> 84</a>   continuous_toFun := continuous_fst.prodMk (f.continuous.comp continuous_snd)</span>
+<span><a class="line" href="#EquivariantCW-L85" id="EquivariantCW-L85"> 85</a>   map_smul&#x27; _ _ := rfl</span>
+<span><a class="line" href="#EquivariantCW-L86" id="EquivariantCW-L86"> 86</a> </span>
+<span><a class="line" href="#EquivariantCW-L87" id="EquivariantCW-L87"> 87</a> omit [DiscreteTopology Γ] in</span>
+<span id="doc/BC4lean.ProperActions.OrbitCell.map_apply"><a class="line" href="#EquivariantCW-L88" id="EquivariantCW-L88"> 88</a> @[simp] theorem map_apply {D E : Type v} [TopologicalSpace D] [TopologicalSpace E]</span>
+<span><a class="line" href="#EquivariantCW-L89" id="EquivariantCW-L89"> 89</a>     (H : Subgroup Γ) (f : C(D, E)) (p : OrbitCell H D) :</span>
+<span><a class="line" href="#EquivariantCW-L90" id="EquivariantCW-L90"> 90</a>     map H f p = (p.1, f p.2) := rfl</span>
+<span><a class="line" href="#EquivariantCW-L91" id="EquivariantCW-L91"> 91</a> </span>
+<span><a class="line" href="#EquivariantCW-L92" id="EquivariantCW-L92"> 92</a> /-- The orbit boundary inclusion Γ/H × ∂Dⁿ → Γ/H × Dⁿ. -/</span>
+<span id="doc/BC4lean.ProperActions.OrbitCell.boundaryInclusion"><a class="line" href="#EquivariantCW-L93" id="EquivariantCW-L93"> 93</a> noncomputable def boundaryInclusion (H : Subgroup Γ) (n : ℕ) :</span>
+<span><a class="line" href="#EquivariantCW-L94" id="EquivariantCW-L94"> 94</a>     EquivariantMap Γ (OrbitCell H (TopCat.diskBoundary.{u} n))</span>
+<span><a class="line" href="#EquivariantCW-L95" id="EquivariantCW-L95"> 95</a>       (OrbitCell H (TopCat.disk.{u} n)) :=</span>
+<span><a class="line" href="#EquivariantCW-L96" id="EquivariantCW-L96"> 96</a>   map H (TopCat.diskBoundaryInclusion n).hom</span>
+<span><a class="line" href="#EquivariantCW-L97" id="EquivariantCW-L97"> 97</a> </span>
+<span><a class="line" href="#EquivariantCW-L98" id="EquivariantCW-L98"> 98</a> omit [DiscreteTopology Γ] in</span>
+<span><a class="line" href="#EquivariantCW-L99" id="EquivariantCW-L99"> 99</a> /-- Orbit boundary inclusions are injective, including in dimension zero. -/</span>
+<span id="doc/BC4lean.ProperActions.OrbitCell.boundaryInclusion_injective"><a class="line" href="#EquivariantCW-L100" id="EquivariantCW-L100">100</a> theorem boundaryInclusion_injective (H : Subgroup Γ) (n : ℕ) :</span>
+<span><a class="line" href="#EquivariantCW-L101" id="EquivariantCW-L101">101</a>     Function.Injective (boundaryInclusion H n) := by</span>
+<span><a class="line" href="#EquivariantCW-L102" id="EquivariantCW-L102">102</a>   intro x y h</span>
+<span><a class="line" href="#EquivariantCW-L103" id="EquivariantCW-L103">103</a>   change (x.1, (TopCat.diskBoundaryInclusion n) x.2) =</span>
+<span><a class="line" href="#EquivariantCW-L104" id="EquivariantCW-L104">104</a>     (y.1, (TopCat.diskBoundaryInclusion n) y.2) at h</span>
+<span><a class="line" href="#EquivariantCW-L105" id="EquivariantCW-L105">105</a>   apply Prod.ext</span>
+<span><a class="line" href="#EquivariantCW-L106" id="EquivariantCW-L106">106</a>   · exact congrArg (fun p : (Γ ⧸ H) × TopCat.disk.{u} n =&gt; p.1) h</span>
+<span><a class="line" href="#EquivariantCW-L107" id="EquivariantCW-L107">107</a>   · exact (TopCat.mono_iff_injective (TopCat.diskBoundaryInclusion n)).mp</span>
+<span><a class="line" href="#EquivariantCW-L108" id="EquivariantCW-L108">108</a>       inferInstance (congrArg Prod.snd h)</span>
+<span><a class="line" href="#EquivariantCW-L109" id="EquivariantCW-L109">109</a> </span>
+<span><a class="line" href="#EquivariantCW-L110" id="EquivariantCW-L110">110</a> /-- The disk orbit cell with finite isotropy is topologically proper. -/</span>
+<span id="doc/BC4lean.ProperActions.OrbitCell.disk_proper"><a class="line" href="#EquivariantCW-L111" id="EquivariantCW-L111">111</a> theorem disk_proper (H : Subgroup Γ) [Finite H] (n : ℕ) :</span>
+<span><a class="line" href="#EquivariantCW-L112" id="EquivariantCW-L112">112</a>     ProperSMul Γ (OrbitCell H (TopCat.disk.{u} n)) := by</span>
+<span><a class="line" href="#EquivariantCW-L113" id="EquivariantCW-L113">113</a>   let : T2Space (TopCat.disk.{u} n) := by</span>
+<span><a class="line" href="#EquivariantCW-L114" id="EquivariantCW-L114">114</a>     change T2Space (ULift (Metric.closedBall (0 : EuclideanSpace ℝ (Fin n)) 1))</span>
+<span><a class="line" href="#EquivariantCW-L115" id="EquivariantCW-L115">115</a>     exact Homeomorph.ulift.{u, 0}.symm.t2Space</span>
+<span><a class="line" href="#EquivariantCW-L116" id="EquivariantCW-L116">116</a>   exact proper H _</span>
+<span><a class="line" href="#EquivariantCW-L117" id="EquivariantCW-L117">117</a> </span>
+<span><a class="line" href="#EquivariantCW-L118" id="EquivariantCW-L118">118</a> /-- The boundary orbit cell with finite isotropy is topologically proper. -/</span>
+<span id="doc/BC4lean.ProperActions.OrbitCell.boundary_proper"><a class="line" href="#EquivariantCW-L119" id="EquivariantCW-L119">119</a> theorem boundary_proper (H : Subgroup Γ) [Finite H] (n : ℕ) :</span>
+<span><a class="line" href="#EquivariantCW-L120" id="EquivariantCW-L120">120</a>     ProperSMul Γ (OrbitCell H (TopCat.diskBoundary.{u} n)) := by</span>
+<span><a class="line" href="#EquivariantCW-L121" id="EquivariantCW-L121">121</a>   let : T2Space (TopCat.diskBoundary.{u} n) := by</span>
+<span><a class="line" href="#EquivariantCW-L122" id="EquivariantCW-L122">122</a>     change T2Space (ULift (Metric.sphere (0 : EuclideanSpace ℝ (Fin n)) 1))</span>
+<span><a class="line" href="#EquivariantCW-L123" id="EquivariantCW-L123">123</a>     exact Homeomorph.ulift.{u, 0}.symm.t2Space</span>
+<span><a class="line" href="#EquivariantCW-L124" id="EquivariantCW-L124">124</a>   exact proper H _</span>
+<span><a class="line" href="#EquivariantCW-L125" id="EquivariantCW-L125">125</a> </span>
+<span><a class="line" href="#EquivariantCW-L126" id="EquivariantCW-L126">126</a> end OrbitCell</span>
+<span><a class="line" href="#EquivariantCW-L127" id="EquivariantCW-L127">127</a> </span>
+<span><a class="line" href="#EquivariantCW-L128" id="EquivariantCW-L128">128</a> /-- Finite isotropy subgroups indexing the allowed orbit cells. -/</span>
+<span id="doc/BC4lean.ProperActions.FiniteIsotropy"><a class="line" href="#EquivariantCW-L129" id="EquivariantCW-L129">129</a> def FiniteIsotropy (Γ : Type u) [Group Γ] := {H : Subgroup Γ // Finite H}</span>
+<span><a class="line" href="#EquivariantCW-L130" id="EquivariantCW-L130">130</a> </span>
+<span><a class="line" href="#EquivariantCW-L131" id="EquivariantCW-L131">131</a> /-- Generating boundary maps, with dimension indexed by the skeletal stage. -/</span>
+<span id="doc/BC4lean.ProperActions.equivariantBasicCell"><a class="line" href="#EquivariantCW-L132" id="EquivariantCW-L132">132</a> noncomputable def equivariantBasicCell (n : ℕ) (H : FiniteIsotropy Γ) :</span>
+<span><a class="line" href="#EquivariantCW-L133" id="EquivariantCW-L133">133</a>     topologicalAction Γ (OrbitCell H.val (TopCat.diskBoundary.{u} n)) ⟶</span>
+<span><a class="line" href="#EquivariantCW-L134" id="EquivariantCW-L134">134</a>       topologicalAction Γ (OrbitCell H.val (TopCat.disk.{u} n)) :=</span>
+<span><a class="line" href="#EquivariantCW-L135" id="EquivariantCW-L135">135</a>   (OrbitCell.boundaryInclusion H.val n).toActionHom</span>
+<span><a class="line" href="#EquivariantCW-L136" id="EquivariantCW-L136">136</a> </span>
+<span><a class="line" href="#EquivariantCW-L137" id="EquivariantCW-L137">137</a> /-- Relative equivariant CW data, attaching n-dimensional finite-isotropy orbit</span>
+<span><a class="line" href="#EquivariantCW-L138" id="EquivariantCW-L138">138</a> cells at stage n. This definition includes actual pushout and colimit witnesses. -/</span>
+<span id="doc/BC4lean.ProperActions.RelativeEquivariantCWComplex"><a class="line" href="#EquivariantCW-L139" id="EquivariantCW-L139">139</a> abbrev RelativeEquivariantCWComplex {X Y : Action TopCat.{u} Γ} (f : X ⟶ Y) :=</span>
+<span><a class="line" href="#EquivariantCW-L140" id="EquivariantCW-L140">140</a>   HomotopicalAlgebra.RelativeCellComplex.{u} (equivariantBasicCell (Γ := Γ)) f</span>
+<span><a class="line" href="#EquivariantCW-L141" id="EquivariantCW-L141">141</a> </span>
+<span><a class="line" href="#EquivariantCW-L142" id="EquivariantCW-L142">142</a> /-- An equivariant CW structure starting from the empty action. Finite isotropy</span>
+<span><a class="line" href="#EquivariantCW-L143" id="EquivariantCW-L143">143</a> is imposed on the cell family, not assumed as a properness conclusion. -/</span>
+<span id="doc/BC4lean.ProperActions.EquivariantCWComplex"><a class="line" href="#EquivariantCW-L144" id="EquivariantCW-L144">144</a> abbrev EquivariantCWComplex (X : Action TopCat.{u} Γ) :=</span>
+<span><a class="line" href="#EquivariantCW-L145" id="EquivariantCW-L145">145</a>   RelativeEquivariantCWComplex (initial.to X)</span>
+<span><a class="line" href="#EquivariantCW-L146" id="EquivariantCW-L146">146</a> </span>
+<span><a class="line" href="#EquivariantCW-L147" id="EquivariantCW-L147">147</a> /-- Relative equivariant CW structures include an attachment at every finite stage. -/</span>
+<span id="doc/BC4lean.ProperActions.RelativeEquivariantCWComplex.attachment"><a class="line" href="#EquivariantCW-L148" id="EquivariantCW-L148">148</a> def RelativeEquivariantCWComplex.attachment {X Y : Action TopCat.{u} Γ} {f : X ⟶ Y}</span>
+<span><a class="line" href="#EquivariantCW-L149" id="EquivariantCW-L149">149</a>     (c : RelativeEquivariantCWComplex f) (n : ℕ) :=</span>
+<span><a class="line" href="#EquivariantCW-L150" id="EquivariantCW-L150">150</a>   c.attachCells n (not_isMax n)</span>
+<span><a class="line" href="#EquivariantCW-L151" id="EquivariantCW-L151">151</a> </span>
+<span><a class="line" href="#EquivariantCW-L152" id="EquivariantCW-L152">152</a> /-- Maps out of a cellular object are determined on the initial subspace and cells. -/</span>
+<span id="doc/BC4lean.ProperActions.RelativeEquivariantCWComplex.hom_ext"><a class="line" href="#EquivariantCW-L153" id="EquivariantCW-L153">153</a> theorem RelativeEquivariantCWComplex.hom_ext</span>
+<span><a class="line" href="#EquivariantCW-L154" id="EquivariantCW-L154">154</a>     {X Y Z : Action TopCat.{u} Γ} {f : X ⟶ Y}</span>
+<span><a class="line" href="#EquivariantCW-L155" id="EquivariantCW-L155">155</a>     (c : RelativeEquivariantCWComplex f) {φ ψ : Y ⟶ Z}</span>
+<span><a class="line" href="#EquivariantCW-L156" id="EquivariantCW-L156">156</a>     (h₀ : f ≫ φ = f ≫ ψ)</span>
+<span><a class="line" href="#EquivariantCW-L157" id="EquivariantCW-L157">157</a>     (h : ∀ γ : HomotopicalAlgebra.RelativeCellComplex.Cells c, γ.ι ≫ φ = γ.ι ≫ ψ) :</span>
+<span><a class="line" href="#EquivariantCW-L158" id="EquivariantCW-L158">158</a>     φ = ψ :=</span>
+<span><a class="line" href="#EquivariantCW-L159" id="EquivariantCW-L159">159</a>   HomotopicalAlgebra.RelativeCellComplex.hom_ext c h₀ h</span>
+<span><a class="line" href="#EquivariantCW-L160" id="EquivariantCW-L160">160</a> </span>
+<span><a class="line" href="#EquivariantCW-L161" id="EquivariantCW-L161">161</a> end BC4lean.ProperActions</span>
+</pre>
+<h2 id="OrbitCellMaps">OrbitCellMaps.lean</h2><p>源码 SHA-256：<code>4cb73c5c98de04a4e67abc1b32d8fbd511f8e27e615373a165014cdc4324f58d</code></p><pre>
+<span><a class="line" href="#OrbitCellMaps-L1" id="OrbitCellMaps-L1">  1</a> import BC4lean.EquivariantCW</span>
+<span><a class="line" href="#OrbitCellMaps-L2" id="OrbitCellMaps-L2">  2</a> </span>
+<span><a class="line" href="#OrbitCellMaps-L3" id="OrbitCellMaps-L3">  3</a> /-! # Maps from orbit cells and fixed-point extension problems</span>
+<span><a class="line" href="#OrbitCellMaps-L4" id="OrbitCellMaps-L4">  4</a> </span>
+<span><a class="line" href="#OrbitCellMaps-L5" id="OrbitCellMaps-L5">  5</a> Continuous equivariant maps Γ/H × D → X are continuous maps D → X^H.</span>
+<span><a class="line" href="#OrbitCellMaps-L6" id="OrbitCellMaps-L6">  6</a> Consequently extension across a parameter map is exactly an ordinary extension</span>
+<span><a class="line" href="#OrbitCellMaps-L7" id="OrbitCellMaps-L7">  7</a> problem in the fixed-point space. This does not assume or prove that those</span>
+<span><a class="line" href="#OrbitCellMaps-L8" id="OrbitCellMaps-L8">  8</a> ordinary extensions exist for contractible targets.</span>
+<span><a class="line" href="#OrbitCellMaps-L9" id="OrbitCellMaps-L9">  9</a> -/</span>
+<span><a class="line" href="#OrbitCellMaps-L10" id="OrbitCellMaps-L10"> 10</a> namespace BC4lean.ProperActions</span>
+<span><a class="line" href="#OrbitCellMaps-L11" id="OrbitCellMaps-L11"> 11</a> </span>
+<span><a class="line" href="#OrbitCellMaps-L12" id="OrbitCellMaps-L12"> 12</a> universe u v w</span>
+<span><a class="line" href="#OrbitCellMaps-L13" id="OrbitCellMaps-L13"> 13</a> </span>
+<span><a class="line" href="#OrbitCellMaps-L14" id="OrbitCellMaps-L14"> 14</a> variable {Γ : Type u} {D E : Type v} {X : Type w} [Group Γ] [TopologicalSpace Γ] [DiscreteTopology Γ]</span>
+<span><a class="line" href="#OrbitCellMaps-L15" id="OrbitCellMaps-L15"> 15</a> variable [TopologicalSpace D] [TopologicalSpace E] [TopologicalSpace X]</span>
+<span><a class="line" href="#OrbitCellMaps-L16" id="OrbitCellMaps-L16"> 16</a> variable [MulAction Γ X] [ContinuousConstSMul Γ X]</span>
+<span><a class="line" href="#OrbitCellMaps-L17" id="OrbitCellMaps-L17"> 17</a> </span>
+<span><a class="line" href="#OrbitCellMaps-L18" id="OrbitCellMaps-L18"> 18</a> /-- Evaluate an equivariant map on the identity-coset slice. -/</span>
+<span id="doc/BC4lean.ProperActions.cellEvaluation"><a class="line" href="#OrbitCellMaps-L19" id="OrbitCellMaps-L19"> 19</a> def cellEvaluation (H : Subgroup Γ) (f : EquivariantMap Γ (OrbitCell H D) X) :</span>
+<span><a class="line" href="#OrbitCellMaps-L20" id="OrbitCellMaps-L20"> 20</a>     C(D, FixedPointSpace H X) where</span>
+<span><a class="line" href="#OrbitCellMaps-L21" id="OrbitCellMaps-L21"> 21</a>   toFun d := ⟨f (QuotientGroup.mk 1, d), fun h =&gt; by</span>
+<span><a class="line" href="#OrbitCellMaps-L22" id="OrbitCellMaps-L22"> 22</a>     change (h : Γ) • f (QuotientGroup.mk 1, d) = f (QuotientGroup.mk 1, d)</span>
+<span><a class="line" href="#OrbitCellMaps-L23" id="OrbitCellMaps-L23"> 23</a>     exact (f.map_smul (h : Γ) (QuotientGroup.mk 1, d)).symm.trans</span>
+<span><a class="line" href="#OrbitCellMaps-L24" id="OrbitCellMaps-L24"> 24</a>       (congrArg f (Prod.ext (subgroup_fixes_identity_coset H h) rfl))⟩</span>
+<span><a class="line" href="#OrbitCellMaps-L25" id="OrbitCellMaps-L25"> 25</a>   continuous_toFun :=</span>
+<span><a class="line" href="#OrbitCellMaps-L26" id="OrbitCellMaps-L26"> 26</a>     (f.continuous.comp (continuous_const.prodMk continuous_id)).subtype_mk _</span>
+<span><a class="line" href="#OrbitCellMaps-L27" id="OrbitCellMaps-L27"> 27</a> </span>
+<span><a class="line" href="#OrbitCellMaps-L28" id="OrbitCellMaps-L28"> 28</a> /-- Extend a continuous family of fixed points equivariantly over the orbit factor. -/</span>
+<span id="doc/BC4lean.ProperActions.cellFromFixed"><a class="line" href="#OrbitCellMaps-L29" id="OrbitCellMaps-L29"> 29</a> def cellFromFixed (H : Subgroup Γ) (u : C(D, FixedPointSpace H X)) :</span>
+<span><a class="line" href="#OrbitCellMaps-L30" id="OrbitCellMaps-L30"> 30</a>     EquivariantMap Γ (OrbitCell H D) X where</span>
+<span><a class="line" href="#OrbitCellMaps-L31" id="OrbitCellMaps-L31"> 31</a>   toFun p := orbitMap H (u p.2) p.1</span>
+<span><a class="line" href="#OrbitCellMaps-L32" id="OrbitCellMaps-L32"> 32</a>   continuous_toFun := by</span>
+<span><a class="line" href="#OrbitCellMaps-L33" id="OrbitCellMaps-L33"> 33</a>     let : DiscreteTopology (Γ ⧸ H) := QuotientGroup.discreteTopology (isOpen_discrete _)</span>
+<span><a class="line" href="#OrbitCellMaps-L34" id="OrbitCellMaps-L34"> 34</a>     change Continuous (fun p : (Γ ⧸ H) × D =&gt; orbitMap H (u p.2) p.1)</span>
+<span><a class="line" href="#OrbitCellMaps-L35" id="OrbitCellMaps-L35"> 35</a>     apply continuous_prod_of_discrete_left.mpr</span>
+<span><a class="line" href="#OrbitCellMaps-L36" id="OrbitCellMaps-L36"> 36</a>     intro q</span>
+<span><a class="line" href="#OrbitCellMaps-L37" id="OrbitCellMaps-L37"> 37</a>     induction q using QuotientGroup.induction_on with</span>
+<span><a class="line" href="#OrbitCellMaps-L38" id="OrbitCellMaps-L38"> 38</a>     | H g =&gt;</span>
+<span><a class="line" href="#OrbitCellMaps-L39" id="OrbitCellMaps-L39"> 39</a>       change Continuous (fun d =&gt; g • (u d : X))</span>
+<span><a class="line" href="#OrbitCellMaps-L40" id="OrbitCellMaps-L40"> 40</a>       exact (continuous_const_smul g).comp (continuous_subtype_val.comp u.continuous)</span>
+<span><a class="line" href="#OrbitCellMaps-L41" id="OrbitCellMaps-L41"> 41</a>   map_smul&#x27; g p := (orbitMap H (u p.2)).map_smul g p.1</span>
+<span><a class="line" href="#OrbitCellMaps-L42" id="OrbitCellMaps-L42"> 42</a> </span>
+<span><a class="line" href="#OrbitCellMaps-L43" id="OrbitCellMaps-L43"> 43</a> /-- The orbit/fixed-point correspondence with a topological parameter. -/</span>
+<span id="doc/BC4lean.ProperActions.orbitCellMapEquiv"><a class="line" href="#OrbitCellMaps-L44" id="OrbitCellMaps-L44"> 44</a> def orbitCellMapEquiv (H : Subgroup Γ) :</span>
+<span><a class="line" href="#OrbitCellMaps-L45" id="OrbitCellMaps-L45"> 45</a>     EquivariantMap Γ (OrbitCell H D) X ≃ C(D, FixedPointSpace H X) where</span>
+<span><a class="line" href="#OrbitCellMaps-L46" id="OrbitCellMaps-L46"> 46</a>   toFun := cellEvaluation H</span>
+<span><a class="line" href="#OrbitCellMaps-L47" id="OrbitCellMaps-L47"> 47</a>   invFun := cellFromFixed H</span>
+<span><a class="line" href="#OrbitCellMaps-L48" id="OrbitCellMaps-L48"> 48</a>   left_inv f := by</span>
+<span><a class="line" href="#OrbitCellMaps-L49" id="OrbitCellMaps-L49"> 49</a>     ext p</span>
+<span><a class="line" href="#OrbitCellMaps-L50" id="OrbitCellMaps-L50"> 50</a>     rcases p with ⟨q, d⟩</span>
+<span><a class="line" href="#OrbitCellMaps-L51" id="OrbitCellMaps-L51"> 51</a>     induction q using QuotientGroup.induction_on with</span>
+<span><a class="line" href="#OrbitCellMaps-L52" id="OrbitCellMaps-L52"> 52</a>     | H g =&gt;</span>
+<span><a class="line" href="#OrbitCellMaps-L53" id="OrbitCellMaps-L53"> 53</a>       change g • f (QuotientGroup.mk 1, d) = f (QuotientGroup.mk g, d)</span>
+<span><a class="line" href="#OrbitCellMaps-L54" id="OrbitCellMaps-L54"> 54</a>       apply (f.map_smul g (QuotientGroup.mk 1, d)).symm.trans</span>
+<span><a class="line" href="#OrbitCellMaps-L55" id="OrbitCellMaps-L55"> 55</a>       apply congrArg f</span>
+<span><a class="line" href="#OrbitCellMaps-L56" id="OrbitCellMaps-L56"> 56</a>       change (g • (QuotientGroup.mk 1 : Γ ⧸ H), d) = (QuotientGroup.mk g, d)</span>
+<span><a class="line" href="#OrbitCellMaps-L57" id="OrbitCellMaps-L57"> 57</a>       simp only [MulAction.Quotient.smul_mk, smul_eq_mul, mul_one]</span>
+<span><a class="line" href="#OrbitCellMaps-L58" id="OrbitCellMaps-L58"> 58</a>   right_inv u := by</span>
+<span><a class="line" href="#OrbitCellMaps-L59" id="OrbitCellMaps-L59"> 59</a>     ext d</span>
+<span><a class="line" href="#OrbitCellMaps-L60" id="OrbitCellMaps-L60"> 60</a>     exact one_smul Γ (u d : X)</span>
+<span><a class="line" href="#OrbitCellMaps-L61" id="OrbitCellMaps-L61"> 61</a> </span>
+<span><a class="line" href="#OrbitCellMaps-L62" id="OrbitCellMaps-L62"> 62</a> omit [ContinuousConstSMul Γ X] [DiscreteTopology Γ] in</span>
+<span><a class="line" href="#OrbitCellMaps-L63" id="OrbitCellMaps-L63"> 63</a> /-- Evaluation commutes with restriction along any continuous parameter map. -/</span>
+<span id="doc/BC4lean.ProperActions.cellEvaluation_comp"><a class="line" href="#OrbitCellMaps-L64" id="OrbitCellMaps-L64"> 64</a> theorem cellEvaluation_comp (H : Subgroup Γ) (i : C(D, E))</span>
+<span><a class="line" href="#OrbitCellMaps-L65" id="OrbitCellMaps-L65"> 65</a>     (f : EquivariantMap Γ (OrbitCell H E) X) :</span>
+<span><a class="line" href="#OrbitCellMaps-L66" id="OrbitCellMaps-L66"> 66</a>     cellEvaluation H (f.comp (OrbitCell.map H i)) = (cellEvaluation H f).comp i := by</span>
+<span><a class="line" href="#OrbitCellMaps-L67" id="OrbitCellMaps-L67"> 67</a>   ext d</span>
+<span><a class="line" href="#OrbitCellMaps-L68" id="OrbitCellMaps-L68"> 68</a>   rfl</span>
+<span><a class="line" href="#OrbitCellMaps-L69" id="OrbitCellMaps-L69"> 69</a> </span>
+<span><a class="line" href="#OrbitCellMaps-L70" id="OrbitCellMaps-L70"> 70</a> /-- An equivariant cell extension exists exactly when its fixed-point slice extends. -/</span>
+<span id="doc/BC4lean.ProperActions.orbitCell_extension_iff"><a class="line" href="#OrbitCellMaps-L71" id="OrbitCellMaps-L71"> 71</a> theorem orbitCell_extension_iff (H : Subgroup Γ) (i : C(D, E))</span>
+<span><a class="line" href="#OrbitCellMaps-L72" id="OrbitCellMaps-L72"> 72</a>     (f : EquivariantMap Γ (OrbitCell H D) X) :</span>
+<span><a class="line" href="#OrbitCellMaps-L73" id="OrbitCellMaps-L73"> 73</a>     (∃ F : EquivariantMap Γ (OrbitCell H E) X, F.comp (OrbitCell.map H i) = f) ↔</span>
+<span><a class="line" href="#OrbitCellMaps-L74" id="OrbitCellMaps-L74"> 74</a>       ∃ u : C(E, FixedPointSpace H X), u.comp i = cellEvaluation H f := by</span>
+<span><a class="line" href="#OrbitCellMaps-L75" id="OrbitCellMaps-L75"> 75</a>   constructor</span>
+<span><a class="line" href="#OrbitCellMaps-L76" id="OrbitCellMaps-L76"> 76</a>   · rintro ⟨F, hF⟩</span>
+<span><a class="line" href="#OrbitCellMaps-L77" id="OrbitCellMaps-L77"> 77</a>     exact ⟨cellEvaluation H F, (cellEvaluation_comp H i F).symm.trans (congrArg (cellEvaluation H) hF)⟩</span>
+<span><a class="line" href="#OrbitCellMaps-L78" id="OrbitCellMaps-L78"> 78</a>   · rintro ⟨u, hu⟩</span>
+<span><a class="line" href="#OrbitCellMaps-L79" id="OrbitCellMaps-L79"> 79</a>     refine ⟨cellFromFixed H u, ?_⟩</span>
+<span><a class="line" href="#OrbitCellMaps-L80" id="OrbitCellMaps-L80"> 80</a>     apply (orbitCellMapEquiv H).injective</span>
+<span><a class="line" href="#OrbitCellMaps-L81" id="OrbitCellMaps-L81"> 81</a>     change cellEvaluation H ((cellFromFixed H u).comp (OrbitCell.map H i)) = cellEvaluation H f</span>
+<span><a class="line" href="#OrbitCellMaps-L82" id="OrbitCellMaps-L82"> 82</a>     rw [cellEvaluation_comp]</span>
+<span><a class="line" href="#OrbitCellMaps-L83" id="OrbitCellMaps-L83"> 83</a>     have he : cellEvaluation H (cellFromFixed H u) = u := (orbitCellMapEquiv H).apply_symm_apply u</span>
+<span><a class="line" href="#OrbitCellMaps-L84" id="OrbitCellMaps-L84"> 84</a>     rw [he, hu]</span>
+<span><a class="line" href="#OrbitCellMaps-L85" id="OrbitCellMaps-L85"> 85</a> </span>
+<span><a class="line" href="#OrbitCellMaps-L86" id="OrbitCellMaps-L86"> 86</a> end BC4lean.ProperActions</span>
 </pre>
 </body></html>
