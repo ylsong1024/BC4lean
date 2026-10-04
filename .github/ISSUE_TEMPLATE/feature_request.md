@@ -1,20 +1,21 @@
 ---
-name: Feature request
-about: Suggest an idea for this project
+name: Design discussion
+about: Propose a mathematical interface, API change, or collaboration improvement
 title: ''
 labels: ''
 assignees: ''
-
 ---
 
-**Is your feature request related to a problem? Please describe.**
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+## Proposal
 
-**Describe the solution you'd like**
-A clear and concise description of what you want to happen.
+State the mathematical or practical problem and the proposed change.
 
-**Describe alternatives you've considered**
-A clear and concise description of any alternative solutions or features you've considered.
+## Existing interfaces and alternatives
 
-**Additional context**
-Add any other context or screenshots about the feature request here.
+Link the relevant source files, pinned Mathlib declarations, and blueprint labels.
+Explain why the existing approach is insufficient and any alternatives considered.
+
+## Bounded next step
+
+What is the smallest useful result or experiment? What would count as success,
+and what obstruction would require a new approach?

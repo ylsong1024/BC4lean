@@ -1,38 +1,23 @@
 ---
-name: Bug report
-about: Create a report to help us improve
+name: Build or website problem
+about: Report a reproducible Lean, blueprint, or website problem
 title: ''
 labels: ''
 assignees: ''
-
 ---
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+## What failed?
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+Describe the expected result and what happened. For a website problem include
+the page URL and whether the latest publishing workflow succeeded.
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+## Reproduce
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+- Commit or branch:
+- Operating system:
+- `lean-toolchain` and `lake env lean --version` (for Lean problems):
+- Exact command or VS Code steps:
+- Error output / minimal example:
 
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
-
-**Smartphone (please complete the following information):**
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
- - Version [e.g. 22]
-
-**Additional context**
-Add any other context about the problem here.
+Please remove credentials and other private data from logs. Include whether
+the issue occurs on a clean checkout with the pinned dependencies.
