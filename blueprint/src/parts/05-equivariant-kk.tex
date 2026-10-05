@@ -306,13 +306,18 @@ KK quotient are further targets.
 \end{definition}
 
 \begin{proposition}\label{prop:scalar-creation-map-caution}
-\lean{BC4lean.KKTheory.scalarCreationMap_adjoint_identity,BC4lean.KKTheory.scalarCreationMap_one_not_compact}
+\lean{BC4lean.KKTheory.scalarCreationMap_adjoint_identity,BC4lean.KKTheory.scalarCreationMap_one_not_compact,BC4lean.KKTheory.ScalarHilbertModule.isCompactOperator_of_isModuleCompact,BC4lean.KKTheory.scalarCreationModuleMap_one_not_moduleCompact,BC4lean.KKTheory.ScalarCreationCycleCounterexample.firstCycle,BC4lean.KKTheory.ScalarCreationCycleCounterexample.secondCycle,BC4lean.KKTheory.ScalarCreationCycleCounterexample.secondCycle_isDegenerate,BC4lean.KKTheory.ScalarCreationCycleCounterexample.fullCycleCounterexample}
 \leanok
 Scalar creation maps in $\mathbb C\otimes_{\mathbb C}H$ are bounded
 adjointable maps, but are not automatically compact. In the scalar correspondence
 $\mathbb C\otimes_{\mathbb C}\ell^2(\mathbb N)\cong\ell^2(\mathbb N)$,
 creation at $1$ is the identity under this identification, hence is not a
-compact Hilbert-space operator.
+compact Hilbert-space operator. The same actual tensor creation map is
+also noncompact for the scalar Hilbert-module compactness predicate.
+The failure persists for two actual complete, countably generated graded
+Kasparov cycles: the first is $\mathbb C$ with operator zero, and the second
+is $\ell^2(\mathbb N)\oplus\ell^2(\mathbb N)$ with diagonal grading and odd
+selfadjoint unitary flip. The second cycle has exactly zero defects.
 \end{proposition}
 \begin{proof}\leanok
 The scalar tensor isometric identification gives the bounded adjoint
@@ -320,6 +325,147 @@ explicitly. Composing creation at $1$ with that identification yields the
 identity. Its compactness would force $\ell^2(\mathbb N)$ to be
 finite-dimensional, contradicting its independent delta vectors.
 \end{proof}
+
+\begin{proposition}\label{prop:rectangular-module-compactness}
+\uses{prop:compact-module-ideal}
+\lean{BC4lean.KKTheory.AdjointableMap.norm_sub_comp_sq_le,BC4lean.KKTheory.isModuleCompact_iff_adjoint_comp_self,BC4lean.KKTheory.IsModuleCompact.of_adjoint_comp_self}
+\leanok
+For an adjointable map $T:E\to F$ with complete source module,
+$T$ is compact if and only if $T^*T$ is compact. The target need not be
+complete. An approximate unit of $\mathcal K_B(E)$ and the rectangular
+$C^*$-identity show that $T$ is a norm limit of compact maps $Te$.
+\end{proposition}
+
+\begin{definition}\label{def:hilbert-module-unitary-equivalence}
+\uses{def:hilbert-modules}
+\lean{BC4lean.KKTheory.HilbertModuleEquiv,BC4lean.KKTheory.HilbertModuleEquiv.toAdjointable,BC4lean.KKTheory.HilbertModuleEquiv.transportStarAlgEquiv,BC4lean.KKTheory.HilbertModuleEquiv.transportMap_norm,BC4lean.KKTheory.HilbertModuleEquiv.transportMap_isModuleCompact_iff}
+\leanok
+A Hilbert-module unitary equivalence is an actual complex-linear isometry
+preserving the coefficient-valued inner product. It is coefficient-linear,
+its inverse is its adjoint, and conjugation preserves operator norm, adjoints
+and compactness, including rectangular operators.
+\end{definition}
+
+\begin{proposition}\label{prop:hilbert-module-direct-sum}
+\uses{def:hilbert-modules,def:countably-generated-module}
+\lean{BC4lean.KKTheory.HilbertModuleSum,BC4lean.KKTheory.inner_sum,BC4lean.KKTheory.norm_sum,BC4lean.KKTheory.hilbertModuleSum_complete,BC4lean.KKTheory.sumMap,BC4lean.KKTheory.IsModuleCompact.sumMap,BC4lean.KKTheory.IsCountablyGeneratedModule.sum,BC4lean.KKTheory.sumSwap,BC4lean.KKTheory.sumAssoc}
+\leanok
+The Hilbert-module direct sum has inner product
+$\langle(x,y),(x',y')\rangle=\langle x,x'\rangle+\langle y,y'\rangle$
+and norm $\sqrt{\|\langle x,x\rangle+\langle y,y\rangle\|}$.
+Complete summands give a complete sum. Coordinate maps are adjointable,
+diagonal compact maps are compact, and countable generation is preserved.
+Swapping and reassociating summands give coefficient-inner-preserving
+isometries.
+\end{proposition}
+
+\begin{definition}\label{def:kasparov-cycle-unitary-isomorphism}
+\uses{def:even-kasparov-cycle,def:hilbert-module-unitary-equivalence}
+\lean{BC4lean.KKTheory.KasparovCycleIso,BC4lean.KKTheory.KasparovCycleIso.refl,BC4lean.KKTheory.KasparovCycleIso.symm,BC4lean.KKTheory.KasparovCycleIso.trans,BC4lean.KKTheory.KasparovCycle.transport,BC4lean.KKTheory.KasparovCycle.transportIso,BC4lean.KKTheory.KasparovCycle.transport_isDegenerate,BC4lean.KKTheory.BundledKasparovCycle,BC4lean.KKTheory.BundledKasparovCycle.isomorphismSetoid}
+\leanok
+Cycle isomorphisms are genuine Hilbert-module unitaries intertwining the
+grading, action, representation and Fredholm operator. They give an
+equivalence relation across actual module types in a fixed explicit universe.
+Unitary transport constructs all target cycle data and preserves degeneracy.
+This is the isomorphism relation; the full homotopy quotient is a separate
+construction.
+\end{definition}
+
+\begin{proposition}\label{prop:kasparov-cycle-direct-sum}
+\uses{prop:hilbert-module-direct-sum,def:even-kasparov-cycle,def:odd-kasparov-cycle-data}
+\lean{BC4lean.KKTheory.KasparovCycle.directSum,BC4lean.KKTheory.KasparovCycle.directSum_isDegenerate,BC4lean.KKTheory.OddKasparovCycle.directSum,BC4lean.KKTheory.OddKasparovCycle.directSum_isDegenerate}
+\leanok
+Even and odd raw cycles have genuine direct sums, with diagonal
+representations and Fredholm operators and the compatible summed actions.
+Every localized compact defect is the diagonal sum of the original defects.
+Direct sums of degenerate cycles are degenerate. Group laws on a homotopy
+quotient remain a further target.
+\end{proposition}
+
+\begin{proposition}\label{prop:compact-perturbation-operator-homotopy}
+\uses{def:fixed-module-operator-homotopy}
+\lean{BC4lean.KKTheory.affineKasparovOperator_square_defect,BC4lean.KKTheory.KasparovCycle.operatorConditions_affine_compactPerturbation,BC4lean.KKTheory.KasparovOperatorHomotopy.compactPerturbation}
+\leanok
+Two admissible operators $F_0,F_1$ on the same cycle frame give an actual
+norm-continuous affine operator homotopy if
+$(F_1-F_0)\phi(a)$ is compact for every $a$. The exact noncommutative square
+identity controls the additional term $(F_1-F_0)^2\phi(a)$; commutation of the
+operators and global compactness of their difference are not required.
+\end{proposition}
+
+\begin{proposition}\label{prop:continuous-section-hilbert-module}
+\uses{def:hilbert-modules,def:countably-generated-module,prop:compact-module-ideal}
+\lean{BC4lean.KKTheory.exists_finite_partition_approximation,BC4lean.KKTheory.continuousSectionCStarModule,BC4lean.KKTheory.continuousSectionOperator,BC4lean.KKTheory.continuousSectionOperator_isModuleCompact,BC4lean.KKTheory.continuousSection_isCountablyGenerated,BC4lean.KKTheory.continuousSectionFibreIsometryEquiv,BC4lean.KKTheory.continuousSectionFibreModuleEquiv}
+\leanok
+For compact Hausdorff $X$, continuous sections $C(X,E)$ with their supremum
+norm form a right Hilbert $C(X,B)$-module under pointwise action and inner
+product. Norm-continuous compact operator fields lift to compact module
+operators by uniform finite partition approximation. Constant sections of a
+countable generating family generate densely. The evaluation-kernel quotient
+has its proved quotient norm and is unitarily identified with $E$.
+This fibre assertion concerns continuous-section modules; fibres of arbitrary
+$C(X,B)$-modules require a further construction.
+\end{proposition}
+
+\begin{definition}\label{def:balanced-module-tensor-algebraic}
+\uses{def:hilbert-modules}
+\lean{BC4lean.KKTheory.BalancedModuleTensor,BC4lean.KKTheory.moduleTensorMk_balance,BC4lean.KKTheory.moduleTensorLift,BC4lean.KKTheory.moduleTensorLift_unique,BC4lean.KKTheory.moduleTensorPureInner,BC4lean.KKTheory.moduleTensorPureInner_self_nonneg,BC4lean.KKTheory.moduleTensorPureInner_norm_le,BC4lean.KKTheory.moduleTensorInner,BC4lean.KKTheory.moduleTensorInner_star}
+\leanok
+Given an actual left action $\Psi:B\to\mathcal L_C(F)$, quotient the complex
+algebraic tensor by the span of $xb\otimes y-x\otimes\Psi(b)y$.
+This constructed quotient has the genuine balanced universal property.
+Its coefficient pairing descends to a Hermitian form on the constructed quotient.
+The elementary formula is
+$\langle y,\Psi(\langle x,x'\rangle)y'\rangle$, respects both balance
+relations, is positive on elementary vectors and satisfies the four-factor
+norm bound. Separation and norm completion are additional obligations.
+\end{definition}
+
+\begin{proposition}\label{prop:injective-star-hom-positivity}
+\uses{def:hilbert-modules}
+\lean{BC4lean.KKTheory.injectiveStarHom_isSelfAdjoint_iff,BC4lean.KKTheory.injectiveStarHom_nonneg_iff,BC4lean.KKTheory.injectiveStarHom_le_iff}
+\leanok
+An injective nonunital complex star homomorphism between $C^*$-algebras
+reflects selfadjointness and the given star-compatible positive order.
+Functoriality of the continuous functional calculus for the negative part
+proves positivity reflection.
+\end{proposition}
+
+\begin{proposition}\label{prop:hilbert-module-gram-positivity}
+\uses{prop:hilbert-module-direct-sum,prop:injective-star-hom-positivity}
+\lean{BC4lean.KKTheory.FiniteStandardModule,BC4lean.KKTheory.moduleGramSynthesis,BC4lean.KKTheory.moduleMatrixRepresentation,BC4lean.KKTheory.moduleMatrixRepresentation_injective,BC4lean.KKTheory.moduleGramMatrix_nonneg}
+\leanok
+For any finite family in a complete Hilbert $B$-module, its matrix of
+coefficient inner products is positive in the actual $C^*$-matrix algebra
+over $B$. Finite synthesis has the adjoint given by coefficient analysis.
+A faithful matrix action and its linking-module embedding realize the Gram
+matrix as $T^*T$ and reflect positivity. Nonunital $B$ is allowed.
+\end{proposition}
+
+\begin{proposition}\label{prop:hilbert-module-completion}
+\uses{def:hilbert-modules,def:countably-generated-module}
+\lean{BC4lean.KKTheory.completionModuleSMul,BC4lean.KKTheory.completionCStarModule,BC4lean.KKTheory.completionInner_coe,BC4lean.KKTheory.completion_norm_eq_sqrt_inner,BC4lean.KKTheory.hilbertModuleToCompletion,BC4lean.KKTheory.hilbertModuleToCompletion_denseRange,BC4lean.KKTheory.IsCountablyGeneratedModule.completion,BC4lean.KKTheory.AdjointableMap.completion,BC4lean.KKTheory.AdjointableMap.norm_completion,BC4lean.KKTheory.AdjointableMap.completionHom}
+\leanok
+The actual norm completion of a right pre-Hilbert $B$-module carries its
+extended coefficient action and inner product, satisfies every Hilbert-module
+law and retains the inherited completion norm. The canonical inclusion is a
+dense coefficient-inner-preserving linear isometry. Countable generation is
+preserved. Adjointable maps extend uniquely to completions, preserving
+adjoints, norm, composition and the endomorphism star-algebra structure.
+Completeness of the original module and a coefficient unit are not required.
+\end{proposition}
+
+\begin{proposition}\label{prop:balanced-module-tensor-positivity}
+\uses{def:balanced-module-tensor-algebraic,prop:hilbert-module-gram-positivity}
+\lean{BC4lean.KKTheory.moduleMatrixQuadratic_nonneg,BC4lean.KKTheory.moduleMatrixPairing_eq_zero_of_quadratic,BC4lean.KKTheory.moduleTensorInner_sum_mk_self_nonneg,BC4lean.KKTheory.moduleTensorInner_self_nonneg}
+\leanok
+The actual balanced tensor form is positive on every algebraic tensor, for
+complete Hilbert modules. Amplifying the positive finite Gram matrix by the
+left representation and using its genuine matrix positive cone proves
+positivity on finite tensor sums. A zero quadratic vector pairs to zero with
+every vector in the same positive matrix form. This uses actual second-module
+inner products, with no assumed tensor norm or separation axiom.
+\end{proposition}
 
 \begin{definition}\label{def:equivariant-kk}
 \uses{def:hilbert-modules}

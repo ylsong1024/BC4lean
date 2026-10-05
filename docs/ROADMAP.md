@@ -113,6 +113,9 @@ C*-algebra, closed compact-operator ideal, general coefficient/module gradings,
 and compatible continuous discrete group actions now complete the
 `def:hilbert-modules` blueprint target. On the standard module B_B, compact
 operators are isometrically star-isomorphic to B, including nonunital B.
+Hilbert-module completion and adjointable completion extensions preserve the
+actual norm and inner product. Finite module Gram matrices are proved positive
+in the genuine matrix C*-algebra.
 See [the Chapter 5 verification record](CHAPTER5_VERIFICATION.md).
 
 ### KK-02 — Cycle data and operator homotopies (verified prerequisites)
@@ -123,11 +126,15 @@ the standard module is countably generated and supplies the standard identity
 cycle with F = 0. Fixed-module norm-continuous operator paths produce actual
 cycles at every parameter; constant, reversed and concatenated paths are
 constructed. These prerequisites do not yet construct KK groups or product laws.
+Genuine unitary cycle isomorphisms, transport, direct-sum cycles and affine
+compact-perturbation homotopies also pass strict compilation and axiom audits.
 
 ### KK-03 — Full homotopy quotient and parity
 
-Construct Hilbert modules over C([0,1],B), evaluation fibres and transport of
-compact defects, or prove equivalence with a fully justified operator-homotopy
+Varying-carrier cycle bundles and C([0,1],E) section modules are verified,
+including uniform compact operator fields and their evaluation-kernel quotient
+fibres. Construct arbitrary C([0,1],B)-module fibres and transport of compact
+defects, or prove equivalence with a fully justified operator-homotopy
 presentation. Bundle modules of varying types and quotient by genuine cycle
 isomorphisms and homotopy. Prove direct-sum congruence, degenerate classes vanish,
 and all abelian group laws. Identify odd cycles with the Clifford-graded picture
@@ -138,8 +145,9 @@ are constructed, with all laws strictly compiled and axiom-audited.
 
 ### KK-04 — Interior tensor product and Kasparov product
 
-Construct the balanced interior Hilbert-module tensor product and its complete
-coefficient-valued inner product. Prove creation-map adjointability; creation
+The algebraic balancing quotient, descended Hermitian coefficient form and
+positivity on every algebraic tensor are verified. Construct its separated
+norm and completed interior Hilbert module. Prove creation-map adjointability; creation
 maps are not automatically compact, as the verified scalar counterexample shows.
 Develop connections, positivity modulo the compact ideal, and the Kasparov
 technical theorem. Prove product existence, uniqueness up to homotopy,

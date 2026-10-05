@@ -47,7 +47,10 @@ logical axioms in their audits.
 Chapter 5 now constructs the complete adjointable operator algebra, compact
 module operators, general module gradings and compatible discrete group actions.
 Raw even/odd Kasparov cycle data, standard identity-cycle data and fixed-module
-operator homotopies are checked prerequisites. The KK homotopy groups, Kasparov
+operator homotopies are checked prerequisites. Module completions, unitary cycle
+transport, direct sums, continuous section modules and positivity of the
+balanced algebraic tensor form now pass the full strict build and axiom audit.
+The KK homotopy groups, Kasparov
 product and comparison with operator K-theory remain unverified; see the
 [Chapter 5 verification record](docs/CHAPTER5_VERIFICATION.md).
 The assembly construction remains a later milestone.
