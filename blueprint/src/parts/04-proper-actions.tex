@@ -11,9 +11,13 @@ properness for countable discrete groups are verified. The cellular mapping
 property is also verified for targets satisfying the fixed-point criterion.
 A countable proper zero-skeleton containing a fixed vertex for every finite
 subgroup is now constructed. For finite groups, a genuine locally compact
-second-countable universal proper CW model is verified. General universal
-proper CW-model existence and the locally compact second-countable model
-choice remain formalization targets.
+second-countable universal proper CW model is verified. The concrete weak
+labeled join is now constructed, and its properness and full subgroup
+fixed-point criterion are verified for arbitrary discrete groups. Its genuine
+CW attachment witnesses are also verified. For every countable discrete
+group, the staircase prism realization is equivariantly homeomorphic to
+a locally compact second-countable telescope, giving a genuine universal
+proper CW model with all required properties on the same space.
 
 \section{Proper actions and compact transporters}
 
@@ -330,6 +334,23 @@ criterion, and then apply the result to the orbit-cell projection.
 
 \section{The fixed-point criterion and uniqueness}
 
+\begin{proposition}\label{prop:orbit-cell-fixed-product}
+\uses{def:orbit-cell,def:subgroup-fixed-point-space}
+\lean{BC4lean.ProperActions.OrbitCell.fixedSpaceHomeomorph,BC4lean.ProperActions.OrbitCell.fixedSpaceHomeomorph_fst,BC4lean.ProperActions.OrbitCell.fixedSpaceHomeomorph_snd,BC4lean.ProperActions.OrbitCell.fixedSpaceHomeomorph_symm_coe,BC4lean.ProperActions.OrbitCell.fixedSpace_nonempty_iff,BC4lean.ProperActions.OrbitCell.fixedSpace_isEmpty_of_cosets,BC4lean.ProperActions.OrbitCell.fixedSpace_isEmpty_of_parameter}
+\leanok
+For subgroups $H,K\leq\Gamma$ and a topological parameter space $D$ with
+trivial action, there is a natural homeomorphism
+$((\Gamma/H)\times D)^K\cong(\Gamma/H)^K\times D$.
+The fixed cell is nonempty exactly when both factors are nonempty; an
+empty factor gives an empty fixed cell. Neither subgroup needs to be
+finite or normal.
+\end{proposition}
+\begin{proof}
+\leanok
+Project a fixed pair to its fixed coset and parameter, and pair them for
+the inverse. Both maps are continuous in the product and subspace topologies.
+\end{proof}
+
 \begin{definition}\label{def:proper-model-fixed-point-criterion}
 \uses{def:subgroup-fixed-point-space}
 \lean{BC4lean.ProperActions.FixedPointCriterion}
@@ -452,6 +473,22 @@ $q(K)$. Apply this construction to singletons for the covering assertion.
 \end{proof}
 
 \section{Categorical equivariant cell attachments}
+
+\begin{proposition}\label{prop:invariant-subspace-inclusions}
+\uses{def:equivariant-map,def:closed-cocompact-piece}
+\lean{BC4lean.ProperActions.InvariantSubset.inclusionMap,BC4lean.ProperActions.InvariantSubset.inclusionMap_refl,BC4lean.ProperActions.InvariantSubset.inclusionMap_comp,BC4lean.ProperActions.InvariantSubset.inclusion_comp_inclusionMap,BC4lean.ProperActions.InvariantSubset.inclusionMap_injective,BC4lean.ProperActions.CocompactPiece.inclusionMap,BC4lean.ProperActions.CocompactPiece.inclusionMap_comp}
+\leanok
+For invariant subsets $S\subseteq T$ of a $\Gamma$-space, the inclusion
+$S\to T$ is continuous, equivariant and injective. These inclusions obey
+identity and composition laws and commute with inclusion into the ambient
+space. In particular, they give the inclusion maps between ordered
+cocompact pieces.
+\end{proposition}
+\begin{proof}
+\leanok
+Use the subtype inclusion, its induced topology and its induced action.
+All compatibility laws follow from the unchanged ambient coordinate.
+\end{proof}
 
 \begin{definition}\label{def:equivariant-cellular-data}
 \uses{def:equivariant-map,def:orbit-cell}
@@ -935,10 +972,90 @@ Left multiplication by $h\in H$ fixes the coset $H$ and leaves the label
 unchanged.
 \end{proof}
 
-These results supply the orbit and face combinatorics for a possible infinite
-join model. Constructing its geometric realization as an equivariant CW
-space, proving fixed-point contractibility, and obtaining a locally compact
-second-countable model remain separate unverified obligations.
+\begin{definition}\label{def:labeled-weak-realization}
+\uses{def:labeled-orbit-simplex}
+\lean{BC4lean.ProperActions.LabeledSimplexCoordinates,BC4lean.ProperActions.LabeledOrbitRealization,BC4lean.ProperActions.LabeledOrbitRealization.chart,BC4lean.ProperActions.LabeledOrbitRealization.continuous_iff,BC4lean.ProperActions.LabeledOrbitRealization.continuous_product_iff}
+\leanok
+The weak realization consists of nonnegative real vertex coordinates with
+sum one and finite support contained in an admissible labeled simplex.
+Equip it with the final topology of all finite simplex charts. A map out of
+this realization is continuous exactly when it is continuous on every chart;
+the same criterion holds after taking a product with a locally compact space.
+The coordinate map into the product of real lines is continuous and injective,
+so the weak realization is Hausdorff.
+\end{definition}
+
+\begin{proposition}\label{prop:labeled-simplex-disk-pair}
+\uses{def:labeled-weak-realization}
+\lean{BC4lean.ProperActions.LabeledOrbitRealization.isCompact_range_chart,BC4lean.ProperActions.LabeledOrbitRealization.chart_isClosedEmbedding,BC4lean.ProperActions.labeledCoordinatesHomeomorph,BC4lean.ProperActions.exists_labeledSimplexDiskHomeomorph}
+Every nonempty simplex chart is homeomorphic to a closed disk of dimension
+one less than its number of vertices. Its full face boundary corresponds
+exactly to the unit sphere, including the zero-dimensional case. Each chart
+is compact and closed embedded in the weak realization.
+\end{proposition}
+\begin{proof}
+\leanok
+Restrict the coordinate vector to the finite vertex set to obtain the standard
+simplex. Identify that simplex with a compact convex body with nonempty
+interior, and use radial rescaling to obtain the disk pair. Vanishing
+barycentric coordinates describe precisely its boundary.
+\end{proof}
+
+\begin{proposition}\label{prop:labeled-realization-proper}
+\uses{def:labeled-weak-realization,prop:labeled-orbit-simplex-isotropy}
+\lean{BC4lean.ProperActions.LabeledOrbitRealization.smul_coordinate,BC4lean.ProperActions.LabeledOrbitRealization.supportSimplex,BC4lean.ProperActions.LabeledOrbitRealization.finite_compact_transporter,BC4lean.ProperActions.LabeledOrbitRealization.proper}
+Every discrete group acts continuously and properly on the weak realization.
+\end{proposition}
+\begin{proof}
+\leanok
+Translation permutes vertex coordinates and takes each finite chart
+continuously to the translated chart. A compact set admits a finite set of
+vertices carrying more than half the barycentric mass at every point.
+Intersecting translates of two such compact sets must transport one of these
+vertices to another. Vertex transporters are finite because vertex isotropy
+is finite. The resulting finite transporter bound also gives the properness
+of the action map directly.
+\end{proof}
+
+\begin{proposition}\label{prop:labeled-realization-fixed-criterion}
+\uses{prop:labeled-realization-proper,prop:labeled-orbit-fixed-vertices}
+\lean{BC4lean.ProperActions.LabeledOrbitRealization.globalShift,BC4lean.ProperActions.LabeledOrbitRealization.continuous_globalShift,BC4lean.ProperActions.LabeledOrbitRealization.fixedGlobalShiftHomotopy,BC4lean.ProperActions.LabeledOrbitRealization.fixedConeHomotopy,BC4lean.ProperActions.LabeledOrbitRealization.fixedPoints_contractible,BC4lean.ProperActions.LabeledOrbitRealization.fixedPointCriterion}
+The actual fixed-point space of every finite subgroup is contractible, and
+that of every infinite subgroup is empty.
+\end{proposition}
+\begin{proof}
+\leanok
+A continuous sequence of shifts moves all join factors upward by one.
+On each finite chart the sequence is represented by a finite homotopy, and
+these homotopies agree on chart overlaps. The shifted realization has no
+vertex in factor zero and can therefore be coned to the subgroup's fixed
+vertex in that factor. Both homotopies preserve the actual fixed-point
+subspace. Infinite-subgroup fixed points are excluded by properness.
+\end{proof}
+
+\begin{proposition}\label{prop:labeled-realization-genuine-cw}
+\uses{prop:labeled-simplex-disk-pair,prop:labeled-orbit-simplex-isotropy,def:labeled-weak-realization}
+\lean{BC4lean.ProperActions.LabeledOrbitRealization.skeletalCoconeIsColimit,BC4lean.ProperActions.labeledAttachmentIsColimit,BC4lean.ProperActions.labeledCellAttachment,BC4lean.ProperActions.LabeledOrbitRealization.equivariantCWComplex}
+The weak labeled realization has a genuine finite-isotropy equivariant CW
+structure, with its dimension filtration as the actual skeletal sequence.
+\end{proposition}
+\begin{proof}
+\leanok
+Index the new dimension-$n$ cells by orbits of simplices with $n+1$ vertices.
+The stabilizer of each representative fixes its whole chart, so its disk pair
+extends to a characteristic orbit disk and attaching orbit sphere.
+The coproduct maps are actual categorical coproducts. Their characteristic
+maps identify precisely the sphere attaching locus: outside the preceding
+skeleton, the support recovers the orbit index, coset, and disk point.
+Given any attaching cocone, lift each chart into its orbit disk and glue the
+prescribed continuous maps using their exact boundary agreement. This proves
+the full pushout universal property. The empty zero stage and the proved
+weak-topology skeletal colimit assemble these attachments into the CW witness.
+\end{proof}
+
+The proper weak realization, its full fixed-point criterion, and its actual
+categorical CW structure are now verified. The locally compact
+second-countable CW model is being constructed separately.
 
 \section{Equivariant CW complexes and a model for $\underline E\Gamma$}
 
@@ -955,34 +1072,42 @@ $\Gamma$, the resulting action is topologically proper.
 \end{definition}
 
 \begin{definition}\label{def:universal-proper-space}
-\uses{def:equivariant-cw-complex,def:proper-model-fixed-point-criterion,prop:conditional-universal-model-uniqueness,prop:proper-infinite-fixed-points,prop:equivariant-cellular-homotopy-terminal,prop:cw-fixed-point-uniqueness,prop:probability-cellular-target,prop:universal-zero-skeleton,prop:finite-group-genuine-cw-model,prop:labeled-orbit-simplex-isotropy,prop:labeled-orbit-fixed-vertices}
-\notready
-A universal proper $\Gamma$-CW complex has contractible fixed-point space
-for every finite subgroup and empty fixed-point space for every infinite
-subgroup. Develop existence, the universal property, and uniqueness up to
-equivariant homotopy. The fixed-point predicate, the finite-group point case, and the conditional
-uniqueness argument have been verified above. The mapping property for equivariant CW sources and uniqueness up to
-equivariant homotopy of CW spaces satisfying the fixed-point criterion are
-now verified. An explicit proper second-countable target satisfying the fixed-point
-criterion and the CW-source mapping property has now been constructed.
-Hausdorffness and properness of finite-isotropy equivariant CW spaces
-are now verified. A genuine CW point model is now verified for finite groups. For general
-countable groups, a proper countable zero-skeleton with all required fixed
-vertices is constructed, but the higher cells and contractibility of its
-finite-subgroup fixed-point spaces remain to be constructed. A CW structure
-or CW replacement for the probability-space target also remains unverified.
+\uses{def:equivariant-cw-complex,prop:labeled-realization-genuine-cw,prop:labeled-realization-fixed-criterion,prop:equivariant-cellular-homotopy-terminal,prop:cw-fixed-point-uniqueness}
+\lean{BC4lean.ProperActions.labeledJoin_universal_proper_CW_model,BC4lean.ProperActions.EquivariantCWComplex.labeledJoin_homotopyTerminal,BC4lean.ProperActions.EquivariantCWComplex.labeledJoin_unique}
+\leanok
+For every discrete group $\Gamma$, the weak labeled join constructed above
+is an explicit universal proper $\Gamma$-CW complex. It has a genuine
+finite-isotropy CW structure, a proper action, contractible fixed-point
+spaces for finite subgroups, and empty fixed-point spaces for infinite
+subgroups. Every finite-isotropy equivariant CW complex admits an equivariant
+map to this model, and any two such maps are equivariantly homotopic.
+Every other equivariant CW model satisfying the same fixed-point criterion
+is equivariantly homotopy equivalent to it.
 \end{definition}
 
 \section{Cocompact pieces and model choices}
 \begin{definition}\label{def:cocompact-pieces}
-\uses{def:universal-proper-space,def:closed-cocompact-piece,prop:cocompact-pieces-directed,prop:cocompact-pieces-cover}
-\notready
-Choose a suitable locally compact second-countable model $E$ for
-$\underline E\Gamma$. Index its closed invariant subsets $X$ with compact
-quotient $X/\Gamma$. Justify the model choice and the directed indexing system.
+\uses{def:universal-proper-space,prop:labeled-realization-genuine-cw,prop:labeled-realization-fixed-criterion,def:closed-cocompact-piece,prop:cocompact-pieces-directed,prop:cocompact-pieces-cover}
+\lean{BC4lean.ProperActions.LabeledOrbitRealization.allowedEquivariantCWComplex,BC4lean.ProperActions.EquivariantCWComplex.transportIso,BC4lean.ProperActions.LabeledOrbitTelescope.fixedPointCriterion,BC4lean.ProperActions.LabeledOrbitTelescope.equivariantCWComplex,BC4lean.ProperActions.LabeledOrbitTelescope.universalProperCWModel,BC4lean.ProperActions.LabeledOrbitTelescope.homotopyTerminal,BC4lean.ProperActions.LabeledOrbitTelescope.unique,BC4lean.ProperActions.LabeledPrismProjection.homeomorph,BC4lean.ProperActions.LabeledPrismProjection.actionIso}
+\leanok
+For a countable discrete group $\Gamma$, choose the concrete geometric
+telescope $E$ of the finite-orbit stages of the weak labeled join.
+This same space is a genuine finite-isotropy equivariant CW complex,
+is locally compact and second-countable, has a proper action, and has
+contractible fixed spaces for finite subgroups and empty fixed spaces
+for infinite subgroups. It has the universal cellular mapping property
+and is unique up to equivariant homotopy among genuine CW models with
+the fixed-point criterion. Its closed invariant subsets with compact
+quotient form the directed cocompact indexing system proved above,
+and their union is $E$.
 \end{definition}
 
-The preceding cocompact indexing construction is verified for a given ambient
-space. What remains in this target is the justified choice and construction of
-a locally compact second-countable universal proper model for general
-countable groups. The finite-group case is now verified above.
+The CW structure is transported through the actual equivariant
+homeomorphism from the invariant staircase prism subcomplex. The general
+CW constructor applies to its invariant family closed under faces. Its
+attachments are actual orbit-disk pushouts and its weak topology is
+the actual skeletal colimit. The telescope's local compactness and
+second countability are proved independently from its nested closed
+finite-orbit stages. Fixed-space contraction uses compact finite-stage
+control and a continuous height majorant; it does not assume a global
+height section on the weak join.

@@ -35,9 +35,15 @@ proper actions and equivariant homotopy. These are building blocks for the
 assembly map, not a completed assembly construction.
 
 In Chapter 4, equivariant CW attachment, Hausdorffness, properness, and the
-cellular mapping property are verified. Labeled orbit simplices now provide
-combinatorial prerequisites for a join model. General universal proper CW-model
-existence and a locally compact second-countable model remain unfinished.
+cellular mapping property are verified. The weak labeled join realization,
+its proper action, finite simplex disk pairs, skeletal topology and colimit,
+and its full subgroup fixed-point criterion now pass strict Lean checks.
+The genuine CW witness, with actual orbit-disk pushouts, also passes its
+axiom audit. The concrete telescope is a genuine locally compact
+second-countable universal proper CW model for every countable discrete
+group, via the verified equivariant prism homeomorphism. Chapter 4 now
+has proofs for all of its blueprint targets, with only the standard Lean
+logical axioms in their audits.
 Equivariant KK-theory and the assembly construction are later milestones.
 Consult the [roadmap](docs/ROADMAP.md) and individual blueprint nodes
 for precise boundaries; a green prerequisite does not verify its successors.
