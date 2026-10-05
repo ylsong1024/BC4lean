@@ -59,3 +59,4 @@ import BC4lean.ProbabilityFixedPoints
 import BC4lean.ProbabilityProperAction
 import BC4lean.ProperActionPullback
 import BC4lean.ProbabilityUniversalTarget
+import BC4lean.LabeledOrbitSimplices

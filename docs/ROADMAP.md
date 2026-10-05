@@ -1,6 +1,6 @@
 # Contributor tasks and roadmap
 
-This is a source-based planning snapshot dated 2026-10-04. Tasks below are
+This is a source-based planning snapshot dated 2026-10-05. Tasks below are
 proposals, not opened GitHub issues or assigned work. Check the current source
 and [issues](https://github.com/ylsong1024/BC4lean/issues) before claiming one.
 Completion requires a reviewed implementation and the checks in
@@ -12,7 +12,7 @@ Completion requires a reviewed implementation and the checks in
 | --- | --- | --- |
 | Reduced group C*-algebra | Group algebra, regular representation, reduced completion and comparisons | Examples, API refinement, independent review |
 | Operator K-theory | K₀/K₁ constructions, functoriality, nonunital comparisons and homotopy modules | Review exact hypotheses and extend structural results in bounded steps |
-| Proper actions | Equivariant maps/homotopies, orbit cells, fixed-point lemmas, cocompact pieces | Equivariant CW theory and a universal proper-space model |
+| Proper actions | Equivariant CW attachment, Hausdorffness, properness, cellular mapping, finite-group models, labeled orbit simplices, cocompact indexing for a given space | General universal proper CW-model existence and a locally compact second-countable model |
 | Equivariant KK-theory | Blueprint specifications | Hilbert module and cycle infrastructure, product and comparison results |
 | Topological side and assembly | Blueprint specifications | Transition maps, colimit, descent, cut-off classes and compatibility |
 
@@ -65,17 +65,24 @@ must not be introduced just to simplify the quotient.
 **Done when:** the homeomorphism and formulas compile and are audited, including
 empty fixed-point cases. Keep this distinct from an equivariant CW construction.
 
-### C4-03 — Specify an equivariant cell-attachment interface
+### C4-03 — Realize the labeled orbit simplices
 
 **Suitable for:** an experienced topology and Lean contributor.
-Survey the pinned topology/category APIs and propose the data for attaching
-Γ/H × Sⁿ⁻¹ to Γ/H × Dⁿ, with finite H. Agree on dimension conventions and the
-ambient category in an issue before implementing one bounded interface.
+**Start from:** `BC4lean/LabeledOrbitSimplices.lean` and
+`BC4lean/EquivariantCW.lean`.
 
-**Done when:** the agreed data and structure maps are defined and checked, with
-an explicit list of still-missing pushout, filtration, and extension results.
-The blueprint target `def:equivariant-cw-complex` remains unready until its full
-specification is implemented.
+The categorical attachment interface, closed skeletal inclusions, Hausdorffness,
+properness, and cellular mapping property are already verified. The labeled
+simplices now have a group action without inversions, finite stabilizers for
+nonempty simplices, and a fixed vertex at every label for each finite subgroup.
+Construct their geometric realization with an actual equivariant CW structure,
+using the specified orbit disks, boundary maps, pushouts, and colimit.
+
+**Done when:** the realization and CW witnesses compile and are axiom-audited,
+including faces and the empty-simplex boundary case. Fixed-point/realization
+compatibility and fixed-space contractibility require their own proofs. The
+locally compact second-countable model choice remains a further obligation;
+these combinatorial results alone do not verify universal proper CW existence.
 
 ### KK-01 — Inventory Hilbert C*-module prerequisites
 

@@ -34,9 +34,12 @@ group C*-algebra construction, operator K-theory modules, and foundations for
 proper actions and equivariant homotopy. These are building blocks for the
 assembly map, not a completed assembly construction.
 
-In Chapter 4, equivariant CW infrastructure and a universal proper-space model
-remain unfinished. Equivariant KK-theory and the assembly construction are later
-milestones. Consult the [roadmap](docs/ROADMAP.md) and individual blueprint nodes
+In Chapter 4, equivariant CW attachment, Hausdorffness, properness, and the
+cellular mapping property are verified. Labeled orbit simplices now provide
+combinatorial prerequisites for a join model. General universal proper CW-model
+existence and a locally compact second-countable model remain unfinished.
+Equivariant KK-theory and the assembly construction are later milestones.
+Consult the [roadmap](docs/ROADMAP.md) and individual blueprint nodes
 for precise boundaries; a green prerequisite does not verify its successors.
 
 ## Build with the pinned dependencies

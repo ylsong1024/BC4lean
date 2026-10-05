@@ -892,6 +892,54 @@ verified cellular mapping theorem. All topological and properness
 properties are proved for this explicit model.
 \end{proof}
 
+\section{Labeled orbit simplices for a join construction}
+
+\begin{definition}\label{def:labeled-orbit-simplex}
+\lean{BC4lean.ProperActions.FiniteOrbitVertex,BC4lean.ProperActions.LabeledOrbitVertex,BC4lean.ProperActions.LabeledOrbitSimplex,BC4lean.ProperActions.LabeledOrbitSimplex.translate,BC4lean.ProperActions.LabeledOrbitSimplex.ofSubset}
+\leanok
+For any group $\Gamma$, let $V=\coprod_{H\leq\Gamma,\ H\text{ finite}}\Gamma/H$.
+Label its copies by $\mathbb N$. A labeled orbit simplex is a finite subset of
+$\mathbb N\times V$ whose projection to $\mathbb N$ is injective. Translation
+acts on the orbit coordinate and fixes the label. Every finite subset of a
+simplex is again a simplex, so the family is closed under taking faces.
+The empty simplex is allowed. These are combinatorial data; no topology or
+geometric realization is asserted here.
+\end{definition}
+
+\begin{proposition}\label{prop:labeled-orbit-simplex-isotropy}
+\uses{def:labeled-orbit-simplex}
+\lean{BC4lean.ProperActions.FiniteOrbitVertex.finite_fixing,BC4lean.ProperActions.LabeledOrbitSimplex.Stabilizes,BC4lean.ProperActions.LabeledOrbitSimplex.fixes_vertex_of_stabilizes,BC4lean.ProperActions.LabeledOrbitSimplex.stabilizes_iff_smul_eq,BC4lean.ProperActions.LabeledOrbitSimplex.finite_stabilizer,BC4lean.ProperActions.LabeledOrbitSimplex.stabilizer_finite}
+If a group element stabilizes a labeled orbit simplex setwise, it fixes each
+of its vertices. Every nonempty simplex has finite stabilizer subgroup.
+The nonempty hypothesis is essential: the empty simplex is stabilized by all
+of $\Gamma$.
+\end{proposition}
+\begin{proof}
+\leanok
+Translation preserves labels, and each label occurs at most once in a
+simplex. Thus a translated vertex that remains in the simplex is the same
+vertex. The stabilizer of an orbit vertex $aH$ is contained in the finite
+conjugate $aHa^{-1}$. Fixing one vertex therefore bounds the stabilizer of a
+nonempty simplex by a finite set.
+\end{proof}
+
+\begin{proposition}\label{prop:labeled-orbit-fixed-vertices}
+\uses{def:labeled-orbit-simplex}
+\lean{BC4lean.ProperActions.fixedOrbitVertex,BC4lean.ProperActions.fixedOrbitVertex_fixed}
+Every finite subgroup $H$ has an explicitly constructed fixed vertex at each
+natural-number label: use the identity coset in the $H$-tagged summand.
+\end{proposition}
+\begin{proof}
+\leanok
+Left multiplication by $h\in H$ fixes the coset $H$ and leaves the label
+unchanged.
+\end{proof}
+
+These results supply the orbit and face combinatorics for a possible infinite
+join model. Constructing its geometric realization as an equivariant CW
+space, proving fixed-point contractibility, and obtaining a locally compact
+second-countable model remain separate unverified obligations.
+
 \section{Equivariant CW complexes and a model for $\underline E\Gamma$}
 
 \begin{definition}\label{def:equivariant-cw-complex}
@@ -907,7 +955,7 @@ $\Gamma$, the resulting action is topologically proper.
 \end{definition}
 
 \begin{definition}\label{def:universal-proper-space}
-\uses{def:equivariant-cw-complex,def:proper-model-fixed-point-criterion,prop:conditional-universal-model-uniqueness,prop:proper-infinite-fixed-points,prop:equivariant-cellular-homotopy-terminal,prop:cw-fixed-point-uniqueness,prop:probability-cellular-target,prop:universal-zero-skeleton,prop:finite-group-genuine-cw-model}
+\uses{def:equivariant-cw-complex,def:proper-model-fixed-point-criterion,prop:conditional-universal-model-uniqueness,prop:proper-infinite-fixed-points,prop:equivariant-cellular-homotopy-terminal,prop:cw-fixed-point-uniqueness,prop:probability-cellular-target,prop:universal-zero-skeleton,prop:finite-group-genuine-cw-model,prop:labeled-orbit-simplex-isotropy,prop:labeled-orbit-fixed-vertices}
 \notready
 A universal proper $\Gamma$-CW complex has contractible fixed-point space
 for every finite subgroup and empty fixed-point space for every infinite
