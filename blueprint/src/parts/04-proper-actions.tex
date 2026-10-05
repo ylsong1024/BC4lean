@@ -633,19 +633,112 @@ homotopy-terminal uniqueness argument. This does not assert existence of a
 CW space satisfying the fixed-point criterion.
 \end{proof}
 
+
+\section{A concrete probability target}
+
+\begin{definition}\label{def:probability-simplex}
+\lean{BC4lean.ProperActions.probabilitySet,BC4lean.ProperActions.ProbabilitySimplex,BC4lean.ProperActions.ProbabilitySimplex.instMulAction,BC4lean.ProperActions.ProbabilitySimplex.instContinuousConstSMul}
+\leanok
+Let $P(\Gamma)$ be the space of functions $p:\Gamma\to\mathbb R$ such that
+$p(g)\geq0$, $p$ is summable, and $\sum_g p(g)=1$. Give it the subspace
+topology of pointwise convergence in $\mathbb R^\Gamma$ and the action
+$(a\cdot p)(g)=p(a^{-1}g)$. Each translation is continuous.
+This definition supplies a topological action; it does not supply a CW
+structure or local compactness.
+\end{definition}
+
+\begin{proposition}\label{prop:probability-fixed-points}
+\uses{def:probability-simplex,def:subgroup-fixed-point-space,def:proper-model-fixed-point-criterion}
+\lean{BC4lean.ProperActions.probabilityFixedPointsHomeomorph,BC4lean.ProperActions.ProbabilitySimplex.fixedPoints_contractible,BC4lean.ProperActions.ProbabilitySimplex.fixedPoints_empty,BC4lean.ProperActions.ProbabilitySimplex.fixedPointCriterion}
+For finite $H\leq\Gamma$, $P(\Gamma)^H$ is contractible. For infinite
+$H\leq\Gamma$, it is empty. Thus $P(\Gamma)$ satisfies the fixed-point criterion.
+\end{proposition}
+\begin{proof}
+\leanok
+The fixed-point space is homeomorphic to the convex set of invariant
+probability functions. For finite $H$, this set contains the uniform
+probability function on $H$. For infinite $H$, a nonzero nonnegative invariant
+function has a positive constant value on an infinite coset, contradicting
+summability. The total mass condition excludes the zero function.
+\end{proof}
+
+\begin{proposition}\label{prop:probability-proper-action}
+\uses{def:probability-simplex,def:proper-action}
+\lean{BC4lean.ProperActions.ProbabilitySimplex.compact_half_mass,BC4lean.ProperActions.ProbabilitySimplex.finite_compact_transporter,BC4lean.ProperActions.ProbabilitySimplex.proper,BC4lean.ProperActions.ProbabilitySimplex.secondCountable}
+For countable discrete $\Gamma$, $P(\Gamma)$ is a proper second-countable
+$\Gamma$-space. More generally, compact subsets of $P(\Gamma)$ have finite
+transporters for every discrete group.
+\end{proposition}
+\begin{proof}
+\leanok
+Compactness gives a finite set carrying more than half the mass of every
+probability function in a given compact subset. If $gK\cap L\ne\varnothing$
+and $S,T$ are such finite sets for $K,L$, respectively, then $gS\cap T$
+is nonempty; hence $g\in TS^{-1}$. The transporter is finite.
+For countable $\Gamma$, the function space and its subspace are first
+countable and Hausdorff, so the compact-transporter criterion implies
+properness. Second countability follows from the countable product topology.
+\end{proof}
+
+\begin{proposition}\label{prop:properness-equivariant-pullback}
+\uses{def:proper-action,def:equivariant-map}
+\lean{BC4lean.ProperActions.EquivariantMap.properSMul}
+Let $A$ be a Hausdorff continuous $\Gamma$-space, let $X$ be a proper
+$\Gamma$-space, and let $f:A\to X$ be continuous and equivariant.
+Then the action on $A$ is proper. No properness assumption on the map $f$
+is needed.
+\end{proposition}
+\begin{proof}
+\leanok
+Push an ultrafilter on $\Gamma\times A$ forward along
+$(g,a)\mapsto(g,f(a))$. Properness of the action on $X$ supplies convergence
+of its group coordinate. The Hausdorff ultrafilter criterion for the action
+on $A$ then proves properness.
+\end{proof}
+
+\begin{proposition}\label{prop:probability-cellular-target}
+\uses{prop:probability-fixed-points,prop:probability-proper-action,prop:equivariant-cellular-homotopy-terminal}
+\lean{BC4lean.ProperActions.EquivariantCWComplex.probability_homotopyTerminal,BC4lean.ProperActions.probability_proper_universal_target}
+Every finite-isotropy equivariant CW complex admits a map to $P(\Gamma)$,
+unique up to equivariant homotopy. For countable discrete groups the target
+is proper. This is a mapping theorem for CW sources; a CW structure on
+$P(\Gamma)$ has not been constructed.
+\end{proposition}
+\begin{proof}
+\leanok
+Apply the verified cellular mapping theorem to the explicit target and its
+fixed-point criterion. Its properness is given by the preceding proposition.
+\end{proof}
+
+\begin{proposition}\label{prop:hausdorff-equivariant-cw-proper}
+\uses{prop:probability-cellular-target,prop:properness-equivariant-pullback}
+\lean{BC4lean.ProperActions.EquivariantCWComplex.proper_of_t2}
+For countable discrete $\Gamma$, a \emph{Hausdorff} space carrying a
+finite-isotropy equivariant CW structure has a proper action.
+Hausdorffness is an explicit hypothesis here; its derivation from the
+categorical CW data remains a separate obligation.
+\end{proposition}
+\begin{proof}
+\leanok
+Choose the map to $P(\Gamma)$ supplied by the cellular mapping theorem and
+transfer properness along that equivariant map.
+\end{proof}
+
 \section{Equivariant CW complexes and a model for $\underline E\Gamma$}
 
 \begin{definition}\label{def:equivariant-cw-complex}
-\uses{def:proper-action,def:equivariant-map,def:equivariant-homotopy,def:orbit-cell,prop:proper-orbit-cells,def:equivariant-cellular-data,prop:orbit-boundary-cell-properties}
+\uses{def:proper-action,def:equivariant-map,def:equivariant-homotopy,def:orbit-cell,prop:proper-orbit-cells,def:equivariant-cellular-data,prop:orbit-boundary-cell-properties,prop:hausdorff-equivariant-cw-proper}
 \notready
 Using the preceding maps and homotopies, develop $\Gamma$-CW complexes by
 equivariant cell attachment, with cells $\Gamma/H\times D^n$.
 For the proper theory the cell stabilizers $H$ are finite. Establish the
 connection between this cellular condition and topological properness.
+The properness theorem is now verified under an explicit Hausdorff
+hypothesis; derive that hypothesis from the categorical cellular data.
 \end{definition}
 
 \begin{definition}\label{def:universal-proper-space}
-\uses{def:equivariant-cw-complex,def:proper-model-fixed-point-criterion,prop:conditional-universal-model-uniqueness,prop:proper-infinite-fixed-points,prop:equivariant-cellular-homotopy-terminal,prop:cw-fixed-point-uniqueness}
+\uses{def:equivariant-cw-complex,def:proper-model-fixed-point-criterion,prop:conditional-universal-model-uniqueness,prop:proper-infinite-fixed-points,prop:equivariant-cellular-homotopy-terminal,prop:cw-fixed-point-uniqueness,prop:probability-cellular-target}
 \notready
 A universal proper $\Gamma$-CW complex has contractible fixed-point space
 for every finite subgroup and empty fixed-point space for every infinite
@@ -653,8 +746,10 @@ subgroup. Develop existence, the universal property, and uniqueness up to
 equivariant homotopy. The fixed-point predicate, the finite-group point case, and the conditional
 uniqueness argument have been verified above. The mapping property for equivariant CW sources and uniqueness up to
 equivariant homotopy of CW spaces satisfying the fixed-point criterion are
-now verified. Construction of such a CW space, and the proof that the
-resulting full action is topologically proper, remain unverified.
+now verified. An explicit proper second-countable target satisfying the fixed-point
+criterion and the CW-source mapping property has now been constructed.
+A CW structure or CW replacement for this target, and the derivation of
+Hausdorffness from the categorical CW data, remain unverified.
 \end{definition}
 
 \section{Cocompact pieces and model choices}

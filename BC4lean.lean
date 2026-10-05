@@ -54,3 +54,8 @@ import BC4lean.DiskHomotopyExtension
 import BC4lean.DiskPathLifting
 import BC4lean.EquivariantPathLifting
 import BC4lean.CellularHomotopy
+import BC4lean.ProbabilitySimplex
+import BC4lean.ProbabilityFixedPoints
+import BC4lean.ProbabilityProperAction
+import BC4lean.ProperActionPullback
+import BC4lean.ProbabilityUniversalTarget

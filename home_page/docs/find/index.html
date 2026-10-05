@@ -62,6 +62,11 @@ code{overflow-wrap:anywhere}</style></head><body><a href="../../blueprint/">返�
 <li><a href="#DiskPathLifting">DiskPathLifting.lean</a></li>
 <li><a href="#EquivariantPathLifting">EquivariantPathLifting.lean</a></li>
 <li><a href="#CellularHomotopy">CellularHomotopy.lean</a></li>
+<li><a href="#ProbabilitySimplex">ProbabilitySimplex.lean</a></li>
+<li><a href="#ProbabilityFixedPoints">ProbabilityFixedPoints.lean</a></li>
+<li><a href="#ProbabilityProperAction">ProbabilityProperAction.lean</a></li>
+<li><a href="#ProperActionPullback">ProperActionPullback.lean</a></li>
+<li><a href="#ProbabilityUniversalTarget">ProbabilityUniversalTarget.lean</a></li>
 </ul></nav>
 <h2 id="GroupAlgebra">GroupAlgebra.lean</h2><p>源码 SHA-256：<code>1c6c0899fe9bc9f7860f291ba7c5573353d18a3c5809258769d689bc39da8ad4</code></p><pre>
 <span><a class="line" href="#L1" id="L1">  1</a> import Mathlib.Algebra.MonoidAlgebra.Basic</span>
@@ -5675,5 +5680,363 @@ code{overflow-wrap:anywhere}</style></head><body><a href="../../blueprint/">返�
 <span><a class="line" href="#CellularHomotopy-L102" id="CellularHomotopy-L102">102</a>     (cA.homotopyTerminal hA) (cX.homotopyTerminal hX)</span>
 <span><a class="line" href="#CellularHomotopy-L103" id="CellularHomotopy-L103">103</a> </span>
 <span><a class="line" href="#CellularHomotopy-L104" id="CellularHomotopy-L104">104</a> end BC4lean.ProperActions</span>
+</pre>
+<h2 id="ProbabilitySimplex">ProbabilitySimplex.lean</h2><p>源码 SHA-256：<code>050c4dc32e1cc75adb91acd74294bb08dec1c2f7355c27b63be87acb006be675</code></p><pre>
+<span><a class="line" href="#ProbabilitySimplex-L1" id="ProbabilitySimplex-L1">  1</a> import BC4lean.FixedPointCriterion</span>
+<span><a class="line" href="#ProbabilitySimplex-L2" id="ProbabilitySimplex-L2">  2</a> import Mathlib.Analysis.Convex.Contractible</span>
+<span><a class="line" href="#ProbabilitySimplex-L3" id="ProbabilitySimplex-L3">  3</a> import Mathlib.Topology.Algebra.InfiniteSum.Real</span>
+<span><a class="line" href="#ProbabilitySimplex-L4" id="ProbabilitySimplex-L4">  4</a> import Mathlib.Topology.Sequences</span>
+<span><a class="line" href="#ProbabilitySimplex-L5" id="ProbabilitySimplex-L5">  5</a> </span>
+<span><a class="line" href="#ProbabilitySimplex-L6" id="ProbabilitySimplex-L6">  6</a> /-! # The probability simplex with pointwise convergence</span>
+<span><a class="line" href="#ProbabilitySimplex-L7" id="ProbabilitySimplex-L7">  7</a> </span>
+<span><a class="line" href="#ProbabilitySimplex-L8" id="ProbabilitySimplex-L8">  8</a> This constructs a concrete Γ-space. No equivariant CW structure or local</span>
+<span><a class="line" href="#ProbabilitySimplex-L9" id="ProbabilitySimplex-L9">  9</a> compactness is assumed in this definition.</span>
+<span><a class="line" href="#ProbabilitySimplex-L10" id="ProbabilitySimplex-L10"> 10</a> -/</span>
+<span><a class="line" href="#ProbabilitySimplex-L11" id="ProbabilitySimplex-L11"> 11</a> </span>
+<span><a class="line" href="#ProbabilitySimplex-L12" id="ProbabilitySimplex-L12"> 12</a> noncomputable section</span>
+<span><a class="line" href="#ProbabilitySimplex-L13" id="ProbabilitySimplex-L13"> 13</a> open scoped BigOperators</span>
+<span><a class="line" href="#ProbabilitySimplex-L14" id="ProbabilitySimplex-L14"> 14</a> </span>
+<span><a class="line" href="#ProbabilitySimplex-L15" id="ProbabilitySimplex-L15"> 15</a> namespace BC4lean.ProperActions</span>
+<span><a class="line" href="#ProbabilitySimplex-L16" id="ProbabilitySimplex-L16"> 16</a> </span>
+<span><a class="line" href="#ProbabilitySimplex-L17" id="ProbabilitySimplex-L17"> 17</a> /-- Real nonnegative summable functions with total mass one. -/</span>
+<span id="doc/BC4lean.ProperActions.probabilitySet"><a class="line" href="#ProbabilitySimplex-L18" id="ProbabilitySimplex-L18"> 18</a> def probabilitySet (Γ : Type*) : Set (Γ → ℝ) :=</span>
+<span><a class="line" href="#ProbabilitySimplex-L19" id="ProbabilitySimplex-L19"> 19</a>   {f | (∀ g, 0 ≤ f g) ∧ Summable f ∧ ∑&#x27; g, f g = 1}</span>
+<span><a class="line" href="#ProbabilitySimplex-L20" id="ProbabilitySimplex-L20"> 20</a> </span>
+<span><a class="line" href="#ProbabilitySimplex-L21" id="ProbabilitySimplex-L21"> 21</a> /-- The probability simplex, with the subspace topology from pointwise convergence. -/</span>
+<span id="doc/BC4lean.ProperActions.ProbabilitySimplex"><a class="line" href="#ProbabilitySimplex-L22" id="ProbabilitySimplex-L22"> 22</a> abbrev ProbabilitySimplex (Γ : Type*) := probabilitySet Γ</span>
+<span><a class="line" href="#ProbabilitySimplex-L23" id="ProbabilitySimplex-L23"> 23</a> </span>
+<span><a class="line" href="#ProbabilitySimplex-L24" id="ProbabilitySimplex-L24"> 24</a> /-- The probability simplex is convex in the real function space. -/</span>
+<span id="doc/BC4lean.ProperActions.probabilitySet_convex"><a class="line" href="#ProbabilitySimplex-L25" id="ProbabilitySimplex-L25"> 25</a> theorem probabilitySet_convex (Γ : Type*) : Convex ℝ (probabilitySet Γ) := by</span>
+<span><a class="line" href="#ProbabilitySimplex-L26" id="ProbabilitySimplex-L26"> 26</a>   intro f hf g hg a b ha hb hab</span>
+<span><a class="line" href="#ProbabilitySimplex-L27" id="ProbabilitySimplex-L27"> 27</a>   refine ⟨fun x =&gt; add_nonneg (mul_nonneg ha (hf.1 x)) (mul_nonneg hb (hg.1 x)),</span>
+<span><a class="line" href="#ProbabilitySimplex-L28" id="ProbabilitySimplex-L28"> 28</a>     (hf.2.1.mul_left a).add (hg.2.1.mul_left b), ?_⟩</span>
+<span><a class="line" href="#ProbabilitySimplex-L29" id="ProbabilitySimplex-L29"> 29</a>   change (∑&#x27; x, (a * f x + b * g x)) = 1</span>
+<span><a class="line" href="#ProbabilitySimplex-L30" id="ProbabilitySimplex-L30"> 30</a>   rw [Summable.tsum_add (hf.2.1.mul_left a) (hg.2.1.mul_left b),</span>
+<span><a class="line" href="#ProbabilitySimplex-L31" id="ProbabilitySimplex-L31"> 31</a>     tsum_mul_left, tsum_mul_left, hf.2.2, hg.2.2, mul_one, mul_one]</span>
+<span><a class="line" href="#ProbabilitySimplex-L32" id="ProbabilitySimplex-L32"> 32</a>   exact hab</span>
+<span><a class="line" href="#ProbabilitySimplex-L33" id="ProbabilitySimplex-L33"> 33</a> </span>
+<span><a class="line" href="#ProbabilitySimplex-L34" id="ProbabilitySimplex-L34"> 34</a> namespace ProbabilitySimplex</span>
+<span><a class="line" href="#ProbabilitySimplex-L35" id="ProbabilitySimplex-L35"> 35</a> variable {Γ : Type*}</span>
+<span><a class="line" href="#ProbabilitySimplex-L36" id="ProbabilitySimplex-L36"> 36</a> </span>
+<span><a class="line" href="#ProbabilitySimplex-L37" id="ProbabilitySimplex-L37"> 37</a> /-- The unit mass at one index. -/</span>
+<span id="doc/BC4lean.ProperActions.ProbabilitySimplex.delta"><a class="line" href="#ProbabilitySimplex-L38" id="ProbabilitySimplex-L38"> 38</a> def delta (g : Γ) : ProbabilitySimplex Γ := by</span>
+<span><a class="line" href="#ProbabilitySimplex-L39" id="ProbabilitySimplex-L39"> 39</a>   classical</span>
+<span><a class="line" href="#ProbabilitySimplex-L40" id="ProbabilitySimplex-L40"> 40</a>   refine ⟨Pi.single g 1, ?_, (by</span>
+<span><a class="line" href="#ProbabilitySimplex-L41" id="ProbabilitySimplex-L41"> 41</a>     convert (hasSum_ite_eq g (1 : ℝ)).summable using 1</span>
+<span><a class="line" href="#ProbabilitySimplex-L42" id="ProbabilitySimplex-L42"> 42</a>     funext x</span>
+<span><a class="line" href="#ProbabilitySimplex-L43" id="ProbabilitySimplex-L43"> 43</a>     simp [Pi.single_apply]), ?_⟩</span>
+<span><a class="line" href="#ProbabilitySimplex-L44" id="ProbabilitySimplex-L44"> 44</a>   · intro x</span>
+<span><a class="line" href="#ProbabilitySimplex-L45" id="ProbabilitySimplex-L45"> 45</a>     by_cases h : x = g &lt;;&gt; simp [h]</span>
+<span><a class="line" href="#ProbabilitySimplex-L46" id="ProbabilitySimplex-L46"> 46</a>   · simp</span>
+<span><a class="line" href="#ProbabilitySimplex-L47" id="ProbabilitySimplex-L47"> 47</a> </span>
+<span><a class="line" href="#ProbabilitySimplex-L48" id="ProbabilitySimplex-L48"> 48</a> /-- A finite set carries at most the total mass. -/</span>
+<span id="doc/BC4lean.ProperActions.ProbabilitySimplex.sum_le_one"><a class="line" href="#ProbabilitySimplex-L49" id="ProbabilitySimplex-L49"> 49</a> theorem sum_le_one (p : ProbabilitySimplex Γ) (s : Finset Γ) :</span>
+<span><a class="line" href="#ProbabilitySimplex-L50" id="ProbabilitySimplex-L50"> 50</a>     ∑ g ∈ s, p.1 g ≤ 1 := by</span>
+<span><a class="line" href="#ProbabilitySimplex-L51" id="ProbabilitySimplex-L51"> 51</a>   rw [← p.2.2.2]</span>
+<span><a class="line" href="#ProbabilitySimplex-L52" id="ProbabilitySimplex-L52"> 52</a>   exact p.2.2.1.sum_le_tsum s (fun g _ =&gt; p.2.1 g)</span>
+<span><a class="line" href="#ProbabilitySimplex-L53" id="ProbabilitySimplex-L53"> 53</a> </span>
+<span><a class="line" href="#ProbabilitySimplex-L54" id="ProbabilitySimplex-L54"> 54</a> /-- Every probability function has more than half its mass on some finite set. -/</span>
+<span id="doc/BC4lean.ProperActions.ProbabilitySimplex.exists_half_mass"><a class="line" href="#ProbabilitySimplex-L55" id="ProbabilitySimplex-L55"> 55</a> theorem exists_half_mass (p : ProbabilitySimplex Γ) :</span>
+<span><a class="line" href="#ProbabilitySimplex-L56" id="ProbabilitySimplex-L56"> 56</a>     ∃ s : Finset Γ, (1 / 2 : ℝ) &lt; ∑ g ∈ s, p.1 g := by</span>
+<span><a class="line" href="#ProbabilitySimplex-L57" id="ProbabilitySimplex-L57"> 57</a>   by_contra! h</span>
+<span><a class="line" href="#ProbabilitySimplex-L58" id="ProbabilitySimplex-L58"> 58</a>   have hh := p.2.2.1.tsum_le_of_sum_le h</span>
+<span><a class="line" href="#ProbabilitySimplex-L59" id="ProbabilitySimplex-L59"> 59</a>   rw [p.2.2.2] at hh</span>
+<span><a class="line" href="#ProbabilitySimplex-L60" id="ProbabilitySimplex-L60"> 60</a>   norm_num at hh</span>
+<span><a class="line" href="#ProbabilitySimplex-L61" id="ProbabilitySimplex-L61"> 61</a> </span>
+<span><a class="line" href="#ProbabilitySimplex-L62" id="ProbabilitySimplex-L62"> 62</a> variable [Group Γ]</span>
+<span><a class="line" href="#ProbabilitySimplex-L63" id="ProbabilitySimplex-L63"> 63</a> </span>
+<span><a class="line" href="#ProbabilitySimplex-L64" id="ProbabilitySimplex-L64"> 64</a> /-- Left translation of a probability function. -/</span>
+<span id="doc/BC4lean.ProperActions.ProbabilitySimplex.translate"><a class="line" href="#ProbabilitySimplex-L65" id="ProbabilitySimplex-L65"> 65</a> def translate (g : Γ) (p : ProbabilitySimplex Γ) : ProbabilitySimplex Γ :=</span>
+<span><a class="line" href="#ProbabilitySimplex-L66" id="ProbabilitySimplex-L66"> 66</a>   ⟨fun x =&gt; p.1 (g⁻¹ * x), fun x =&gt; p.2.1 (g⁻¹ * x),</span>
+<span><a class="line" href="#ProbabilitySimplex-L67" id="ProbabilitySimplex-L67"> 67</a>     (Equiv.mulLeft g⁻¹).summable_iff.mpr p.2.2.1,</span>
+<span><a class="line" href="#ProbabilitySimplex-L68" id="ProbabilitySimplex-L68"> 68</a>     ((Equiv.mulLeft g⁻¹).tsum_eq p.1).trans p.2.2.2⟩</span>
+<span><a class="line" href="#ProbabilitySimplex-L69" id="ProbabilitySimplex-L69"> 69</a> </span>
+<span id="doc/BC4lean.ProperActions.ProbabilitySimplex.instMulAction"><a class="line" href="#ProbabilitySimplex-L70" id="ProbabilitySimplex-L70"> 70</a> instance instMulAction : MulAction Γ (ProbabilitySimplex Γ) where</span>
+<span><a class="line" href="#ProbabilitySimplex-L71" id="ProbabilitySimplex-L71"> 71</a>   smul := translate</span>
+<span><a class="line" href="#ProbabilitySimplex-L72" id="ProbabilitySimplex-L72"> 72</a>   one_smul p := by</span>
+<span><a class="line" href="#ProbabilitySimplex-L73" id="ProbabilitySimplex-L73"> 73</a>     apply Subtype.ext</span>
+<span><a class="line" href="#ProbabilitySimplex-L74" id="ProbabilitySimplex-L74"> 74</a>     funext x</span>
+<span><a class="line" href="#ProbabilitySimplex-L75" id="ProbabilitySimplex-L75"> 75</a>     change p.1 (1⁻¹ * x) = p.1 x</span>
+<span><a class="line" href="#ProbabilitySimplex-L76" id="ProbabilitySimplex-L76"> 76</a>     simp</span>
+<span><a class="line" href="#ProbabilitySimplex-L77" id="ProbabilitySimplex-L77"> 77</a>   mul_smul g h p := by</span>
+<span><a class="line" href="#ProbabilitySimplex-L78" id="ProbabilitySimplex-L78"> 78</a>     apply Subtype.ext</span>
+<span><a class="line" href="#ProbabilitySimplex-L79" id="ProbabilitySimplex-L79"> 79</a>     funext x</span>
+<span><a class="line" href="#ProbabilitySimplex-L80" id="ProbabilitySimplex-L80"> 80</a>     change p.1 ((g * h)⁻¹ * x) = p.1 (h⁻¹ * (g⁻¹ * x))</span>
+<span><a class="line" href="#ProbabilitySimplex-L81" id="ProbabilitySimplex-L81"> 81</a>     simp [mul_assoc]</span>
+<span><a class="line" href="#ProbabilitySimplex-L82" id="ProbabilitySimplex-L82"> 82</a> </span>
+<span id="doc/BC4lean.ProperActions.ProbabilitySimplex.smul_apply"><a class="line" href="#ProbabilitySimplex-L83" id="ProbabilitySimplex-L83"> 83</a> @[simp] theorem smul_apply (g : Γ) (p : ProbabilitySimplex Γ) (x : Γ) :</span>
+<span><a class="line" href="#ProbabilitySimplex-L84" id="ProbabilitySimplex-L84"> 84</a>     (g • p).1 x = p.1 (g⁻¹ * x) := rfl</span>
+<span><a class="line" href="#ProbabilitySimplex-L85" id="ProbabilitySimplex-L85"> 85</a> </span>
+<span id="doc/BC4lean.ProperActions.ProbabilitySimplex.instContinuousConstSMul"><a class="line" href="#ProbabilitySimplex-L86" id="ProbabilitySimplex-L86"> 86</a> instance instContinuousConstSMul : ContinuousConstSMul Γ (ProbabilitySimplex Γ) where</span>
+<span><a class="line" href="#ProbabilitySimplex-L87" id="ProbabilitySimplex-L87"> 87</a>   continuous_const_smul g := by</span>
+<span><a class="line" href="#ProbabilitySimplex-L88" id="ProbabilitySimplex-L88"> 88</a>     change Continuous (translate g)</span>
+<span><a class="line" href="#ProbabilitySimplex-L89" id="ProbabilitySimplex-L89"> 89</a>     apply Continuous.subtype_mk</span>
+<span><a class="line" href="#ProbabilitySimplex-L90" id="ProbabilitySimplex-L90"> 90</a>     exact continuous_pi fun x =&gt; (continuous_apply (g⁻¹ * x)).comp continuous_subtype_val</span>
+<span><a class="line" href="#ProbabilitySimplex-L91" id="ProbabilitySimplex-L91"> 91</a> </span>
+<span><a class="line" href="#ProbabilitySimplex-L92" id="ProbabilitySimplex-L92"> 92</a> /-- The whole simplex is contractible; the fixed-subspace statement is proved separately. -/</span>
+<span id="doc/BC4lean.ProperActions.ProbabilitySimplex.contractible"><a class="line" href="#ProbabilitySimplex-L93" id="ProbabilitySimplex-L93"> 93</a> theorem contractible : ContractibleSpace (ProbabilitySimplex Γ) :=</span>
+<span><a class="line" href="#ProbabilitySimplex-L94" id="ProbabilitySimplex-L94"> 94</a>   (probabilitySet_convex Γ).contractibleSpace ⟨(delta (1 : Γ)).1, (delta (1 : Γ)).2⟩</span>
+<span><a class="line" href="#ProbabilitySimplex-L95" id="ProbabilitySimplex-L95"> 95</a> </span>
+<span><a class="line" href="#ProbabilitySimplex-L96" id="ProbabilitySimplex-L96"> 96</a> end ProbabilitySimplex</span>
+<span><a class="line" href="#ProbabilitySimplex-L97" id="ProbabilitySimplex-L97"> 97</a> end BC4lean.ProperActions</span>
+</pre>
+<h2 id="ProbabilityFixedPoints">ProbabilityFixedPoints.lean</h2><p>源码 SHA-256：<code>b1ace22238429d73788cd7fb723631ac885c2ef44b0ca8b5ab6072ccf7802c05</code></p><pre>
+<span><a class="line" href="#ProbabilityFixedPoints-L1" id="ProbabilityFixedPoints-L1">  1</a> import BC4lean.ProbabilitySimplex</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L2" id="ProbabilityFixedPoints-L2">  2</a> </span>
+<span><a class="line" href="#ProbabilityFixedPoints-L3" id="ProbabilityFixedPoints-L3">  3</a> /-! # Fixed points of the probability simplex -/</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L4" id="ProbabilityFixedPoints-L4">  4</a> </span>
+<span><a class="line" href="#ProbabilityFixedPoints-L5" id="ProbabilityFixedPoints-L5">  5</a> noncomputable section</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L6" id="ProbabilityFixedPoints-L6">  6</a> open scoped BigOperators</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L7" id="ProbabilityFixedPoints-L7">  7</a> namespace BC4lean.ProperActions</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L8" id="ProbabilityFixedPoints-L8">  8</a> </span>
+<span><a class="line" href="#ProbabilityFixedPoints-L9" id="ProbabilityFixedPoints-L9">  9</a> variable {Γ : Type*} [Group Γ]</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L10" id="ProbabilityFixedPoints-L10"> 10</a> </span>
+<span><a class="line" href="#ProbabilityFixedPoints-L11" id="ProbabilityFixedPoints-L11"> 11</a> /-- The invariant probability functions for a subgroup, as a convex subset of function space. -/</span>
+<span id="doc/BC4lean.ProperActions.invariantProbabilitySet"><a class="line" href="#ProbabilityFixedPoints-L12" id="ProbabilityFixedPoints-L12"> 12</a> def invariantProbabilitySet (H : Subgroup Γ) : Set (Γ → ℝ) :=</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L13" id="ProbabilityFixedPoints-L13"> 13</a>   {f | f ∈ probabilitySet Γ ∧ ∀ h : H, ∀ x, f ((h : Γ)⁻¹ * x) = f x}</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L14" id="ProbabilityFixedPoints-L14"> 14</a> </span>
+<span><a class="line" href="#ProbabilityFixedPoints-L15" id="ProbabilityFixedPoints-L15"> 15</a> /-- Invariance and normalization are preserved under convex combinations. -/</span>
+<span id="doc/BC4lean.ProperActions.invariantProbabilitySet_convex"><a class="line" href="#ProbabilityFixedPoints-L16" id="ProbabilityFixedPoints-L16"> 16</a> theorem invariantProbabilitySet_convex (H : Subgroup Γ) :</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L17" id="ProbabilityFixedPoints-L17"> 17</a>     Convex ℝ (invariantProbabilitySet H) := by</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L18" id="ProbabilityFixedPoints-L18"> 18</a>   intro f hf g hg a b ha hb hab</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L19" id="ProbabilityFixedPoints-L19"> 19</a>   refine ⟨probabilitySet_convex Γ hf.1 hg.1 ha hb hab, ?_⟩</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L20" id="ProbabilityFixedPoints-L20"> 20</a>   intro h x</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L21" id="ProbabilityFixedPoints-L21"> 21</a>   change a * f ((h : Γ)⁻¹ * x) + b * g ((h : Γ)⁻¹ * x) = a * f x + b * g x</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L22" id="ProbabilityFixedPoints-L22"> 22</a>   rw [hf.2 h x, hg.2 h x]</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L23" id="ProbabilityFixedPoints-L23"> 23</a> </span>
+<span><a class="line" href="#ProbabilityFixedPoints-L24" id="ProbabilityFixedPoints-L24"> 24</a> /-- Fixed points are homeomorphic to the invariant convex subset. -/</span>
+<span id="doc/BC4lean.ProperActions.probabilityFixedPointsHomeomorph"><a class="line" href="#ProbabilityFixedPoints-L25" id="ProbabilityFixedPoints-L25"> 25</a> def probabilityFixedPointsHomeomorph (H : Subgroup Γ) :</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L26" id="ProbabilityFixedPoints-L26"> 26</a>     FixedPointSpace H (ProbabilitySimplex Γ) ≃ₜ invariantProbabilitySet H where</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L27" id="ProbabilityFixedPoints-L27"> 27</a>   toFun p := ⟨p.1.1, p.1.2, fun h x =&gt; congrArg (fun q : ProbabilitySimplex Γ =&gt; q.1 x) (p.2 h)⟩</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L28" id="ProbabilityFixedPoints-L28"> 28</a>   invFun f := ⟨⟨f.1, f.2.1⟩, fun h =&gt; Subtype.ext (funext (f.2.2 h))⟩</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L29" id="ProbabilityFixedPoints-L29"> 29</a>   left_inv _ := rfl</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L30" id="ProbabilityFixedPoints-L30"> 30</a>   right_inv _ := rfl</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L31" id="ProbabilityFixedPoints-L31"> 31</a>   continuous_toFun := (continuous_subtype_val.comp continuous_subtype_val).subtype_mk _</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L32" id="ProbabilityFixedPoints-L32"> 32</a>   continuous_invFun := (continuous_subtype_val.subtype_mk _).subtype_mk _</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L33" id="ProbabilityFixedPoints-L33"> 33</a> </span>
+<span><a class="line" href="#ProbabilityFixedPoints-L34" id="ProbabilityFixedPoints-L34"> 34</a> /-- A finite subgroup has an invariant probability function: its uniform distribution. -/</span>
+<span id="doc/BC4lean.ProperActions.invariantProbabilitySet_nonempty"><a class="line" href="#ProbabilityFixedPoints-L35" id="ProbabilityFixedPoints-L35"> 35</a> theorem invariantProbabilitySet_nonempty (H : Subgroup Γ) [Finite H] :</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L36" id="ProbabilityFixedPoints-L36"> 36</a>     (invariantProbabilitySet H).Nonempty := by</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L37" id="ProbabilityFixedPoints-L37"> 37</a>   classical</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L38" id="ProbabilityFixedPoints-L38"> 38</a>   let := Fintype.ofFinite H</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L39" id="ProbabilityFixedPoints-L39"> 39</a>   let c : ℝ := (Fintype.card H : ℝ)⁻¹</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L40" id="ProbabilityFixedPoints-L40"> 40</a>   let f : Γ → ℝ := (H : Set Γ).indicator (fun _ =&gt; c)</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L41" id="ProbabilityFixedPoints-L41"> 41</a>   have hc : 0 ≤ c := by dsimp [c]; positivity</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L42" id="ProbabilityFixedPoints-L42"> 42</a>   have hcard : (Fintype.card H : ℝ) ≠ 0 := by exact_mod_cast Fintype.card_ne_zero</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L43" id="ProbabilityFixedPoints-L43"> 43</a>   refine ⟨f, ⟨?_, ?_, ?_⟩, ?_⟩</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L44" id="ProbabilityFixedPoints-L44"> 44</a>   · intro x</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L45" id="ProbabilityFixedPoints-L45"> 45</a>     exact Set.indicator_nonneg (fun _ _ =&gt; hc) x</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L46" id="ProbabilityFixedPoints-L46"> 46</a>   · exact summable_of_hasFiniteSupport ((Set.toFinite (H : Set Γ)).subset Set.support_indicator_subset)</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L47" id="ProbabilityFixedPoints-L47"> 47</a>   · change (∑&#x27; x, (H : Set Γ).indicator (fun _ =&gt; c) x) = 1</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L48" id="ProbabilityFixedPoints-L48"> 48</a>     rw [← tsum_subtype]</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L49" id="ProbabilityFixedPoints-L49"> 49</a>     simp [tsum_fintype, c, hcard]</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L50" id="ProbabilityFixedPoints-L50"> 50</a>   · intro h x</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L51" id="ProbabilityFixedPoints-L51"> 51</a>     simp only [f, Set.indicator_apply, SetLike.mem_coe]</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L52" id="ProbabilityFixedPoints-L52"> 52</a>     rw [H.mul_mem_cancel_left (H.inv_mem h.2)]</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L53" id="ProbabilityFixedPoints-L53"> 53</a> </span>
+<span><a class="line" href="#ProbabilityFixedPoints-L54" id="ProbabilityFixedPoints-L54"> 54</a> namespace ProbabilitySimplex</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L55" id="ProbabilityFixedPoints-L55"> 55</a> </span>
+<span><a class="line" href="#ProbabilityFixedPoints-L56" id="ProbabilityFixedPoints-L56"> 56</a> /-- Finite-subgroup fixed points of the simplex are contractible. -/</span>
+<span id="doc/BC4lean.ProperActions.ProbabilitySimplex.fixedPoints_contractible"><a class="line" href="#ProbabilityFixedPoints-L57" id="ProbabilityFixedPoints-L57"> 57</a> theorem fixedPoints_contractible (H : Subgroup Γ) [Finite H] :</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L58" id="ProbabilityFixedPoints-L58"> 58</a>     ContractibleSpace (FixedPointSpace H (ProbabilitySimplex Γ)) := by</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L59" id="ProbabilityFixedPoints-L59"> 59</a>   let := (invariantProbabilitySet_convex H).contractibleSpace (invariantProbabilitySet_nonempty H)</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L60" id="ProbabilityFixedPoints-L60"> 60</a>   exact (probabilityFixedPointsHomeomorph H).contractibleSpace</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L61" id="ProbabilityFixedPoints-L61"> 61</a> </span>
+<span><a class="line" href="#ProbabilityFixedPoints-L62" id="ProbabilityFixedPoints-L62"> 62</a> /-- Infinite subgroups have no invariant probability functions. -/</span>
+<span id="doc/BC4lean.ProperActions.ProbabilitySimplex.fixedPoints_empty"><a class="line" href="#ProbabilityFixedPoints-L63" id="ProbabilityFixedPoints-L63"> 63</a> theorem fixedPoints_empty (H : Subgroup Γ) [Infinite H] :</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L64" id="ProbabilityFixedPoints-L64"> 64</a>     IsEmpty (FixedPointSpace H (ProbabilitySimplex Γ)) := by</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L65" id="ProbabilityFixedPoints-L65"> 65</a>   classical</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L66" id="ProbabilityFixedPoints-L66"> 66</a>   refine ⟨fun p =&gt; ?_⟩</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L67" id="ProbabilityFixedPoints-L67"> 67</a>   have hex : ∃ x, p.1.1 x ≠ 0 := by</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L68" id="ProbabilityFixedPoints-L68"> 68</a>     by_contra! hz</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L69" id="ProbabilityFixedPoints-L69"> 69</a>     have ht := p.1.2.2.2</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L70" id="ProbabilityFixedPoints-L70"> 70</a>     simp only [hz, tsum_zero] at ht</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L71" id="ProbabilityFixedPoints-L71"> 71</a>     norm_num at ht</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L72" id="ProbabilityFixedPoints-L72"> 72</a>   obtain ⟨x, hx⟩ := hex</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L73" id="ProbabilityFixedPoints-L73"> 73</a>   have hpos : 0 &lt; p.1.1 x := lt_of_le_of_ne (p.1.2.1 x) (Ne.symm hx)</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L74" id="ProbabilityFixedPoints-L74"> 74</a>   have hs : Summable (fun h : H =&gt; p.1.1 ((h : Γ) * x)) :=</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L75" id="ProbabilityFixedPoints-L75"> 75</a>     p.1.2.2.1.comp_injective (fun _ _ h =&gt; Subtype.ext (mul_right_cancel h))</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L76" id="ProbabilityFixedPoints-L76"> 76</a>   have he (h : H) : p.1.1 ((h : Γ) * x) = p.1.1 x := by</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L77" id="ProbabilityFixedPoints-L77"> 77</a>     have hfix := congrArg (fun q : ProbabilitySimplex Γ =&gt; q.1 x) (p.2 h⁻¹)</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L78" id="ProbabilityFixedPoints-L78"> 78</a>     change p.1.1 (((h⁻¹ : H) : Γ)⁻¹ * x) = p.1.1 x at hfix</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L79" id="ProbabilityFixedPoints-L79"> 79</a>     simpa only [Subgroup.coe_inv, inv_inv] using hfix</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L80" id="ProbabilityFixedPoints-L80"> 80</a>   simp only [he] at hs</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L81" id="ProbabilityFixedPoints-L81"> 81</a>   let := Finite.of_summable_const hpos hs</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L82" id="ProbabilityFixedPoints-L82"> 82</a>   exact not_finite H</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L83" id="ProbabilityFixedPoints-L83"> 83</a> </span>
+<span><a class="line" href="#ProbabilityFixedPoints-L84" id="ProbabilityFixedPoints-L84"> 84</a> /-- The concrete simplex satisfies the full finite/infinite subgroup criterion. -/</span>
+<span id="doc/BC4lean.ProperActions.ProbabilitySimplex.fixedPointCriterion"><a class="line" href="#ProbabilityFixedPoints-L85" id="ProbabilityFixedPoints-L85"> 85</a> theorem fixedPointCriterion : FixedPointCriterion Γ (ProbabilitySimplex Γ) :=</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L86" id="ProbabilityFixedPoints-L86"> 86</a>   ⟨fun H _ =&gt; fixedPoints_contractible H, fun H _ =&gt; fixedPoints_empty H⟩</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L87" id="ProbabilityFixedPoints-L87"> 87</a> </span>
+<span><a class="line" href="#ProbabilityFixedPoints-L88" id="ProbabilityFixedPoints-L88"> 88</a> end ProbabilitySimplex</span>
+<span><a class="line" href="#ProbabilityFixedPoints-L89" id="ProbabilityFixedPoints-L89"> 89</a> end BC4lean.ProperActions</span>
+</pre>
+<h2 id="ProbabilityProperAction">ProbabilityProperAction.lean</h2><p>源码 SHA-256：<code>043065dbe31f65afde8c8c9d555252af7a2c2534105de2c2a5820048da71147f</code></p><pre>
+<span><a class="line" href="#ProbabilityProperAction-L1" id="ProbabilityProperAction-L1">  1</a> import BC4lean.ProbabilitySimplex</span>
+<span><a class="line" href="#ProbabilityProperAction-L2" id="ProbabilityProperAction-L2">  2</a> import BC4lean.ProperActions</span>
+<span><a class="line" href="#ProbabilityProperAction-L3" id="ProbabilityProperAction-L3">  3</a> </span>
+<span><a class="line" href="#ProbabilityProperAction-L4" id="ProbabilityProperAction-L4">  4</a> /-! # Properness of the probability-simplex action</span>
+<span><a class="line" href="#ProbabilityProperAction-L5" id="ProbabilityProperAction-L5">  5</a> </span>
+<span><a class="line" href="#ProbabilityProperAction-L6" id="ProbabilityProperAction-L6">  6</a> Compact sets of probability functions are uniformly concentrated on a finite</span>
+<span><a class="line" href="#ProbabilityProperAction-L7" id="ProbabilityProperAction-L7">  7</a> set of coordinates. This bounds all compact transporters by a finite set.</span>
+<span><a class="line" href="#ProbabilityProperAction-L8" id="ProbabilityProperAction-L8">  8</a> -/</span>
+<span><a class="line" href="#ProbabilityProperAction-L9" id="ProbabilityProperAction-L9">  9</a> </span>
+<span><a class="line" href="#ProbabilityProperAction-L10" id="ProbabilityProperAction-L10"> 10</a> noncomputable section</span>
+<span><a class="line" href="#ProbabilityProperAction-L11" id="ProbabilityProperAction-L11"> 11</a> open scoped BigOperators Pointwise Classical</span>
+<span><a class="line" href="#ProbabilityProperAction-L12" id="ProbabilityProperAction-L12"> 12</a> </span>
+<span><a class="line" href="#ProbabilityProperAction-L13" id="ProbabilityProperAction-L13"> 13</a> namespace BC4lean.ProperActions.ProbabilitySimplex</span>
+<span><a class="line" href="#ProbabilityProperAction-L14" id="ProbabilityProperAction-L14"> 14</a> </span>
+<span><a class="line" href="#ProbabilityProperAction-L15" id="ProbabilityProperAction-L15"> 15</a> variable {Γ : Type*}</span>
+<span><a class="line" href="#ProbabilityProperAction-L16" id="ProbabilityProperAction-L16"> 16</a> </span>
+<span><a class="line" href="#ProbabilityProperAction-L17" id="ProbabilityProperAction-L17"> 17</a> /-- On a compact set of probability functions, a single finite set carries more than half the mass. -/</span>
+<span id="doc/BC4lean.ProperActions.ProbabilitySimplex.compact_half_mass"><a class="line" href="#ProbabilityProperAction-L18" id="ProbabilityProperAction-L18"> 18</a> theorem compact_half_mass {K : Set (ProbabilitySimplex Γ)} (hK : IsCompact K) :</span>
+<span><a class="line" href="#ProbabilityProperAction-L19" id="ProbabilityProperAction-L19"> 19</a>     ∃ s : Finset Γ, ∀ p ∈ K, (1 / 2 : ℝ) &lt; ∑ g ∈ s, p.1 g := by</span>
+<span><a class="line" href="#ProbabilityProperAction-L20" id="ProbabilityProperAction-L20"> 20</a>   classical</span>
+<span><a class="line" href="#ProbabilityProperAction-L21" id="ProbabilityProperAction-L21"> 21</a>   let U (s : Finset Γ) : Set (ProbabilitySimplex Γ) := {p | (1 / 2 : ℝ) &lt; ∑ g ∈ s, p.1 g}</span>
+<span><a class="line" href="#ProbabilityProperAction-L22" id="ProbabilityProperAction-L22"> 22</a>   have ho (s : Finset Γ) : IsOpen (U s) :=</span>
+<span><a class="line" href="#ProbabilityProperAction-L23" id="ProbabilityProperAction-L23"> 23</a>     isOpen_lt continuous_const (continuous_finsetSum s fun g _ =&gt;</span>
+<span><a class="line" href="#ProbabilityProperAction-L24" id="ProbabilityProperAction-L24"> 24</a>       (continuous_apply g).comp continuous_subtype_val)</span>
+<span><a class="line" href="#ProbabilityProperAction-L25" id="ProbabilityProperAction-L25"> 25</a>   have hc : K ⊆ ⋃ s, U s := by</span>
+<span><a class="line" href="#ProbabilityProperAction-L26" id="ProbabilityProperAction-L26"> 26</a>     intro p _</span>
+<span><a class="line" href="#ProbabilityProperAction-L27" id="ProbabilityProperAction-L27"> 27</a>     obtain ⟨s, hs⟩ := exists_half_mass p</span>
+<span><a class="line" href="#ProbabilityProperAction-L28" id="ProbabilityProperAction-L28"> 28</a>     exact Set.mem_iUnion.mpr ⟨s, hs⟩</span>
+<span><a class="line" href="#ProbabilityProperAction-L29" id="ProbabilityProperAction-L29"> 29</a>   obtain ⟨S, hS⟩ := hK.elim_finite_subcover U ho hc</span>
+<span><a class="line" href="#ProbabilityProperAction-L30" id="ProbabilityProperAction-L30"> 30</a>   refine ⟨S.biUnion id, fun p hp =&gt; ?_⟩</span>
+<span><a class="line" href="#ProbabilityProperAction-L31" id="ProbabilityProperAction-L31"> 31</a>   obtain ⟨s, hs, hps⟩ := Set.mem_iUnion₂.mp (hS hp)</span>
+<span><a class="line" href="#ProbabilityProperAction-L32" id="ProbabilityProperAction-L32"> 32</a>   apply lt_of_lt_of_le hps</span>
+<span><a class="line" href="#ProbabilityProperAction-L33" id="ProbabilityProperAction-L33"> 33</a>   exact Finset.sum_le_sum_of_subset_of_nonneg</span>
+<span><a class="line" href="#ProbabilityProperAction-L34" id="ProbabilityProperAction-L34"> 34</a>     (fun g hg =&gt; Finset.mem_biUnion.mpr ⟨s, hs, hg⟩) (fun g _ _ =&gt; p.2.1 g)</span>
+<span><a class="line" href="#ProbabilityProperAction-L35" id="ProbabilityProperAction-L35"> 35</a> </span>
+<span><a class="line" href="#ProbabilityProperAction-L36" id="ProbabilityProperAction-L36"> 36</a> /-- Two finite sets each carrying more than half the mass must intersect. -/</span>
+<span id="doc/BC4lean.ProperActions.ProbabilitySimplex.half_mass_inter"><a class="line" href="#ProbabilityProperAction-L37" id="ProbabilityProperAction-L37"> 37</a> theorem half_mass_inter (p : ProbabilitySimplex Γ) (s t : Finset Γ)</span>
+<span><a class="line" href="#ProbabilityProperAction-L38" id="ProbabilityProperAction-L38"> 38</a>     (hs : (1 / 2 : ℝ) &lt; ∑ g ∈ s, p.1 g) (ht : (1 / 2 : ℝ) &lt; ∑ g ∈ t, p.1 g) :</span>
+<span><a class="line" href="#ProbabilityProperAction-L39" id="ProbabilityProperAction-L39"> 39</a>     (s ∩ t).Nonempty := by</span>
+<span><a class="line" href="#ProbabilityProperAction-L40" id="ProbabilityProperAction-L40"> 40</a>   classical</span>
+<span><a class="line" href="#ProbabilityProperAction-L41" id="ProbabilityProperAction-L41"> 41</a>   by_contra h</span>
+<span><a class="line" href="#ProbabilityProperAction-L42" id="ProbabilityProperAction-L42"> 42</a>   have hd : Disjoint s t := Finset.disjoint_iff_inter_eq_empty.mpr</span>
+<span><a class="line" href="#ProbabilityProperAction-L43" id="ProbabilityProperAction-L43"> 43</a>     (Finset.not_nonempty_iff_eq_empty.mp h)</span>
+<span><a class="line" href="#ProbabilityProperAction-L44" id="ProbabilityProperAction-L44"> 44</a>   have hle := sum_le_one p (s ∪ t)</span>
+<span><a class="line" href="#ProbabilityProperAction-L45" id="ProbabilityProperAction-L45"> 45</a>   rw [Finset.sum_union hd] at hle</span>
+<span><a class="line" href="#ProbabilityProperAction-L46" id="ProbabilityProperAction-L46"> 46</a>   linarith</span>
+<span><a class="line" href="#ProbabilityProperAction-L47" id="ProbabilityProperAction-L47"> 47</a> </span>
+<span><a class="line" href="#ProbabilityProperAction-L48" id="ProbabilityProperAction-L48"> 48</a> variable [Group Γ]</span>
+<span><a class="line" href="#ProbabilityProperAction-L49" id="ProbabilityProperAction-L49"> 49</a> </span>
+<span><a class="line" href="#ProbabilityProperAction-L50" id="ProbabilityProperAction-L50"> 50</a> /-- Translation preserves the mass assigned to a finite set. -/</span>
+<span id="doc/BC4lean.ProperActions.ProbabilitySimplex.sum_translate_image"><a class="line" href="#ProbabilityProperAction-L51" id="ProbabilityProperAction-L51"> 51</a> theorem sum_translate_image (g : Γ) (p : ProbabilitySimplex Γ) (s : Finset Γ) :</span>
+<span><a class="line" href="#ProbabilityProperAction-L52" id="ProbabilityProperAction-L52"> 52</a>     ∑ x ∈ s.image (fun y =&gt; g * y), (g • p).1 x = ∑ y ∈ s, p.1 y := by</span>
+<span><a class="line" href="#ProbabilityProperAction-L53" id="ProbabilityProperAction-L53"> 53</a>   classical</span>
+<span><a class="line" href="#ProbabilityProperAction-L54" id="ProbabilityProperAction-L54"> 54</a>   rw [Finset.sum_image (fun _ _ _ _ h =&gt; mul_left_cancel h)]</span>
+<span><a class="line" href="#ProbabilityProperAction-L55" id="ProbabilityProperAction-L55"> 55</a>   simp</span>
+<span><a class="line" href="#ProbabilityProperAction-L56" id="ProbabilityProperAction-L56"> 56</a> </span>
+<span><a class="line" href="#ProbabilityProperAction-L57" id="ProbabilityProperAction-L57"> 57</a> /-- Compact subsets have finite transporters under left translation. -/</span>
+<span id="doc/BC4lean.ProperActions.ProbabilitySimplex.finite_compact_transporter"><a class="line" href="#ProbabilityProperAction-L58" id="ProbabilityProperAction-L58"> 58</a> theorem finite_compact_transporter {K L : Set (ProbabilitySimplex Γ)}</span>
+<span><a class="line" href="#ProbabilityProperAction-L59" id="ProbabilityProperAction-L59"> 59</a>     (hK : IsCompact K) (hL : IsCompact L) :</span>
+<span><a class="line" href="#ProbabilityProperAction-L60" id="ProbabilityProperAction-L60"> 60</a>     {g : Γ | (g • K ∩ L).Nonempty}.Finite := by</span>
+<span><a class="line" href="#ProbabilityProperAction-L61" id="ProbabilityProperAction-L61"> 61</a>   classical</span>
+<span><a class="line" href="#ProbabilityProperAction-L62" id="ProbabilityProperAction-L62"> 62</a>   obtain ⟨s, hs⟩ := compact_half_mass hK</span>
+<span><a class="line" href="#ProbabilityProperAction-L63" id="ProbabilityProperAction-L63"> 63</a>   obtain ⟨t, ht⟩ := compact_half_mass hL</span>
+<span><a class="line" href="#ProbabilityProperAction-L64" id="ProbabilityProperAction-L64"> 64</a>   apply ((t.product s).image (fun p =&gt; p.1 * p.2⁻¹)).finite_toSet.subset</span>
+<span><a class="line" href="#ProbabilityProperAction-L65" id="ProbabilityProperAction-L65"> 65</a>   intro g hg</span>
+<span><a class="line" href="#ProbabilityProperAction-L66" id="ProbabilityProperAction-L66"> 66</a>   obtain ⟨q, hq, hqL⟩ := hg</span>
+<span><a class="line" href="#ProbabilityProperAction-L67" id="ProbabilityProperAction-L67"> 67</a>   obtain ⟨p, hp, rfl⟩ := hq</span>
+<span><a class="line" href="#ProbabilityProperAction-L68" id="ProbabilityProperAction-L68"> 68</a>   have himage : (1 / 2 : ℝ) &lt; ∑ x ∈ s.image (fun y =&gt; g * y), (g • p).1 x := by</span>
+<span><a class="line" href="#ProbabilityProperAction-L69" id="ProbabilityProperAction-L69"> 69</a>     rw [sum_translate_image]</span>
+<span><a class="line" href="#ProbabilityProperAction-L70" id="ProbabilityProperAction-L70"> 70</a>     exact hs p hp</span>
+<span><a class="line" href="#ProbabilityProperAction-L71" id="ProbabilityProperAction-L71"> 71</a>   obtain ⟨x, hx⟩ := half_mass_inter (g • p) (s.image (fun y =&gt; g * y)) t himage (ht _ hqL)</span>
+<span><a class="line" href="#ProbabilityProperAction-L72" id="ProbabilityProperAction-L72"> 72</a>   obtain ⟨hx, hxt⟩ := Finset.mem_inter.mp hx</span>
+<span><a class="line" href="#ProbabilityProperAction-L73" id="ProbabilityProperAction-L73"> 73</a>   obtain ⟨y, hys, rfl⟩ := Finset.mem_image.mp hx</span>
+<span><a class="line" href="#ProbabilityProperAction-L74" id="ProbabilityProperAction-L74"> 74</a>   exact Finset.mem_image.mpr ⟨(g * y,y), Finset.mem_product.mpr ⟨hxt,hys⟩, by simp⟩</span>
+<span><a class="line" href="#ProbabilityProperAction-L75" id="ProbabilityProperAction-L75"> 75</a> </span>
+<span><a class="line" href="#ProbabilityProperAction-L76" id="ProbabilityProperAction-L76"> 76</a> /-- The simplex action is properly discontinuous. -/</span>
+<span id="doc/BC4lean.ProperActions.ProbabilitySimplex.properlyDiscontinuous"><a class="line" href="#ProbabilityProperAction-L77" id="ProbabilityProperAction-L77"> 77</a> theorem properlyDiscontinuous : ProperlyDiscontinuousSMul Γ (ProbabilitySimplex Γ) :=</span>
+<span><a class="line" href="#ProbabilityProperAction-L78" id="ProbabilityProperAction-L78"> 78</a>   properlyDiscontinuousSMul_iff.mpr (fun hK hL =&gt; finite_compact_transporter hK hL)</span>
+<span><a class="line" href="#ProbabilityProperAction-L79" id="ProbabilityProperAction-L79"> 79</a> </span>
+<span><a class="line" href="#ProbabilityProperAction-L80" id="ProbabilityProperAction-L80"> 80</a> /-- For countable discrete groups the probability simplex is a proper Γ-space. -/</span>
+<span id="doc/BC4lean.ProperActions.ProbabilitySimplex.proper"><a class="line" href="#ProbabilityProperAction-L81" id="ProbabilityProperAction-L81"> 81</a> theorem proper [Countable Γ] [TopologicalSpace Γ] [DiscreteTopology Γ] :</span>
+<span><a class="line" href="#ProbabilityProperAction-L82" id="ProbabilityProperAction-L82"> 82</a>     ProperSMul Γ (ProbabilitySimplex Γ) :=</span>
+<span><a class="line" href="#ProbabilityProperAction-L83" id="ProbabilityProperAction-L83"> 83</a>   properlyDiscontinuousSMul_iff_properSMul.mp properlyDiscontinuous</span>
+<span><a class="line" href="#ProbabilityProperAction-L84" id="ProbabilityProperAction-L84"> 84</a> </span>
+<span><a class="line" href="#ProbabilityProperAction-L85" id="ProbabilityProperAction-L85"> 85</a> end BC4lean.ProperActions.ProbabilitySimplex</span>
+</pre>
+<h2 id="ProperActionPullback">ProperActionPullback.lean</h2><p>源码 SHA-256：<code>e83a100f91a099c1964adc4daad97eaafed47887f8fd9f2c6db98ba65df3e82b</code></p><pre>
+<span><a class="line" href="#ProperActionPullback-L1" id="ProperActionPullback-L1">  1</a> import BC4lean.EquivariantMaps</span>
+<span><a class="line" href="#ProperActionPullback-L2" id="ProperActionPullback-L2">  2</a> import BC4lean.ProperActions</span>
+<span><a class="line" href="#ProperActionPullback-L3" id="ProperActionPullback-L3">  3</a> </span>
+<span><a class="line" href="#ProperActionPullback-L4" id="ProperActionPullback-L4">  4</a> /-! # Properness transferred along an equivariant map -/</span>
+<span><a class="line" href="#ProperActionPullback-L5" id="ProperActionPullback-L5">  5</a> </span>
+<span><a class="line" href="#ProperActionPullback-L6" id="ProperActionPullback-L6">  6</a> open Filter Topology</span>
+<span><a class="line" href="#ProperActionPullback-L7" id="ProperActionPullback-L7">  7</a> </span>
+<span><a class="line" href="#ProperActionPullback-L8" id="ProperActionPullback-L8">  8</a> namespace BC4lean.ProperActions</span>
+<span><a class="line" href="#ProperActionPullback-L9" id="ProperActionPullback-L9">  9</a> </span>
+<span><a class="line" href="#ProperActionPullback-L10" id="ProperActionPullback-L10"> 10</a> variable {Γ A X : Type*} [Group Γ] [TopologicalSpace Γ]</span>
+<span><a class="line" href="#ProperActionPullback-L11" id="ProperActionPullback-L11"> 11</a> variable [TopologicalSpace A] [TopologicalSpace X] [MulAction Γ A] [MulAction Γ X]</span>
+<span><a class="line" href="#ProperActionPullback-L12" id="ProperActionPullback-L12"> 12</a> </span>
+<span><a class="line" href="#ProperActionPullback-L13" id="ProperActionPullback-L13"> 13</a> /-- A Hausdorff continuous Γ-space mapping equivariantly to a proper Γ-space is proper. -/</span>
+<span id="doc/BC4lean.ProperActions.EquivariantMap.properSMul"><a class="line" href="#ProperActionPullback-L14" id="ProperActionPullback-L14"> 14</a> theorem EquivariantMap.properSMul [T2Space A] [ContinuousSMul Γ A] [ProperSMul Γ X]</span>
+<span><a class="line" href="#ProperActionPullback-L15" id="ProperActionPullback-L15"> 15</a>     (f : EquivariantMap Γ A X) : ProperSMul Γ A := by</span>
+<span><a class="line" href="#ProperActionPullback-L16" id="ProperActionPullback-L16"> 16</a>   apply properSMul_iff_continuousSMul_ultrafilter_tendsto_t2.mpr</span>
+<span><a class="line" href="#ProperActionPullback-L17" id="ProperActionPullback-L17"> 17</a>   refine ⟨inferInstance, fun U a b hab =&gt; ?_⟩</span>
+<span><a class="line" href="#ProperActionPullback-L18" id="ProperActionPullback-L18"> 18</a>   let m : Γ × A → Γ × X := fun p =&gt; (p.1, f p.2)</span>
+<span><a class="line" href="#ProperActionPullback-L19" id="ProperActionPullback-L19"> 19</a>   let V := U.map m</span>
+<span><a class="line" href="#ProperActionPullback-L20" id="ProperActionPullback-L20"> 20</a>   have hv : Tendsto (fun p : Γ × X =&gt; (p.1 • p.2,p.2)) V (𝓝 (f a,f b)) := by</span>
+<span><a class="line" href="#ProperActionPullback-L21" id="ProperActionPullback-L21"> 21</a>     rw [show (V : Filter (Γ × X)) = Filter.map m U from Ultrafilter.coe_map m U,</span>
+<span><a class="line" href="#ProperActionPullback-L22" id="ProperActionPullback-L22"> 22</a>       tendsto_map&#x27;_iff]</span>
+<span><a class="line" href="#ProperActionPullback-L23" id="ProperActionPullback-L23"> 23</a>     have ht := ((f.continuous.prodMap f.continuous).tendsto (a,b)).comp hab</span>
+<span><a class="line" href="#ProperActionPullback-L24" id="ProperActionPullback-L24"> 24</a>     simpa only [Function.comp_def, Prod.map_apply, m, f.map_smul] using ht</span>
+<span><a class="line" href="#ProperActionPullback-L25" id="ProperActionPullback-L25"> 25</a>   obtain ⟨g, _, hg⟩ :=</span>
+<span><a class="line" href="#ProperActionPullback-L26" id="ProperActionPullback-L26"> 26</a>     (properSMul_iff_continuousSMul_ultrafilter_tendsto.mp (inferInstance : ProperSMul Γ X)).2</span>
+<span><a class="line" href="#ProperActionPullback-L27" id="ProperActionPullback-L27"> 27</a>       V (f a) (f b) hv</span>
+<span><a class="line" href="#ProperActionPullback-L28" id="ProperActionPullback-L28"> 28</a>   refine ⟨g, ?_⟩</span>
+<span><a class="line" href="#ProperActionPullback-L29" id="ProperActionPullback-L29"> 29</a>   simpa only [V, Ultrafilter.coe_map, tendsto_map&#x27;_iff, Function.comp_def, m] using hg</span>
+<span><a class="line" href="#ProperActionPullback-L30" id="ProperActionPullback-L30"> 30</a> </span>
+<span><a class="line" href="#ProperActionPullback-L31" id="ProperActionPullback-L31"> 31</a> end BC4lean.ProperActions</span>
+</pre>
+<h2 id="ProbabilityUniversalTarget">ProbabilityUniversalTarget.lean</h2><p>源码 SHA-256：<code>68e5e6b0bc1717ff82eaeb32b25c4f9472dd99351d0a17970d366b1675b7392d</code></p><pre>
+<span><a class="line" href="#ProbabilityUniversalTarget-L1" id="ProbabilityUniversalTarget-L1">  1</a> import BC4lean.ProbabilityFixedPoints</span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L2" id="ProbabilityUniversalTarget-L2">  2</a> import BC4lean.ProbabilityProperAction</span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L3" id="ProbabilityUniversalTarget-L3">  3</a> import BC4lean.ProperActionPullback</span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L4" id="ProbabilityUniversalTarget-L4">  4</a> import BC4lean.CellularHomotopy</span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L5" id="ProbabilityUniversalTarget-L5">  5</a> </span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L6" id="ProbabilityUniversalTarget-L6">  6</a> /-! # A concrete proper target for the cellular mapping theorem</span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L7" id="ProbabilityUniversalTarget-L7">  7</a> </span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L8" id="ProbabilityUniversalTarget-L8">  8</a> This module does not equip the probability simplex with a CW structure and</span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L9" id="ProbabilityUniversalTarget-L9">  9</a> does not assert that it is locally compact. It constructs the target and</span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L10" id="ProbabilityUniversalTarget-L10"> 10</a> proves the mapping property for equivariant CW sources.</span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L11" id="ProbabilityUniversalTarget-L11"> 11</a> -/</span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L12" id="ProbabilityUniversalTarget-L12"> 12</a> </span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L13" id="ProbabilityUniversalTarget-L13"> 13</a> namespace BC4lean.ProperActions</span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L14" id="ProbabilityUniversalTarget-L14"> 14</a> </span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L15" id="ProbabilityUniversalTarget-L15"> 15</a> universe u</span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L16" id="ProbabilityUniversalTarget-L16"> 16</a> variable {Γ : Type u} [Group Γ] [TopologicalSpace Γ] [DiscreteTopology Γ]</span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L17" id="ProbabilityUniversalTarget-L17"> 17</a> variable {A : Type u} [TopologicalSpace A] [MulAction Γ A] [ContinuousConstSMul Γ A]</span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L18" id="ProbabilityUniversalTarget-L18"> 18</a> </span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L19" id="ProbabilityUniversalTarget-L19"> 19</a> /-- Every finite-isotropy equivariant CW complex maps to the explicit probability simplex,</span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L20" id="ProbabilityUniversalTarget-L20"> 20</a> uniquely up to equivariant homotopy. -/</span>
+<span id="doc/BC4lean.ProperActions.EquivariantCWComplex.probability_homotopyTerminal"><a class="line" href="#ProbabilityUniversalTarget-L21" id="ProbabilityUniversalTarget-L21"> 21</a> theorem EquivariantCWComplex.probability_homotopyTerminal</span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L22" id="ProbabilityUniversalTarget-L22"> 22</a>     (c : EquivariantCWComplex (topologicalAction Γ A)) :</span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L23" id="ProbabilityUniversalTarget-L23"> 23</a>     HomotopyTerminalFor Γ A (ProbabilitySimplex Γ) :=</span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L24" id="ProbabilityUniversalTarget-L24"> 24</a>   c.homotopyTerminal ProbabilitySimplex.fixedPointCriterion</span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L25" id="ProbabilityUniversalTarget-L25"> 25</a> </span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L26" id="ProbabilityUniversalTarget-L26"> 26</a> omit [Group Γ] [TopologicalSpace Γ] [DiscreteTopology Γ] in</span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L27" id="ProbabilityUniversalTarget-L27"> 27</a> /-- For countable Γ, the explicit target has a countable base. -/</span>
+<span id="doc/BC4lean.ProperActions.ProbabilitySimplex.secondCountable"><a class="line" href="#ProbabilityUniversalTarget-L28" id="ProbabilityUniversalTarget-L28"> 28</a> theorem ProbabilitySimplex.secondCountable [Countable Γ] :</span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L29" id="ProbabilityUniversalTarget-L29"> 29</a>     SecondCountableTopology (ProbabilitySimplex Γ) := inferInstance</span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L30" id="ProbabilityUniversalTarget-L30"> 30</a> </span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L31" id="ProbabilityUniversalTarget-L31"> 31</a> /-- For a countable group, the concrete target is proper and has the full cellular mapping property. -/</span>
+<span id="doc/BC4lean.ProperActions.probability_proper_universal_target"><a class="line" href="#ProbabilityUniversalTarget-L32" id="ProbabilityUniversalTarget-L32"> 32</a> theorem probability_proper_universal_target [Countable Γ]</span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L33" id="ProbabilityUniversalTarget-L33"> 33</a>     (c : EquivariantCWComplex (topologicalAction Γ A)) :</span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L34" id="ProbabilityUniversalTarget-L34"> 34</a>     ProperSMul Γ (ProbabilitySimplex Γ) ∧ HomotopyTerminalFor Γ A (ProbabilitySimplex Γ) :=</span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L35" id="ProbabilityUniversalTarget-L35"> 35</a>   ⟨ProbabilitySimplex.proper, c.probability_homotopyTerminal⟩</span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L36" id="ProbabilityUniversalTarget-L36"> 36</a> </span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L37" id="ProbabilityUniversalTarget-L37"> 37</a> /-- A Hausdorff finite-isotropy equivariant CW space has a proper action for countable Γ.</span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L38" id="ProbabilityUniversalTarget-L38"> 38</a> Hausdorffness remains an explicit premise until it is derived from the categorical CW data. -/</span>
+<span id="doc/BC4lean.ProperActions.EquivariantCWComplex.proper_of_t2"><a class="line" href="#ProbabilityUniversalTarget-L39" id="ProbabilityUniversalTarget-L39"> 39</a> theorem EquivariantCWComplex.proper_of_t2 [Countable Γ] [T2Space A]</span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L40" id="ProbabilityUniversalTarget-L40"> 40</a>     (c : EquivariantCWComplex (topologicalAction Γ A)) : ProperSMul Γ A := by</span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L41" id="ProbabilityUniversalTarget-L41"> 41</a>   let : ProperSMul Γ (ProbabilitySimplex Γ) := ProbabilitySimplex.proper</span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L42" id="ProbabilityUniversalTarget-L42"> 42</a>   let : ContinuousSMul Γ A := ⟨continuous_prod_of_discrete_left.mpr continuous_const_smul⟩</span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L43" id="ProbabilityUniversalTarget-L43"> 43</a>   obtain ⟨f⟩ := c.probability_homotopyTerminal.1</span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L44" id="ProbabilityUniversalTarget-L44"> 44</a>   exact f.properSMul</span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L45" id="ProbabilityUniversalTarget-L45"> 45</a> </span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L46" id="ProbabilityUniversalTarget-L46"> 46</a> end BC4lean.ProperActions</span>
 </pre>
 </body></html>
