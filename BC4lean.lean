@@ -136,3 +136,6 @@ import BC4lean.TelescopeFixedContraction
 import BC4lean.LabeledTelescopeCW
 import BC4lean.LabeledUniversalTarget
 import BC4lean.OrbitCellFixedSpace
+import BC4lean.HilbertCStarModule
+import BC4lean.AdjointableOperator
+import BC4lean.RankOneOperator

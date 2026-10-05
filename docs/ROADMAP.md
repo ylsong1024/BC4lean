@@ -13,7 +13,7 @@ Completion requires a reviewed implementation and the checks in
 | Reduced group C*-algebra | Group algebra, regular representation, reduced completion and comparisons | Examples, API refinement, independent review |
 | Operator K-theory | K₀/K₁ constructions, functoriality, nonunital comparisons and homotopy modules | Review exact hypotheses and extend structural results in bounded steps |
 | Proper actions | Equivariant CW attachment, Hausdorffness, properness, cellular mapping, finite-group models, proper weak labeled join with genuine CW structure and fixed-point criterion, universal mapping and uniqueness, locally compact second-countable telescope model, cocompact indexing | API refinement, examples and independent review |
-| Equivariant KK-theory | Blueprint specifications | Hilbert module and cycle infrastructure, product and comparison results |
+| Equivariant KK-theory | Right Hilbert-module foundations, adjointable maps and rank-one operators | Compact module operators, grading, actions, cycles, products and comparison |
 | Topological side and assembly | Blueprint specifications | Transition maps, colimit, descent, cut-off classes and compatibility |
 
 This table describes source organization, not a new verification certificate.
@@ -105,16 +105,26 @@ locally compact second-countable model choice is now proved;
 the verified realization, fixed-point contraction and CW attachments together
 prove universal proper CW existence for every discrete group.
 
-### KK-01 — Inventory Hilbert C*-module prerequisites
+### KK-01 — Hilbert C*-module prerequisites (first milestone verified)
+
+The pinned API inventory, opposite-algebra convention for right modules,
+adjointable maps and rank-one operators are checked. The standard right module
+B_B is verified as a concrete example. See [the Chapter 5 verification
+record](CHAPTER5_VERIFICATION.md) for exact declarations and the remaining scope.
+The full `def:hilbert-modules` target remains incomplete.
+
+### KK-02 — Adjointable operator algebra and compact module operators
 
 **Suitable for:** an operator-algebra contributor working with a Lean developer.
-Survey the pinned APIs for complex C*-algebras, module-valued inner products,
-completeness, and adjointable operators. Propose exact conventions for Chapter 5's
-`def:hilbert-modules`, with a small test case and a list of reusable APIs.
+Prove adjoint norm preservation and the C*-identity, construct the complete
+adjointable endomorphism algebra for complete modules, and take the operator-norm
+closure of the span of rank-one maps. Use the verified composition identities
+to establish the compact module operators as an adjoint-closed two-sided ideal.
 
-**Done when:** the issue/PR contains a checked API inventory and a bounded next
-statement. An inventory alone does not justify a verified definition marker.
-Do not replace Kasparov theory by an axiomatized interface and call it complete.
+**Done when:** these precise statements compile without extra axioms, the
+standard module example is checked, and the appropriate blueprint nodes have
+individually audited declarations. Grading and equivariant Kasparov cycles are
+subsequent tasks, not consequences of this milestone alone.
 
 ## Longer-term dependencies
 

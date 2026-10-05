@@ -67,6 +67,9 @@ code{overflow-wrap:anywhere}</style></head><body><a href="../../blueprint/">返�
 <li><a href="#ProbabilityProperAction">ProbabilityProperAction.lean</a></li>
 <li><a href="#ProperActionPullback">ProperActionPullback.lean</a></li>
 <li><a href="#ProbabilityUniversalTarget">ProbabilityUniversalTarget.lean</a></li>
+<li><a href="#HilbertCStarModule">HilbertCStarModule.lean</a></li>
+<li><a href="#AdjointableOperator">AdjointableOperator.lean</a></li>
+<li><a href="#RankOneOperator">RankOneOperator.lean</a></li>
 </ul></nav>
 <h2 id="GroupAlgebra">GroupAlgebra.lean</h2><p>源码 SHA-256：<code>1c6c0899fe9bc9f7860f291ba7c5573353d18a3c5809258769d689bc39da8ad4</code></p><pre>
 <span><a class="line" href="#L1" id="L1">  1</a> import Mathlib.Algebra.MonoidAlgebra.Basic</span>
@@ -7003,5 +7006,324 @@ code{overflow-wrap:anywhere}</style></head><body><a href="../../blueprint/">返�
 <span><a class="line" href="#ProbabilityUniversalTarget-L123" id="ProbabilityUniversalTarget-L123">123</a> end BC4lean.ProperActions</span>
 <span><a class="line" href="#ProbabilityUniversalTarget-L124" id="ProbabilityUniversalTarget-L124">124</a> </span>
 <span><a class="line" href="#ProbabilityUniversalTarget-L125" id="ProbabilityUniversalTarget-L125">125</a> end</span>
+</pre>
+<h2 id="HilbertCStarModule">HilbertCStarModule.lean</h2><p>源码 SHA-256：<code>fd6d940f19d329bab386f23b090ec1ae4539ca73a4c57d6234045eff5dcf1130</code></p><pre>
+<span><a class="line" href="#HilbertCStarModule-L1" id="HilbertCStarModule-L1">  1</a> import Mathlib.Analysis.CStarAlgebra.Module.Constructions</span>
+<span><a class="line" href="#HilbertCStarModule-L2" id="HilbertCStarModule-L2">  2</a> </span>
+<span><a class="line" href="#HilbertCStarModule-L3" id="HilbertCStarModule-L3">  3</a> /-! # Right Hilbert C⋆-module foundations</span>
+<span><a class="line" href="#HilbertCStarModule-L4" id="HilbertCStarModule-L4">  4</a> </span>
+<span><a class="line" href="#HilbertCStarModule-L5" id="HilbertCStarModule-L5">  5</a> We use `CStarModule Bᵐᵒᵖ E`: the right action `x b` is `MulOpposite.op b • x`,</span>
+<span><a class="line" href="#HilbertCStarModule-L6" id="HilbertCStarModule-L6">  6</a> and the usual B-valued inner product is `MulOpposite.unop (inner Bᵐᵒᵖ x y)`.</span>
+<span><a class="line" href="#HilbertCStarModule-L7" id="HilbertCStarModule-L7">  7</a> This explicit opposite is necessary because the pinned Mathlib convention has</span>
+<span><a class="line" href="#HilbertCStarModule-L8" id="HilbertCStarModule-L8">  8</a> `inner x (a • y) = a * inner x y`. Completeness is an additional</span>
+<span><a class="line" href="#HilbertCStarModule-L9" id="HilbertCStarModule-L9">  9</a> `CompleteSpace E` assumption when a Hilbert (rather than pre-Hilbert) module</span>
+<span><a class="line" href="#HilbertCStarModule-L10" id="HilbertCStarModule-L10"> 10</a> is required. The results below also hold before completion and for nonunital B.</span>
+<span><a class="line" href="#HilbertCStarModule-L11" id="HilbertCStarModule-L11"> 11</a> -/</span>
+<span><a class="line" href="#HilbertCStarModule-L12" id="HilbertCStarModule-L12"> 12</a> </span>
+<span><a class="line" href="#HilbertCStarModule-L13" id="HilbertCStarModule-L13"> 13</a> noncomputable section</span>
+<span><a class="line" href="#HilbertCStarModule-L14" id="HilbertCStarModule-L14"> 14</a> namespace BC4lean.KKTheory</span>
+<span><a class="line" href="#HilbertCStarModule-L15" id="HilbertCStarModule-L15"> 15</a> </span>
+<span><a class="line" href="#HilbertCStarModule-L16" id="HilbertCStarModule-L16"> 16</a> open scoped InnerProductSpace</span>
+<span><a class="line" href="#HilbertCStarModule-L17" id="HilbertCStarModule-L17"> 17</a> open CStarModule</span>
+<span><a class="line" href="#HilbertCStarModule-L18" id="HilbertCStarModule-L18"> 18</a> </span>
+<span><a class="line" href="#HilbertCStarModule-L19" id="HilbertCStarModule-L19"> 19</a> variable {B E : Type*} [NonUnitalCStarAlgebra B] [PartialOrder B]</span>
+<span><a class="line" href="#HilbertCStarModule-L20" id="HilbertCStarModule-L20"> 20</a>   [NormedAddCommGroup E] [NormedSpace ℂ E] [SMul Bᵐᵒᵖ E] [CStarModule Bᵐᵒᵖ E]</span>
+<span><a class="line" href="#HilbertCStarModule-L21" id="HilbertCStarModule-L21"> 21</a> </span>
+<span><a class="line" href="#HilbertCStarModule-L22" id="HilbertCStarModule-L22"> 22</a> /-- Nondegeneracy in the first variable. -/</span>
+<span id="doc/BC4lean.KKTheory.module_inner_ext_left"><a class="line" href="#HilbertCStarModule-L23" id="HilbertCStarModule-L23"> 23</a> theorem module_inner_ext_left {x y : E}</span>
+<span><a class="line" href="#HilbertCStarModule-L24" id="HilbertCStarModule-L24"> 24</a>     (h : ∀ z, ⟪x, z⟫_(Bᵐᵒᵖ) = ⟪y, z⟫_(Bᵐᵒᵖ)) : x = y := by</span>
+<span><a class="line" href="#HilbertCStarModule-L25" id="HilbertCStarModule-L25"> 25</a>   apply sub_eq_zero.mp</span>
+<span><a class="line" href="#HilbertCStarModule-L26" id="HilbertCStarModule-L26"> 26</a>   apply (CStarModule.inner_self (A := Bᵐᵒᵖ)).mp</span>
+<span><a class="line" href="#HilbertCStarModule-L27" id="HilbertCStarModule-L27"> 27</a>   rw [CStarModule.inner_sub_left, h, sub_self]</span>
+<span><a class="line" href="#HilbertCStarModule-L28" id="HilbertCStarModule-L28"> 28</a> </span>
+<span><a class="line" href="#HilbertCStarModule-L29" id="HilbertCStarModule-L29"> 29</a> /-- Nondegeneracy in the second variable. -/</span>
+<span id="doc/BC4lean.KKTheory.module_inner_ext_right"><a class="line" href="#HilbertCStarModule-L30" id="HilbertCStarModule-L30"> 30</a> theorem module_inner_ext_right {x y : E}</span>
+<span><a class="line" href="#HilbertCStarModule-L31" id="HilbertCStarModule-L31"> 31</a>     (h : ∀ z, ⟪z, x⟫_(Bᵐᵒᵖ) = ⟪z, y⟫_(Bᵐᵒᵖ)) : x = y := by</span>
+<span><a class="line" href="#HilbertCStarModule-L32" id="HilbertCStarModule-L32"> 32</a>   apply module_inner_ext_left (B := B)</span>
+<span><a class="line" href="#HilbertCStarModule-L33" id="HilbertCStarModule-L33"> 33</a>   intro z</span>
+<span><a class="line" href="#HilbertCStarModule-L34" id="HilbertCStarModule-L34"> 34</a>   simpa only [CStarModule.star_inner] using congrArg star (h z)</span>
+<span><a class="line" href="#HilbertCStarModule-L35" id="HilbertCStarModule-L35"> 35</a> </span>
+<span><a class="line" href="#HilbertCStarModule-L36" id="HilbertCStarModule-L36"> 36</a> /-- The scalar action distributes over addition in the coefficient algebra. -/</span>
+<span id="doc/BC4lean.KKTheory.module_add_smul"><a class="line" href="#HilbertCStarModule-L37" id="HilbertCStarModule-L37"> 37</a> theorem module_add_smul (a b : Bᵐᵒᵖ) (x : E) : (a + b) • x = a • x + b • x := by</span>
+<span><a class="line" href="#HilbertCStarModule-L38" id="HilbertCStarModule-L38"> 38</a>   apply module_inner_ext_right (B := B)</span>
+<span><a class="line" href="#HilbertCStarModule-L39" id="HilbertCStarModule-L39"> 39</a>   intro z</span>
+<span><a class="line" href="#HilbertCStarModule-L40" id="HilbertCStarModule-L40"> 40</a>   simp only [inner_op_smul_right, CStarModule.inner_add_right, add_mul]</span>
+<span><a class="line" href="#HilbertCStarModule-L41" id="HilbertCStarModule-L41"> 41</a> </span>
+<span><a class="line" href="#HilbertCStarModule-L42" id="HilbertCStarModule-L42"> 42</a> /-- The scalar action distributes over addition in the module. -/</span>
+<span id="doc/BC4lean.KKTheory.module_smul_add"><a class="line" href="#HilbertCStarModule-L43" id="HilbertCStarModule-L43"> 43</a> theorem module_smul_add (a : Bᵐᵒᵖ) (x y : E) : a • (x + y) = a • x + a • y := by</span>
+<span><a class="line" href="#HilbertCStarModule-L44" id="HilbertCStarModule-L44"> 44</a>   apply module_inner_ext_right (B := B)</span>
+<span><a class="line" href="#HilbertCStarModule-L45" id="HilbertCStarModule-L45"> 45</a>   intro z</span>
+<span><a class="line" href="#HilbertCStarModule-L46" id="HilbertCStarModule-L46"> 46</a>   simp only [inner_op_smul_right, CStarModule.inner_add_right, mul_add]</span>
+<span><a class="line" href="#HilbertCStarModule-L47" id="HilbertCStarModule-L47"> 47</a> </span>
+<span><a class="line" href="#HilbertCStarModule-L48" id="HilbertCStarModule-L48"> 48</a> /-- Associativity of the right action, expressed with opposite coefficients. -/</span>
+<span id="doc/BC4lean.KKTheory.module_mul_smul"><a class="line" href="#HilbertCStarModule-L49" id="HilbertCStarModule-L49"> 49</a> theorem module_mul_smul (a b : Bᵐᵒᵖ) (x : E) : (a * b) • x = a • (b • x) := by</span>
+<span><a class="line" href="#HilbertCStarModule-L50" id="HilbertCStarModule-L50"> 50</a>   apply module_inner_ext_right (B := B)</span>
+<span><a class="line" href="#HilbertCStarModule-L51" id="HilbertCStarModule-L51"> 51</a>   intro z</span>
+<span><a class="line" href="#HilbertCStarModule-L52" id="HilbertCStarModule-L52"> 52</a>   simp only [inner_op_smul_right, mul_assoc]</span>
+<span><a class="line" href="#HilbertCStarModule-L53" id="HilbertCStarModule-L53"> 53</a> </span>
+<span><a class="line" href="#HilbertCStarModule-L54" id="HilbertCStarModule-L54"> 54</a> /-- Compatibility of complex multiplication with the coefficient action. -/</span>
+<span id="doc/BC4lean.KKTheory.module_complex_smul"><a class="line" href="#HilbertCStarModule-L55" id="HilbertCStarModule-L55"> 55</a> theorem module_complex_smul (c : ℂ) (a : Bᵐᵒᵖ) (x : E) :</span>
+<span><a class="line" href="#HilbertCStarModule-L56" id="HilbertCStarModule-L56"> 56</a>     (c • a) • x = c • (a • x) := by</span>
+<span><a class="line" href="#HilbertCStarModule-L57" id="HilbertCStarModule-L57"> 57</a>   apply module_inner_ext_right (B := B)</span>
+<span><a class="line" href="#HilbertCStarModule-L58" id="HilbertCStarModule-L58"> 58</a>   intro z</span>
+<span><a class="line" href="#HilbertCStarModule-L59" id="HilbertCStarModule-L59"> 59</a>   simp only [inner_op_smul_right, inner_smul_right_complex, smul_mul_assoc]</span>
+<span><a class="line" href="#HilbertCStarModule-L60" id="HilbertCStarModule-L60"> 60</a> </span>
+<span><a class="line" href="#HilbertCStarModule-L61" id="HilbertCStarModule-L61"> 61</a> /-- The module action is contractive; no bound on it is assumed. -/</span>
+<span id="doc/BC4lean.KKTheory.module_norm_smul_le"><a class="line" href="#HilbertCStarModule-L62" id="HilbertCStarModule-L62"> 62</a> theorem module_norm_smul_le (a : Bᵐᵒᵖ) (x : E) : ‖a • x‖ ≤ ‖a‖ * ‖x‖ := by</span>
+<span><a class="line" href="#HilbertCStarModule-L63" id="HilbertCStarModule-L63"> 63</a>   have h : ‖a • x‖ ^ 2 ≤ (‖a‖ * ‖x‖) ^ 2 := by</span>
+<span><a class="line" href="#HilbertCStarModule-L64" id="HilbertCStarModule-L64"> 64</a>     calc</span>
+<span><a class="line" href="#HilbertCStarModule-L65" id="HilbertCStarModule-L65"> 65</a>       ‖a • x‖ ^ 2 = ‖a * ⟪x, x⟫_(Bᵐᵒᵖ) * star a‖ := by</span>
+<span><a class="line" href="#HilbertCStarModule-L66" id="HilbertCStarModule-L66"> 66</a>         rw [CStarModule.norm_sq_eq (Bᵐᵒᵖ), inner_op_smul_right, inner_op_smul_left, ← mul_assoc]</span>
+<span><a class="line" href="#HilbertCStarModule-L67" id="HilbertCStarModule-L67"> 67</a>       _ ≤ ‖a‖ * ‖⟪x, x⟫_(Bᵐᵒᵖ)‖ * ‖star a‖ := norm_mul₃_le</span>
+<span><a class="line" href="#HilbertCStarModule-L68" id="HilbertCStarModule-L68"> 68</a>       _ = (‖a‖ * ‖x‖) ^ 2 := by</span>
+<span><a class="line" href="#HilbertCStarModule-L69" id="HilbertCStarModule-L69"> 69</a>         rw [norm_star, ← CStarModule.norm_sq_eq (Bᵐᵒᵖ)]</span>
+<span><a class="line" href="#HilbertCStarModule-L70" id="HilbertCStarModule-L70"> 70</a>         ring</span>
+<span><a class="line" href="#HilbertCStarModule-L71" id="HilbertCStarModule-L71"> 71</a>   exact (pow_le_pow_iff_left₀ (_root_.norm_nonneg _) (by positivity) (by decide : 2 ≠ 0)).mp h</span>
+<span><a class="line" href="#HilbertCStarModule-L72" id="HilbertCStarModule-L72"> 72</a> </span>
+<span><a class="line" href="#HilbertCStarModule-L73" id="HilbertCStarModule-L73"> 73</a> variable [StarOrderedRing B]</span>
+<span><a class="line" href="#HilbertCStarModule-L74" id="HilbertCStarModule-L74"> 74</a> </span>
+<span><a class="line" href="#HilbertCStarModule-L75" id="HilbertCStarModule-L75"> 75</a> /-- The standard right module over B has the usual B-valued inner product. -/</span>
+<span id="doc/BC4lean.KKTheory.standard_module_inner"><a class="line" href="#HilbertCStarModule-L76" id="HilbertCStarModule-L76"> 76</a> theorem standard_module_inner (x y : B) :</span>
+<span><a class="line" href="#HilbertCStarModule-L77" id="HilbertCStarModule-L77"> 77</a>     MulOpposite.unop ⟪MulOpposite.op x, MulOpposite.op y⟫_(Bᵐᵒᵖ) = star x * y := rfl</span>
+<span><a class="line" href="#HilbertCStarModule-L78" id="HilbertCStarModule-L78"> 78</a> </span>
+<span><a class="line" href="#HilbertCStarModule-L79" id="HilbertCStarModule-L79"> 79</a> omit [PartialOrder B] [StarOrderedRing B] in</span>
+<span><a class="line" href="#HilbertCStarModule-L80" id="HilbertCStarModule-L80"> 80</a> /-- The standard right module is complete. -/</span>
+<span id="doc/BC4lean.KKTheory.standard_module_complete"><a class="line" href="#HilbertCStarModule-L81" id="HilbertCStarModule-L81"> 81</a> theorem standard_module_complete : CompleteSpace Bᵐᵒᵖ := inferInstance</span>
+<span><a class="line" href="#HilbertCStarModule-L82" id="HilbertCStarModule-L82"> 82</a> </span>
+<span><a class="line" href="#HilbertCStarModule-L83" id="HilbertCStarModule-L83"> 83</a> end BC4lean.KKTheory</span>
+</pre>
+<h2 id="AdjointableOperator">AdjointableOperator.lean</h2><p>源码 SHA-256：<code>8fb98856ffd3521f889d54e0c04dd1dfe893c277b0891394e20c6d47ee36728d</code></p><pre>
+<span><a class="line" href="#AdjointableOperator-L1" id="AdjointableOperator-L1">  1</a> import BC4lean.HilbertCStarModule</span>
+<span><a class="line" href="#AdjointableOperator-L2" id="AdjointableOperator-L2">  2</a> </span>
+<span><a class="line" href="#AdjointableOperator-L3" id="AdjointableOperator-L3">  3</a> /-! # Adjointable maps of right Hilbert C⋆-modules</span>
+<span><a class="line" href="#AdjointableOperator-L4" id="AdjointableOperator-L4">  4</a> </span>
+<span><a class="line" href="#AdjointableOperator-L5" id="AdjointableOperator-L5">  5</a> An adjointable map is a bounded complex-linear map with a bounded adjoint for</span>
+<span><a class="line" href="#AdjointableOperator-L6" id="AdjointableOperator-L6">  6</a> the coefficient-valued inner product. Module linearity is proved from the</span>
+<span><a class="line" href="#AdjointableOperator-L7" id="AdjointableOperator-L7">  7</a> adjoint identity. Completeness is not needed for these algebraic identities.</span>
+<span><a class="line" href="#AdjointableOperator-L8" id="AdjointableOperator-L8">  8</a> -/</span>
+<span><a class="line" href="#AdjointableOperator-L9" id="AdjointableOperator-L9">  9</a> </span>
+<span><a class="line" href="#AdjointableOperator-L10" id="AdjointableOperator-L10"> 10</a> noncomputable section</span>
+<span><a class="line" href="#AdjointableOperator-L11" id="AdjointableOperator-L11"> 11</a> namespace BC4lean.KKTheory</span>
+<span><a class="line" href="#AdjointableOperator-L12" id="AdjointableOperator-L12"> 12</a> </span>
+<span><a class="line" href="#AdjointableOperator-L13" id="AdjointableOperator-L13"> 13</a> open scoped InnerProductSpace</span>
+<span><a class="line" href="#AdjointableOperator-L14" id="AdjointableOperator-L14"> 14</a> open CStarModule</span>
+<span><a class="line" href="#AdjointableOperator-L15" id="AdjointableOperator-L15"> 15</a> </span>
+<span><a class="line" href="#AdjointableOperator-L16" id="AdjointableOperator-L16"> 16</a> variable {B E F G H : Type*} [NonUnitalCStarAlgebra B] [PartialOrder B]</span>
+<span><a class="line" href="#AdjointableOperator-L17" id="AdjointableOperator-L17"> 17</a>   [NormedAddCommGroup E] [NormedSpace ℂ E] [SMul Bᵐᵒᵖ E] [CStarModule Bᵐᵒᵖ E]</span>
+<span><a class="line" href="#AdjointableOperator-L18" id="AdjointableOperator-L18"> 18</a>   [NormedAddCommGroup F] [NormedSpace ℂ F] [SMul Bᵐᵒᵖ F] [CStarModule Bᵐᵒᵖ F]</span>
+<span><a class="line" href="#AdjointableOperator-L19" id="AdjointableOperator-L19"> 19</a>   [NormedAddCommGroup G] [NormedSpace ℂ G] [SMul Bᵐᵒᵖ G] [CStarModule Bᵐᵒᵖ G]</span>
+<span><a class="line" href="#AdjointableOperator-L20" id="AdjointableOperator-L20"> 20</a>   [NormedAddCommGroup H] [NormedSpace ℂ H] [SMul Bᵐᵒᵖ H] [CStarModule Bᵐᵒᵖ H]</span>
+<span><a class="line" href="#AdjointableOperator-L21" id="AdjointableOperator-L21"> 21</a> </span>
+<span><a class="line" href="#AdjointableOperator-L22" id="AdjointableOperator-L22"> 22</a> /-- A bounded adjointable map, storing its uniquely determined adjoint. -/</span>
+<span id="doc/BC4lean.KKTheory.AdjointableMap"><a class="line" href="#AdjointableOperator-L23" id="AdjointableOperator-L23"> 23</a> structure AdjointableMap (B E F : Type*) [NonUnitalCStarAlgebra B]</span>
+<span><a class="line" href="#AdjointableOperator-L24" id="AdjointableOperator-L24"> 24</a>     [PartialOrder B]</span>
+<span><a class="line" href="#AdjointableOperator-L25" id="AdjointableOperator-L25"> 25</a>     [NormedAddCommGroup E] [NormedSpace ℂ E] [SMul Bᵐᵒᵖ E] [CStarModule Bᵐᵒᵖ E]</span>
+<span><a class="line" href="#AdjointableOperator-L26" id="AdjointableOperator-L26"> 26</a>     [NormedAddCommGroup F] [NormedSpace ℂ F] [SMul Bᵐᵒᵖ F] [CStarModule Bᵐᵒᵖ F] where</span>
+<span><a class="line" href="#AdjointableOperator-L27" id="AdjointableOperator-L27"> 27</a>   toCLM : E →L[ℂ] F</span>
+<span><a class="line" href="#AdjointableOperator-L28" id="AdjointableOperator-L28"> 28</a>   adjointCLM : F →L[ℂ] E</span>
+<span><a class="line" href="#AdjointableOperator-L29" id="AdjointableOperator-L29"> 29</a>   adjoint_identity : ∀ x y, ⟪toCLM x, y⟫_(Bᵐᵒᵖ) = ⟪x, adjointCLM y⟫_(Bᵐᵒᵖ)</span>
+<span><a class="line" href="#AdjointableOperator-L30" id="AdjointableOperator-L30"> 30</a> </span>
+<span><a class="line" href="#AdjointableOperator-L31" id="AdjointableOperator-L31"> 31</a> namespace AdjointableMap</span>
+<span><a class="line" href="#AdjointableOperator-L32" id="AdjointableOperator-L32"> 32</a> </span>
+<span id="doc/BC4lean.KKTheory.AdjointableMap.instCoeFun"><a class="line" href="#AdjointableOperator-L33" id="AdjointableOperator-L33"> 33</a> instance instCoeFun : CoeFun (AdjointableMap B E F) (fun _ =&gt; E → F) := ⟨fun T =&gt; T.toCLM⟩</span>
+<span><a class="line" href="#AdjointableOperator-L34" id="AdjointableOperator-L34"> 34</a> </span>
+<span><a class="line" href="#AdjointableOperator-L35" id="AdjointableOperator-L35"> 35</a> /-- Uniqueness of an adjoint. -/</span>
+<span id="doc/BC4lean.KKTheory.AdjointableMap.adjoint_unique"><a class="line" href="#AdjointableOperator-L36" id="AdjointableOperator-L36"> 36</a> theorem adjoint_unique (T : AdjointableMap B E F) (S : F →L[ℂ] E)</span>
+<span><a class="line" href="#AdjointableOperator-L37" id="AdjointableOperator-L37"> 37</a>     (hS : ∀ x y, ⟪T x, y⟫_(Bᵐᵒᵖ) = ⟪x, S y⟫_(Bᵐᵒᵖ)) : S = T.adjointCLM := by</span>
+<span><a class="line" href="#AdjointableOperator-L38" id="AdjointableOperator-L38"> 38</a>   ext y</span>
+<span><a class="line" href="#AdjointableOperator-L39" id="AdjointableOperator-L39"> 39</a>   apply module_inner_ext_right (B := B)</span>
+<span><a class="line" href="#AdjointableOperator-L40" id="AdjointableOperator-L40"> 40</a>   intro x</span>
+<span><a class="line" href="#AdjointableOperator-L41" id="AdjointableOperator-L41"> 41</a>   rw [← hS, T.adjoint_identity]</span>
+<span><a class="line" href="#AdjointableOperator-L42" id="AdjointableOperator-L42"> 42</a> </span>
+<span id="doc/BC4lean.KKTheory.AdjointableMap.ext"><a class="line" href="#AdjointableOperator-L43" id="AdjointableOperator-L43"> 43</a> @[ext] theorem ext {S T : AdjointableMap B E F} (h : ∀ x, S x = T x) : S = T := by</span>
+<span><a class="line" href="#AdjointableOperator-L44" id="AdjointableOperator-L44"> 44</a>   have hf : S.toCLM = T.toCLM := ContinuousLinearMap.ext h</span>
+<span><a class="line" href="#AdjointableOperator-L45" id="AdjointableOperator-L45"> 45</a>   have ha : S.adjointCLM = T.adjointCLM := T.adjoint_unique S.adjointCLM (by</span>
+<span><a class="line" href="#AdjointableOperator-L46" id="AdjointableOperator-L46"> 46</a>     intro x y</span>
+<span><a class="line" href="#AdjointableOperator-L47" id="AdjointableOperator-L47"> 47</a>     rw [← h x]</span>
+<span><a class="line" href="#AdjointableOperator-L48" id="AdjointableOperator-L48"> 48</a>     exact S.adjoint_identity x y)</span>
+<span><a class="line" href="#AdjointableOperator-L49" id="AdjointableOperator-L49"> 49</a>   cases S</span>
+<span><a class="line" href="#AdjointableOperator-L50" id="AdjointableOperator-L50"> 50</a>   cases T</span>
+<span><a class="line" href="#AdjointableOperator-L51" id="AdjointableOperator-L51"> 51</a>   cases hf</span>
+<span><a class="line" href="#AdjointableOperator-L52" id="AdjointableOperator-L52"> 52</a>   cases ha</span>
+<span><a class="line" href="#AdjointableOperator-L53" id="AdjointableOperator-L53"> 53</a>   rfl</span>
+<span><a class="line" href="#AdjointableOperator-L54" id="AdjointableOperator-L54"> 54</a> </span>
+<span><a class="line" href="#AdjointableOperator-L55" id="AdjointableOperator-L55"> 55</a> /-- Every adjointable complex-linear map respects the right coefficient action. -/</span>
+<span id="doc/BC4lean.KKTheory.AdjointableMap.map_op_smul"><a class="line" href="#AdjointableOperator-L56" id="AdjointableOperator-L56"> 56</a> @[simp] theorem map_op_smul (T : AdjointableMap B E F) (a : Bᵐᵒᵖ) (x : E) :</span>
+<span><a class="line" href="#AdjointableOperator-L57" id="AdjointableOperator-L57"> 57</a>     T (a • x) = a • T x := by</span>
+<span><a class="line" href="#AdjointableOperator-L58" id="AdjointableOperator-L58"> 58</a>   apply module_inner_ext_left (B := B)</span>
+<span><a class="line" href="#AdjointableOperator-L59" id="AdjointableOperator-L59"> 59</a>   intro y</span>
+<span><a class="line" href="#AdjointableOperator-L60" id="AdjointableOperator-L60"> 60</a>   rw [T.adjoint_identity, inner_op_smul_left, inner_op_smul_left, T.adjoint_identity]</span>
+<span><a class="line" href="#AdjointableOperator-L61" id="AdjointableOperator-L61"> 61</a> </span>
+<span><a class="line" href="#AdjointableOperator-L62" id="AdjointableOperator-L62"> 62</a> /-- The adjoint as an adjointable map in the reverse direction. -/</span>
+<span id="doc/BC4lean.KKTheory.AdjointableMap.adjoint"><a class="line" href="#AdjointableOperator-L63" id="AdjointableOperator-L63"> 63</a> def adjoint (T : AdjointableMap B E F) : AdjointableMap B F E where</span>
+<span><a class="line" href="#AdjointableOperator-L64" id="AdjointableOperator-L64"> 64</a>   toCLM := T.adjointCLM</span>
+<span><a class="line" href="#AdjointableOperator-L65" id="AdjointableOperator-L65"> 65</a>   adjointCLM := T.toCLM</span>
+<span><a class="line" href="#AdjointableOperator-L66" id="AdjointableOperator-L66"> 66</a>   adjoint_identity x y := by</span>
+<span><a class="line" href="#AdjointableOperator-L67" id="AdjointableOperator-L67"> 67</a>     simpa only [CStarModule.star_inner] using (congrArg star (T.adjoint_identity y x)).symm</span>
+<span><a class="line" href="#AdjointableOperator-L68" id="AdjointableOperator-L68"> 68</a> </span>
+<span id="doc/BC4lean.KKTheory.AdjointableMap.adjoint_adjoint"><a class="line" href="#AdjointableOperator-L69" id="AdjointableOperator-L69"> 69</a> @[simp] theorem adjoint_adjoint (T : AdjointableMap B E F) : T.adjoint.adjoint = T := rfl</span>
+<span><a class="line" href="#AdjointableOperator-L70" id="AdjointableOperator-L70"> 70</a> </span>
+<span><a class="line" href="#AdjointableOperator-L71" id="AdjointableOperator-L71"> 71</a> /-- Zero adjointable map. -/</span>
+<span id="doc/BC4lean.KKTheory.AdjointableMap.zero"><a class="line" href="#AdjointableOperator-L72" id="AdjointableOperator-L72"> 72</a> def zero : AdjointableMap B E F where</span>
+<span><a class="line" href="#AdjointableOperator-L73" id="AdjointableOperator-L73"> 73</a>   toCLM := 0</span>
+<span><a class="line" href="#AdjointableOperator-L74" id="AdjointableOperator-L74"> 74</a>   adjointCLM := 0</span>
+<span><a class="line" href="#AdjointableOperator-L75" id="AdjointableOperator-L75"> 75</a>   adjoint_identity _ _ := by simp</span>
+<span><a class="line" href="#AdjointableOperator-L76" id="AdjointableOperator-L76"> 76</a> </span>
+<span id="doc/BC4lean.KKTheory.AdjointableMap.zero_apply"><a class="line" href="#AdjointableOperator-L77" id="AdjointableOperator-L77"> 77</a> @[simp] theorem zero_apply (x : E) : (zero : AdjointableMap B E F) x = 0 := rfl</span>
+<span><a class="line" href="#AdjointableOperator-L78" id="AdjointableOperator-L78"> 78</a> </span>
+<span id="doc/BC4lean.KKTheory.AdjointableMap.adjoint_zero"><a class="line" href="#AdjointableOperator-L79" id="AdjointableOperator-L79"> 79</a> @[simp] theorem adjoint_zero : (zero : AdjointableMap B E F).adjoint = zero := rfl</span>
+<span><a class="line" href="#AdjointableOperator-L80" id="AdjointableOperator-L80"> 80</a> </span>
+<span><a class="line" href="#AdjointableOperator-L81" id="AdjointableOperator-L81"> 81</a> /-- Identity adjointable operator. -/</span>
+<span id="doc/BC4lean.KKTheory.AdjointableMap.id"><a class="line" href="#AdjointableOperator-L82" id="AdjointableOperator-L82"> 82</a> def id : AdjointableMap B E E where</span>
+<span><a class="line" href="#AdjointableOperator-L83" id="AdjointableOperator-L83"> 83</a>   toCLM := ContinuousLinearMap.id ℂ E</span>
+<span><a class="line" href="#AdjointableOperator-L84" id="AdjointableOperator-L84"> 84</a>   adjointCLM := ContinuousLinearMap.id ℂ E</span>
+<span><a class="line" href="#AdjointableOperator-L85" id="AdjointableOperator-L85"> 85</a>   adjoint_identity _ _ := rfl</span>
+<span><a class="line" href="#AdjointableOperator-L86" id="AdjointableOperator-L86"> 86</a> </span>
+<span id="doc/BC4lean.KKTheory.AdjointableMap.id_apply"><a class="line" href="#AdjointableOperator-L87" id="AdjointableOperator-L87"> 87</a> @[simp] theorem id_apply (x : E) : (id : AdjointableMap B E E) x = x := rfl</span>
+<span><a class="line" href="#AdjointableOperator-L88" id="AdjointableOperator-L88"> 88</a> </span>
+<span id="doc/BC4lean.KKTheory.AdjointableMap.adjoint_id"><a class="line" href="#AdjointableOperator-L89" id="AdjointableOperator-L89"> 89</a> @[simp] theorem adjoint_id : (id : AdjointableMap B E E).adjoint = id := rfl</span>
+<span><a class="line" href="#AdjointableOperator-L90" id="AdjointableOperator-L90"> 90</a> </span>
+<span><a class="line" href="#AdjointableOperator-L91" id="AdjointableOperator-L91"> 91</a> /-- Composition, with the adjoints in reverse order. -/</span>
+<span id="doc/BC4lean.KKTheory.AdjointableMap.comp"><a class="line" href="#AdjointableOperator-L92" id="AdjointableOperator-L92"> 92</a> def comp (S : AdjointableMap B F G) (T : AdjointableMap B E F) : AdjointableMap B E G where</span>
+<span><a class="line" href="#AdjointableOperator-L93" id="AdjointableOperator-L93"> 93</a>   toCLM := S.toCLM.comp T.toCLM</span>
+<span><a class="line" href="#AdjointableOperator-L94" id="AdjointableOperator-L94"> 94</a>   adjointCLM := T.adjointCLM.comp S.adjointCLM</span>
+<span><a class="line" href="#AdjointableOperator-L95" id="AdjointableOperator-L95"> 95</a>   adjoint_identity x y := by</span>
+<span><a class="line" href="#AdjointableOperator-L96" id="AdjointableOperator-L96"> 96</a>     change ⟪S (T x), y⟫_(Bᵐᵒᵖ) = ⟪x, T.adjointCLM (S.adjointCLM y)⟫_(Bᵐᵒᵖ)</span>
+<span><a class="line" href="#AdjointableOperator-L97" id="AdjointableOperator-L97"> 97</a>     rw [S.adjoint_identity, T.adjoint_identity]</span>
+<span><a class="line" href="#AdjointableOperator-L98" id="AdjointableOperator-L98"> 98</a> </span>
+<span id="doc/BC4lean.KKTheory.AdjointableMap.comp_apply"><a class="line" href="#AdjointableOperator-L99" id="AdjointableOperator-L99"> 99</a> @[simp] theorem comp_apply (S : AdjointableMap B F G) (T : AdjointableMap B E F) (x : E) :</span>
+<span><a class="line" href="#AdjointableOperator-L100" id="AdjointableOperator-L100">100</a>     S.comp T x = S (T x) := rfl</span>
+<span><a class="line" href="#AdjointableOperator-L101" id="AdjointableOperator-L101">101</a> </span>
+<span id="doc/BC4lean.KKTheory.AdjointableMap.adjoint_comp"><a class="line" href="#AdjointableOperator-L102" id="AdjointableOperator-L102">102</a> @[simp] theorem adjoint_comp (S : AdjointableMap B F G) (T : AdjointableMap B E F) :</span>
+<span><a class="line" href="#AdjointableOperator-L103" id="AdjointableOperator-L103">103</a>     (S.comp T).adjoint = T.adjoint.comp S.adjoint := rfl</span>
+<span><a class="line" href="#AdjointableOperator-L104" id="AdjointableOperator-L104">104</a> </span>
+<span id="doc/BC4lean.KKTheory.AdjointableMap.id_comp"><a class="line" href="#AdjointableOperator-L105" id="AdjointableOperator-L105">105</a> @[simp] theorem id_comp (T : AdjointableMap B E F) : id.comp T = T := by ext; rfl</span>
+<span><a class="line" href="#AdjointableOperator-L106" id="AdjointableOperator-L106">106</a> </span>
+<span id="doc/BC4lean.KKTheory.AdjointableMap.comp_id"><a class="line" href="#AdjointableOperator-L107" id="AdjointableOperator-L107">107</a> @[simp] theorem comp_id (T : AdjointableMap B E F) : T.comp id = T := by ext; rfl</span>
+<span><a class="line" href="#AdjointableOperator-L108" id="AdjointableOperator-L108">108</a> </span>
+<span id="doc/BC4lean.KKTheory.AdjointableMap.comp_assoc"><a class="line" href="#AdjointableOperator-L109" id="AdjointableOperator-L109">109</a> theorem comp_assoc (R : AdjointableMap B G H) (S : AdjointableMap B F G)</span>
+<span><a class="line" href="#AdjointableOperator-L110" id="AdjointableOperator-L110">110</a>     (T : AdjointableMap B E F) : (R.comp S).comp T = R.comp (S.comp T) := by ext; rfl</span>
+<span><a class="line" href="#AdjointableOperator-L111" id="AdjointableOperator-L111">111</a> </span>
+<span><a class="line" href="#AdjointableOperator-L112" id="AdjointableOperator-L112">112</a> /-- Sum of adjointable maps. -/</span>
+<span id="doc/BC4lean.KKTheory.AdjointableMap.add"><a class="line" href="#AdjointableOperator-L113" id="AdjointableOperator-L113">113</a> def add (S T : AdjointableMap B E F) : AdjointableMap B E F where</span>
+<span><a class="line" href="#AdjointableOperator-L114" id="AdjointableOperator-L114">114</a>   toCLM := S.toCLM + T.toCLM</span>
+<span><a class="line" href="#AdjointableOperator-L115" id="AdjointableOperator-L115">115</a>   adjointCLM := S.adjointCLM + T.adjointCLM</span>
+<span><a class="line" href="#AdjointableOperator-L116" id="AdjointableOperator-L116">116</a>   adjoint_identity x y := by</span>
+<span><a class="line" href="#AdjointableOperator-L117" id="AdjointableOperator-L117">117</a>     change ⟪S x + T x, y⟫_(Bᵐᵒᵖ) = ⟪x, S.adjointCLM y + T.adjointCLM y⟫_(Bᵐᵒᵖ)</span>
+<span><a class="line" href="#AdjointableOperator-L118" id="AdjointableOperator-L118">118</a>     rw [CStarModule.inner_add_left, CStarModule.inner_add_right, S.adjoint_identity, T.adjoint_identity]</span>
+<span><a class="line" href="#AdjointableOperator-L119" id="AdjointableOperator-L119">119</a> </span>
+<span id="doc/BC4lean.KKTheory.AdjointableMap.add_apply"><a class="line" href="#AdjointableOperator-L120" id="AdjointableOperator-L120">120</a> @[simp] theorem add_apply (S T : AdjointableMap B E F) (x : E) :</span>
+<span><a class="line" href="#AdjointableOperator-L121" id="AdjointableOperator-L121">121</a>     S.add T x = S x + T x := rfl</span>
+<span><a class="line" href="#AdjointableOperator-L122" id="AdjointableOperator-L122">122</a> </span>
+<span id="doc/BC4lean.KKTheory.AdjointableMap.adjoint_add"><a class="line" href="#AdjointableOperator-L123" id="AdjointableOperator-L123">123</a> @[simp] theorem adjoint_add (S T : AdjointableMap B E F) :</span>
+<span><a class="line" href="#AdjointableOperator-L124" id="AdjointableOperator-L124">124</a>     (S.add T).adjoint = S.adjoint.add T.adjoint := rfl</span>
+<span><a class="line" href="#AdjointableOperator-L125" id="AdjointableOperator-L125">125</a> </span>
+<span><a class="line" href="#AdjointableOperator-L126" id="AdjointableOperator-L126">126</a> /-- Complex scalar multiplication; the adjoint is conjugate-linear. -/</span>
+<span id="doc/BC4lean.KKTheory.AdjointableMap.smul"><a class="line" href="#AdjointableOperator-L127" id="AdjointableOperator-L127">127</a> def smul (c : ℂ) (T : AdjointableMap B E F) : AdjointableMap B E F where</span>
+<span><a class="line" href="#AdjointableOperator-L128" id="AdjointableOperator-L128">128</a>   toCLM := c • T.toCLM</span>
+<span><a class="line" href="#AdjointableOperator-L129" id="AdjointableOperator-L129">129</a>   adjointCLM := star c • T.adjointCLM</span>
+<span><a class="line" href="#AdjointableOperator-L130" id="AdjointableOperator-L130">130</a>   adjoint_identity x y := by</span>
+<span><a class="line" href="#AdjointableOperator-L131" id="AdjointableOperator-L131">131</a>     change ⟪c • T x, y⟫_(Bᵐᵒᵖ) = ⟪x, star c • T.adjointCLM y⟫_(Bᵐᵒᵖ)</span>
+<span><a class="line" href="#AdjointableOperator-L132" id="AdjointableOperator-L132">132</a>     rw [inner_smul_left_complex, inner_smul_right_complex, T.adjoint_identity]</span>
+<span><a class="line" href="#AdjointableOperator-L133" id="AdjointableOperator-L133">133</a> </span>
+<span id="doc/BC4lean.KKTheory.AdjointableMap.smul_apply"><a class="line" href="#AdjointableOperator-L134" id="AdjointableOperator-L134">134</a> @[simp] theorem smul_apply (c : ℂ) (T : AdjointableMap B E F) (x : E) :</span>
+<span><a class="line" href="#AdjointableOperator-L135" id="AdjointableOperator-L135">135</a>     T.smul c x = c • T x := rfl</span>
+<span><a class="line" href="#AdjointableOperator-L136" id="AdjointableOperator-L136">136</a> </span>
+<span id="doc/BC4lean.KKTheory.AdjointableMap.adjoint_smul"><a class="line" href="#AdjointableOperator-L137" id="AdjointableOperator-L137">137</a> @[simp] theorem adjoint_smul (c : ℂ) (T : AdjointableMap B E F) :</span>
+<span><a class="line" href="#AdjointableOperator-L138" id="AdjointableOperator-L138">138</a>     (T.smul c).adjoint = T.adjoint.smul (star c) := by ext; rfl</span>
+<span><a class="line" href="#AdjointableOperator-L139" id="AdjointableOperator-L139">139</a> </span>
+<span><a class="line" href="#AdjointableOperator-L140" id="AdjointableOperator-L140">140</a> end AdjointableMap</span>
+<span><a class="line" href="#AdjointableOperator-L141" id="AdjointableOperator-L141">141</a> end BC4lean.KKTheory</span>
+</pre>
+<h2 id="RankOneOperator">RankOneOperator.lean</h2><p>源码 SHA-256：<code>d3b1c87e56a885b902f6f431a74d8b606c1ae0ec42f22a1520a3c08c92ea2675</code></p><pre>
+<span><a class="line" href="#RankOneOperator-L1" id="RankOneOperator-L1">  1</a> import BC4lean.AdjointableOperator</span>
+<span><a class="line" href="#RankOneOperator-L2" id="RankOneOperator-L2">  2</a> </span>
+<span><a class="line" href="#RankOneOperator-L3" id="RankOneOperator-L3">  3</a> /-! # Rank-one operators on right Hilbert C⋆-modules</span>
+<span><a class="line" href="#RankOneOperator-L4" id="RankOneOperator-L4">  4</a> </span>
+<span><a class="line" href="#RankOneOperator-L5" id="RankOneOperator-L5">  5</a> For x in F and y in E, θ(x,y) maps z to x⟨y,z⟩. We prove boundedness,</span>
+<span><a class="line" href="#RankOneOperator-L6" id="RankOneOperator-L6">  6</a> adjointability and the composition identities used to construct compact module</span>
+<span><a class="line" href="#RankOneOperator-L7" id="RankOneOperator-L7">  7</a> operators. Operator-norm closure and the compact-operator ideal are later work.</span>
+<span><a class="line" href="#RankOneOperator-L8" id="RankOneOperator-L8">  8</a> -/</span>
+<span><a class="line" href="#RankOneOperator-L9" id="RankOneOperator-L9">  9</a> </span>
+<span><a class="line" href="#RankOneOperator-L10" id="RankOneOperator-L10"> 10</a> noncomputable section</span>
+<span><a class="line" href="#RankOneOperator-L11" id="RankOneOperator-L11"> 11</a> namespace BC4lean.KKTheory</span>
+<span><a class="line" href="#RankOneOperator-L12" id="RankOneOperator-L12"> 12</a> </span>
+<span><a class="line" href="#RankOneOperator-L13" id="RankOneOperator-L13"> 13</a> open scoped InnerProductSpace</span>
+<span><a class="line" href="#RankOneOperator-L14" id="RankOneOperator-L14"> 14</a> open CStarModule</span>
+<span><a class="line" href="#RankOneOperator-L15" id="RankOneOperator-L15"> 15</a> </span>
+<span><a class="line" href="#RankOneOperator-L16" id="RankOneOperator-L16"> 16</a> variable {B E F G : Type*} [NonUnitalCStarAlgebra B] [PartialOrder B] [StarOrderedRing B]</span>
+<span><a class="line" href="#RankOneOperator-L17" id="RankOneOperator-L17"> 17</a>   [NormedAddCommGroup E] [NormedSpace ℂ E] [SMul Bᵐᵒᵖ E] [CStarModule Bᵐᵒᵖ E]</span>
+<span><a class="line" href="#RankOneOperator-L18" id="RankOneOperator-L18"> 18</a>   [NormedAddCommGroup F] [NormedSpace ℂ F] [SMul Bᵐᵒᵖ F] [CStarModule Bᵐᵒᵖ F]</span>
+<span><a class="line" href="#RankOneOperator-L19" id="RankOneOperator-L19"> 19</a>   [NormedAddCommGroup G] [NormedSpace ℂ G] [SMul Bᵐᵒᵖ G] [CStarModule Bᵐᵒᵖ G]</span>
+<span><a class="line" href="#RankOneOperator-L20" id="RankOneOperator-L20"> 20</a> </span>
+<span><a class="line" href="#RankOneOperator-L21" id="RankOneOperator-L21"> 21</a> /-- The rank-one map as a bounded complex-linear map. -/</span>
+<span id="doc/BC4lean.KKTheory.moduleRankOneCLM"><a class="line" href="#RankOneOperator-L22" id="RankOneOperator-L22"> 22</a> def moduleRankOneCLM (x : F) (y : E) : E →L[ℂ] F :=</span>
+<span><a class="line" href="#RankOneOperator-L23" id="RankOneOperator-L23"> 23</a>   LinearMap.mkContinuous</span>
+<span><a class="line" href="#RankOneOperator-L24" id="RankOneOperator-L24"> 24</a>     { toFun := fun z =&gt; ⟪y, z⟫_(Bᵐᵒᵖ) • x</span>
+<span><a class="line" href="#RankOneOperator-L25" id="RankOneOperator-L25"> 25</a>       map_add&#x27; := fun z w =&gt; by rw [CStarModule.inner_add_right, module_add_smul]</span>
+<span><a class="line" href="#RankOneOperator-L26" id="RankOneOperator-L26"> 26</a>       map_smul&#x27; := fun c z =&gt; by</span>
+<span><a class="line" href="#RankOneOperator-L27" id="RankOneOperator-L27"> 27</a>         simp only [inner_smul_right_complex, module_complex_smul, RingHom.id_apply] }</span>
+<span><a class="line" href="#RankOneOperator-L28" id="RankOneOperator-L28"> 28</a>     (‖x‖ * ‖y‖) (fun z =&gt; by</span>
+<span><a class="line" href="#RankOneOperator-L29" id="RankOneOperator-L29"> 29</a>       calc</span>
+<span><a class="line" href="#RankOneOperator-L30" id="RankOneOperator-L30"> 30</a>         ‖⟪y, z⟫_(Bᵐᵒᵖ) • x‖ ≤ ‖⟪y, z⟫_(Bᵐᵒᵖ)‖ * ‖x‖ := module_norm_smul_le _ _</span>
+<span><a class="line" href="#RankOneOperator-L31" id="RankOneOperator-L31"> 31</a>         _ ≤ (‖y‖ * ‖z‖) * ‖x‖ := mul_le_mul_of_nonneg_right (CStarModule.norm_inner_le E) (_root_.norm_nonneg _)</span>
+<span><a class="line" href="#RankOneOperator-L32" id="RankOneOperator-L32"> 32</a>         _ = (‖x‖ * ‖y‖) * ‖z‖ := by ring)</span>
+<span><a class="line" href="#RankOneOperator-L33" id="RankOneOperator-L33"> 33</a> </span>
+<span id="doc/BC4lean.KKTheory.moduleRankOneCLM_apply"><a class="line" href="#RankOneOperator-L34" id="RankOneOperator-L34"> 34</a> @[simp] theorem moduleRankOneCLM_apply (x : F) (y z : E) :</span>
+<span><a class="line" href="#RankOneOperator-L35" id="RankOneOperator-L35"> 35</a>     moduleRankOneCLM (B := B) x y z = ⟪y, z⟫_(Bᵐᵒᵖ) • x := rfl</span>
+<span><a class="line" href="#RankOneOperator-L36" id="RankOneOperator-L36"> 36</a> </span>
+<span><a class="line" href="#RankOneOperator-L37" id="RankOneOperator-L37"> 37</a> /-- A rank-one map is adjointable, with θ(x,y)* = θ(y,x). -/</span>
+<span id="doc/BC4lean.KKTheory.moduleRankOne"><a class="line" href="#RankOneOperator-L38" id="RankOneOperator-L38"> 38</a> def moduleRankOne (x : F) (y : E) : AdjointableMap B E F where</span>
+<span><a class="line" href="#RankOneOperator-L39" id="RankOneOperator-L39"> 39</a>   toCLM := moduleRankOneCLM (B := B) x y</span>
+<span><a class="line" href="#RankOneOperator-L40" id="RankOneOperator-L40"> 40</a>   adjointCLM := moduleRankOneCLM (B := B) y x</span>
+<span><a class="line" href="#RankOneOperator-L41" id="RankOneOperator-L41"> 41</a>   adjoint_identity z w := by</span>
+<span><a class="line" href="#RankOneOperator-L42" id="RankOneOperator-L42"> 42</a>     change ⟪⟪y, z⟫_(Bᵐᵒᵖ) • x, w⟫_(Bᵐᵒᵖ) = ⟪z, ⟪x, w⟫_(Bᵐᵒᵖ) • y⟫_(Bᵐᵒᵖ)</span>
+<span><a class="line" href="#RankOneOperator-L43" id="RankOneOperator-L43"> 43</a>     simp only [inner_op_smul_left, inner_op_smul_right, CStarModule.star_inner]</span>
+<span><a class="line" href="#RankOneOperator-L44" id="RankOneOperator-L44"> 44</a> </span>
+<span id="doc/BC4lean.KKTheory.moduleRankOne_apply"><a class="line" href="#RankOneOperator-L45" id="RankOneOperator-L45"> 45</a> @[simp] theorem moduleRankOne_apply (x : F) (y z : E) :</span>
+<span><a class="line" href="#RankOneOperator-L46" id="RankOneOperator-L46"> 46</a>     moduleRankOne (B := B) x y z = ⟪y, z⟫_(Bᵐᵒᵖ) • x := rfl</span>
+<span><a class="line" href="#RankOneOperator-L47" id="RankOneOperator-L47"> 47</a> </span>
+<span id="doc/BC4lean.KKTheory.moduleRankOne_adjoint"><a class="line" href="#RankOneOperator-L48" id="RankOneOperator-L48"> 48</a> @[simp] theorem moduleRankOne_adjoint (x : F) (y : E) :</span>
+<span><a class="line" href="#RankOneOperator-L49" id="RankOneOperator-L49"> 49</a>     (moduleRankOne (B := B) x y).adjoint = moduleRankOne y x := rfl</span>
+<span><a class="line" href="#RankOneOperator-L50" id="RankOneOperator-L50"> 50</a> </span>
+<span><a class="line" href="#RankOneOperator-L51" id="RankOneOperator-L51"> 51</a> /-- The usual rank-one operator-norm bound. -/</span>
+<span id="doc/BC4lean.KKTheory.moduleRankOne_norm_le"><a class="line" href="#RankOneOperator-L52" id="RankOneOperator-L52"> 52</a> theorem moduleRankOne_norm_le (x : F) (y : E) :</span>
+<span><a class="line" href="#RankOneOperator-L53" id="RankOneOperator-L53"> 53</a>     ‖(moduleRankOne (B := B) x y).toCLM‖ ≤ ‖x‖ * ‖y‖ := by</span>
+<span><a class="line" href="#RankOneOperator-L54" id="RankOneOperator-L54"> 54</a>   apply ContinuousLinearMap.opNorm_le_bound _ (by positivity)</span>
+<span><a class="line" href="#RankOneOperator-L55" id="RankOneOperator-L55"> 55</a>   intro z</span>
+<span><a class="line" href="#RankOneOperator-L56" id="RankOneOperator-L56"> 56</a>   change ‖⟪y, z⟫_(Bᵐᵒᵖ) • x‖ ≤ _</span>
+<span><a class="line" href="#RankOneOperator-L57" id="RankOneOperator-L57"> 57</a>   calc</span>
+<span><a class="line" href="#RankOneOperator-L58" id="RankOneOperator-L58"> 58</a>     _ ≤ ‖⟪y, z⟫_(Bᵐᵒᵖ)‖ * ‖x‖ := module_norm_smul_le _ _</span>
+<span><a class="line" href="#RankOneOperator-L59" id="RankOneOperator-L59"> 59</a>     _ ≤ (‖y‖ * ‖z‖) * ‖x‖ := mul_le_mul_of_nonneg_right (CStarModule.norm_inner_le E) (_root_.norm_nonneg _)</span>
+<span><a class="line" href="#RankOneOperator-L60" id="RankOneOperator-L60"> 60</a>     _ = (‖x‖ * ‖y‖) * ‖z‖ := by ring</span>
+<span><a class="line" href="#RankOneOperator-L61" id="RankOneOperator-L61"> 61</a> </span>
+<span><a class="line" href="#RankOneOperator-L62" id="RankOneOperator-L62"> 62</a> /-- Left composition by an adjointable map preserves rank-one operators. -/</span>
+<span id="doc/BC4lean.KKTheory.comp_moduleRankOne"><a class="line" href="#RankOneOperator-L63" id="RankOneOperator-L63"> 63</a> theorem comp_moduleRankOne (T : AdjointableMap B F G) (x : F) (y : E) :</span>
+<span><a class="line" href="#RankOneOperator-L64" id="RankOneOperator-L64"> 64</a>     T.comp (moduleRankOne x y) = moduleRankOne (T x) y := by</span>
+<span><a class="line" href="#RankOneOperator-L65" id="RankOneOperator-L65"> 65</a>   ext z</span>
+<span><a class="line" href="#RankOneOperator-L66" id="RankOneOperator-L66"> 66</a>   exact T.map_op_smul _ _</span>
+<span><a class="line" href="#RankOneOperator-L67" id="RankOneOperator-L67"> 67</a> </span>
+<span><a class="line" href="#RankOneOperator-L68" id="RankOneOperator-L68"> 68</a> /-- Right composition by an adjointable map preserves rank-one operators. -/</span>
+<span id="doc/BC4lean.KKTheory.moduleRankOne_comp"><a class="line" href="#RankOneOperator-L69" id="RankOneOperator-L69"> 69</a> theorem moduleRankOne_comp (x : G) (y : F) (T : AdjointableMap B E F) :</span>
+<span><a class="line" href="#RankOneOperator-L70" id="RankOneOperator-L70"> 70</a>     (moduleRankOne x y).comp T = moduleRankOne x (T.adjoint y) := by</span>
+<span><a class="line" href="#RankOneOperator-L71" id="RankOneOperator-L71"> 71</a>   ext z</span>
+<span><a class="line" href="#RankOneOperator-L72" id="RankOneOperator-L72"> 72</a>   change ⟪y, T z⟫_(Bᵐᵒᵖ) • x = ⟪T.adjoint y, z⟫_(Bᵐᵒᵖ) • x</span>
+<span><a class="line" href="#RankOneOperator-L73" id="RankOneOperator-L73"> 73</a>   rw [T.adjoint.adjoint_identity]</span>
+<span><a class="line" href="#RankOneOperator-L74" id="RankOneOperator-L74"> 74</a>   rfl</span>
+<span><a class="line" href="#RankOneOperator-L75" id="RankOneOperator-L75"> 75</a> </span>
+<span><a class="line" href="#RankOneOperator-L76" id="RankOneOperator-L76"> 76</a> /-- Product of two rank-one operators. -/</span>
+<span id="doc/BC4lean.KKTheory.moduleRankOne_comp_moduleRankOne"><a class="line" href="#RankOneOperator-L77" id="RankOneOperator-L77"> 77</a> theorem moduleRankOne_comp_moduleRankOne (x : G) (y u : F) (v : E) :</span>
+<span><a class="line" href="#RankOneOperator-L78" id="RankOneOperator-L78"> 78</a>     (moduleRankOne (B := B) x y).comp (moduleRankOne u v) =</span>
+<span><a class="line" href="#RankOneOperator-L79" id="RankOneOperator-L79"> 79</a>       moduleRankOne (⟪y, u⟫_(Bᵐᵒᵖ) • x) v :=</span>
+<span><a class="line" href="#RankOneOperator-L80" id="RankOneOperator-L80"> 80</a>   comp_moduleRankOne _ _ _</span>
+<span><a class="line" href="#RankOneOperator-L81" id="RankOneOperator-L81"> 81</a> </span>
+<span><a class="line" href="#RankOneOperator-L82" id="RankOneOperator-L82"> 82</a> /-- On the standard right module, θ(x,y) is left multiplication by x y*. -/</span>
+<span id="doc/BC4lean.KKTheory.standard_moduleRankOne"><a class="line" href="#RankOneOperator-L83" id="RankOneOperator-L83"> 83</a> theorem standard_moduleRankOne (x y z : B) :</span>
+<span><a class="line" href="#RankOneOperator-L84" id="RankOneOperator-L84"> 84</a>     MulOpposite.unop (moduleRankOne (B := B) (MulOpposite.op x)</span>
+<span><a class="line" href="#RankOneOperator-L85" id="RankOneOperator-L85"> 85</a>       (MulOpposite.op y) (MulOpposite.op z)) = x * star y * z := by</span>
+<span><a class="line" href="#RankOneOperator-L86" id="RankOneOperator-L86"> 86</a>   change x * (star y * z) = x * star y * z</span>
+<span><a class="line" href="#RankOneOperator-L87" id="RankOneOperator-L87"> 87</a>   rw [mul_assoc]</span>
+<span><a class="line" href="#RankOneOperator-L88" id="RankOneOperator-L88"> 88</a> </span>
+<span><a class="line" href="#RankOneOperator-L89" id="RankOneOperator-L89"> 89</a> end BC4lean.KKTheory</span>
 </pre>
 </body></html>

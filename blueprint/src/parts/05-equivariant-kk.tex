@@ -2,10 +2,130 @@
 \label{ch:equivariant-kk}
 
 \section{Hilbert modules and operator ideals}
+In this section $B$ is a possibly nonunital complex $C^*$-algebra and
+$E,F,G$ are right pre-Hilbert $B$-modules, with inner product linear in the
+second variable. A Hilbert module is complete in the induced norm.
+The first results below do not require completeness.
+
+The pinned Mathlib scalar convention is implemented using
+\texttt{CStarModule} over the opposite algebra $B^{\mathrm{op}}$:
+$x b$ is represented by $\operatorname{op}(b)\mathbin{\bullet}x$, and
+our $B$-valued inner product is the unop of Mathlib's inner product.
+This fixes the multiplication order for the later Kasparov-cycle construction.
+
+\begin{proposition}\label{prop:module-inner-separation}
+\lean{BC4lean.KKTheory.module_inner_ext_left,BC4lean.KKTheory.module_inner_ext_right}
+\leanok
+The inner product separates points in either variable. In particular,
+if $\langle z,x\rangle=\langle z,y\rangle$ for all $z\in E$, then $x=y$;
+the same holds when the test vector is in the second variable.
+\end{proposition}
+\begin{proof}
+\leanok
+Apply definiteness to $\langle x-y,x-y\rangle$ and use conjugate symmetry.
+\end{proof}
+
+\begin{proposition}\label{prop:module-action-bound}
+\uses{prop:module-inner-separation}
+\lean{BC4lean.KKTheory.module_add_smul,BC4lean.KKTheory.module_smul_add,BC4lean.KKTheory.module_mul_smul,BC4lean.KKTheory.module_complex_smul,BC4lean.KKTheory.module_norm_smul_le}
+\leanok
+The coefficient action satisfies
+$x(b+d)=xb+xd$, $(x+y)b=xb+yb$, $(xb)d=x(bd)$,
+$x(cb)=c(xb)$ for $c\in\mathbb C$, and
+$\|xb\|\leq\|x\|\|b\|$. These properties follow from
+the module-valued inner-product identities and its norm, rather than being
+additional assumptions on the action.
+\end{proposition}
+\begin{proof}
+\leanok
+Use separation by inner products for the algebraic identities. For the bound,
+apply submultiplicativity to
+$\langle xb,xb\rangle=b^*\langle x,x\rangle b$ and take square roots.
+\end{proof}
+
+\begin{definition}\label{def:adjointable-module-map}
+\lean{BC4lean.KKTheory.AdjointableMap}
+\leanok
+An adjointable map $T:E\to F$ is a bounded complex-linear map together with
+a bounded complex-linear map $T^*:F\to E$ satisfying
+$\langle Tx,y\rangle=\langle x,T^*y\rangle$ for all $x,y$.
+\end{definition}
+
+\begin{proposition}\label{prop:adjointable-module-map-laws}
+\uses{def:adjointable-module-map,prop:module-inner-separation}
+\lean{BC4lean.KKTheory.AdjointableMap.adjoint_unique,BC4lean.KKTheory.AdjointableMap.map_op_smul,BC4lean.KKTheory.AdjointableMap.adjoint_adjoint,BC4lean.KKTheory.AdjointableMap.adjoint_comp,BC4lean.KKTheory.AdjointableMap.id_comp,BC4lean.KKTheory.AdjointableMap.comp_id,BC4lean.KKTheory.AdjointableMap.comp_assoc,BC4lean.KKTheory.AdjointableMap.adjoint_add,BC4lean.KKTheory.AdjointableMap.adjoint_smul}
+\leanok
+The adjoint is unique, and $T$ is automatically right $B$-linear.
+Adjointable maps are closed under addition, complex scalar multiplication
+and composition. They have identity and zero maps, composition is associative,
+and
+\[
+ (T^*)^*=T,\qquad (ST)^*=T^*S^*,\qquad
+ (S+T)^*=S^*+T^*,\qquad (cT)^*=\overline c\,T^*.
+\]
+\end{proposition}
+\begin{proof}
+\leanok
+Apply the adjoint identity and inner-product separation. Construct the
+operations using bounded complex-linear maps and their indicated adjoints.
+\end{proof}
+
+\begin{definition}\label{def:module-rank-one}
+\uses{prop:module-action-bound,def:adjointable-module-map}
+\lean{BC4lean.KKTheory.moduleRankOneCLM,BC4lean.KKTheory.moduleRankOne}
+\leanok
+For $x\in F$ and $y\in E$, define the rank-one module operator
+\[
+ \theta_{x,y}:E\longrightarrow F,\qquad
+ \theta_{x,y}(z)=x\langle y,z\rangle.
+\]
+This is a bounded adjointable map. ``Rank-one'' is in the Hilbert-module sense;
+it need not have one-dimensional complex range.
+\end{definition}
+
+\begin{proposition}\label{prop:module-rank-one-laws}
+\uses{def:module-rank-one,prop:adjointable-module-map-laws}
+\lean{BC4lean.KKTheory.moduleRankOne_norm_le,BC4lean.KKTheory.moduleRankOne_adjoint,BC4lean.KKTheory.comp_moduleRankOne,BC4lean.KKTheory.moduleRankOne_comp,BC4lean.KKTheory.moduleRankOne_comp_moduleRankOne}
+\leanok
+For all appropriately typed vectors and adjointable maps,
+\[
+ \|\theta_{x,y}\|\leq\|x\|\|y\|,\qquad
+ \theta_{x,y}^*=\theta_{y,x},\qquad
+ T\theta_{x,y}=\theta_{Tx,y},\qquad
+ \theta_{x,y}T=\theta_{x,T^*y}.
+\]
+In particular,
+$\theta_{x,y}\theta_{u,v}=\theta_{x\langle y,u\rangle,v}$.
+\end{proposition}
+\begin{proof}
+\leanok
+Use the module-action bound and Cauchy--Schwarz for the norm estimate.
+The remaining identities follow by evaluation on vectors and the adjoint identity.
+\end{proof}
+
+\begin{proposition}\label{prop:standard-module-rank-one}
+\uses{def:module-rank-one}
+\lean{BC4lean.KKTheory.standard_module_inner,BC4lean.KKTheory.standard_module_complete,BC4lean.KKTheory.standard_moduleRankOne}
+\leanok
+The standard right module $B_B$ is complete, has inner product
+$\langle x,y\rangle=x^*y$, and its rank-one operator $\theta_{x,y}$ is left
+multiplication by $xy^*$.
+\end{proposition}
+\begin{proof}
+\leanok
+Use the existing complete $C^*$-algebra norm and evaluate the inner product
+and rank-one construction on the opposite-algebra model of $B_B$.
+\end{proof}
+
 \begin{definition}\label{def:hilbert-modules}
+\uses{prop:module-rank-one-laws,prop:standard-module-rank-one}
 \notready
 Develop graded Hilbert $C^*$-modules, adjointable operators, compact module
 operators, and continuous compatible group actions.
+The ungraded adjointable-map and rank-one foundations above are verified.
+The next step is the operator-norm closure of the span of rank-one maps,
+including its two-sided ideal and adjoint properties; grading and group
+actions remain to be developed.
 \end{definition}
 
 \section{Equivariant Kasparov cycles}
