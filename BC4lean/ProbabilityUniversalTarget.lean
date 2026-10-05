@@ -35,12 +35,20 @@ theorem probability_proper_universal_target [Countable Γ]
   ⟨ProbabilitySimplex.proper, c.probability_homotopyTerminal⟩
 
 /-- A Hausdorff finite-isotropy equivariant CW space has a proper action for countable Γ.
-Hausdorffness remains an explicit premise until it is derived from the categorical CW data. -/
+The following unconditional result supplies Hausdorffness from the categorical CW data. -/
 theorem EquivariantCWComplex.proper_of_t2 [Countable Γ] [T2Space A]
     (c : EquivariantCWComplex (topologicalAction Γ A)) : ProperSMul Γ A := by
   let : ProperSMul Γ (ProbabilitySimplex Γ) := ProbabilitySimplex.proper
   let : ContinuousSMul Γ A := ⟨continuous_prod_of_discrete_left.mpr continuous_const_smul⟩
   obtain ⟨f⟩ := c.probability_homotopyTerminal.1
   exact f.properSMul
+
+
+/-- A finite-isotropy equivariant CW space has a proper action for every countable discrete group.
+Hausdorffness is derived from the cellular data, rather than imposed as a separate hypothesis. -/
+theorem EquivariantCWComplex.proper [Countable Γ]
+    (c : EquivariantCWComplex (topologicalAction Γ A)) : ProperSMul Γ A := by
+  let : T2Space A := c.t2Space
+  exact c.proper_of_t2
 
 end BC4lean.ProperActions

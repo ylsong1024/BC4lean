@@ -4720,478 +4720,774 @@ code{overflow-wrap:anywhere}</style></head><body><a href="../../blueprint/">返�
 <span><a class="line" href="#CocompactPieces-L166" id="CocompactPieces-L166">166</a> end CocompactPiece</span>
 <span><a class="line" href="#CocompactPieces-L167" id="CocompactPieces-L167">167</a> end BC4lean.ProperActions</span>
 </pre>
-<h2 id="EquivariantCW">EquivariantCW.lean</h2><p>源码 SHA-256：<code>191a00ac5738dc26da8853c6ae5e939d6ff8e94ad69bc3fe6051d417a097b9bc</code></p><pre>
+<h2 id="EquivariantCW">EquivariantCW.lean</h2><p>源码 SHA-256：<code>3a6203f441913c64d9d55afee276d5ee752cebff288ff18f6af9487b0bb69ef0</code></p><pre>
 <span><a class="line" href="#EquivariantCW-L1" id="EquivariantCW-L1">  1</a> import BC4lean.ProperOrbitCells</span>
 <span><a class="line" href="#EquivariantCW-L2" id="EquivariantCW-L2">  2</a> import Mathlib.Topology.CWComplex.Abstract.Basic</span>
 <span><a class="line" href="#EquivariantCW-L3" id="EquivariantCW-L3">  3</a> import Mathlib.CategoryTheory.Action.Limits</span>
 <span><a class="line" href="#EquivariantCW-L4" id="EquivariantCW-L4">  4</a> import Mathlib.CategoryTheory.Types.Monomorphisms</span>
-<span><a class="line" href="#EquivariantCW-L5" id="EquivariantCW-L5">  5</a> </span>
-<span><a class="line" href="#EquivariantCW-L6" id="EquivariantCW-L6">  6</a> /-! # Equivariant cell attachments</span>
-<span><a class="line" href="#EquivariantCW-L7" id="EquivariantCW-L7">  7</a> </span>
-<span><a class="line" href="#EquivariantCW-L8" id="EquivariantCW-L8">  8</a> This module realizes the orbit boundary inclusions in `Action TopCat Γ`</span>
-<span><a class="line" href="#EquivariantCW-L9" id="EquivariantCW-L9">  9</a> and specializes Mathlib&#x27;s relative cell complex structure to them. The cells</span>
-<span><a class="line" href="#EquivariantCW-L10" id="EquivariantCW-L10"> 10</a> have finite isotropy. Properness of arbitrary cellular colimits and the</span>
-<span><a class="line" href="#EquivariantCW-L11" id="EquivariantCW-L11"> 11</a> universal proper-space existence and mapping theorems are separate results;</span>
-<span><a class="line" href="#EquivariantCW-L12" id="EquivariantCW-L12"> 12</a> they are not fields or axioms of the definitions below.</span>
-<span><a class="line" href="#EquivariantCW-L13" id="EquivariantCW-L13"> 13</a> -/</span>
-<span><a class="line" href="#EquivariantCW-L14" id="EquivariantCW-L14"> 14</a> </span>
-<span><a class="line" href="#EquivariantCW-L15" id="EquivariantCW-L15"> 15</a> open CategoryTheory CategoryTheory.Limits</span>
-<span><a class="line" href="#EquivariantCW-L16" id="EquivariantCW-L16"> 16</a> </span>
-<span><a class="line" href="#EquivariantCW-L17" id="EquivariantCW-L17"> 17</a> namespace BC4lean.ProperActions</span>
-<span><a class="line" href="#EquivariantCW-L18" id="EquivariantCW-L18"> 18</a> </span>
-<span><a class="line" href="#EquivariantCW-L19" id="EquivariantCW-L19"> 19</a> universe u v</span>
-<span><a class="line" href="#EquivariantCW-L20" id="EquivariantCW-L20"> 20</a> </span>
-<span><a class="line" href="#EquivariantCW-L21" id="EquivariantCW-L21"> 21</a> /-- Bundle an action with continuous translations as an action in `TopCat`. -/</span>
-<span id="doc/BC4lean.ProperActions.topologicalAction"><a class="line" href="#EquivariantCW-L22" id="EquivariantCW-L22"> 22</a> def topologicalAction (Γ : Type u) (X : Type v) [Group Γ] [TopologicalSpace X]</span>
-<span><a class="line" href="#EquivariantCW-L23" id="EquivariantCW-L23"> 23</a>     [MulAction Γ X] [ContinuousConstSMul Γ X] : Action TopCat.{v} Γ where</span>
-<span><a class="line" href="#EquivariantCW-L24" id="EquivariantCW-L24"> 24</a>   V := TopCat.of X</span>
-<span><a class="line" href="#EquivariantCW-L25" id="EquivariantCW-L25"> 25</a>   ρ :=</span>
-<span><a class="line" href="#EquivariantCW-L26" id="EquivariantCW-L26"> 26</a>     { toFun := fun g =&gt; TopCat.ofHom ⟨fun x =&gt; g • x, continuous_const_smul g⟩</span>
-<span><a class="line" href="#EquivariantCW-L27" id="EquivariantCW-L27"> 27</a>       map_one&#x27; := by</span>
-<span><a class="line" href="#EquivariantCW-L28" id="EquivariantCW-L28"> 28</a>         apply TopCat.hom_ext</span>
-<span><a class="line" href="#EquivariantCW-L29" id="EquivariantCW-L29"> 29</a>         apply ContinuousMap.ext</span>
-<span><a class="line" href="#EquivariantCW-L30" id="EquivariantCW-L30"> 30</a>         intro x</span>
-<span><a class="line" href="#EquivariantCW-L31" id="EquivariantCW-L31"> 31</a>         exact one_smul Γ x</span>
-<span><a class="line" href="#EquivariantCW-L32" id="EquivariantCW-L32"> 32</a>       map_mul&#x27; := by</span>
-<span><a class="line" href="#EquivariantCW-L33" id="EquivariantCW-L33"> 33</a>         intro g h</span>
-<span><a class="line" href="#EquivariantCW-L34" id="EquivariantCW-L34"> 34</a>         apply TopCat.hom_ext</span>
-<span><a class="line" href="#EquivariantCW-L35" id="EquivariantCW-L35"> 35</a>         apply ContinuousMap.ext</span>
-<span><a class="line" href="#EquivariantCW-L36" id="EquivariantCW-L36"> 36</a>         intro x</span>
-<span><a class="line" href="#EquivariantCW-L37" id="EquivariantCW-L37"> 37</a>         exact mul_smul g h x }</span>
-<span><a class="line" href="#EquivariantCW-L38" id="EquivariantCW-L38"> 38</a> </span>
-<span><a class="line" href="#EquivariantCW-L39" id="EquivariantCW-L39"> 39</a> namespace EquivariantMap</span>
-<span><a class="line" href="#EquivariantCW-L40" id="EquivariantCW-L40"> 40</a> </span>
-<span><a class="line" href="#EquivariantCW-L41" id="EquivariantCW-L41"> 41</a> variable {Γ : Type u} {X Y Z : Type v} [Group Γ]</span>
-<span><a class="line" href="#EquivariantCW-L42" id="EquivariantCW-L42"> 42</a> variable [TopologicalSpace X] [TopologicalSpace Y] [TopologicalSpace Z]</span>
-<span><a class="line" href="#EquivariantCW-L43" id="EquivariantCW-L43"> 43</a> variable [MulAction Γ X] [MulAction Γ Y] [MulAction Γ Z]</span>
-<span><a class="line" href="#EquivariantCW-L44" id="EquivariantCW-L44"> 44</a> variable [ContinuousConstSMul Γ X] [ContinuousConstSMul Γ Y] [ContinuousConstSMul Γ Z]</span>
-<span><a class="line" href="#EquivariantCW-L45" id="EquivariantCW-L45"> 45</a> </span>
-<span><a class="line" href="#EquivariantCW-L46" id="EquivariantCW-L46"> 46</a> /-- A bundled continuous equivariant map gives a morphism of topological actions. -/</span>
-<span id="doc/BC4lean.ProperActions.EquivariantMap.toActionHom"><a class="line" href="#EquivariantCW-L47" id="EquivariantCW-L47"> 47</a> def toActionHom (f : EquivariantMap Γ X Y) :</span>
-<span><a class="line" href="#EquivariantCW-L48" id="EquivariantCW-L48"> 48</a>     topologicalAction Γ X ⟶ topologicalAction Γ Y where</span>
-<span><a class="line" href="#EquivariantCW-L49" id="EquivariantCW-L49"> 49</a>   hom := TopCat.ofHom f.toContinuousMap</span>
-<span><a class="line" href="#EquivariantCW-L50" id="EquivariantCW-L50"> 50</a>   comm g := by ext x; exact f.map_smul g x</span>
-<span><a class="line" href="#EquivariantCW-L51" id="EquivariantCW-L51"> 51</a> </span>
-<span id="doc/BC4lean.ProperActions.EquivariantMap.toActionHom_apply"><a class="line" href="#EquivariantCW-L52" id="EquivariantCW-L52"> 52</a> @[simp] theorem toActionHom_apply (f : EquivariantMap Γ X Y) (x : X) :</span>
-<span><a class="line" href="#EquivariantCW-L53" id="EquivariantCW-L53"> 53</a>     f.toActionHom.hom x = f x := rfl</span>
+<span><a class="line" href="#EquivariantCW-L5" id="EquivariantCW-L5">  5</a> import Mathlib.Topology.TietzeExtension</span>
+<span><a class="line" href="#EquivariantCW-L6" id="EquivariantCW-L6">  6</a> import Mathlib.Topology.Category.TopCat.Limits.Products</span>
+<span><a class="line" href="#EquivariantCW-L7" id="EquivariantCW-L7">  7</a> import Mathlib.CategoryTheory.SmallObject.TransfiniteCompositionLifting</span>
+<span><a class="line" href="#EquivariantCW-L8" id="EquivariantCW-L8">  8</a> </span>
+<span><a class="line" href="#EquivariantCW-L9" id="EquivariantCW-L9">  9</a> /-! # Equivariant cell attachments</span>
+<span><a class="line" href="#EquivariantCW-L10" id="EquivariantCW-L10"> 10</a> </span>
+<span><a class="line" href="#EquivariantCW-L11" id="EquivariantCW-L11"> 11</a> This module realizes the orbit boundary inclusions in `Action TopCat Γ`</span>
+<span><a class="line" href="#EquivariantCW-L12" id="EquivariantCW-L12"> 12</a> and specializes Mathlib&#x27;s relative cell complex structure to them. The cells</span>
+<span><a class="line" href="#EquivariantCW-L13" id="EquivariantCW-L13"> 13</a> have finite isotropy. Properness of arbitrary cellular colimits and the</span>
+<span><a class="line" href="#EquivariantCW-L14" id="EquivariantCW-L14"> 14</a> universal proper-space existence and mapping theorems are separate results;</span>
+<span><a class="line" href="#EquivariantCW-L15" id="EquivariantCW-L15"> 15</a> they are not fields or axioms of the definitions below.</span>
+<span><a class="line" href="#EquivariantCW-L16" id="EquivariantCW-L16"> 16</a> -/</span>
+<span><a class="line" href="#EquivariantCW-L17" id="EquivariantCW-L17"> 17</a> </span>
+<span><a class="line" href="#EquivariantCW-L18" id="EquivariantCW-L18"> 18</a> open CategoryTheory CategoryTheory.Limits</span>
+<span><a class="line" href="#EquivariantCW-L19" id="EquivariantCW-L19"> 19</a> </span>
+<span><a class="line" href="#EquivariantCW-L20" id="EquivariantCW-L20"> 20</a> namespace BC4lean.ProperActions</span>
+<span><a class="line" href="#EquivariantCW-L21" id="EquivariantCW-L21"> 21</a> </span>
+<span><a class="line" href="#EquivariantCW-L22" id="EquivariantCW-L22"> 22</a> universe u v</span>
+<span><a class="line" href="#EquivariantCW-L23" id="EquivariantCW-L23"> 23</a> </span>
+<span><a class="line" href="#EquivariantCW-L24" id="EquivariantCW-L24"> 24</a> /-- Bundle an action with continuous translations as an action in `TopCat`. -/</span>
+<span id="doc/BC4lean.ProperActions.topologicalAction"><a class="line" href="#EquivariantCW-L25" id="EquivariantCW-L25"> 25</a> def topologicalAction (Γ : Type u) (X : Type v) [Group Γ] [TopologicalSpace X]</span>
+<span><a class="line" href="#EquivariantCW-L26" id="EquivariantCW-L26"> 26</a>     [MulAction Γ X] [ContinuousConstSMul Γ X] : Action TopCat.{v} Γ where</span>
+<span><a class="line" href="#EquivariantCW-L27" id="EquivariantCW-L27"> 27</a>   V := TopCat.of X</span>
+<span><a class="line" href="#EquivariantCW-L28" id="EquivariantCW-L28"> 28</a>   ρ :=</span>
+<span><a class="line" href="#EquivariantCW-L29" id="EquivariantCW-L29"> 29</a>     { toFun := fun g =&gt; TopCat.ofHom ⟨fun x =&gt; g • x, continuous_const_smul g⟩</span>
+<span><a class="line" href="#EquivariantCW-L30" id="EquivariantCW-L30"> 30</a>       map_one&#x27; := by</span>
+<span><a class="line" href="#EquivariantCW-L31" id="EquivariantCW-L31"> 31</a>         apply TopCat.hom_ext</span>
+<span><a class="line" href="#EquivariantCW-L32" id="EquivariantCW-L32"> 32</a>         apply ContinuousMap.ext</span>
+<span><a class="line" href="#EquivariantCW-L33" id="EquivariantCW-L33"> 33</a>         intro x</span>
+<span><a class="line" href="#EquivariantCW-L34" id="EquivariantCW-L34"> 34</a>         exact one_smul Γ x</span>
+<span><a class="line" href="#EquivariantCW-L35" id="EquivariantCW-L35"> 35</a>       map_mul&#x27; := by</span>
+<span><a class="line" href="#EquivariantCW-L36" id="EquivariantCW-L36"> 36</a>         intro g h</span>
+<span><a class="line" href="#EquivariantCW-L37" id="EquivariantCW-L37"> 37</a>         apply TopCat.hom_ext</span>
+<span><a class="line" href="#EquivariantCW-L38" id="EquivariantCW-L38"> 38</a>         apply ContinuousMap.ext</span>
+<span><a class="line" href="#EquivariantCW-L39" id="EquivariantCW-L39"> 39</a>         intro x</span>
+<span><a class="line" href="#EquivariantCW-L40" id="EquivariantCW-L40"> 40</a>         exact mul_smul g h x }</span>
+<span><a class="line" href="#EquivariantCW-L41" id="EquivariantCW-L41"> 41</a> </span>
+<span><a class="line" href="#EquivariantCW-L42" id="EquivariantCW-L42"> 42</a> namespace EquivariantMap</span>
+<span><a class="line" href="#EquivariantCW-L43" id="EquivariantCW-L43"> 43</a> </span>
+<span><a class="line" href="#EquivariantCW-L44" id="EquivariantCW-L44"> 44</a> variable {Γ : Type u} {X Y Z : Type v} [Group Γ]</span>
+<span><a class="line" href="#EquivariantCW-L45" id="EquivariantCW-L45"> 45</a> variable [TopologicalSpace X] [TopologicalSpace Y] [TopologicalSpace Z]</span>
+<span><a class="line" href="#EquivariantCW-L46" id="EquivariantCW-L46"> 46</a> variable [MulAction Γ X] [MulAction Γ Y] [MulAction Γ Z]</span>
+<span><a class="line" href="#EquivariantCW-L47" id="EquivariantCW-L47"> 47</a> variable [ContinuousConstSMul Γ X] [ContinuousConstSMul Γ Y] [ContinuousConstSMul Γ Z]</span>
+<span><a class="line" href="#EquivariantCW-L48" id="EquivariantCW-L48"> 48</a> </span>
+<span><a class="line" href="#EquivariantCW-L49" id="EquivariantCW-L49"> 49</a> /-- A bundled continuous equivariant map gives a morphism of topological actions. -/</span>
+<span id="doc/BC4lean.ProperActions.EquivariantMap.toActionHom"><a class="line" href="#EquivariantCW-L50" id="EquivariantCW-L50"> 50</a> def toActionHom (f : EquivariantMap Γ X Y) :</span>
+<span><a class="line" href="#EquivariantCW-L51" id="EquivariantCW-L51"> 51</a>     topologicalAction Γ X ⟶ topologicalAction Γ Y where</span>
+<span><a class="line" href="#EquivariantCW-L52" id="EquivariantCW-L52"> 52</a>   hom := TopCat.ofHom f.toContinuousMap</span>
+<span><a class="line" href="#EquivariantCW-L53" id="EquivariantCW-L53"> 53</a>   comm g := by ext x; exact f.map_smul g x</span>
 <span><a class="line" href="#EquivariantCW-L54" id="EquivariantCW-L54"> 54</a> </span>
-<span id="doc/BC4lean.ProperActions.EquivariantMap.toActionHom_id"><a class="line" href="#EquivariantCW-L55" id="EquivariantCW-L55"> 55</a> @[simp] theorem toActionHom_id :</span>
-<span><a class="line" href="#EquivariantCW-L56" id="EquivariantCW-L56"> 56</a>     (id (Γ := Γ) (X := X)).toActionHom = 𝟙 (topologicalAction Γ X) := rfl</span>
+<span id="doc/BC4lean.ProperActions.EquivariantMap.toActionHom_apply"><a class="line" href="#EquivariantCW-L55" id="EquivariantCW-L55"> 55</a> @[simp] theorem toActionHom_apply (f : EquivariantMap Γ X Y) (x : X) :</span>
+<span><a class="line" href="#EquivariantCW-L56" id="EquivariantCW-L56"> 56</a>     f.toActionHom.hom x = f x := rfl</span>
 <span><a class="line" href="#EquivariantCW-L57" id="EquivariantCW-L57"> 57</a> </span>
-<span id="doc/BC4lean.ProperActions.EquivariantMap.toActionHom_comp"><a class="line" href="#EquivariantCW-L58" id="EquivariantCW-L58"> 58</a> @[simp] theorem toActionHom_comp (g : EquivariantMap Γ Y Z) (f : EquivariantMap Γ X Y) :</span>
-<span><a class="line" href="#EquivariantCW-L59" id="EquivariantCW-L59"> 59</a>     (g.comp f).toActionHom = f.toActionHom ≫ g.toActionHom := rfl</span>
+<span id="doc/BC4lean.ProperActions.EquivariantMap.toActionHom_id"><a class="line" href="#EquivariantCW-L58" id="EquivariantCW-L58"> 58</a> @[simp] theorem toActionHom_id :</span>
+<span><a class="line" href="#EquivariantCW-L59" id="EquivariantCW-L59"> 59</a>     (id (Γ := Γ) (X := X)).toActionHom = 𝟙 (topologicalAction Γ X) := rfl</span>
 <span><a class="line" href="#EquivariantCW-L60" id="EquivariantCW-L60"> 60</a> </span>
-<span><a class="line" href="#EquivariantCW-L61" id="EquivariantCW-L61"> 61</a> /-- Recover the pointwise equivariant-map API from a categorical morphism. -/</span>
-<span id="doc/BC4lean.ProperActions.EquivariantMap.ofActionHom"><a class="line" href="#EquivariantCW-L62" id="EquivariantCW-L62"> 62</a> def ofActionHom (f : topologicalAction Γ X ⟶ topologicalAction Γ Y) :</span>
-<span><a class="line" href="#EquivariantCW-L63" id="EquivariantCW-L63"> 63</a>     EquivariantMap Γ X Y where</span>
-<span><a class="line" href="#EquivariantCW-L64" id="EquivariantCW-L64"> 64</a>   toContinuousMap := f.hom.hom</span>
-<span><a class="line" href="#EquivariantCW-L65" id="EquivariantCW-L65"> 65</a>   map_smul&#x27; g x := congrArg (fun k : TopCat.of X ⟶ TopCat.of Y =&gt; k x) (f.comm g)</span>
-<span><a class="line" href="#EquivariantCW-L66" id="EquivariantCW-L66"> 66</a> </span>
-<span><a class="line" href="#EquivariantCW-L67" id="EquivariantCW-L67"> 67</a> /-- The categorical and pointwise descriptions have exactly the same morphisms. -/</span>
-<span id="doc/BC4lean.ProperActions.EquivariantMap.actionHomEquiv"><a class="line" href="#EquivariantCW-L68" id="EquivariantCW-L68"> 68</a> def actionHomEquiv :</span>
-<span><a class="line" href="#EquivariantCW-L69" id="EquivariantCW-L69"> 69</a>     EquivariantMap Γ X Y ≃ (topologicalAction Γ X ⟶ topologicalAction Γ Y) where</span>
-<span><a class="line" href="#EquivariantCW-L70" id="EquivariantCW-L70"> 70</a>   toFun := toActionHom</span>
-<span><a class="line" href="#EquivariantCW-L71" id="EquivariantCW-L71"> 71</a>   invFun := ofActionHom</span>
-<span><a class="line" href="#EquivariantCW-L72" id="EquivariantCW-L72"> 72</a>   left_inv f := by ext x; rfl</span>
-<span><a class="line" href="#EquivariantCW-L73" id="EquivariantCW-L73"> 73</a>   right_inv f := by apply Action.Hom.ext; rfl</span>
-<span><a class="line" href="#EquivariantCW-L74" id="EquivariantCW-L74"> 74</a> </span>
-<span><a class="line" href="#EquivariantCW-L75" id="EquivariantCW-L75"> 75</a> end EquivariantMap</span>
-<span><a class="line" href="#EquivariantCW-L76" id="EquivariantCW-L76"> 76</a> </span>
-<span><a class="line" href="#EquivariantCW-L77" id="EquivariantCW-L77"> 77</a> variable {Γ : Type u} [Group Γ] [TopologicalSpace Γ] [DiscreteTopology Γ]</span>
-<span><a class="line" href="#EquivariantCW-L78" id="EquivariantCW-L78"> 78</a> </span>
-<span><a class="line" href="#EquivariantCW-L79" id="EquivariantCW-L79"> 79</a> namespace OrbitCell</span>
-<span><a class="line" href="#EquivariantCW-L80" id="EquivariantCW-L80"> 80</a> </span>
-<span><a class="line" href="#EquivariantCW-L81" id="EquivariantCW-L81"> 81</a> /-- Map the parameter of an orbit cell, leaving its coset coordinate unchanged. -/</span>
-<span id="doc/BC4lean.ProperActions.OrbitCell.map"><a class="line" href="#EquivariantCW-L82" id="EquivariantCW-L82"> 82</a> def map {D E : Type v} [TopologicalSpace D] [TopologicalSpace E]</span>
-<span><a class="line" href="#EquivariantCW-L83" id="EquivariantCW-L83"> 83</a>     (H : Subgroup Γ) (f : C(D, E)) : EquivariantMap Γ (OrbitCell H D) (OrbitCell H E) where</span>
-<span><a class="line" href="#EquivariantCW-L84" id="EquivariantCW-L84"> 84</a>   toFun p := (p.1, f p.2)</span>
-<span><a class="line" href="#EquivariantCW-L85" id="EquivariantCW-L85"> 85</a>   continuous_toFun := continuous_fst.prodMk (f.continuous.comp continuous_snd)</span>
-<span><a class="line" href="#EquivariantCW-L86" id="EquivariantCW-L86"> 86</a>   map_smul&#x27; _ _ := rfl</span>
-<span><a class="line" href="#EquivariantCW-L87" id="EquivariantCW-L87"> 87</a> </span>
-<span><a class="line" href="#EquivariantCW-L88" id="EquivariantCW-L88"> 88</a> omit [DiscreteTopology Γ] in</span>
-<span id="doc/BC4lean.ProperActions.OrbitCell.map_apply"><a class="line" href="#EquivariantCW-L89" id="EquivariantCW-L89"> 89</a> @[simp] theorem map_apply {D E : Type v} [TopologicalSpace D] [TopologicalSpace E]</span>
-<span><a class="line" href="#EquivariantCW-L90" id="EquivariantCW-L90"> 90</a>     (H : Subgroup Γ) (f : C(D, E)) (p : OrbitCell H D) :</span>
-<span><a class="line" href="#EquivariantCW-L91" id="EquivariantCW-L91"> 91</a>     map H f p = (p.1, f p.2) := rfl</span>
-<span><a class="line" href="#EquivariantCW-L92" id="EquivariantCW-L92"> 92</a> </span>
-<span><a class="line" href="#EquivariantCW-L93" id="EquivariantCW-L93"> 93</a> /-- The orbit boundary inclusion Γ/H × ∂Dⁿ → Γ/H × Dⁿ. -/</span>
-<span id="doc/BC4lean.ProperActions.OrbitCell.boundaryInclusion"><a class="line" href="#EquivariantCW-L94" id="EquivariantCW-L94"> 94</a> noncomputable def boundaryInclusion (H : Subgroup Γ) (n : ℕ) :</span>
-<span><a class="line" href="#EquivariantCW-L95" id="EquivariantCW-L95"> 95</a>     EquivariantMap Γ (OrbitCell H (TopCat.diskBoundary.{u} n))</span>
-<span><a class="line" href="#EquivariantCW-L96" id="EquivariantCW-L96"> 96</a>       (OrbitCell H (TopCat.disk.{u} n)) :=</span>
-<span><a class="line" href="#EquivariantCW-L97" id="EquivariantCW-L97"> 97</a>   map H (TopCat.diskBoundaryInclusion n).hom</span>
-<span><a class="line" href="#EquivariantCW-L98" id="EquivariantCW-L98"> 98</a> </span>
-<span><a class="line" href="#EquivariantCW-L99" id="EquivariantCW-L99"> 99</a> omit [DiscreteTopology Γ] in</span>
-<span><a class="line" href="#EquivariantCW-L100" id="EquivariantCW-L100">100</a> /-- Orbit boundary inclusions are injective, including in dimension zero. -/</span>
-<span id="doc/BC4lean.ProperActions.OrbitCell.boundaryInclusion_injective"><a class="line" href="#EquivariantCW-L101" id="EquivariantCW-L101">101</a> theorem boundaryInclusion_injective (H : Subgroup Γ) (n : ℕ) :</span>
-<span><a class="line" href="#EquivariantCW-L102" id="EquivariantCW-L102">102</a>     Function.Injective (boundaryInclusion H n) := by</span>
-<span><a class="line" href="#EquivariantCW-L103" id="EquivariantCW-L103">103</a>   intro x y h</span>
-<span><a class="line" href="#EquivariantCW-L104" id="EquivariantCW-L104">104</a>   change (x.1, (TopCat.diskBoundaryInclusion n) x.2) =</span>
-<span><a class="line" href="#EquivariantCW-L105" id="EquivariantCW-L105">105</a>     (y.1, (TopCat.diskBoundaryInclusion n) y.2) at h</span>
-<span><a class="line" href="#EquivariantCW-L106" id="EquivariantCW-L106">106</a>   apply Prod.ext</span>
-<span><a class="line" href="#EquivariantCW-L107" id="EquivariantCW-L107">107</a>   · exact congrArg (fun p : (Γ ⧸ H) × TopCat.disk.{u} n =&gt; p.1) h</span>
-<span><a class="line" href="#EquivariantCW-L108" id="EquivariantCW-L108">108</a>   · exact (TopCat.mono_iff_injective (TopCat.diskBoundaryInclusion n)).mp</span>
-<span><a class="line" href="#EquivariantCW-L109" id="EquivariantCW-L109">109</a>       inferInstance (congrArg Prod.snd h)</span>
-<span><a class="line" href="#EquivariantCW-L110" id="EquivariantCW-L110">110</a> </span>
-<span><a class="line" href="#EquivariantCW-L111" id="EquivariantCW-L111">111</a> /-- The disk orbit cell with finite isotropy is topologically proper. -/</span>
-<span id="doc/BC4lean.ProperActions.OrbitCell.disk_proper"><a class="line" href="#EquivariantCW-L112" id="EquivariantCW-L112">112</a> theorem disk_proper (H : Subgroup Γ) [Finite H] (n : ℕ) :</span>
-<span><a class="line" href="#EquivariantCW-L113" id="EquivariantCW-L113">113</a>     ProperSMul Γ (OrbitCell H (TopCat.disk.{u} n)) := by</span>
-<span><a class="line" href="#EquivariantCW-L114" id="EquivariantCW-L114">114</a>   let : T2Space (TopCat.disk.{u} n) := by</span>
-<span><a class="line" href="#EquivariantCW-L115" id="EquivariantCW-L115">115</a>     change T2Space (ULift (Metric.closedBall (0 : EuclideanSpace ℝ (Fin n)) 1))</span>
-<span><a class="line" href="#EquivariantCW-L116" id="EquivariantCW-L116">116</a>     exact Homeomorph.ulift.{u, 0}.symm.t2Space</span>
-<span><a class="line" href="#EquivariantCW-L117" id="EquivariantCW-L117">117</a>   exact proper H _</span>
-<span><a class="line" href="#EquivariantCW-L118" id="EquivariantCW-L118">118</a> </span>
-<span><a class="line" href="#EquivariantCW-L119" id="EquivariantCW-L119">119</a> /-- The boundary orbit cell with finite isotropy is topologically proper. -/</span>
-<span id="doc/BC4lean.ProperActions.OrbitCell.boundary_proper"><a class="line" href="#EquivariantCW-L120" id="EquivariantCW-L120">120</a> theorem boundary_proper (H : Subgroup Γ) [Finite H] (n : ℕ) :</span>
-<span><a class="line" href="#EquivariantCW-L121" id="EquivariantCW-L121">121</a>     ProperSMul Γ (OrbitCell H (TopCat.diskBoundary.{u} n)) := by</span>
-<span><a class="line" href="#EquivariantCW-L122" id="EquivariantCW-L122">122</a>   let : T2Space (TopCat.diskBoundary.{u} n) := by</span>
-<span><a class="line" href="#EquivariantCW-L123" id="EquivariantCW-L123">123</a>     change T2Space (ULift (Metric.sphere (0 : EuclideanSpace ℝ (Fin n)) 1))</span>
-<span><a class="line" href="#EquivariantCW-L124" id="EquivariantCW-L124">124</a>     exact Homeomorph.ulift.{u, 0}.symm.t2Space</span>
-<span><a class="line" href="#EquivariantCW-L125" id="EquivariantCW-L125">125</a>   exact proper H _</span>
-<span><a class="line" href="#EquivariantCW-L126" id="EquivariantCW-L126">126</a> </span>
-<span><a class="line" href="#EquivariantCW-L127" id="EquivariantCW-L127">127</a> end OrbitCell</span>
-<span><a class="line" href="#EquivariantCW-L128" id="EquivariantCW-L128">128</a> </span>
-<span><a class="line" href="#EquivariantCW-L129" id="EquivariantCW-L129">129</a> /-- Finite isotropy subgroups indexing the allowed orbit cells. -/</span>
-<span id="doc/BC4lean.ProperActions.FiniteIsotropy"><a class="line" href="#EquivariantCW-L130" id="EquivariantCW-L130">130</a> def FiniteIsotropy (Γ : Type u) [Group Γ] := {H : Subgroup Γ // Finite H}</span>
+<span id="doc/BC4lean.ProperActions.EquivariantMap.toActionHom_comp"><a class="line" href="#EquivariantCW-L61" id="EquivariantCW-L61"> 61</a> @[simp] theorem toActionHom_comp (g : EquivariantMap Γ Y Z) (f : EquivariantMap Γ X Y) :</span>
+<span><a class="line" href="#EquivariantCW-L62" id="EquivariantCW-L62"> 62</a>     (g.comp f).toActionHom = f.toActionHom ≫ g.toActionHom := rfl</span>
+<span><a class="line" href="#EquivariantCW-L63" id="EquivariantCW-L63"> 63</a> </span>
+<span><a class="line" href="#EquivariantCW-L64" id="EquivariantCW-L64"> 64</a> /-- Recover the pointwise equivariant-map API from a categorical morphism. -/</span>
+<span id="doc/BC4lean.ProperActions.EquivariantMap.ofActionHom"><a class="line" href="#EquivariantCW-L65" id="EquivariantCW-L65"> 65</a> def ofActionHom (f : topologicalAction Γ X ⟶ topologicalAction Γ Y) :</span>
+<span><a class="line" href="#EquivariantCW-L66" id="EquivariantCW-L66"> 66</a>     EquivariantMap Γ X Y where</span>
+<span><a class="line" href="#EquivariantCW-L67" id="EquivariantCW-L67"> 67</a>   toContinuousMap := f.hom.hom</span>
+<span><a class="line" href="#EquivariantCW-L68" id="EquivariantCW-L68"> 68</a>   map_smul&#x27; g x := congrArg (fun k : TopCat.of X ⟶ TopCat.of Y =&gt; k x) (f.comm g)</span>
+<span><a class="line" href="#EquivariantCW-L69" id="EquivariantCW-L69"> 69</a> </span>
+<span><a class="line" href="#EquivariantCW-L70" id="EquivariantCW-L70"> 70</a> /-- The categorical and pointwise descriptions have exactly the same morphisms. -/</span>
+<span id="doc/BC4lean.ProperActions.EquivariantMap.actionHomEquiv"><a class="line" href="#EquivariantCW-L71" id="EquivariantCW-L71"> 71</a> def actionHomEquiv :</span>
+<span><a class="line" href="#EquivariantCW-L72" id="EquivariantCW-L72"> 72</a>     EquivariantMap Γ X Y ≃ (topologicalAction Γ X ⟶ topologicalAction Γ Y) where</span>
+<span><a class="line" href="#EquivariantCW-L73" id="EquivariantCW-L73"> 73</a>   toFun := toActionHom</span>
+<span><a class="line" href="#EquivariantCW-L74" id="EquivariantCW-L74"> 74</a>   invFun := ofActionHom</span>
+<span><a class="line" href="#EquivariantCW-L75" id="EquivariantCW-L75"> 75</a>   left_inv f := by ext x; rfl</span>
+<span><a class="line" href="#EquivariantCW-L76" id="EquivariantCW-L76"> 76</a>   right_inv f := by apply Action.Hom.ext; rfl</span>
+<span><a class="line" href="#EquivariantCW-L77" id="EquivariantCW-L77"> 77</a> </span>
+<span><a class="line" href="#EquivariantCW-L78" id="EquivariantCW-L78"> 78</a> end EquivariantMap</span>
+<span><a class="line" href="#EquivariantCW-L79" id="EquivariantCW-L79"> 79</a> </span>
+<span><a class="line" href="#EquivariantCW-L80" id="EquivariantCW-L80"> 80</a> variable {Γ : Type u} [Group Γ] [TopologicalSpace Γ] [DiscreteTopology Γ]</span>
+<span><a class="line" href="#EquivariantCW-L81" id="EquivariantCW-L81"> 81</a> </span>
+<span><a class="line" href="#EquivariantCW-L82" id="EquivariantCW-L82"> 82</a> namespace OrbitCell</span>
+<span><a class="line" href="#EquivariantCW-L83" id="EquivariantCW-L83"> 83</a> </span>
+<span><a class="line" href="#EquivariantCW-L84" id="EquivariantCW-L84"> 84</a> /-- Map the parameter of an orbit cell, leaving its coset coordinate unchanged. -/</span>
+<span id="doc/BC4lean.ProperActions.OrbitCell.map"><a class="line" href="#EquivariantCW-L85" id="EquivariantCW-L85"> 85</a> def map {D E : Type v} [TopologicalSpace D] [TopologicalSpace E]</span>
+<span><a class="line" href="#EquivariantCW-L86" id="EquivariantCW-L86"> 86</a>     (H : Subgroup Γ) (f : C(D, E)) : EquivariantMap Γ (OrbitCell H D) (OrbitCell H E) where</span>
+<span><a class="line" href="#EquivariantCW-L87" id="EquivariantCW-L87"> 87</a>   toFun p := (p.1, f p.2)</span>
+<span><a class="line" href="#EquivariantCW-L88" id="EquivariantCW-L88"> 88</a>   continuous_toFun := continuous_fst.prodMk (f.continuous.comp continuous_snd)</span>
+<span><a class="line" href="#EquivariantCW-L89" id="EquivariantCW-L89"> 89</a>   map_smul&#x27; _ _ := rfl</span>
+<span><a class="line" href="#EquivariantCW-L90" id="EquivariantCW-L90"> 90</a> </span>
+<span><a class="line" href="#EquivariantCW-L91" id="EquivariantCW-L91"> 91</a> omit [DiscreteTopology Γ] in</span>
+<span id="doc/BC4lean.ProperActions.OrbitCell.map_apply"><a class="line" href="#EquivariantCW-L92" id="EquivariantCW-L92"> 92</a> @[simp] theorem map_apply {D E : Type v} [TopologicalSpace D] [TopologicalSpace E]</span>
+<span><a class="line" href="#EquivariantCW-L93" id="EquivariantCW-L93"> 93</a>     (H : Subgroup Γ) (f : C(D, E)) (p : OrbitCell H D) :</span>
+<span><a class="line" href="#EquivariantCW-L94" id="EquivariantCW-L94"> 94</a>     map H f p = (p.1, f p.2) := rfl</span>
+<span><a class="line" href="#EquivariantCW-L95" id="EquivariantCW-L95"> 95</a> </span>
+<span><a class="line" href="#EquivariantCW-L96" id="EquivariantCW-L96"> 96</a> /-- The orbit boundary inclusion Γ/H × ∂Dⁿ → Γ/H × Dⁿ. -/</span>
+<span id="doc/BC4lean.ProperActions.OrbitCell.boundaryInclusion"><a class="line" href="#EquivariantCW-L97" id="EquivariantCW-L97"> 97</a> noncomputable def boundaryInclusion (H : Subgroup Γ) (n : ℕ) :</span>
+<span><a class="line" href="#EquivariantCW-L98" id="EquivariantCW-L98"> 98</a>     EquivariantMap Γ (OrbitCell H (TopCat.diskBoundary.{u} n))</span>
+<span><a class="line" href="#EquivariantCW-L99" id="EquivariantCW-L99"> 99</a>       (OrbitCell H (TopCat.disk.{u} n)) :=</span>
+<span><a class="line" href="#EquivariantCW-L100" id="EquivariantCW-L100">100</a>   map H (TopCat.diskBoundaryInclusion n).hom</span>
+<span><a class="line" href="#EquivariantCW-L101" id="EquivariantCW-L101">101</a> </span>
+<span><a class="line" href="#EquivariantCW-L102" id="EquivariantCW-L102">102</a> omit [DiscreteTopology Γ] in</span>
+<span><a class="line" href="#EquivariantCW-L103" id="EquivariantCW-L103">103</a> /-- Orbit boundary inclusions are injective, including in dimension zero. -/</span>
+<span id="doc/BC4lean.ProperActions.OrbitCell.boundaryInclusion_injective"><a class="line" href="#EquivariantCW-L104" id="EquivariantCW-L104">104</a> theorem boundaryInclusion_injective (H : Subgroup Γ) (n : ℕ) :</span>
+<span><a class="line" href="#EquivariantCW-L105" id="EquivariantCW-L105">105</a>     Function.Injective (boundaryInclusion H n) := by</span>
+<span><a class="line" href="#EquivariantCW-L106" id="EquivariantCW-L106">106</a>   intro x y h</span>
+<span><a class="line" href="#EquivariantCW-L107" id="EquivariantCW-L107">107</a>   change (x.1, (TopCat.diskBoundaryInclusion n) x.2) =</span>
+<span><a class="line" href="#EquivariantCW-L108" id="EquivariantCW-L108">108</a>     (y.1, (TopCat.diskBoundaryInclusion n) y.2) at h</span>
+<span><a class="line" href="#EquivariantCW-L109" id="EquivariantCW-L109">109</a>   apply Prod.ext</span>
+<span><a class="line" href="#EquivariantCW-L110" id="EquivariantCW-L110">110</a>   · exact congrArg (fun p : (Γ ⧸ H) × TopCat.disk.{u} n =&gt; p.1) h</span>
+<span><a class="line" href="#EquivariantCW-L111" id="EquivariantCW-L111">111</a>   · exact (TopCat.mono_iff_injective (TopCat.diskBoundaryInclusion n)).mp</span>
+<span><a class="line" href="#EquivariantCW-L112" id="EquivariantCW-L112">112</a>       inferInstance (congrArg Prod.snd h)</span>
+<span><a class="line" href="#EquivariantCW-L113" id="EquivariantCW-L113">113</a> </span>
+<span><a class="line" href="#EquivariantCW-L114" id="EquivariantCW-L114">114</a> /-- The disk orbit cell with finite isotropy is topologically proper. -/</span>
+<span id="doc/BC4lean.ProperActions.OrbitCell.disk_proper"><a class="line" href="#EquivariantCW-L115" id="EquivariantCW-L115">115</a> theorem disk_proper (H : Subgroup Γ) [Finite H] (n : ℕ) :</span>
+<span><a class="line" href="#EquivariantCW-L116" id="EquivariantCW-L116">116</a>     ProperSMul Γ (OrbitCell H (TopCat.disk.{u} n)) := by</span>
+<span><a class="line" href="#EquivariantCW-L117" id="EquivariantCW-L117">117</a>   let : T2Space (TopCat.disk.{u} n) := by</span>
+<span><a class="line" href="#EquivariantCW-L118" id="EquivariantCW-L118">118</a>     change T2Space (ULift (Metric.closedBall (0 : EuclideanSpace ℝ (Fin n)) 1))</span>
+<span><a class="line" href="#EquivariantCW-L119" id="EquivariantCW-L119">119</a>     exact Homeomorph.ulift.{u, 0}.symm.t2Space</span>
+<span><a class="line" href="#EquivariantCW-L120" id="EquivariantCW-L120">120</a>   exact proper H _</span>
+<span><a class="line" href="#EquivariantCW-L121" id="EquivariantCW-L121">121</a> </span>
+<span><a class="line" href="#EquivariantCW-L122" id="EquivariantCW-L122">122</a> /-- The boundary orbit cell with finite isotropy is topologically proper. -/</span>
+<span id="doc/BC4lean.ProperActions.OrbitCell.boundary_proper"><a class="line" href="#EquivariantCW-L123" id="EquivariantCW-L123">123</a> theorem boundary_proper (H : Subgroup Γ) [Finite H] (n : ℕ) :</span>
+<span><a class="line" href="#EquivariantCW-L124" id="EquivariantCW-L124">124</a>     ProperSMul Γ (OrbitCell H (TopCat.diskBoundary.{u} n)) := by</span>
+<span><a class="line" href="#EquivariantCW-L125" id="EquivariantCW-L125">125</a>   let : T2Space (TopCat.diskBoundary.{u} n) := by</span>
+<span><a class="line" href="#EquivariantCW-L126" id="EquivariantCW-L126">126</a>     change T2Space (ULift (Metric.sphere (0 : EuclideanSpace ℝ (Fin n)) 1))</span>
+<span><a class="line" href="#EquivariantCW-L127" id="EquivariantCW-L127">127</a>     exact Homeomorph.ulift.{u, 0}.symm.t2Space</span>
+<span><a class="line" href="#EquivariantCW-L128" id="EquivariantCW-L128">128</a>   exact proper H _</span>
+<span><a class="line" href="#EquivariantCW-L129" id="EquivariantCW-L129">129</a> </span>
+<span><a class="line" href="#EquivariantCW-L130" id="EquivariantCW-L130">130</a> end OrbitCell</span>
 <span><a class="line" href="#EquivariantCW-L131" id="EquivariantCW-L131">131</a> </span>
-<span><a class="line" href="#EquivariantCW-L132" id="EquivariantCW-L132">132</a> /-- Generating boundary maps, with dimension indexed by the skeletal stage. -/</span>
-<span id="doc/BC4lean.ProperActions.equivariantBasicCell"><a class="line" href="#EquivariantCW-L133" id="EquivariantCW-L133">133</a> noncomputable def equivariantBasicCell (n : ℕ) (H : FiniteIsotropy Γ) :</span>
-<span><a class="line" href="#EquivariantCW-L134" id="EquivariantCW-L134">134</a>     topologicalAction Γ (OrbitCell H.val (TopCat.diskBoundary.{u} n)) ⟶</span>
-<span><a class="line" href="#EquivariantCW-L135" id="EquivariantCW-L135">135</a>       topologicalAction Γ (OrbitCell H.val (TopCat.disk.{u} n)) :=</span>
-<span><a class="line" href="#EquivariantCW-L136" id="EquivariantCW-L136">136</a>   (OrbitCell.boundaryInclusion H.val n).toActionHom</span>
-<span><a class="line" href="#EquivariantCW-L137" id="EquivariantCW-L137">137</a> </span>
-<span><a class="line" href="#EquivariantCW-L138" id="EquivariantCW-L138">138</a> /-- Relative equivariant CW data, attaching n-dimensional finite-isotropy orbit</span>
-<span><a class="line" href="#EquivariantCW-L139" id="EquivariantCW-L139">139</a> cells at stage n. This definition includes actual pushout and colimit witnesses. -/</span>
-<span id="doc/BC4lean.ProperActions.RelativeEquivariantCWComplex"><a class="line" href="#EquivariantCW-L140" id="EquivariantCW-L140">140</a> abbrev RelativeEquivariantCWComplex {X Y : Action TopCat.{u} Γ} (f : X ⟶ Y) :=</span>
-<span><a class="line" href="#EquivariantCW-L141" id="EquivariantCW-L141">141</a>   HomotopicalAlgebra.RelativeCellComplex.{u} (equivariantBasicCell (Γ := Γ)) f</span>
-<span><a class="line" href="#EquivariantCW-L142" id="EquivariantCW-L142">142</a> </span>
-<span><a class="line" href="#EquivariantCW-L143" id="EquivariantCW-L143">143</a> /-- An equivariant CW structure starting from the empty action. Finite isotropy</span>
-<span><a class="line" href="#EquivariantCW-L144" id="EquivariantCW-L144">144</a> is imposed on the cell family, not assumed as a properness conclusion. -/</span>
-<span id="doc/BC4lean.ProperActions.EquivariantCWComplex"><a class="line" href="#EquivariantCW-L145" id="EquivariantCW-L145">145</a> abbrev EquivariantCWComplex (X : Action TopCat.{u} Γ) :=</span>
-<span><a class="line" href="#EquivariantCW-L146" id="EquivariantCW-L146">146</a>   RelativeEquivariantCWComplex (initial.to X)</span>
-<span><a class="line" href="#EquivariantCW-L147" id="EquivariantCW-L147">147</a> </span>
-<span><a class="line" href="#EquivariantCW-L148" id="EquivariantCW-L148">148</a> /-- Relative equivariant CW structures include an attachment at every finite stage. -/</span>
-<span id="doc/BC4lean.ProperActions.RelativeEquivariantCWComplex.attachment"><a class="line" href="#EquivariantCW-L149" id="EquivariantCW-L149">149</a> def RelativeEquivariantCWComplex.attachment {X Y : Action TopCat.{u} Γ} {f : X ⟶ Y}</span>
-<span><a class="line" href="#EquivariantCW-L150" id="EquivariantCW-L150">150</a>     (c : RelativeEquivariantCWComplex f) (n : ℕ) :=</span>
-<span><a class="line" href="#EquivariantCW-L151" id="EquivariantCW-L151">151</a>   c.attachCells n (not_isMax n)</span>
-<span><a class="line" href="#EquivariantCW-L152" id="EquivariantCW-L152">152</a> </span>
-<span><a class="line" href="#EquivariantCW-L153" id="EquivariantCW-L153">153</a> /-- Maps out of a cellular object are determined on the initial subspace and cells. -/</span>
-<span id="doc/BC4lean.ProperActions.RelativeEquivariantCWComplex.hom_ext"><a class="line" href="#EquivariantCW-L154" id="EquivariantCW-L154">154</a> theorem RelativeEquivariantCWComplex.hom_ext</span>
-<span><a class="line" href="#EquivariantCW-L155" id="EquivariantCW-L155">155</a>     {X Y Z : Action TopCat.{u} Γ} {f : X ⟶ Y}</span>
-<span><a class="line" href="#EquivariantCW-L156" id="EquivariantCW-L156">156</a>     (c : RelativeEquivariantCWComplex f) {φ ψ : Y ⟶ Z}</span>
-<span><a class="line" href="#EquivariantCW-L157" id="EquivariantCW-L157">157</a>     (h₀ : f ≫ φ = f ≫ ψ)</span>
-<span><a class="line" href="#EquivariantCW-L158" id="EquivariantCW-L158">158</a>     (h : ∀ γ : HomotopicalAlgebra.RelativeCellComplex.Cells c, γ.ι ≫ φ = γ.ι ≫ ψ) :</span>
-<span><a class="line" href="#EquivariantCW-L159" id="EquivariantCW-L159">159</a>     φ = ψ :=</span>
-<span><a class="line" href="#EquivariantCW-L160" id="EquivariantCW-L160">160</a>   HomotopicalAlgebra.RelativeCellComplex.hom_ext c h₀ h</span>
-<span><a class="line" href="#EquivariantCW-L161" id="EquivariantCW-L161">161</a> </span>
-<span><a class="line" href="#EquivariantCW-L162" id="EquivariantCW-L162">162</a> </span>
-<span><a class="line" href="#EquivariantCW-L163" id="EquivariantCW-L163">163</a> /-- Forget both topology and action, retaining the underlying set. -/</span>
-<span id="doc/BC4lean.ProperActions.underlyingAction"><a class="line" href="#EquivariantCW-L164" id="EquivariantCW-L164">164</a> abbrev underlyingAction : Action TopCat.{u} Γ ⥤ Type u :=</span>
-<span><a class="line" href="#EquivariantCW-L165" id="EquivariantCW-L165">165</a>   Action.forget TopCat Γ ⋙ forget TopCat</span>
-<span><a class="line" href="#EquivariantCW-L166" id="EquivariantCW-L166">166</a> </span>
-<span><a class="line" href="#EquivariantCW-L167" id="EquivariantCW-L167">167</a> private instance : PreservesWellOrderContinuousOfShape ℕ (underlyingAction (Γ := Γ)) where</span>
-<span><a class="line" href="#EquivariantCW-L168" id="EquivariantCW-L168">168</a> </span>
-<span><a class="line" href="#EquivariantCW-L169" id="EquivariantCW-L169">169</a> private noncomputable def underlyingAttachment</span>
-<span><a class="line" href="#EquivariantCW-L170" id="EquivariantCW-L170">170</a>     {α : Type u} {A B : α → Action TopCat.{u} Γ}</span>
-<span><a class="line" href="#EquivariantCW-L171" id="EquivariantCW-L171">171</a>     {g : ∀ a, A a ⟶ B a} {X Y : Action TopCat.{u} Γ} {f : X ⟶ Y}</span>
-<span><a class="line" href="#EquivariantCW-L172" id="EquivariantCW-L172">172</a>     (c : HomotopicalAlgebra.AttachCells.{u} g f) :</span>
-<span><a class="line" href="#EquivariantCW-L173" id="EquivariantCW-L173">173</a>     HomotopicalAlgebra.AttachCells.{u}</span>
-<span><a class="line" href="#EquivariantCW-L174" id="EquivariantCW-L174">174</a>       (fun a =&gt; (underlyingAction (Γ := Γ)).map (g a))</span>
-<span><a class="line" href="#EquivariantCW-L175" id="EquivariantCW-L175">175</a>       ((underlyingAction (Γ := Γ)).map f) where</span>
-<span><a class="line" href="#EquivariantCW-L176" id="EquivariantCW-L176">176</a>   ι := c.ι</span>
-<span><a class="line" href="#EquivariantCW-L177" id="EquivariantCW-L177">177</a>   π := c.π</span>
-<span><a class="line" href="#EquivariantCW-L178" id="EquivariantCW-L178">178</a>   cofan₁ := Cofan.mk _ (fun i =&gt; (underlyingAction (Γ := Γ)).map (c.cofan₁.inj i))</span>
-<span><a class="line" href="#EquivariantCW-L179" id="EquivariantCW-L179">179</a>   cofan₂ := Cofan.mk _ (fun i =&gt; (underlyingAction (Γ := Γ)).map (c.cofan₂.inj i))</span>
-<span><a class="line" href="#EquivariantCW-L180" id="EquivariantCW-L180">180</a>   isColimit₁ := isColimitCofanMkObjOfIsColimit _ _ _ c.isColimit₁</span>
-<span><a class="line" href="#EquivariantCW-L181" id="EquivariantCW-L181">181</a>   isColimit₂ := isColimitCofanMkObjOfIsColimit _ _ _ c.isColimit₂</span>
-<span><a class="line" href="#EquivariantCW-L182" id="EquivariantCW-L182">182</a>   m := (underlyingAction (Γ := Γ)).map c.m</span>
-<span><a class="line" href="#EquivariantCW-L183" id="EquivariantCW-L183">183</a>   hm i := by simpa only [Functor.map_comp, cofan_mk_inj] using congrArg ((underlyingAction (Γ := Γ)).map) (c.hm i)</span>
-<span><a class="line" href="#EquivariantCW-L184" id="EquivariantCW-L184">184</a>   g₁ := (underlyingAction (Γ := Γ)).map c.g₁</span>
-<span><a class="line" href="#EquivariantCW-L185" id="EquivariantCW-L185">185</a>   g₂ := (underlyingAction (Γ := Γ)).map c.g₂</span>
-<span><a class="line" href="#EquivariantCW-L186" id="EquivariantCW-L186">186</a>   isPushout := c.isPushout.map _</span>
-<span><a class="line" href="#EquivariantCW-L187" id="EquivariantCW-L187">187</a> </span>
-<span><a class="line" href="#EquivariantCW-L188" id="EquivariantCW-L188">188</a> /-- A finite-isotropy orbit-cell attachment never identifies pre-existing points. -/</span>
-<span id="doc/BC4lean.ProperActions.orbitCellAttachment_injective"><a class="line" href="#EquivariantCW-L189" id="EquivariantCW-L189">189</a> theorem orbitCellAttachment_injective</span>
-<span><a class="line" href="#EquivariantCW-L190" id="EquivariantCW-L190">190</a>     {A B : Action TopCat.{u} Γ} {i : A ⟶ B} {n : ℕ}</span>
-<span><a class="line" href="#EquivariantCW-L191" id="EquivariantCW-L191">191</a>     (c : HomotopicalAlgebra.AttachCells.{u} (equivariantBasicCell (Γ := Γ) n) i) :</span>
-<span><a class="line" href="#EquivariantCW-L192" id="EquivariantCW-L192">192</a>     Function.Injective i.hom := by</span>
-<span><a class="line" href="#EquivariantCW-L193" id="EquivariantCW-L193">193</a>   let a := underlyingAttachment c</span>
-<span><a class="line" href="#EquivariantCW-L194" id="EquivariantCW-L194">194</a>   have hc : (MorphismProperty.monomorphisms (Type u)).coproducts.pushouts</span>
-<span><a class="line" href="#EquivariantCW-L195" id="EquivariantCW-L195">195</a>       ((underlyingAction (Γ := Γ)).map i) := by</span>
-<span><a class="line" href="#EquivariantCW-L196" id="EquivariantCW-L196">196</a>     apply MorphismProperty.pushouts_monotone</span>
-<span><a class="line" href="#EquivariantCW-L197" id="EquivariantCW-L197">197</a>       (MorphismProperty.coproducts_monotone (b := MorphismProperty.monomorphisms (Type u)) ?_)</span>
-<span><a class="line" href="#EquivariantCW-L198" id="EquivariantCW-L198">198</a>       _ a.pushouts_coproducts</span>
-<span><a class="line" href="#EquivariantCW-L199" id="EquivariantCW-L199">199</a>     intro X Y f hf</span>
-<span><a class="line" href="#EquivariantCW-L200" id="EquivariantCW-L200">200</a>     cases hf with</span>
-<span><a class="line" href="#EquivariantCW-L201" id="EquivariantCW-L201">201</a>     | mk H =&gt;</span>
-<span><a class="line" href="#EquivariantCW-L202" id="EquivariantCW-L202">202</a>       exact (CategoryTheory.mono_iff_injective _).mpr</span>
-<span><a class="line" href="#EquivariantCW-L203" id="EquivariantCW-L203">203</a>         (OrbitCell.boundaryInclusion_injective H.val n)</span>
-<span><a class="line" href="#EquivariantCW-L204" id="EquivariantCW-L204">204</a>   have hp : (MorphismProperty.monomorphisms (Type u)).coproducts.pushouts ≤</span>
-<span><a class="line" href="#EquivariantCW-L205" id="EquivariantCW-L205">205</a>       (MorphismProperty.monomorphisms (Type u)).pushouts :=</span>
-<span><a class="line" href="#EquivariantCW-L206" id="EquivariantCW-L206">206</a>     MorphismProperty.pushouts_monotone (MorphismProperty.monomorphisms (Type u)).coproducts_le</span>
-<span><a class="line" href="#EquivariantCW-L207" id="EquivariantCW-L207">207</a>   exact (CategoryTheory.mono_iff_injective _).mp</span>
-<span><a class="line" href="#EquivariantCW-L208" id="EquivariantCW-L208">208</a>     (MorphismProperty.pushouts_le _ (hp _ hc))</span>
-<span><a class="line" href="#EquivariantCW-L209" id="EquivariantCW-L209">209</a> </span>
-<span><a class="line" href="#EquivariantCW-L210" id="EquivariantCW-L210">210</a> private noncomputable def underlyingCellularSequence</span>
-<span><a class="line" href="#EquivariantCW-L211" id="EquivariantCW-L211">211</a>     {A B : Action TopCat.{u} Γ} {i : A ⟶ B}</span>
-<span><a class="line" href="#EquivariantCW-L212" id="EquivariantCW-L212">212</a>     (c : RelativeEquivariantCWComplex i) :</span>
-<span><a class="line" href="#EquivariantCW-L213" id="EquivariantCW-L213">213</a>     (MorphismProperty.monomorphisms (Type u)).TransfiniteCompositionOfShape ℕ</span>
-<span><a class="line" href="#EquivariantCW-L214" id="EquivariantCW-L214">214</a>       ((underlyingAction (Γ := Γ)).map i) where</span>
-<span><a class="line" href="#EquivariantCW-L215" id="EquivariantCW-L215">215</a>   toTransfiniteCompositionOfShape := c.toTransfiniteCompositionOfShape.map underlyingAction</span>
-<span><a class="line" href="#EquivariantCW-L216" id="EquivariantCW-L216">216</a>   map_mem n _ := (CategoryTheory.mono_iff_injective _).mpr</span>
-<span><a class="line" href="#EquivariantCW-L217" id="EquivariantCW-L217">217</a>     (orbitCellAttachment_injective (c.attachment n))</span>
-<span><a class="line" href="#EquivariantCW-L218" id="EquivariantCW-L218">218</a> </span>
-<span><a class="line" href="#EquivariantCW-L219" id="EquivariantCW-L219">219</a> /-- The inclusion underlying any relative equivariant CW structure is injective. -/</span>
-<span id="doc/BC4lean.ProperActions.RelativeEquivariantCWComplex.injective"><a class="line" href="#EquivariantCW-L220" id="EquivariantCW-L220">220</a> theorem RelativeEquivariantCWComplex.injective</span>
-<span><a class="line" href="#EquivariantCW-L221" id="EquivariantCW-L221">221</a>     {A B : Action TopCat.{u} Γ} {i : A ⟶ B}</span>
-<span><a class="line" href="#EquivariantCW-L222" id="EquivariantCW-L222">222</a>     (c : RelativeEquivariantCWComplex i) : Function.Injective i.hom := by</span>
-<span><a class="line" href="#EquivariantCW-L223" id="EquivariantCW-L223">223</a>   exact (CategoryTheory.mono_iff_injective _).mp</span>
-<span><a class="line" href="#EquivariantCW-L224" id="EquivariantCW-L224">224</a>     ((MorphismProperty.monomorphisms (Type u)).transfiniteCompositionsOfShape_le ℕ _</span>
-<span><a class="line" href="#EquivariantCW-L225" id="EquivariantCW-L225">225</a>       (underlyingCellularSequence c).mem)</span>
-<span><a class="line" href="#EquivariantCW-L226" id="EquivariantCW-L226">226</a> </span>
-<span><a class="line" href="#EquivariantCW-L227" id="EquivariantCW-L227">227</a> /-- Every skeletal transition is injective, including non-adjacent stages. -/</span>
-<span id="doc/BC4lean.ProperActions.RelativeEquivariantCWComplex.skeletonMap_injective"><a class="line" href="#EquivariantCW-L228" id="EquivariantCW-L228">228</a> theorem RelativeEquivariantCWComplex.skeletonMap_injective</span>
-<span><a class="line" href="#EquivariantCW-L229" id="EquivariantCW-L229">229</a>     {A B : Action TopCat.{u} Γ} {i : A ⟶ B}</span>
-<span><a class="line" href="#EquivariantCW-L230" id="EquivariantCW-L230">230</a>     (c : RelativeEquivariantCWComplex i) {m n : ℕ} (h : m ≤ n) :</span>
-<span><a class="line" href="#EquivariantCW-L231" id="EquivariantCW-L231">231</a>     Function.Injective (c.F.map (homOfLE h)).hom := by</span>
-<span><a class="line" href="#EquivariantCW-L232" id="EquivariantCW-L232">232</a>   exact (CategoryTheory.mono_iff_injective _).mp</span>
-<span><a class="line" href="#EquivariantCW-L233" id="EquivariantCW-L233">233</a>     ((underlyingCellularSequence c).mem_map (homOfLE h))</span>
-<span><a class="line" href="#EquivariantCW-L234" id="EquivariantCW-L234">234</a> </span>
-<span><a class="line" href="#EquivariantCW-L235" id="EquivariantCW-L235">235</a> /-- No points in a skeleton become identified in the final CW colimit. -/</span>
-<span id="doc/BC4lean.ProperActions.RelativeEquivariantCWComplex.skeletonInclusion_injective"><a class="line" href="#EquivariantCW-L236" id="EquivariantCW-L236">236</a> theorem RelativeEquivariantCWComplex.skeletonInclusion_injective</span>
-<span><a class="line" href="#EquivariantCW-L237" id="EquivariantCW-L237">237</a>     {A B : Action TopCat.{u} Γ} {i : A ⟶ B}</span>
-<span><a class="line" href="#EquivariantCW-L238" id="EquivariantCW-L238">238</a>     (c : RelativeEquivariantCWComplex i) (n : ℕ) :</span>
-<span><a class="line" href="#EquivariantCW-L239" id="EquivariantCW-L239">239</a>     Function.Injective (c.incl.app n).hom := by</span>
-<span><a class="line" href="#EquivariantCW-L240" id="EquivariantCW-L240">240</a>   exact (CategoryTheory.mono_iff_injective _).mp</span>
-<span><a class="line" href="#EquivariantCW-L241" id="EquivariantCW-L241">241</a>     ((underlyingCellularSequence c).mem_incl_app n)</span>
-<span><a class="line" href="#EquivariantCW-L242" id="EquivariantCW-L242">242</a> </span>
-<span><a class="line" href="#EquivariantCW-L243" id="EquivariantCW-L243">243</a> omit [DiscreteTopology Γ] in</span>
-<span><a class="line" href="#EquivariantCW-L244" id="EquivariantCW-L244">244</a> /-- Orbit-cell boundaries are closed subspaces of the disks, even for infinite Γ/H. -/</span>
-<span id="doc/BC4lean.ProperActions.OrbitCell.boundaryInclusion_isClosedEmbedding"><a class="line" href="#EquivariantCW-L245" id="EquivariantCW-L245">245</a> theorem OrbitCell.boundaryInclusion_isClosedEmbedding (H : Subgroup Γ) (n : ℕ) :</span>
-<span><a class="line" href="#EquivariantCW-L246" id="EquivariantCW-L246">246</a>     Topology.IsClosedEmbedding (boundaryInclusion H n) := by</span>
-<span><a class="line" href="#EquivariantCW-L247" id="EquivariantCW-L247">247</a>   let : T2Space (TopCat.disk.{u} n) := by</span>
-<span><a class="line" href="#EquivariantCW-L248" id="EquivariantCW-L248">248</a>     change T2Space (ULift (Metric.closedBall (0 : EuclideanSpace ℝ (Fin n)) 1))</span>
-<span><a class="line" href="#EquivariantCW-L249" id="EquivariantCW-L249">249</a>     exact Homeomorph.ulift.{u, 0}.symm.t2Space</span>
-<span><a class="line" href="#EquivariantCW-L250" id="EquivariantCW-L250">250</a>   have hd : Topology.IsClosedEmbedding (TopCat.diskBoundaryInclusion.{u} n) :=</span>
-<span><a class="line" href="#EquivariantCW-L251" id="EquivariantCW-L251">251</a>     (TopCat.diskBoundaryInclusion n).hom.continuous.isClosedEmbedding</span>
-<span><a class="line" href="#EquivariantCW-L252" id="EquivariantCW-L252">252</a>       ((TopCat.mono_iff_injective _).mp inferInstance)</span>
-<span><a class="line" href="#EquivariantCW-L253" id="EquivariantCW-L253">253</a>   exact Topology.IsClosedEmbedding.id.prodMap hd</span>
-<span><a class="line" href="#EquivariantCW-L254" id="EquivariantCW-L254">254</a> </span>
-<span><a class="line" href="#EquivariantCW-L255" id="EquivariantCW-L255">255</a> /-- Every point of a relative CW colimit comes from a finite skeletal stage. -/</span>
-<span id="doc/BC4lean.ProperActions.RelativeEquivariantCWComplex.exists_skeleton_preimage"><a class="line" href="#EquivariantCW-L256" id="EquivariantCW-L256">256</a> theorem RelativeEquivariantCWComplex.exists_skeleton_preimage</span>
-<span><a class="line" href="#EquivariantCW-L257" id="EquivariantCW-L257">257</a>     {A B : Action TopCat.{u} Γ} {i : A ⟶ B}</span>
-<span><a class="line" href="#EquivariantCW-L258" id="EquivariantCW-L258">258</a>     (c : RelativeEquivariantCWComplex i) (x : B.V) :</span>
-<span><a class="line" href="#EquivariantCW-L259" id="EquivariantCW-L259">259</a>     ∃ (n : ℕ) (y : (c.F.obj n).V), (c.incl.app n).hom y = x := by</span>
-<span><a class="line" href="#EquivariantCW-L260" id="EquivariantCW-L260">260</a>   exact Types.jointly_surjective_of_isColimit</span>
-<span><a class="line" href="#EquivariantCW-L261" id="EquivariantCW-L261">261</a>     (isColimitOfPreserves (underlyingAction (Γ := Γ)) c.isColimit) x</span>
-<span><a class="line" href="#EquivariantCW-L262" id="EquivariantCW-L262">262</a> </span>
-<span><a class="line" href="#EquivariantCW-L263" id="EquivariantCW-L263">263</a> /-- The CW colimit topology detects open sets on all finite skeleta. -/</span>
-<span id="doc/BC4lean.ProperActions.RelativeEquivariantCWComplex.isOpen_iff"><a class="line" href="#EquivariantCW-L264" id="EquivariantCW-L264">264</a> theorem RelativeEquivariantCWComplex.isOpen_iff</span>
-<span><a class="line" href="#EquivariantCW-L265" id="EquivariantCW-L265">265</a>     {A B : Action TopCat.{u} Γ} {i : A ⟶ B}</span>
-<span><a class="line" href="#EquivariantCW-L266" id="EquivariantCW-L266">266</a>     (c : RelativeEquivariantCWComplex i) (s : Set B.V) :</span>
-<span><a class="line" href="#EquivariantCW-L267" id="EquivariantCW-L267">267</a>     IsOpen s ↔ ∀ n : ℕ, IsOpen ((c.incl.app n).hom ⁻¹&#x27; s) := by</span>
-<span><a class="line" href="#EquivariantCW-L268" id="EquivariantCW-L268">268</a>   exact TopCat.isOpen_iff_of_isColimit _</span>
-<span><a class="line" href="#EquivariantCW-L269" id="EquivariantCW-L269">269</a>     (isColimitOfPreserves (Action.forget TopCat Γ) c.isColimit) s</span>
-<span><a class="line" href="#EquivariantCW-L270" id="EquivariantCW-L270">270</a> </span>
-<span><a class="line" href="#EquivariantCW-L271" id="EquivariantCW-L271">271</a> /-- The CW colimit topology detects closed sets on all finite skeleta. -/</span>
-<span id="doc/BC4lean.ProperActions.RelativeEquivariantCWComplex.isClosed_iff"><a class="line" href="#EquivariantCW-L272" id="EquivariantCW-L272">272</a> theorem RelativeEquivariantCWComplex.isClosed_iff</span>
-<span><a class="line" href="#EquivariantCW-L273" id="EquivariantCW-L273">273</a>     {A B : Action TopCat.{u} Γ} {i : A ⟶ B}</span>
-<span><a class="line" href="#EquivariantCW-L274" id="EquivariantCW-L274">274</a>     (c : RelativeEquivariantCWComplex i) (s : Set B.V) :</span>
-<span><a class="line" href="#EquivariantCW-L275" id="EquivariantCW-L275">275</a>     IsClosed s ↔ ∀ n : ℕ, IsClosed ((c.incl.app n).hom ⁻¹&#x27; s) := by</span>
-<span><a class="line" href="#EquivariantCW-L276" id="EquivariantCW-L276">276</a>   exact TopCat.isClosed_iff_of_isColimit _</span>
-<span><a class="line" href="#EquivariantCW-L277" id="EquivariantCW-L277">277</a>     (isColimitOfPreserves (Action.forget TopCat Γ) c.isColimit) s</span>
-<span><a class="line" href="#EquivariantCW-L278" id="EquivariantCW-L278">278</a> </span>
-<span><a class="line" href="#EquivariantCW-L279" id="EquivariantCW-L279">279</a> /-- Continuity out of a relative CW colimit is tested on its finite skeleta. -/</span>
-<span id="doc/BC4lean.ProperActions.RelativeEquivariantCWComplex.continuous_iff"><a class="line" href="#EquivariantCW-L280" id="EquivariantCW-L280">280</a> theorem RelativeEquivariantCWComplex.continuous_iff</span>
-<span><a class="line" href="#EquivariantCW-L281" id="EquivariantCW-L281">281</a>     {A B : Action TopCat.{u} Γ} {i : A ⟶ B}</span>
-<span><a class="line" href="#EquivariantCW-L282" id="EquivariantCW-L282">282</a>     (c : RelativeEquivariantCWComplex i) {Z : Type v} [TopologicalSpace Z] (f : B.V → Z) :</span>
-<span><a class="line" href="#EquivariantCW-L283" id="EquivariantCW-L283">283</a>     Continuous f ↔ ∀ n : ℕ, Continuous (f ∘ (c.incl.app n).hom) := by</span>
-<span><a class="line" href="#EquivariantCW-L284" id="EquivariantCW-L284">284</a>   exact TopCat.continuous_iff_of_isColimit _</span>
-<span><a class="line" href="#EquivariantCW-L285" id="EquivariantCW-L285">285</a>     (isColimitOfPreserves (Action.forget TopCat Γ) c.isColimit) f</span>
-<span><a class="line" href="#EquivariantCW-L286" id="EquivariantCW-L286">286</a> </span>
-<span><a class="line" href="#EquivariantCW-L287" id="EquivariantCW-L287">287</a> end BC4lean.ProperActions</span>
-<span><a class="line" href="#EquivariantCW-L288" id="EquivariantCW-L288">288</a> </span>
-<span><a class="line" href="#EquivariantCW-L289" id="EquivariantCW-L289">289</a> universe u</span>
-<span><a class="line" href="#EquivariantCW-L290" id="EquivariantCW-L290">290</a> </span>
-<span><a class="line" href="#EquivariantCW-L291" id="EquivariantCW-L291">291</a> namespace BC4lean.ProperActions</span>
-<span><a class="line" href="#EquivariantCW-L292" id="EquivariantCW-L292">292</a> </span>
-<span><a class="line" href="#EquivariantCW-L293" id="EquivariantCW-L293">293</a> /-- Closed embeddings are preserved by topological pushout. -/</span>
-<span id="doc/BC4lean.ProperActions.pushout_isClosedEmbedding"><a class="line" href="#EquivariantCW-L294" id="EquivariantCW-L294">294</a> theorem pushout_isClosedEmbedding</span>
-<span><a class="line" href="#EquivariantCW-L295" id="EquivariantCW-L295">295</a>     {A B X Y : TopCat.{u}} {a : A ⟶ X} {m : A ⟶ B} {f : X ⟶ Y} {g : B ⟶ Y}</span>
-<span><a class="line" href="#EquivariantCW-L296" id="EquivariantCW-L296">296</a>     (sq : IsPushout a m f g) (hm : Topology.IsClosedEmbedding m) :</span>
-<span><a class="line" href="#EquivariantCW-L297" id="EquivariantCW-L297">297</a>     Topology.IsClosedEmbedding f := by</span>
-<span><a class="line" href="#EquivariantCW-L298" id="EquivariantCW-L298">298</a>   have sqt := sq.flip.map (forget TopCat)</span>
-<span><a class="line" href="#EquivariantCW-L299" id="EquivariantCW-L299">299</a>   have hinj : Function.Injective f := by</span>
-<span><a class="line" href="#EquivariantCW-L300" id="EquivariantCW-L300">300</a>     let : Mono ((forget TopCat).map m) := (mono_iff_injective _).mpr hm.injective</span>
-<span><a class="line" href="#EquivariantCW-L301" id="EquivariantCW-L301">301</a>     exact (mono_iff_injective _).mp</span>
-<span><a class="line" href="#EquivariantCW-L302" id="EquivariantCW-L302">302</a>       (Types.pushoutCocone_inr_mono_of_isColimit sqt.isColimit)</span>
-<span><a class="line" href="#EquivariantCW-L303" id="EquivariantCW-L303">303</a>   refine .of_continuous_injective_isClosedMap f.hom.continuous hinj ?_</span>
-<span><a class="line" href="#EquivariantCW-L304" id="EquivariantCW-L304">304</a>   intro s hs</span>
-<span><a class="line" href="#EquivariantCW-L305" id="EquivariantCW-L305">305</a>   have he : g ⁻¹&#x27; (f &#x27;&#x27; s) = m &#x27;&#x27; (a ⁻¹&#x27; s) := by</span>
-<span><a class="line" href="#EquivariantCW-L306" id="EquivariantCW-L306">306</a>     ext b</span>
-<span><a class="line" href="#EquivariantCW-L307" id="EquivariantCW-L307">307</a>     constructor</span>
-<span><a class="line" href="#EquivariantCW-L308" id="EquivariantCW-L308">308</a>     · rintro ⟨x, hx, hxb⟩</span>
-<span><a class="line" href="#EquivariantCW-L309" id="EquivariantCW-L309">309</a>       obtain ⟨z, hzb, hzx⟩ :=</span>
-<span><a class="line" href="#EquivariantCW-L310" id="EquivariantCW-L310">310</a>         (Types.pushoutCocone_inl_eq_inr_iff_of_isColimit sqt.isColimit hm.injective b x).mp hxb.symm</span>
-<span><a class="line" href="#EquivariantCW-L311" id="EquivariantCW-L311">311</a>       change a z = x at hzx</span>
-<span><a class="line" href="#EquivariantCW-L312" id="EquivariantCW-L312">312</a>       exact ⟨z, by change a z ∈ s; rw [hzx]; exact hx, hzb⟩</span>
-<span><a class="line" href="#EquivariantCW-L313" id="EquivariantCW-L313">313</a>     · rintro ⟨z, hz, rfl⟩</span>
-<span><a class="line" href="#EquivariantCW-L314" id="EquivariantCW-L314">314</a>       exact ⟨a z, hz, ConcreteCategory.congr_hom sq.w z⟩</span>
-<span><a class="line" href="#EquivariantCW-L315" id="EquivariantCW-L315">315</a>   apply (TopCat.isClosed_iff_of_isColimit _ sq.isColimit (f &#x27;&#x27; s)).mpr</span>
-<span><a class="line" href="#EquivariantCW-L316" id="EquivariantCW-L316">316</a>   intro j</span>
-<span><a class="line" href="#EquivariantCW-L317" id="EquivariantCW-L317">317</a>   rcases j with _ | (_ | _)</span>
-<span><a class="line" href="#EquivariantCW-L318" id="EquivariantCW-L318">318</a>   · change IsClosed ((a ≫ f) ⁻¹&#x27; (f &#x27;&#x27; s))</span>
-<span><a class="line" href="#EquivariantCW-L319" id="EquivariantCW-L319">319</a>     simpa only [TopCat.coe_comp, Set.preimage_comp, hinj.preimage_image] using</span>
-<span><a class="line" href="#EquivariantCW-L320" id="EquivariantCW-L320">320</a>       hs.preimage a.hom.continuous</span>
-<span><a class="line" href="#EquivariantCW-L321" id="EquivariantCW-L321">321</a>   · change IsClosed (f ⁻¹&#x27; (f &#x27;&#x27; s))</span>
-<span><a class="line" href="#EquivariantCW-L322" id="EquivariantCW-L322">322</a>     simpa only [hinj.preimage_image] using hs</span>
-<span><a class="line" href="#EquivariantCW-L323" id="EquivariantCW-L323">323</a>   · change IsClosed (g ⁻¹&#x27; (f &#x27;&#x27; s))</span>
-<span><a class="line" href="#EquivariantCW-L324" id="EquivariantCW-L324">324</a>     rw [he]</span>
-<span><a class="line" href="#EquivariantCW-L325" id="EquivariantCW-L325">325</a>     exact hm.isClosedMap _ (hs.preimage a.hom.continuous)</span>
-<span><a class="line" href="#EquivariantCW-L326" id="EquivariantCW-L326">326</a> </span>
-<span><a class="line" href="#EquivariantCW-L327" id="EquivariantCW-L327">327</a> end BC4lean.ProperActions</span>
-<span><a class="line" href="#EquivariantCW-L328" id="EquivariantCW-L328">328</a> </span>
-<span><a class="line" href="#EquivariantCW-L329" id="EquivariantCW-L329">329</a> namespace BC4lean.ProperActions</span>
-<span><a class="line" href="#EquivariantCW-L330" id="EquivariantCW-L330">330</a> </span>
-<span><a class="line" href="#EquivariantCW-L331" id="EquivariantCW-L331">331</a> /-- A coproduct of closed embeddings is a closed embedding. -/</span>
-<span id="doc/BC4lean.ProperActions.coproduct_isClosedEmbedding"><a class="line" href="#EquivariantCW-L332" id="EquivariantCW-L332">332</a> theorem coproduct_isClosedEmbedding</span>
-<span><a class="line" href="#EquivariantCW-L333" id="EquivariantCW-L333">333</a>     {ι : Type u} {A B : ι → TopCat.{u}} {c₁ : Cofan A} {c₂ : Cofan B}</span>
-<span><a class="line" href="#EquivariantCW-L334" id="EquivariantCW-L334">334</a>     (hc₁ : IsColimit c₁) (hc₂ : IsColimit c₂)</span>
-<span><a class="line" href="#EquivariantCW-L335" id="EquivariantCW-L335">335</a>     (f : ∀ j, A j ⟶ B j) (hf : ∀ j, Topology.IsClosedEmbedding (f j))</span>
-<span><a class="line" href="#EquivariantCW-L336" id="EquivariantCW-L336">336</a>     (m : c₁.pt ⟶ c₂.pt) (hm : ∀ j, c₁.inj j ≫ m = f j ≫ c₂.inj j) :</span>
-<span><a class="line" href="#EquivariantCW-L337" id="EquivariantCW-L337">337</a>     Topology.IsClosedEmbedding m := by</span>
-<span><a class="line" href="#EquivariantCW-L338" id="EquivariantCW-L338">338</a>   let d₁ : Cofan (fun j =&gt; (forget TopCat).obj (A j)) :=</span>
-<span><a class="line" href="#EquivariantCW-L339" id="EquivariantCW-L339">339</a>     Cofan.mk _ (fun j =&gt; (forget TopCat).map (c₁.inj j))</span>
-<span><a class="line" href="#EquivariantCW-L340" id="EquivariantCW-L340">340</a>   let d₂ : Cofan (fun j =&gt; (forget TopCat).obj (B j)) :=</span>
-<span><a class="line" href="#EquivariantCW-L341" id="EquivariantCW-L341">341</a>     Cofan.mk _ (fun j =&gt; (forget TopCat).map (c₂.inj j))</span>
-<span><a class="line" href="#EquivariantCW-L342" id="EquivariantCW-L342">342</a>   have hd₁ : IsColimit d₁ := isColimitCofanMkObjOfIsColimit _ _ _ hc₁</span>
-<span><a class="line" href="#EquivariantCW-L343" id="EquivariantCW-L343">343</a>   have hd₂ : IsColimit d₂ := isColimitCofanMkObjOfIsColimit _ _ _ hc₂</span>
-<span><a class="line" href="#EquivariantCW-L344" id="EquivariantCW-L344">344</a>   have hm&#x27; (j : ι) (x : A j) : m (c₁.inj j x) = c₂.inj j (f j x) :=</span>
-<span><a class="line" href="#EquivariantCW-L345" id="EquivariantCW-L345">345</a>     ConcreteCategory.congr_hom (hm j) x</span>
-<span><a class="line" href="#EquivariantCW-L346" id="EquivariantCW-L346">346</a>   have hinj : Function.Injective m := by</span>
-<span><a class="line" href="#EquivariantCW-L347" id="EquivariantCW-L347">347</a>     intro x y hxy</span>
-<span><a class="line" href="#EquivariantCW-L348" id="EquivariantCW-L348">348</a>     obtain ⟨j, z, rfl⟩ := Cofan.inj_jointly_surjective_of_isColimit hd₁ x</span>
-<span><a class="line" href="#EquivariantCW-L349" id="EquivariantCW-L349">349</a>     obtain ⟨k, w, rfl⟩ := Cofan.inj_jointly_surjective_of_isColimit hd₁ y</span>
-<span><a class="line" href="#EquivariantCW-L350" id="EquivariantCW-L350">350</a>     change m (c₁.inj j z) = m (c₁.inj k w) at hxy</span>
-<span><a class="line" href="#EquivariantCW-L351" id="EquivariantCW-L351">351</a>     rw [hm&#x27;, hm&#x27;] at hxy</span>
-<span><a class="line" href="#EquivariantCW-L352" id="EquivariantCW-L352">352</a>     obtain rfl := Cofan.eq_of_inj_apply_eq_of_isColimit hd₂ _ _ hxy</span>
-<span><a class="line" href="#EquivariantCW-L353" id="EquivariantCW-L353">353</a>     have h := Cofan.inj_injective_of_isColimit hd₂ j hxy</span>
-<span><a class="line" href="#EquivariantCW-L354" id="EquivariantCW-L354">354</a>     exact congrArg (c₁.inj j) ((hf j).injective h)</span>
-<span><a class="line" href="#EquivariantCW-L355" id="EquivariantCW-L355">355</a>   refine .of_continuous_injective_isClosedMap m.hom.continuous hinj ?_</span>
-<span><a class="line" href="#EquivariantCW-L356" id="EquivariantCW-L356">356</a>   intro s hs</span>
-<span><a class="line" href="#EquivariantCW-L357" id="EquivariantCW-L357">357</a>   apply (TopCat.isClosed_iff_of_isColimit _ hc₂ (m &#x27;&#x27; s)).mpr</span>
-<span><a class="line" href="#EquivariantCW-L358" id="EquivariantCW-L358">358</a>   rintro ⟨j⟩</span>
-<span><a class="line" href="#EquivariantCW-L359" id="EquivariantCW-L359">359</a>   have he : c₂.inj j ⁻¹&#x27; (m &#x27;&#x27; s) = f j &#x27;&#x27; (c₁.inj j ⁻¹&#x27; s) := by</span>
-<span><a class="line" href="#EquivariantCW-L360" id="EquivariantCW-L360">360</a>     ext y</span>
-<span><a class="line" href="#EquivariantCW-L361" id="EquivariantCW-L361">361</a>     constructor</span>
-<span><a class="line" href="#EquivariantCW-L362" id="EquivariantCW-L362">362</a>     · rintro ⟨x, hx, hxy⟩</span>
-<span><a class="line" href="#EquivariantCW-L363" id="EquivariantCW-L363">363</a>       obtain ⟨k, z, rfl⟩ := Cofan.inj_jointly_surjective_of_isColimit hd₁ x</span>
-<span><a class="line" href="#EquivariantCW-L364" id="EquivariantCW-L364">364</a>       change m (c₁.inj k z) = c₂.inj j y at hxy</span>
-<span><a class="line" href="#EquivariantCW-L365" id="EquivariantCW-L365">365</a>       rw [hm&#x27;] at hxy</span>
-<span><a class="line" href="#EquivariantCW-L366" id="EquivariantCW-L366">366</a>       obtain rfl := Cofan.eq_of_inj_apply_eq_of_isColimit hd₂ _ _ hxy</span>
-<span><a class="line" href="#EquivariantCW-L367" id="EquivariantCW-L367">367</a>       exact ⟨z, hx, Cofan.inj_injective_of_isColimit hd₂ k hxy⟩</span>
-<span><a class="line" href="#EquivariantCW-L368" id="EquivariantCW-L368">368</a>     · rintro ⟨x, hx, rfl⟩</span>
-<span><a class="line" href="#EquivariantCW-L369" id="EquivariantCW-L369">369</a>       exact ⟨c₁.inj j x, hx, hm&#x27; j x⟩</span>
-<span><a class="line" href="#EquivariantCW-L370" id="EquivariantCW-L370">370</a>   change IsClosed (c₂.inj j ⁻¹&#x27; (m &#x27;&#x27; s))</span>
-<span><a class="line" href="#EquivariantCW-L371" id="EquivariantCW-L371">371</a>   rw [he]</span>
-<span><a class="line" href="#EquivariantCW-L372" id="EquivariantCW-L372">372</a>   exact (hf j).isClosedMap _ (hs.preimage (c₁.inj j).hom.continuous)</span>
-<span><a class="line" href="#EquivariantCW-L373" id="EquivariantCW-L373">373</a> </span>
-<span><a class="line" href="#EquivariantCW-L374" id="EquivariantCW-L374">374</a> end BC4lean.ProperActions</span>
-<span><a class="line" href="#EquivariantCW-L375" id="EquivariantCW-L375">375</a> </span>
-<span><a class="line" href="#EquivariantCW-L376" id="EquivariantCW-L376">376</a> namespace BC4lean.ProperActions</span>
-<span><a class="line" href="#EquivariantCW-L377" id="EquivariantCW-L377">377</a> variable {Γ : Type u} [Group Γ] [TopologicalSpace Γ] [DiscreteTopology Γ]</span>
+<span><a class="line" href="#EquivariantCW-L132" id="EquivariantCW-L132">132</a> /-- Finite isotropy subgroups indexing the allowed orbit cells. -/</span>
+<span id="doc/BC4lean.ProperActions.FiniteIsotropy"><a class="line" href="#EquivariantCW-L133" id="EquivariantCW-L133">133</a> def FiniteIsotropy (Γ : Type u) [Group Γ] := {H : Subgroup Γ // Finite H}</span>
+<span><a class="line" href="#EquivariantCW-L134" id="EquivariantCW-L134">134</a> </span>
+<span><a class="line" href="#EquivariantCW-L135" id="EquivariantCW-L135">135</a> /-- Generating boundary maps, with dimension indexed by the skeletal stage. -/</span>
+<span id="doc/BC4lean.ProperActions.equivariantBasicCell"><a class="line" href="#EquivariantCW-L136" id="EquivariantCW-L136">136</a> noncomputable def equivariantBasicCell (n : ℕ) (H : FiniteIsotropy Γ) :</span>
+<span><a class="line" href="#EquivariantCW-L137" id="EquivariantCW-L137">137</a>     topologicalAction Γ (OrbitCell H.val (TopCat.diskBoundary.{u} n)) ⟶</span>
+<span><a class="line" href="#EquivariantCW-L138" id="EquivariantCW-L138">138</a>       topologicalAction Γ (OrbitCell H.val (TopCat.disk.{u} n)) :=</span>
+<span><a class="line" href="#EquivariantCW-L139" id="EquivariantCW-L139">139</a>   (OrbitCell.boundaryInclusion H.val n).toActionHom</span>
+<span><a class="line" href="#EquivariantCW-L140" id="EquivariantCW-L140">140</a> </span>
+<span><a class="line" href="#EquivariantCW-L141" id="EquivariantCW-L141">141</a> /-- Relative equivariant CW data, attaching n-dimensional finite-isotropy orbit</span>
+<span><a class="line" href="#EquivariantCW-L142" id="EquivariantCW-L142">142</a> cells at stage n. This definition includes actual pushout and colimit witnesses. -/</span>
+<span id="doc/BC4lean.ProperActions.RelativeEquivariantCWComplex"><a class="line" href="#EquivariantCW-L143" id="EquivariantCW-L143">143</a> abbrev RelativeEquivariantCWComplex {X Y : Action TopCat.{u} Γ} (f : X ⟶ Y) :=</span>
+<span><a class="line" href="#EquivariantCW-L144" id="EquivariantCW-L144">144</a>   HomotopicalAlgebra.RelativeCellComplex.{u} (equivariantBasicCell (Γ := Γ)) f</span>
+<span><a class="line" href="#EquivariantCW-L145" id="EquivariantCW-L145">145</a> </span>
+<span><a class="line" href="#EquivariantCW-L146" id="EquivariantCW-L146">146</a> /-- An equivariant CW structure starting from the empty action. Finite isotropy</span>
+<span><a class="line" href="#EquivariantCW-L147" id="EquivariantCW-L147">147</a> is imposed on the cell family, not assumed as a properness conclusion. -/</span>
+<span id="doc/BC4lean.ProperActions.EquivariantCWComplex"><a class="line" href="#EquivariantCW-L148" id="EquivariantCW-L148">148</a> abbrev EquivariantCWComplex (X : Action TopCat.{u} Γ) :=</span>
+<span><a class="line" href="#EquivariantCW-L149" id="EquivariantCW-L149">149</a>   RelativeEquivariantCWComplex (initial.to X)</span>
+<span><a class="line" href="#EquivariantCW-L150" id="EquivariantCW-L150">150</a> </span>
+<span><a class="line" href="#EquivariantCW-L151" id="EquivariantCW-L151">151</a> /-- Relative equivariant CW structures include an attachment at every finite stage. -/</span>
+<span id="doc/BC4lean.ProperActions.RelativeEquivariantCWComplex.attachment"><a class="line" href="#EquivariantCW-L152" id="EquivariantCW-L152">152</a> def RelativeEquivariantCWComplex.attachment {X Y : Action TopCat.{u} Γ} {f : X ⟶ Y}</span>
+<span><a class="line" href="#EquivariantCW-L153" id="EquivariantCW-L153">153</a>     (c : RelativeEquivariantCWComplex f) (n : ℕ) :=</span>
+<span><a class="line" href="#EquivariantCW-L154" id="EquivariantCW-L154">154</a>   c.attachCells n (not_isMax n)</span>
+<span><a class="line" href="#EquivariantCW-L155" id="EquivariantCW-L155">155</a> </span>
+<span><a class="line" href="#EquivariantCW-L156" id="EquivariantCW-L156">156</a> /-- Maps out of a cellular object are determined on the initial subspace and cells. -/</span>
+<span id="doc/BC4lean.ProperActions.RelativeEquivariantCWComplex.hom_ext"><a class="line" href="#EquivariantCW-L157" id="EquivariantCW-L157">157</a> theorem RelativeEquivariantCWComplex.hom_ext</span>
+<span><a class="line" href="#EquivariantCW-L158" id="EquivariantCW-L158">158</a>     {X Y Z : Action TopCat.{u} Γ} {f : X ⟶ Y}</span>
+<span><a class="line" href="#EquivariantCW-L159" id="EquivariantCW-L159">159</a>     (c : RelativeEquivariantCWComplex f) {φ ψ : Y ⟶ Z}</span>
+<span><a class="line" href="#EquivariantCW-L160" id="EquivariantCW-L160">160</a>     (h₀ : f ≫ φ = f ≫ ψ)</span>
+<span><a class="line" href="#EquivariantCW-L161" id="EquivariantCW-L161">161</a>     (h : ∀ γ : HomotopicalAlgebra.RelativeCellComplex.Cells c, γ.ι ≫ φ = γ.ι ≫ ψ) :</span>
+<span><a class="line" href="#EquivariantCW-L162" id="EquivariantCW-L162">162</a>     φ = ψ :=</span>
+<span><a class="line" href="#EquivariantCW-L163" id="EquivariantCW-L163">163</a>   HomotopicalAlgebra.RelativeCellComplex.hom_ext c h₀ h</span>
+<span><a class="line" href="#EquivariantCW-L164" id="EquivariantCW-L164">164</a> </span>
+<span><a class="line" href="#EquivariantCW-L165" id="EquivariantCW-L165">165</a> </span>
+<span><a class="line" href="#EquivariantCW-L166" id="EquivariantCW-L166">166</a> /-- Forget both topology and action, retaining the underlying set. -/</span>
+<span id="doc/BC4lean.ProperActions.underlyingAction"><a class="line" href="#EquivariantCW-L167" id="EquivariantCW-L167">167</a> abbrev underlyingAction : Action TopCat.{u} Γ ⥤ Type u :=</span>
+<span><a class="line" href="#EquivariantCW-L168" id="EquivariantCW-L168">168</a>   Action.forget TopCat Γ ⋙ forget TopCat</span>
+<span><a class="line" href="#EquivariantCW-L169" id="EquivariantCW-L169">169</a> </span>
+<span><a class="line" href="#EquivariantCW-L170" id="EquivariantCW-L170">170</a> private instance : PreservesWellOrderContinuousOfShape ℕ (underlyingAction (Γ := Γ)) where</span>
+<span><a class="line" href="#EquivariantCW-L171" id="EquivariantCW-L171">171</a> </span>
+<span><a class="line" href="#EquivariantCW-L172" id="EquivariantCW-L172">172</a> private noncomputable def underlyingAttachment</span>
+<span><a class="line" href="#EquivariantCW-L173" id="EquivariantCW-L173">173</a>     {α : Type u} {A B : α → Action TopCat.{u} Γ}</span>
+<span><a class="line" href="#EquivariantCW-L174" id="EquivariantCW-L174">174</a>     {g : ∀ a, A a ⟶ B a} {X Y : Action TopCat.{u} Γ} {f : X ⟶ Y}</span>
+<span><a class="line" href="#EquivariantCW-L175" id="EquivariantCW-L175">175</a>     (c : HomotopicalAlgebra.AttachCells.{u} g f) :</span>
+<span><a class="line" href="#EquivariantCW-L176" id="EquivariantCW-L176">176</a>     HomotopicalAlgebra.AttachCells.{u}</span>
+<span><a class="line" href="#EquivariantCW-L177" id="EquivariantCW-L177">177</a>       (fun a =&gt; (underlyingAction (Γ := Γ)).map (g a))</span>
+<span><a class="line" href="#EquivariantCW-L178" id="EquivariantCW-L178">178</a>       ((underlyingAction (Γ := Γ)).map f) where</span>
+<span><a class="line" href="#EquivariantCW-L179" id="EquivariantCW-L179">179</a>   ι := c.ι</span>
+<span><a class="line" href="#EquivariantCW-L180" id="EquivariantCW-L180">180</a>   π := c.π</span>
+<span><a class="line" href="#EquivariantCW-L181" id="EquivariantCW-L181">181</a>   cofan₁ := Cofan.mk _ (fun i =&gt; (underlyingAction (Γ := Γ)).map (c.cofan₁.inj i))</span>
+<span><a class="line" href="#EquivariantCW-L182" id="EquivariantCW-L182">182</a>   cofan₂ := Cofan.mk _ (fun i =&gt; (underlyingAction (Γ := Γ)).map (c.cofan₂.inj i))</span>
+<span><a class="line" href="#EquivariantCW-L183" id="EquivariantCW-L183">183</a>   isColimit₁ := isColimitCofanMkObjOfIsColimit _ _ _ c.isColimit₁</span>
+<span><a class="line" href="#EquivariantCW-L184" id="EquivariantCW-L184">184</a>   isColimit₂ := isColimitCofanMkObjOfIsColimit _ _ _ c.isColimit₂</span>
+<span><a class="line" href="#EquivariantCW-L185" id="EquivariantCW-L185">185</a>   m := (underlyingAction (Γ := Γ)).map c.m</span>
+<span><a class="line" href="#EquivariantCW-L186" id="EquivariantCW-L186">186</a>   hm i := by simpa only [Functor.map_comp, cofan_mk_inj] using congrArg ((underlyingAction (Γ := Γ)).map) (c.hm i)</span>
+<span><a class="line" href="#EquivariantCW-L187" id="EquivariantCW-L187">187</a>   g₁ := (underlyingAction (Γ := Γ)).map c.g₁</span>
+<span><a class="line" href="#EquivariantCW-L188" id="EquivariantCW-L188">188</a>   g₂ := (underlyingAction (Γ := Γ)).map c.g₂</span>
+<span><a class="line" href="#EquivariantCW-L189" id="EquivariantCW-L189">189</a>   isPushout := c.isPushout.map _</span>
+<span><a class="line" href="#EquivariantCW-L190" id="EquivariantCW-L190">190</a> </span>
+<span><a class="line" href="#EquivariantCW-L191" id="EquivariantCW-L191">191</a> /-- A finite-isotropy orbit-cell attachment never identifies pre-existing points. -/</span>
+<span id="doc/BC4lean.ProperActions.orbitCellAttachment_injective"><a class="line" href="#EquivariantCW-L192" id="EquivariantCW-L192">192</a> theorem orbitCellAttachment_injective</span>
+<span><a class="line" href="#EquivariantCW-L193" id="EquivariantCW-L193">193</a>     {A B : Action TopCat.{u} Γ} {i : A ⟶ B} {n : ℕ}</span>
+<span><a class="line" href="#EquivariantCW-L194" id="EquivariantCW-L194">194</a>     (c : HomotopicalAlgebra.AttachCells.{u} (equivariantBasicCell (Γ := Γ) n) i) :</span>
+<span><a class="line" href="#EquivariantCW-L195" id="EquivariantCW-L195">195</a>     Function.Injective i.hom := by</span>
+<span><a class="line" href="#EquivariantCW-L196" id="EquivariantCW-L196">196</a>   let a := underlyingAttachment c</span>
+<span><a class="line" href="#EquivariantCW-L197" id="EquivariantCW-L197">197</a>   have hc : (MorphismProperty.monomorphisms (Type u)).coproducts.pushouts</span>
+<span><a class="line" href="#EquivariantCW-L198" id="EquivariantCW-L198">198</a>       ((underlyingAction (Γ := Γ)).map i) := by</span>
+<span><a class="line" href="#EquivariantCW-L199" id="EquivariantCW-L199">199</a>     apply MorphismProperty.pushouts_monotone</span>
+<span><a class="line" href="#EquivariantCW-L200" id="EquivariantCW-L200">200</a>       (MorphismProperty.coproducts_monotone (b := MorphismProperty.monomorphisms (Type u)) ?_)</span>
+<span><a class="line" href="#EquivariantCW-L201" id="EquivariantCW-L201">201</a>       _ a.pushouts_coproducts</span>
+<span><a class="line" href="#EquivariantCW-L202" id="EquivariantCW-L202">202</a>     intro X Y f hf</span>
+<span><a class="line" href="#EquivariantCW-L203" id="EquivariantCW-L203">203</a>     cases hf with</span>
+<span><a class="line" href="#EquivariantCW-L204" id="EquivariantCW-L204">204</a>     | mk H =&gt;</span>
+<span><a class="line" href="#EquivariantCW-L205" id="EquivariantCW-L205">205</a>       exact (CategoryTheory.mono_iff_injective _).mpr</span>
+<span><a class="line" href="#EquivariantCW-L206" id="EquivariantCW-L206">206</a>         (OrbitCell.boundaryInclusion_injective H.val n)</span>
+<span><a class="line" href="#EquivariantCW-L207" id="EquivariantCW-L207">207</a>   have hp : (MorphismProperty.monomorphisms (Type u)).coproducts.pushouts ≤</span>
+<span><a class="line" href="#EquivariantCW-L208" id="EquivariantCW-L208">208</a>       (MorphismProperty.monomorphisms (Type u)).pushouts :=</span>
+<span><a class="line" href="#EquivariantCW-L209" id="EquivariantCW-L209">209</a>     MorphismProperty.pushouts_monotone (MorphismProperty.monomorphisms (Type u)).coproducts_le</span>
+<span><a class="line" href="#EquivariantCW-L210" id="EquivariantCW-L210">210</a>   exact (CategoryTheory.mono_iff_injective _).mp</span>
+<span><a class="line" href="#EquivariantCW-L211" id="EquivariantCW-L211">211</a>     (MorphismProperty.pushouts_le _ (hp _ hc))</span>
+<span><a class="line" href="#EquivariantCW-L212" id="EquivariantCW-L212">212</a> </span>
+<span><a class="line" href="#EquivariantCW-L213" id="EquivariantCW-L213">213</a> private noncomputable def underlyingCellularSequence</span>
+<span><a class="line" href="#EquivariantCW-L214" id="EquivariantCW-L214">214</a>     {A B : Action TopCat.{u} Γ} {i : A ⟶ B}</span>
+<span><a class="line" href="#EquivariantCW-L215" id="EquivariantCW-L215">215</a>     (c : RelativeEquivariantCWComplex i) :</span>
+<span><a class="line" href="#EquivariantCW-L216" id="EquivariantCW-L216">216</a>     (MorphismProperty.monomorphisms (Type u)).TransfiniteCompositionOfShape ℕ</span>
+<span><a class="line" href="#EquivariantCW-L217" id="EquivariantCW-L217">217</a>       ((underlyingAction (Γ := Γ)).map i) where</span>
+<span><a class="line" href="#EquivariantCW-L218" id="EquivariantCW-L218">218</a>   toTransfiniteCompositionOfShape := c.toTransfiniteCompositionOfShape.map underlyingAction</span>
+<span><a class="line" href="#EquivariantCW-L219" id="EquivariantCW-L219">219</a>   map_mem n _ := (CategoryTheory.mono_iff_injective _).mpr</span>
+<span><a class="line" href="#EquivariantCW-L220" id="EquivariantCW-L220">220</a>     (orbitCellAttachment_injective (c.attachment n))</span>
+<span><a class="line" href="#EquivariantCW-L221" id="EquivariantCW-L221">221</a> </span>
+<span><a class="line" href="#EquivariantCW-L222" id="EquivariantCW-L222">222</a> /-- The inclusion underlying any relative equivariant CW structure is injective. -/</span>
+<span id="doc/BC4lean.ProperActions.RelativeEquivariantCWComplex.injective"><a class="line" href="#EquivariantCW-L223" id="EquivariantCW-L223">223</a> theorem RelativeEquivariantCWComplex.injective</span>
+<span><a class="line" href="#EquivariantCW-L224" id="EquivariantCW-L224">224</a>     {A B : Action TopCat.{u} Γ} {i : A ⟶ B}</span>
+<span><a class="line" href="#EquivariantCW-L225" id="EquivariantCW-L225">225</a>     (c : RelativeEquivariantCWComplex i) : Function.Injective i.hom := by</span>
+<span><a class="line" href="#EquivariantCW-L226" id="EquivariantCW-L226">226</a>   exact (CategoryTheory.mono_iff_injective _).mp</span>
+<span><a class="line" href="#EquivariantCW-L227" id="EquivariantCW-L227">227</a>     ((MorphismProperty.monomorphisms (Type u)).transfiniteCompositionsOfShape_le ℕ _</span>
+<span><a class="line" href="#EquivariantCW-L228" id="EquivariantCW-L228">228</a>       (underlyingCellularSequence c).mem)</span>
+<span><a class="line" href="#EquivariantCW-L229" id="EquivariantCW-L229">229</a> </span>
+<span><a class="line" href="#EquivariantCW-L230" id="EquivariantCW-L230">230</a> /-- Every skeletal transition is injective, including non-adjacent stages. -/</span>
+<span id="doc/BC4lean.ProperActions.RelativeEquivariantCWComplex.skeletonMap_injective"><a class="line" href="#EquivariantCW-L231" id="EquivariantCW-L231">231</a> theorem RelativeEquivariantCWComplex.skeletonMap_injective</span>
+<span><a class="line" href="#EquivariantCW-L232" id="EquivariantCW-L232">232</a>     {A B : Action TopCat.{u} Γ} {i : A ⟶ B}</span>
+<span><a class="line" href="#EquivariantCW-L233" id="EquivariantCW-L233">233</a>     (c : RelativeEquivariantCWComplex i) {m n : ℕ} (h : m ≤ n) :</span>
+<span><a class="line" href="#EquivariantCW-L234" id="EquivariantCW-L234">234</a>     Function.Injective (c.F.map (homOfLE h)).hom := by</span>
+<span><a class="line" href="#EquivariantCW-L235" id="EquivariantCW-L235">235</a>   exact (CategoryTheory.mono_iff_injective _).mp</span>
+<span><a class="line" href="#EquivariantCW-L236" id="EquivariantCW-L236">236</a>     ((underlyingCellularSequence c).mem_map (homOfLE h))</span>
+<span><a class="line" href="#EquivariantCW-L237" id="EquivariantCW-L237">237</a> </span>
+<span><a class="line" href="#EquivariantCW-L238" id="EquivariantCW-L238">238</a> /-- No points in a skeleton become identified in the final CW colimit. -/</span>
+<span id="doc/BC4lean.ProperActions.RelativeEquivariantCWComplex.skeletonInclusion_injective"><a class="line" href="#EquivariantCW-L239" id="EquivariantCW-L239">239</a> theorem RelativeEquivariantCWComplex.skeletonInclusion_injective</span>
+<span><a class="line" href="#EquivariantCW-L240" id="EquivariantCW-L240">240</a>     {A B : Action TopCat.{u} Γ} {i : A ⟶ B}</span>
+<span><a class="line" href="#EquivariantCW-L241" id="EquivariantCW-L241">241</a>     (c : RelativeEquivariantCWComplex i) (n : ℕ) :</span>
+<span><a class="line" href="#EquivariantCW-L242" id="EquivariantCW-L242">242</a>     Function.Injective (c.incl.app n).hom := by</span>
+<span><a class="line" href="#EquivariantCW-L243" id="EquivariantCW-L243">243</a>   exact (CategoryTheory.mono_iff_injective _).mp</span>
+<span><a class="line" href="#EquivariantCW-L244" id="EquivariantCW-L244">244</a>     ((underlyingCellularSequence c).mem_incl_app n)</span>
+<span><a class="line" href="#EquivariantCW-L245" id="EquivariantCW-L245">245</a> </span>
+<span><a class="line" href="#EquivariantCW-L246" id="EquivariantCW-L246">246</a> omit [DiscreteTopology Γ] in</span>
+<span><a class="line" href="#EquivariantCW-L247" id="EquivariantCW-L247">247</a> /-- Orbit-cell boundaries are closed subspaces of the disks, even for infinite Γ/H. -/</span>
+<span id="doc/BC4lean.ProperActions.OrbitCell.boundaryInclusion_isClosedEmbedding"><a class="line" href="#EquivariantCW-L248" id="EquivariantCW-L248">248</a> theorem OrbitCell.boundaryInclusion_isClosedEmbedding (H : Subgroup Γ) (n : ℕ) :</span>
+<span><a class="line" href="#EquivariantCW-L249" id="EquivariantCW-L249">249</a>     Topology.IsClosedEmbedding (boundaryInclusion H n) := by</span>
+<span><a class="line" href="#EquivariantCW-L250" id="EquivariantCW-L250">250</a>   let : T2Space (TopCat.disk.{u} n) := by</span>
+<span><a class="line" href="#EquivariantCW-L251" id="EquivariantCW-L251">251</a>     change T2Space (ULift (Metric.closedBall (0 : EuclideanSpace ℝ (Fin n)) 1))</span>
+<span><a class="line" href="#EquivariantCW-L252" id="EquivariantCW-L252">252</a>     exact Homeomorph.ulift.{u, 0}.symm.t2Space</span>
+<span><a class="line" href="#EquivariantCW-L253" id="EquivariantCW-L253">253</a>   have hd : Topology.IsClosedEmbedding (TopCat.diskBoundaryInclusion.{u} n) :=</span>
+<span><a class="line" href="#EquivariantCW-L254" id="EquivariantCW-L254">254</a>     (TopCat.diskBoundaryInclusion n).hom.continuous.isClosedEmbedding</span>
+<span><a class="line" href="#EquivariantCW-L255" id="EquivariantCW-L255">255</a>       ((TopCat.mono_iff_injective _).mp inferInstance)</span>
+<span><a class="line" href="#EquivariantCW-L256" id="EquivariantCW-L256">256</a>   exact Topology.IsClosedEmbedding.id.prodMap hd</span>
+<span><a class="line" href="#EquivariantCW-L257" id="EquivariantCW-L257">257</a> </span>
+<span><a class="line" href="#EquivariantCW-L258" id="EquivariantCW-L258">258</a> /-- Every point of a relative CW colimit comes from a finite skeletal stage. -/</span>
+<span id="doc/BC4lean.ProperActions.RelativeEquivariantCWComplex.exists_skeleton_preimage"><a class="line" href="#EquivariantCW-L259" id="EquivariantCW-L259">259</a> theorem RelativeEquivariantCWComplex.exists_skeleton_preimage</span>
+<span><a class="line" href="#EquivariantCW-L260" id="EquivariantCW-L260">260</a>     {A B : Action TopCat.{u} Γ} {i : A ⟶ B}</span>
+<span><a class="line" href="#EquivariantCW-L261" id="EquivariantCW-L261">261</a>     (c : RelativeEquivariantCWComplex i) (x : B.V) :</span>
+<span><a class="line" href="#EquivariantCW-L262" id="EquivariantCW-L262">262</a>     ∃ (n : ℕ) (y : (c.F.obj n).V), (c.incl.app n).hom y = x := by</span>
+<span><a class="line" href="#EquivariantCW-L263" id="EquivariantCW-L263">263</a>   exact Types.jointly_surjective_of_isColimit</span>
+<span><a class="line" href="#EquivariantCW-L264" id="EquivariantCW-L264">264</a>     (isColimitOfPreserves (underlyingAction (Γ := Γ)) c.isColimit) x</span>
+<span><a class="line" href="#EquivariantCW-L265" id="EquivariantCW-L265">265</a> </span>
+<span><a class="line" href="#EquivariantCW-L266" id="EquivariantCW-L266">266</a> /-- The CW colimit topology detects open sets on all finite skeleta. -/</span>
+<span id="doc/BC4lean.ProperActions.RelativeEquivariantCWComplex.isOpen_iff"><a class="line" href="#EquivariantCW-L267" id="EquivariantCW-L267">267</a> theorem RelativeEquivariantCWComplex.isOpen_iff</span>
+<span><a class="line" href="#EquivariantCW-L268" id="EquivariantCW-L268">268</a>     {A B : Action TopCat.{u} Γ} {i : A ⟶ B}</span>
+<span><a class="line" href="#EquivariantCW-L269" id="EquivariantCW-L269">269</a>     (c : RelativeEquivariantCWComplex i) (s : Set B.V) :</span>
+<span><a class="line" href="#EquivariantCW-L270" id="EquivariantCW-L270">270</a>     IsOpen s ↔ ∀ n : ℕ, IsOpen ((c.incl.app n).hom ⁻¹&#x27; s) := by</span>
+<span><a class="line" href="#EquivariantCW-L271" id="EquivariantCW-L271">271</a>   exact TopCat.isOpen_iff_of_isColimit _</span>
+<span><a class="line" href="#EquivariantCW-L272" id="EquivariantCW-L272">272</a>     (isColimitOfPreserves (Action.forget TopCat Γ) c.isColimit) s</span>
+<span><a class="line" href="#EquivariantCW-L273" id="EquivariantCW-L273">273</a> </span>
+<span><a class="line" href="#EquivariantCW-L274" id="EquivariantCW-L274">274</a> /-- The CW colimit topology detects closed sets on all finite skeleta. -/</span>
+<span id="doc/BC4lean.ProperActions.RelativeEquivariantCWComplex.isClosed_iff"><a class="line" href="#EquivariantCW-L275" id="EquivariantCW-L275">275</a> theorem RelativeEquivariantCWComplex.isClosed_iff</span>
+<span><a class="line" href="#EquivariantCW-L276" id="EquivariantCW-L276">276</a>     {A B : Action TopCat.{u} Γ} {i : A ⟶ B}</span>
+<span><a class="line" href="#EquivariantCW-L277" id="EquivariantCW-L277">277</a>     (c : RelativeEquivariantCWComplex i) (s : Set B.V) :</span>
+<span><a class="line" href="#EquivariantCW-L278" id="EquivariantCW-L278">278</a>     IsClosed s ↔ ∀ n : ℕ, IsClosed ((c.incl.app n).hom ⁻¹&#x27; s) := by</span>
+<span><a class="line" href="#EquivariantCW-L279" id="EquivariantCW-L279">279</a>   exact TopCat.isClosed_iff_of_isColimit _</span>
+<span><a class="line" href="#EquivariantCW-L280" id="EquivariantCW-L280">280</a>     (isColimitOfPreserves (Action.forget TopCat Γ) c.isColimit) s</span>
+<span><a class="line" href="#EquivariantCW-L281" id="EquivariantCW-L281">281</a> </span>
+<span><a class="line" href="#EquivariantCW-L282" id="EquivariantCW-L282">282</a> /-- Continuity out of a relative CW colimit is tested on its finite skeleta. -/</span>
+<span id="doc/BC4lean.ProperActions.RelativeEquivariantCWComplex.continuous_iff"><a class="line" href="#EquivariantCW-L283" id="EquivariantCW-L283">283</a> theorem RelativeEquivariantCWComplex.continuous_iff</span>
+<span><a class="line" href="#EquivariantCW-L284" id="EquivariantCW-L284">284</a>     {A B : Action TopCat.{u} Γ} {i : A ⟶ B}</span>
+<span><a class="line" href="#EquivariantCW-L285" id="EquivariantCW-L285">285</a>     (c : RelativeEquivariantCWComplex i) {Z : Type v} [TopologicalSpace Z] (f : B.V → Z) :</span>
+<span><a class="line" href="#EquivariantCW-L286" id="EquivariantCW-L286">286</a>     Continuous f ↔ ∀ n : ℕ, Continuous (f ∘ (c.incl.app n).hom) := by</span>
+<span><a class="line" href="#EquivariantCW-L287" id="EquivariantCW-L287">287</a>   exact TopCat.continuous_iff_of_isColimit _</span>
+<span><a class="line" href="#EquivariantCW-L288" id="EquivariantCW-L288">288</a>     (isColimitOfPreserves (Action.forget TopCat Γ) c.isColimit) f</span>
+<span><a class="line" href="#EquivariantCW-L289" id="EquivariantCW-L289">289</a> </span>
+<span><a class="line" href="#EquivariantCW-L290" id="EquivariantCW-L290">290</a> end BC4lean.ProperActions</span>
+<span><a class="line" href="#EquivariantCW-L291" id="EquivariantCW-L291">291</a> </span>
+<span><a class="line" href="#EquivariantCW-L292" id="EquivariantCW-L292">292</a> universe u</span>
+<span><a class="line" href="#EquivariantCW-L293" id="EquivariantCW-L293">293</a> </span>
+<span><a class="line" href="#EquivariantCW-L294" id="EquivariantCW-L294">294</a> namespace BC4lean.ProperActions</span>
+<span><a class="line" href="#EquivariantCW-L295" id="EquivariantCW-L295">295</a> </span>
+<span><a class="line" href="#EquivariantCW-L296" id="EquivariantCW-L296">296</a> /-- Closed embeddings are preserved by topological pushout. -/</span>
+<span id="doc/BC4lean.ProperActions.pushout_isClosedEmbedding"><a class="line" href="#EquivariantCW-L297" id="EquivariantCW-L297">297</a> theorem pushout_isClosedEmbedding</span>
+<span><a class="line" href="#EquivariantCW-L298" id="EquivariantCW-L298">298</a>     {A B X Y : TopCat.{u}} {a : A ⟶ X} {m : A ⟶ B} {f : X ⟶ Y} {g : B ⟶ Y}</span>
+<span><a class="line" href="#EquivariantCW-L299" id="EquivariantCW-L299">299</a>     (sq : IsPushout a m f g) (hm : Topology.IsClosedEmbedding m) :</span>
+<span><a class="line" href="#EquivariantCW-L300" id="EquivariantCW-L300">300</a>     Topology.IsClosedEmbedding f := by</span>
+<span><a class="line" href="#EquivariantCW-L301" id="EquivariantCW-L301">301</a>   have sqt := sq.flip.map (forget TopCat)</span>
+<span><a class="line" href="#EquivariantCW-L302" id="EquivariantCW-L302">302</a>   have hinj : Function.Injective f := by</span>
+<span><a class="line" href="#EquivariantCW-L303" id="EquivariantCW-L303">303</a>     let : Mono ((forget TopCat).map m) := (mono_iff_injective _).mpr hm.injective</span>
+<span><a class="line" href="#EquivariantCW-L304" id="EquivariantCW-L304">304</a>     exact (mono_iff_injective _).mp</span>
+<span><a class="line" href="#EquivariantCW-L305" id="EquivariantCW-L305">305</a>       (Types.pushoutCocone_inr_mono_of_isColimit sqt.isColimit)</span>
+<span><a class="line" href="#EquivariantCW-L306" id="EquivariantCW-L306">306</a>   refine .of_continuous_injective_isClosedMap f.hom.continuous hinj ?_</span>
+<span><a class="line" href="#EquivariantCW-L307" id="EquivariantCW-L307">307</a>   intro s hs</span>
+<span><a class="line" href="#EquivariantCW-L308" id="EquivariantCW-L308">308</a>   have he : g ⁻¹&#x27; (f &#x27;&#x27; s) = m &#x27;&#x27; (a ⁻¹&#x27; s) := by</span>
+<span><a class="line" href="#EquivariantCW-L309" id="EquivariantCW-L309">309</a>     ext b</span>
+<span><a class="line" href="#EquivariantCW-L310" id="EquivariantCW-L310">310</a>     constructor</span>
+<span><a class="line" href="#EquivariantCW-L311" id="EquivariantCW-L311">311</a>     · rintro ⟨x, hx, hxb⟩</span>
+<span><a class="line" href="#EquivariantCW-L312" id="EquivariantCW-L312">312</a>       obtain ⟨z, hzb, hzx⟩ :=</span>
+<span><a class="line" href="#EquivariantCW-L313" id="EquivariantCW-L313">313</a>         (Types.pushoutCocone_inl_eq_inr_iff_of_isColimit sqt.isColimit hm.injective b x).mp hxb.symm</span>
+<span><a class="line" href="#EquivariantCW-L314" id="EquivariantCW-L314">314</a>       change a z = x at hzx</span>
+<span><a class="line" href="#EquivariantCW-L315" id="EquivariantCW-L315">315</a>       exact ⟨z, by change a z ∈ s; rw [hzx]; exact hx, hzb⟩</span>
+<span><a class="line" href="#EquivariantCW-L316" id="EquivariantCW-L316">316</a>     · rintro ⟨z, hz, rfl⟩</span>
+<span><a class="line" href="#EquivariantCW-L317" id="EquivariantCW-L317">317</a>       exact ⟨a z, hz, ConcreteCategory.congr_hom sq.w z⟩</span>
+<span><a class="line" href="#EquivariantCW-L318" id="EquivariantCW-L318">318</a>   apply (TopCat.isClosed_iff_of_isColimit _ sq.isColimit (f &#x27;&#x27; s)).mpr</span>
+<span><a class="line" href="#EquivariantCW-L319" id="EquivariantCW-L319">319</a>   intro j</span>
+<span><a class="line" href="#EquivariantCW-L320" id="EquivariantCW-L320">320</a>   rcases j with _ | (_ | _)</span>
+<span><a class="line" href="#EquivariantCW-L321" id="EquivariantCW-L321">321</a>   · change IsClosed ((a ≫ f) ⁻¹&#x27; (f &#x27;&#x27; s))</span>
+<span><a class="line" href="#EquivariantCW-L322" id="EquivariantCW-L322">322</a>     simpa only [TopCat.coe_comp, Set.preimage_comp, hinj.preimage_image] using</span>
+<span><a class="line" href="#EquivariantCW-L323" id="EquivariantCW-L323">323</a>       hs.preimage a.hom.continuous</span>
+<span><a class="line" href="#EquivariantCW-L324" id="EquivariantCW-L324">324</a>   · change IsClosed (f ⁻¹&#x27; (f &#x27;&#x27; s))</span>
+<span><a class="line" href="#EquivariantCW-L325" id="EquivariantCW-L325">325</a>     simpa only [hinj.preimage_image] using hs</span>
+<span><a class="line" href="#EquivariantCW-L326" id="EquivariantCW-L326">326</a>   · change IsClosed (g ⁻¹&#x27; (f &#x27;&#x27; s))</span>
+<span><a class="line" href="#EquivariantCW-L327" id="EquivariantCW-L327">327</a>     rw [he]</span>
+<span><a class="line" href="#EquivariantCW-L328" id="EquivariantCW-L328">328</a>     exact hm.isClosedMap _ (hs.preimage a.hom.continuous)</span>
+<span><a class="line" href="#EquivariantCW-L329" id="EquivariantCW-L329">329</a> </span>
+<span><a class="line" href="#EquivariantCW-L330" id="EquivariantCW-L330">330</a> end BC4lean.ProperActions</span>
+<span><a class="line" href="#EquivariantCW-L331" id="EquivariantCW-L331">331</a> </span>
+<span><a class="line" href="#EquivariantCW-L332" id="EquivariantCW-L332">332</a> namespace BC4lean.ProperActions</span>
+<span><a class="line" href="#EquivariantCW-L333" id="EquivariantCW-L333">333</a> </span>
+<span><a class="line" href="#EquivariantCW-L334" id="EquivariantCW-L334">334</a> /-- A coproduct of closed embeddings is a closed embedding. -/</span>
+<span id="doc/BC4lean.ProperActions.coproduct_isClosedEmbedding"><a class="line" href="#EquivariantCW-L335" id="EquivariantCW-L335">335</a> theorem coproduct_isClosedEmbedding</span>
+<span><a class="line" href="#EquivariantCW-L336" id="EquivariantCW-L336">336</a>     {ι : Type u} {A B : ι → TopCat.{u}} {c₁ : Cofan A} {c₂ : Cofan B}</span>
+<span><a class="line" href="#EquivariantCW-L337" id="EquivariantCW-L337">337</a>     (hc₁ : IsColimit c₁) (hc₂ : IsColimit c₂)</span>
+<span><a class="line" href="#EquivariantCW-L338" id="EquivariantCW-L338">338</a>     (f : ∀ j, A j ⟶ B j) (hf : ∀ j, Topology.IsClosedEmbedding (f j))</span>
+<span><a class="line" href="#EquivariantCW-L339" id="EquivariantCW-L339">339</a>     (m : c₁.pt ⟶ c₂.pt) (hm : ∀ j, c₁.inj j ≫ m = f j ≫ c₂.inj j) :</span>
+<span><a class="line" href="#EquivariantCW-L340" id="EquivariantCW-L340">340</a>     Topology.IsClosedEmbedding m := by</span>
+<span><a class="line" href="#EquivariantCW-L341" id="EquivariantCW-L341">341</a>   let d₁ : Cofan (fun j =&gt; (forget TopCat).obj (A j)) :=</span>
+<span><a class="line" href="#EquivariantCW-L342" id="EquivariantCW-L342">342</a>     Cofan.mk _ (fun j =&gt; (forget TopCat).map (c₁.inj j))</span>
+<span><a class="line" href="#EquivariantCW-L343" id="EquivariantCW-L343">343</a>   let d₂ : Cofan (fun j =&gt; (forget TopCat).obj (B j)) :=</span>
+<span><a class="line" href="#EquivariantCW-L344" id="EquivariantCW-L344">344</a>     Cofan.mk _ (fun j =&gt; (forget TopCat).map (c₂.inj j))</span>
+<span><a class="line" href="#EquivariantCW-L345" id="EquivariantCW-L345">345</a>   have hd₁ : IsColimit d₁ := isColimitCofanMkObjOfIsColimit _ _ _ hc₁</span>
+<span><a class="line" href="#EquivariantCW-L346" id="EquivariantCW-L346">346</a>   have hd₂ : IsColimit d₂ := isColimitCofanMkObjOfIsColimit _ _ _ hc₂</span>
+<span><a class="line" href="#EquivariantCW-L347" id="EquivariantCW-L347">347</a>   have hm&#x27; (j : ι) (x : A j) : m (c₁.inj j x) = c₂.inj j (f j x) :=</span>
+<span><a class="line" href="#EquivariantCW-L348" id="EquivariantCW-L348">348</a>     ConcreteCategory.congr_hom (hm j) x</span>
+<span><a class="line" href="#EquivariantCW-L349" id="EquivariantCW-L349">349</a>   have hinj : Function.Injective m := by</span>
+<span><a class="line" href="#EquivariantCW-L350" id="EquivariantCW-L350">350</a>     intro x y hxy</span>
+<span><a class="line" href="#EquivariantCW-L351" id="EquivariantCW-L351">351</a>     obtain ⟨j, z, rfl⟩ := Cofan.inj_jointly_surjective_of_isColimit hd₁ x</span>
+<span><a class="line" href="#EquivariantCW-L352" id="EquivariantCW-L352">352</a>     obtain ⟨k, w, rfl⟩ := Cofan.inj_jointly_surjective_of_isColimit hd₁ y</span>
+<span><a class="line" href="#EquivariantCW-L353" id="EquivariantCW-L353">353</a>     change m (c₁.inj j z) = m (c₁.inj k w) at hxy</span>
+<span><a class="line" href="#EquivariantCW-L354" id="EquivariantCW-L354">354</a>     rw [hm&#x27;, hm&#x27;] at hxy</span>
+<span><a class="line" href="#EquivariantCW-L355" id="EquivariantCW-L355">355</a>     obtain rfl := Cofan.eq_of_inj_apply_eq_of_isColimit hd₂ _ _ hxy</span>
+<span><a class="line" href="#EquivariantCW-L356" id="EquivariantCW-L356">356</a>     have h := Cofan.inj_injective_of_isColimit hd₂ j hxy</span>
+<span><a class="line" href="#EquivariantCW-L357" id="EquivariantCW-L357">357</a>     exact congrArg (c₁.inj j) ((hf j).injective h)</span>
+<span><a class="line" href="#EquivariantCW-L358" id="EquivariantCW-L358">358</a>   refine .of_continuous_injective_isClosedMap m.hom.continuous hinj ?_</span>
+<span><a class="line" href="#EquivariantCW-L359" id="EquivariantCW-L359">359</a>   intro s hs</span>
+<span><a class="line" href="#EquivariantCW-L360" id="EquivariantCW-L360">360</a>   apply (TopCat.isClosed_iff_of_isColimit _ hc₂ (m &#x27;&#x27; s)).mpr</span>
+<span><a class="line" href="#EquivariantCW-L361" id="EquivariantCW-L361">361</a>   rintro ⟨j⟩</span>
+<span><a class="line" href="#EquivariantCW-L362" id="EquivariantCW-L362">362</a>   have he : c₂.inj j ⁻¹&#x27; (m &#x27;&#x27; s) = f j &#x27;&#x27; (c₁.inj j ⁻¹&#x27; s) := by</span>
+<span><a class="line" href="#EquivariantCW-L363" id="EquivariantCW-L363">363</a>     ext y</span>
+<span><a class="line" href="#EquivariantCW-L364" id="EquivariantCW-L364">364</a>     constructor</span>
+<span><a class="line" href="#EquivariantCW-L365" id="EquivariantCW-L365">365</a>     · rintro ⟨x, hx, hxy⟩</span>
+<span><a class="line" href="#EquivariantCW-L366" id="EquivariantCW-L366">366</a>       obtain ⟨k, z, rfl⟩ := Cofan.inj_jointly_surjective_of_isColimit hd₁ x</span>
+<span><a class="line" href="#EquivariantCW-L367" id="EquivariantCW-L367">367</a>       change m (c₁.inj k z) = c₂.inj j y at hxy</span>
+<span><a class="line" href="#EquivariantCW-L368" id="EquivariantCW-L368">368</a>       rw [hm&#x27;] at hxy</span>
+<span><a class="line" href="#EquivariantCW-L369" id="EquivariantCW-L369">369</a>       obtain rfl := Cofan.eq_of_inj_apply_eq_of_isColimit hd₂ _ _ hxy</span>
+<span><a class="line" href="#EquivariantCW-L370" id="EquivariantCW-L370">370</a>       exact ⟨z, hx, Cofan.inj_injective_of_isColimit hd₂ k hxy⟩</span>
+<span><a class="line" href="#EquivariantCW-L371" id="EquivariantCW-L371">371</a>     · rintro ⟨x, hx, rfl⟩</span>
+<span><a class="line" href="#EquivariantCW-L372" id="EquivariantCW-L372">372</a>       exact ⟨c₁.inj j x, hx, hm&#x27; j x⟩</span>
+<span><a class="line" href="#EquivariantCW-L373" id="EquivariantCW-L373">373</a>   change IsClosed (c₂.inj j ⁻¹&#x27; (m &#x27;&#x27; s))</span>
+<span><a class="line" href="#EquivariantCW-L374" id="EquivariantCW-L374">374</a>   rw [he]</span>
+<span><a class="line" href="#EquivariantCW-L375" id="EquivariantCW-L375">375</a>   exact (hf j).isClosedMap _ (hs.preimage (c₁.inj j).hom.continuous)</span>
+<span><a class="line" href="#EquivariantCW-L376" id="EquivariantCW-L376">376</a> </span>
+<span><a class="line" href="#EquivariantCW-L377" id="EquivariantCW-L377">377</a> end BC4lean.ProperActions</span>
 <span><a class="line" href="#EquivariantCW-L378" id="EquivariantCW-L378">378</a> </span>
-<span><a class="line" href="#EquivariantCW-L379" id="EquivariantCW-L379">379</a> /-- An orbit-cell attachment includes the previous stage as a closed subspace. -/</span>
-<span id="doc/BC4lean.ProperActions.orbitCellAttachment_isClosedEmbedding"><a class="line" href="#EquivariantCW-L380" id="EquivariantCW-L380">380</a> theorem orbitCellAttachment_isClosedEmbedding</span>
-<span><a class="line" href="#EquivariantCW-L381" id="EquivariantCW-L381">381</a>     {A B : Action TopCat.{u} Γ} {i : A ⟶ B} {n : ℕ}</span>
-<span><a class="line" href="#EquivariantCW-L382" id="EquivariantCW-L382">382</a>     (c : HomotopicalAlgebra.AttachCells.{u} (equivariantBasicCell (Γ := Γ) n) i) :</span>
-<span><a class="line" href="#EquivariantCW-L383" id="EquivariantCW-L383">383</a>     Topology.IsClosedEmbedding i.hom := by</span>
-<span><a class="line" href="#EquivariantCW-L384" id="EquivariantCW-L384">384</a>   apply pushout_isClosedEmbedding (c.isPushout.map (Action.forget TopCat Γ))</span>
-<span><a class="line" href="#EquivariantCW-L385" id="EquivariantCW-L385">385</a>   let d₁ : Cofan (fun j =&gt; (topologicalAction Γ</span>
-<span><a class="line" href="#EquivariantCW-L386" id="EquivariantCW-L386">386</a>       (OrbitCell (c.π j).val (TopCat.diskBoundary.{u} n))).V) :=</span>
-<span><a class="line" href="#EquivariantCW-L387" id="EquivariantCW-L387">387</a>     Cofan.mk c.cofan₁.pt.V (fun j =&gt; (c.cofan₁.inj j).hom)</span>
-<span><a class="line" href="#EquivariantCW-L388" id="EquivariantCW-L388">388</a>   let d₂ : Cofan (fun j =&gt; (topologicalAction Γ</span>
-<span><a class="line" href="#EquivariantCW-L389" id="EquivariantCW-L389">389</a>       (OrbitCell (c.π j).val (TopCat.disk.{u} n))).V) :=</span>
-<span><a class="line" href="#EquivariantCW-L390" id="EquivariantCW-L390">390</a>     Cofan.mk c.cofan₂.pt.V (fun j =&gt; (c.cofan₂.inj j).hom)</span>
-<span><a class="line" href="#EquivariantCW-L391" id="EquivariantCW-L391">391</a>   have hd₁ : IsColimit d₁ := isColimitCofanMkObjOfIsColimit (Action.forget TopCat Γ) _ _ c.isColimit₁</span>
-<span><a class="line" href="#EquivariantCW-L392" id="EquivariantCW-L392">392</a>   have hd₂ : IsColimit d₂ := isColimitCofanMkObjOfIsColimit (Action.forget TopCat Γ) _ _ c.isColimit₂</span>
-<span><a class="line" href="#EquivariantCW-L393" id="EquivariantCW-L393">393</a>   apply coproduct_isClosedEmbedding hd₁ hd₂</span>
-<span><a class="line" href="#EquivariantCW-L394" id="EquivariantCW-L394">394</a>     (fun j =&gt; (equivariantBasicCell n (c.π j)).hom)</span>
-<span><a class="line" href="#EquivariantCW-L395" id="EquivariantCW-L395">395</a>     (fun j =&gt; OrbitCell.boundaryInclusion_isClosedEmbedding (c.π j).val n) c.m.hom</span>
-<span><a class="line" href="#EquivariantCW-L396" id="EquivariantCW-L396">396</a>   intro j</span>
-<span><a class="line" href="#EquivariantCW-L397" id="EquivariantCW-L397">397</a>   simpa only [d₁, d₂, cofan_mk_inj, Action.comp_hom] using congrArg Action.Hom.hom (c.hm j)</span>
-<span><a class="line" href="#EquivariantCW-L398" id="EquivariantCW-L398">398</a> </span>
-<span><a class="line" href="#EquivariantCW-L399" id="EquivariantCW-L399">399</a> set_option backward.isDefEq.respectTransparency false in</span>
-<span><a class="line" href="#EquivariantCW-L400" id="EquivariantCW-L400">400</a> /-- All finite skeletal transitions are closed embeddings. -/</span>
-<span id="doc/BC4lean.ProperActions.RelativeEquivariantCWComplex.skeletonMap_isClosedEmbedding"><a class="line" href="#EquivariantCW-L401" id="EquivariantCW-L401">401</a> theorem RelativeEquivariantCWComplex.skeletonMap_isClosedEmbedding</span>
-<span><a class="line" href="#EquivariantCW-L402" id="EquivariantCW-L402">402</a>     {A B : Action TopCat.{u} Γ} {i : A ⟶ B}</span>
-<span><a class="line" href="#EquivariantCW-L403" id="EquivariantCW-L403">403</a>     (c : RelativeEquivariantCWComplex i) {m n : ℕ} (h : m ≤ n) :</span>
-<span><a class="line" href="#EquivariantCW-L404" id="EquivariantCW-L404">404</a>     Topology.IsClosedEmbedding (c.F.map (homOfLE h)).hom := by</span>
-<span><a class="line" href="#EquivariantCW-L405" id="EquivariantCW-L405">405</a>   induction n, h using Nat.le_induction with</span>
-<span><a class="line" href="#EquivariantCW-L406" id="EquivariantCW-L406">406</a>   | base =&gt; simpa using (Topology.IsClosedEmbedding.id (X := (c.F.obj m).V))</span>
-<span><a class="line" href="#EquivariantCW-L407" id="EquivariantCW-L407">407</a>   | succ n h ih =&gt;</span>
-<span><a class="line" href="#EquivariantCW-L408" id="EquivariantCW-L408">408</a>     have hn : Topology.IsClosedEmbedding (c.F.map (homOfLE (Nat.le_succ n))).hom := by</span>
-<span><a class="line" href="#EquivariantCW-L409" id="EquivariantCW-L409">409</a>       exact orbitCellAttachment_isClosedEmbedding (c.attachment n)</span>
-<span><a class="line" href="#EquivariantCW-L410" id="EquivariantCW-L410">410</a>     have he := hn.comp ih</span>
-<span><a class="line" href="#EquivariantCW-L411" id="EquivariantCW-L411">411</a>     have heq : (c.F.map (homOfLE (Nat.le_succ n))).hom ∘</span>
-<span><a class="line" href="#EquivariantCW-L412" id="EquivariantCW-L412">412</a>         (c.F.map (homOfLE h)).hom =</span>
-<span><a class="line" href="#EquivariantCW-L413" id="EquivariantCW-L413">413</a>         (c.F.map (homOfLE (Nat.le.step h))).hom := by</span>
-<span><a class="line" href="#EquivariantCW-L414" id="EquivariantCW-L414">414</a>       funext x</span>
-<span><a class="line" href="#EquivariantCW-L415" id="EquivariantCW-L415">415</a>       exact (ConcreteCategory.congr_hom</span>
-<span><a class="line" href="#EquivariantCW-L416" id="EquivariantCW-L416">416</a>         (congrArg Action.Hom.hom (c.F.map_comp (homOfLE h) (homOfLE (Nat.le_succ n)))) x).symm</span>
-<span><a class="line" href="#EquivariantCW-L417" id="EquivariantCW-L417">417</a>     rw [heq] at he</span>
-<span><a class="line" href="#EquivariantCW-L418" id="EquivariantCW-L418">418</a>     exact he</span>
-<span><a class="line" href="#EquivariantCW-L419" id="EquivariantCW-L419">419</a> </span>
-<span><a class="line" href="#EquivariantCW-L420" id="EquivariantCW-L420">420</a> /-- Each finite skeleton embeds as a closed subspace of the final CW colimit. -/</span>
-<span id="doc/BC4lean.ProperActions.RelativeEquivariantCWComplex.skeletonInclusion_isClosedEmbedding"><a class="line" href="#EquivariantCW-L421" id="EquivariantCW-L421">421</a> theorem RelativeEquivariantCWComplex.skeletonInclusion_isClosedEmbedding</span>
-<span><a class="line" href="#EquivariantCW-L422" id="EquivariantCW-L422">422</a>     {A B : Action TopCat.{u} Γ} {i : A ⟶ B}</span>
-<span><a class="line" href="#EquivariantCW-L423" id="EquivariantCW-L423">423</a>     (c : RelativeEquivariantCWComplex i) (n : ℕ) :</span>
-<span><a class="line" href="#EquivariantCW-L424" id="EquivariantCW-L424">424</a>     Topology.IsClosedEmbedding (c.incl.app n).hom := by</span>
-<span><a class="line" href="#EquivariantCW-L425" id="EquivariantCW-L425">425</a>   have hn := c.skeletonInclusion_injective n</span>
-<span><a class="line" href="#EquivariantCW-L426" id="EquivariantCW-L426">426</a>   refine .of_continuous_injective_isClosedMap (c.incl.app n).hom.hom.continuous hn ?_</span>
-<span><a class="line" href="#EquivariantCW-L427" id="EquivariantCW-L427">427</a>   intro s hs</span>
-<span><a class="line" href="#EquivariantCW-L428" id="EquivariantCW-L428">428</a>   apply (c.isClosed_iff _).mpr</span>
-<span><a class="line" href="#EquivariantCW-L429" id="EquivariantCW-L429">429</a>   intro m</span>
-<span><a class="line" href="#EquivariantCW-L430" id="EquivariantCW-L430">430</a>   have hnat {j k : ℕ} (h : j ≤ k) (x : (c.F.obj j).V) :</span>
-<span><a class="line" href="#EquivariantCW-L431" id="EquivariantCW-L431">431</a>       (c.incl.app k).hom ((c.F.map (homOfLE h)).hom x) = (c.incl.app j).hom x := by</span>
-<span><a class="line" href="#EquivariantCW-L432" id="EquivariantCW-L432">432</a>     exact ConcreteCategory.congr_hom (congrArg Action.Hom.hom (c.incl.naturality (homOfLE h))) x</span>
-<span><a class="line" href="#EquivariantCW-L433" id="EquivariantCW-L433">433</a>   rcases le_total m n with h | h</span>
-<span><a class="line" href="#EquivariantCW-L434" id="EquivariantCW-L434">434</a>   · have he : (c.incl.app m).hom ⁻¹&#x27; ((c.incl.app n).hom &#x27;&#x27; s) =</span>
-<span><a class="line" href="#EquivariantCW-L435" id="EquivariantCW-L435">435</a>         (c.F.map (homOfLE h)).hom ⁻¹&#x27; s := by</span>
-<span><a class="line" href="#EquivariantCW-L436" id="EquivariantCW-L436">436</a>       ext x</span>
-<span><a class="line" href="#EquivariantCW-L437" id="EquivariantCW-L437">437</a>       constructor</span>
-<span><a class="line" href="#EquivariantCW-L438" id="EquivariantCW-L438">438</a>       · rintro ⟨y, hy, hxy⟩</span>
-<span><a class="line" href="#EquivariantCW-L439" id="EquivariantCW-L439">439</a>         have heq := hn (hxy.trans (hnat h x).symm)</span>
-<span><a class="line" href="#EquivariantCW-L440" id="EquivariantCW-L440">440</a>         change (c.F.map (homOfLE h)).hom x ∈ s</span>
-<span><a class="line" href="#EquivariantCW-L441" id="EquivariantCW-L441">441</a>         rw [← heq]</span>
-<span><a class="line" href="#EquivariantCW-L442" id="EquivariantCW-L442">442</a>         exact hy</span>
-<span><a class="line" href="#EquivariantCW-L443" id="EquivariantCW-L443">443</a>       · intro hx</span>
-<span><a class="line" href="#EquivariantCW-L444" id="EquivariantCW-L444">444</a>         exact ⟨_, hx, hnat h x⟩</span>
-<span><a class="line" href="#EquivariantCW-L445" id="EquivariantCW-L445">445</a>     rw [he]</span>
-<span><a class="line" href="#EquivariantCW-L446" id="EquivariantCW-L446">446</a>     exact hs.preimage (c.F.map (homOfLE h)).hom.hom.continuous</span>
-<span><a class="line" href="#EquivariantCW-L447" id="EquivariantCW-L447">447</a>   · have he : (c.incl.app m).hom ⁻¹&#x27; ((c.incl.app n).hom &#x27;&#x27; s) =</span>
-<span><a class="line" href="#EquivariantCW-L448" id="EquivariantCW-L448">448</a>         (c.F.map (homOfLE h)).hom &#x27;&#x27; s := by</span>
-<span><a class="line" href="#EquivariantCW-L449" id="EquivariantCW-L449">449</a>       ext x</span>
-<span><a class="line" href="#EquivariantCW-L450" id="EquivariantCW-L450">450</a>       constructor</span>
-<span><a class="line" href="#EquivariantCW-L451" id="EquivariantCW-L451">451</a>       · rintro ⟨y, hy, hxy⟩</span>
-<span><a class="line" href="#EquivariantCW-L452" id="EquivariantCW-L452">452</a>         exact ⟨y, hy, (c.skeletonInclusion_injective m) ((hnat h y).trans hxy)⟩</span>
-<span><a class="line" href="#EquivariantCW-L453" id="EquivariantCW-L453">453</a>       · rintro ⟨y, hy, rfl⟩</span>
-<span><a class="line" href="#EquivariantCW-L454" id="EquivariantCW-L454">454</a>         exact ⟨y, hy, (hnat h y).symm⟩</span>
-<span><a class="line" href="#EquivariantCW-L455" id="EquivariantCW-L455">455</a>     rw [he]</span>
-<span><a class="line" href="#EquivariantCW-L456" id="EquivariantCW-L456">456</a>     exact (c.skeletonMap_isClosedEmbedding h).isClosedMap s hs</span>
-<span><a class="line" href="#EquivariantCW-L457" id="EquivariantCW-L457">457</a> </span>
-<span><a class="line" href="#EquivariantCW-L458" id="EquivariantCW-L458">458</a> </span>
-<span><a class="line" href="#EquivariantCW-L459" id="EquivariantCW-L459">459</a> /-- The initial subspace of a relative equivariant CW complex is closed embedded. -/</span>
-<span id="doc/BC4lean.ProperActions.RelativeEquivariantCWComplex.isClosedEmbedding"><a class="line" href="#EquivariantCW-L460" id="EquivariantCW-L460">460</a> theorem RelativeEquivariantCWComplex.isClosedEmbedding</span>
-<span><a class="line" href="#EquivariantCW-L461" id="EquivariantCW-L461">461</a>     {A B : Action TopCat.{u} Γ} {i : A ⟶ B}</span>
-<span><a class="line" href="#EquivariantCW-L462" id="EquivariantCW-L462">462</a>     (c : RelativeEquivariantCWComplex i) : Topology.IsClosedEmbedding i.hom := by</span>
-<span><a class="line" href="#EquivariantCW-L463" id="EquivariantCW-L463">463</a>   have h := (c.skeletonInclusion_isClosedEmbedding 0).comp</span>
-<span><a class="line" href="#EquivariantCW-L464" id="EquivariantCW-L464">464</a>     (TopCat.homeoOfIso ((Action.forget TopCat Γ).mapIso c.isoBot.symm)).isClosedEmbedding</span>
-<span><a class="line" href="#EquivariantCW-L465" id="EquivariantCW-L465">465</a>   change Topology.IsClosedEmbedding ((c.incl.app 0).hom ∘ c.isoBot.inv.hom) at h</span>
-<span><a class="line" href="#EquivariantCW-L466" id="EquivariantCW-L466">466</a>   have hf := congrArg Action.Hom.hom c.fac</span>
-<span><a class="line" href="#EquivariantCW-L467" id="EquivariantCW-L467">467</a>   change c.isoBot.inv.hom ≫ (c.incl.app 0).hom = i.hom at hf</span>
-<span><a class="line" href="#EquivariantCW-L468" id="EquivariantCW-L468">468</a>   change Topology.IsClosedEmbedding (c.isoBot.inv.hom ≫ (c.incl.app 0).hom) at h</span>
-<span><a class="line" href="#EquivariantCW-L469" id="EquivariantCW-L469">469</a>   rwa [hf] at h</span>
-<span><a class="line" href="#EquivariantCW-L470" id="EquivariantCW-L470">470</a> </span>
-<span><a class="line" href="#EquivariantCW-L471" id="EquivariantCW-L471">471</a> end BC4lean.ProperActions</span>
+<span><a class="line" href="#EquivariantCW-L379" id="EquivariantCW-L379">379</a> namespace BC4lean.ProperActions</span>
+<span><a class="line" href="#EquivariantCW-L380" id="EquivariantCW-L380">380</a> variable {Γ : Type u} [Group Γ] [TopologicalSpace Γ] [DiscreteTopology Γ]</span>
+<span><a class="line" href="#EquivariantCW-L381" id="EquivariantCW-L381">381</a> </span>
+<span><a class="line" href="#EquivariantCW-L382" id="EquivariantCW-L382">382</a> /-- An orbit-cell attachment includes the previous stage as a closed subspace. -/</span>
+<span id="doc/BC4lean.ProperActions.orbitCellAttachment_isClosedEmbedding"><a class="line" href="#EquivariantCW-L383" id="EquivariantCW-L383">383</a> theorem orbitCellAttachment_isClosedEmbedding</span>
+<span><a class="line" href="#EquivariantCW-L384" id="EquivariantCW-L384">384</a>     {A B : Action TopCat.{u} Γ} {i : A ⟶ B} {n : ℕ}</span>
+<span><a class="line" href="#EquivariantCW-L385" id="EquivariantCW-L385">385</a>     (c : HomotopicalAlgebra.AttachCells.{u} (equivariantBasicCell (Γ := Γ) n) i) :</span>
+<span><a class="line" href="#EquivariantCW-L386" id="EquivariantCW-L386">386</a>     Topology.IsClosedEmbedding i.hom := by</span>
+<span><a class="line" href="#EquivariantCW-L387" id="EquivariantCW-L387">387</a>   apply pushout_isClosedEmbedding (c.isPushout.map (Action.forget TopCat Γ))</span>
+<span><a class="line" href="#EquivariantCW-L388" id="EquivariantCW-L388">388</a>   let d₁ : Cofan (fun j =&gt; (topologicalAction Γ</span>
+<span><a class="line" href="#EquivariantCW-L389" id="EquivariantCW-L389">389</a>       (OrbitCell (c.π j).val (TopCat.diskBoundary.{u} n))).V) :=</span>
+<span><a class="line" href="#EquivariantCW-L390" id="EquivariantCW-L390">390</a>     Cofan.mk c.cofan₁.pt.V (fun j =&gt; (c.cofan₁.inj j).hom)</span>
+<span><a class="line" href="#EquivariantCW-L391" id="EquivariantCW-L391">391</a>   let d₂ : Cofan (fun j =&gt; (topologicalAction Γ</span>
+<span><a class="line" href="#EquivariantCW-L392" id="EquivariantCW-L392">392</a>       (OrbitCell (c.π j).val (TopCat.disk.{u} n))).V) :=</span>
+<span><a class="line" href="#EquivariantCW-L393" id="EquivariantCW-L393">393</a>     Cofan.mk c.cofan₂.pt.V (fun j =&gt; (c.cofan₂.inj j).hom)</span>
+<span><a class="line" href="#EquivariantCW-L394" id="EquivariantCW-L394">394</a>   have hd₁ : IsColimit d₁ := isColimitCofanMkObjOfIsColimit (Action.forget TopCat Γ) _ _ c.isColimit₁</span>
+<span><a class="line" href="#EquivariantCW-L395" id="EquivariantCW-L395">395</a>   have hd₂ : IsColimit d₂ := isColimitCofanMkObjOfIsColimit (Action.forget TopCat Γ) _ _ c.isColimit₂</span>
+<span><a class="line" href="#EquivariantCW-L396" id="EquivariantCW-L396">396</a>   apply coproduct_isClosedEmbedding hd₁ hd₂</span>
+<span><a class="line" href="#EquivariantCW-L397" id="EquivariantCW-L397">397</a>     (fun j =&gt; (equivariantBasicCell n (c.π j)).hom)</span>
+<span><a class="line" href="#EquivariantCW-L398" id="EquivariantCW-L398">398</a>     (fun j =&gt; OrbitCell.boundaryInclusion_isClosedEmbedding (c.π j).val n) c.m.hom</span>
+<span><a class="line" href="#EquivariantCW-L399" id="EquivariantCW-L399">399</a>   intro j</span>
+<span><a class="line" href="#EquivariantCW-L400" id="EquivariantCW-L400">400</a>   simpa only [d₁, d₂, cofan_mk_inj, Action.comp_hom] using congrArg Action.Hom.hom (c.hm j)</span>
+<span><a class="line" href="#EquivariantCW-L401" id="EquivariantCW-L401">401</a> </span>
+<span><a class="line" href="#EquivariantCW-L402" id="EquivariantCW-L402">402</a> set_option backward.isDefEq.respectTransparency false in</span>
+<span><a class="line" href="#EquivariantCW-L403" id="EquivariantCW-L403">403</a> /-- All finite skeletal transitions are closed embeddings. -/</span>
+<span id="doc/BC4lean.ProperActions.RelativeEquivariantCWComplex.skeletonMap_isClosedEmbedding"><a class="line" href="#EquivariantCW-L404" id="EquivariantCW-L404">404</a> theorem RelativeEquivariantCWComplex.skeletonMap_isClosedEmbedding</span>
+<span><a class="line" href="#EquivariantCW-L405" id="EquivariantCW-L405">405</a>     {A B : Action TopCat.{u} Γ} {i : A ⟶ B}</span>
+<span><a class="line" href="#EquivariantCW-L406" id="EquivariantCW-L406">406</a>     (c : RelativeEquivariantCWComplex i) {m n : ℕ} (h : m ≤ n) :</span>
+<span><a class="line" href="#EquivariantCW-L407" id="EquivariantCW-L407">407</a>     Topology.IsClosedEmbedding (c.F.map (homOfLE h)).hom := by</span>
+<span><a class="line" href="#EquivariantCW-L408" id="EquivariantCW-L408">408</a>   induction n, h using Nat.le_induction with</span>
+<span><a class="line" href="#EquivariantCW-L409" id="EquivariantCW-L409">409</a>   | base =&gt; simpa using (Topology.IsClosedEmbedding.id (X := (c.F.obj m).V))</span>
+<span><a class="line" href="#EquivariantCW-L410" id="EquivariantCW-L410">410</a>   | succ n h ih =&gt;</span>
+<span><a class="line" href="#EquivariantCW-L411" id="EquivariantCW-L411">411</a>     have hn : Topology.IsClosedEmbedding (c.F.map (homOfLE (Nat.le_succ n))).hom := by</span>
+<span><a class="line" href="#EquivariantCW-L412" id="EquivariantCW-L412">412</a>       exact orbitCellAttachment_isClosedEmbedding (c.attachment n)</span>
+<span><a class="line" href="#EquivariantCW-L413" id="EquivariantCW-L413">413</a>     have he := hn.comp ih</span>
+<span><a class="line" href="#EquivariantCW-L414" id="EquivariantCW-L414">414</a>     have heq : (c.F.map (homOfLE (Nat.le_succ n))).hom ∘</span>
+<span><a class="line" href="#EquivariantCW-L415" id="EquivariantCW-L415">415</a>         (c.F.map (homOfLE h)).hom =</span>
+<span><a class="line" href="#EquivariantCW-L416" id="EquivariantCW-L416">416</a>         (c.F.map (homOfLE (Nat.le.step h))).hom := by</span>
+<span><a class="line" href="#EquivariantCW-L417" id="EquivariantCW-L417">417</a>       funext x</span>
+<span><a class="line" href="#EquivariantCW-L418" id="EquivariantCW-L418">418</a>       exact (ConcreteCategory.congr_hom</span>
+<span><a class="line" href="#EquivariantCW-L419" id="EquivariantCW-L419">419</a>         (congrArg Action.Hom.hom (c.F.map_comp (homOfLE h) (homOfLE (Nat.le_succ n)))) x).symm</span>
+<span><a class="line" href="#EquivariantCW-L420" id="EquivariantCW-L420">420</a>     rw [heq] at he</span>
+<span><a class="line" href="#EquivariantCW-L421" id="EquivariantCW-L421">421</a>     exact he</span>
+<span><a class="line" href="#EquivariantCW-L422" id="EquivariantCW-L422">422</a> </span>
+<span><a class="line" href="#EquivariantCW-L423" id="EquivariantCW-L423">423</a> /-- Each finite skeleton embeds as a closed subspace of the final CW colimit. -/</span>
+<span id="doc/BC4lean.ProperActions.RelativeEquivariantCWComplex.skeletonInclusion_isClosedEmbedding"><a class="line" href="#EquivariantCW-L424" id="EquivariantCW-L424">424</a> theorem RelativeEquivariantCWComplex.skeletonInclusion_isClosedEmbedding</span>
+<span><a class="line" href="#EquivariantCW-L425" id="EquivariantCW-L425">425</a>     {A B : Action TopCat.{u} Γ} {i : A ⟶ B}</span>
+<span><a class="line" href="#EquivariantCW-L426" id="EquivariantCW-L426">426</a>     (c : RelativeEquivariantCWComplex i) (n : ℕ) :</span>
+<span><a class="line" href="#EquivariantCW-L427" id="EquivariantCW-L427">427</a>     Topology.IsClosedEmbedding (c.incl.app n).hom := by</span>
+<span><a class="line" href="#EquivariantCW-L428" id="EquivariantCW-L428">428</a>   have hn := c.skeletonInclusion_injective n</span>
+<span><a class="line" href="#EquivariantCW-L429" id="EquivariantCW-L429">429</a>   refine .of_continuous_injective_isClosedMap (c.incl.app n).hom.hom.continuous hn ?_</span>
+<span><a class="line" href="#EquivariantCW-L430" id="EquivariantCW-L430">430</a>   intro s hs</span>
+<span><a class="line" href="#EquivariantCW-L431" id="EquivariantCW-L431">431</a>   apply (c.isClosed_iff _).mpr</span>
+<span><a class="line" href="#EquivariantCW-L432" id="EquivariantCW-L432">432</a>   intro m</span>
+<span><a class="line" href="#EquivariantCW-L433" id="EquivariantCW-L433">433</a>   have hnat {j k : ℕ} (h : j ≤ k) (x : (c.F.obj j).V) :</span>
+<span><a class="line" href="#EquivariantCW-L434" id="EquivariantCW-L434">434</a>       (c.incl.app k).hom ((c.F.map (homOfLE h)).hom x) = (c.incl.app j).hom x := by</span>
+<span><a class="line" href="#EquivariantCW-L435" id="EquivariantCW-L435">435</a>     exact ConcreteCategory.congr_hom (congrArg Action.Hom.hom (c.incl.naturality (homOfLE h))) x</span>
+<span><a class="line" href="#EquivariantCW-L436" id="EquivariantCW-L436">436</a>   rcases le_total m n with h | h</span>
+<span><a class="line" href="#EquivariantCW-L437" id="EquivariantCW-L437">437</a>   · have he : (c.incl.app m).hom ⁻¹&#x27; ((c.incl.app n).hom &#x27;&#x27; s) =</span>
+<span><a class="line" href="#EquivariantCW-L438" id="EquivariantCW-L438">438</a>         (c.F.map (homOfLE h)).hom ⁻¹&#x27; s := by</span>
+<span><a class="line" href="#EquivariantCW-L439" id="EquivariantCW-L439">439</a>       ext x</span>
+<span><a class="line" href="#EquivariantCW-L440" id="EquivariantCW-L440">440</a>       constructor</span>
+<span><a class="line" href="#EquivariantCW-L441" id="EquivariantCW-L441">441</a>       · rintro ⟨y, hy, hxy⟩</span>
+<span><a class="line" href="#EquivariantCW-L442" id="EquivariantCW-L442">442</a>         have heq := hn (hxy.trans (hnat h x).symm)</span>
+<span><a class="line" href="#EquivariantCW-L443" id="EquivariantCW-L443">443</a>         change (c.F.map (homOfLE h)).hom x ∈ s</span>
+<span><a class="line" href="#EquivariantCW-L444" id="EquivariantCW-L444">444</a>         rw [← heq]</span>
+<span><a class="line" href="#EquivariantCW-L445" id="EquivariantCW-L445">445</a>         exact hy</span>
+<span><a class="line" href="#EquivariantCW-L446" id="EquivariantCW-L446">446</a>       · intro hx</span>
+<span><a class="line" href="#EquivariantCW-L447" id="EquivariantCW-L447">447</a>         exact ⟨_, hx, hnat h x⟩</span>
+<span><a class="line" href="#EquivariantCW-L448" id="EquivariantCW-L448">448</a>     rw [he]</span>
+<span><a class="line" href="#EquivariantCW-L449" id="EquivariantCW-L449">449</a>     exact hs.preimage (c.F.map (homOfLE h)).hom.hom.continuous</span>
+<span><a class="line" href="#EquivariantCW-L450" id="EquivariantCW-L450">450</a>   · have he : (c.incl.app m).hom ⁻¹&#x27; ((c.incl.app n).hom &#x27;&#x27; s) =</span>
+<span><a class="line" href="#EquivariantCW-L451" id="EquivariantCW-L451">451</a>         (c.F.map (homOfLE h)).hom &#x27;&#x27; s := by</span>
+<span><a class="line" href="#EquivariantCW-L452" id="EquivariantCW-L452">452</a>       ext x</span>
+<span><a class="line" href="#EquivariantCW-L453" id="EquivariantCW-L453">453</a>       constructor</span>
+<span><a class="line" href="#EquivariantCW-L454" id="EquivariantCW-L454">454</a>       · rintro ⟨y, hy, hxy⟩</span>
+<span><a class="line" href="#EquivariantCW-L455" id="EquivariantCW-L455">455</a>         exact ⟨y, hy, (c.skeletonInclusion_injective m) ((hnat h y).trans hxy)⟩</span>
+<span><a class="line" href="#EquivariantCW-L456" id="EquivariantCW-L456">456</a>       · rintro ⟨y, hy, rfl⟩</span>
+<span><a class="line" href="#EquivariantCW-L457" id="EquivariantCW-L457">457</a>         exact ⟨y, hy, (hnat h y).symm⟩</span>
+<span><a class="line" href="#EquivariantCW-L458" id="EquivariantCW-L458">458</a>     rw [he]</span>
+<span><a class="line" href="#EquivariantCW-L459" id="EquivariantCW-L459">459</a>     exact (c.skeletonMap_isClosedEmbedding h).isClosedMap s hs</span>
+<span><a class="line" href="#EquivariantCW-L460" id="EquivariantCW-L460">460</a> </span>
+<span><a class="line" href="#EquivariantCW-L461" id="EquivariantCW-L461">461</a> </span>
+<span><a class="line" href="#EquivariantCW-L462" id="EquivariantCW-L462">462</a> /-- The initial subspace of a relative equivariant CW complex is closed embedded. -/</span>
+<span id="doc/BC4lean.ProperActions.RelativeEquivariantCWComplex.isClosedEmbedding"><a class="line" href="#EquivariantCW-L463" id="EquivariantCW-L463">463</a> theorem RelativeEquivariantCWComplex.isClosedEmbedding</span>
+<span><a class="line" href="#EquivariantCW-L464" id="EquivariantCW-L464">464</a>     {A B : Action TopCat.{u} Γ} {i : A ⟶ B}</span>
+<span><a class="line" href="#EquivariantCW-L465" id="EquivariantCW-L465">465</a>     (c : RelativeEquivariantCWComplex i) : Topology.IsClosedEmbedding i.hom := by</span>
+<span><a class="line" href="#EquivariantCW-L466" id="EquivariantCW-L466">466</a>   have h := (c.skeletonInclusion_isClosedEmbedding 0).comp</span>
+<span><a class="line" href="#EquivariantCW-L467" id="EquivariantCW-L467">467</a>     (TopCat.homeoOfIso ((Action.forget TopCat Γ).mapIso c.isoBot.symm)).isClosedEmbedding</span>
+<span><a class="line" href="#EquivariantCW-L468" id="EquivariantCW-L468">468</a>   change Topology.IsClosedEmbedding ((c.incl.app 0).hom ∘ c.isoBot.inv.hom) at h</span>
+<span><a class="line" href="#EquivariantCW-L469" id="EquivariantCW-L469">469</a>   have hf := congrArg Action.Hom.hom c.fac</span>
+<span><a class="line" href="#EquivariantCW-L470" id="EquivariantCW-L470">470</a>   change c.isoBot.inv.hom ≫ (c.incl.app 0).hom = i.hom at hf</span>
+<span><a class="line" href="#EquivariantCW-L471" id="EquivariantCW-L471">471</a>   change Topology.IsClosedEmbedding (c.isoBot.inv.hom ≫ (c.incl.app 0).hom) at h</span>
+<span><a class="line" href="#EquivariantCW-L472" id="EquivariantCW-L472">472</a>   rwa [hf] at h</span>
+<span><a class="line" href="#EquivariantCW-L473" id="EquivariantCW-L473">473</a> </span>
+<span><a class="line" href="#EquivariantCW-L474" id="EquivariantCW-L474">474</a> end BC4lean.ProperActions</span>
+<span><a class="line" href="#EquivariantCW-L475" id="EquivariantCW-L475">475</a> </span>
+<span><a class="line" href="#EquivariantCW-L476" id="EquivariantCW-L476">476</a> open CategoryTheory CategoryTheory.Limits</span>
+<span><a class="line" href="#EquivariantCW-L477" id="EquivariantCW-L477">477</a> open scoped Topology</span>
+<span><a class="line" href="#EquivariantCW-L478" id="EquivariantCW-L478">478</a> universe v</span>
+<span><a class="line" href="#EquivariantCW-L479" id="EquivariantCW-L479">479</a> namespace BC4lean.ProperActions</span>
+<span><a class="line" href="#EquivariantCW-L480" id="EquivariantCW-L480">480</a> </span>
+<span><a class="line" href="#EquivariantCW-L481" id="EquivariantCW-L481">481</a> /-- Continuous real functions separate distinct points. -/</span>
+<span id="doc/BC4lean.ProperActions.RealSeparatesPoints"><a class="line" href="#EquivariantCW-L482" id="EquivariantCW-L482">482</a> def RealSeparatesPoints (X : Type*) [TopologicalSpace X] : Prop :=</span>
+<span><a class="line" href="#EquivariantCW-L483" id="EquivariantCW-L483">483</a>   ∀ x y : X, x ≠ y → ∃ f : C(X, ℝ), f x ≠ f y</span>
+<span><a class="line" href="#EquivariantCW-L484" id="EquivariantCW-L484">484</a> </span>
+<span id="doc/BC4lean.ProperActions.RealSeparatesPoints.t2Space"><a class="line" href="#EquivariantCW-L485" id="EquivariantCW-L485">485</a> theorem RealSeparatesPoints.t2Space {X : Type*} [TopologicalSpace X]</span>
+<span><a class="line" href="#EquivariantCW-L486" id="EquivariantCW-L486">486</a>     (h : RealSeparatesPoints X) : T2Space X := by</span>
+<span><a class="line" href="#EquivariantCW-L487" id="EquivariantCW-L487">487</a>   constructor</span>
+<span><a class="line" href="#EquivariantCW-L488" id="EquivariantCW-L488">488</a>   intro x y hxy</span>
+<span><a class="line" href="#EquivariantCW-L489" id="EquivariantCW-L489">489</a>   obtain ⟨f, hf⟩ := h x y hxy</span>
+<span><a class="line" href="#EquivariantCW-L490" id="EquivariantCW-L490">490</a>   exact separated_by_continuous f.continuous hf</span>
+<span><a class="line" href="#EquivariantCW-L491" id="EquivariantCW-L491">491</a> </span>
+<span><a class="line" href="#EquivariantCW-L492" id="EquivariantCW-L492">492</a> /-- Normality of a disjoint union follows componentwise. -/</span>
+<span id="doc/BC4lean.ProperActions.normalSpace_sigma"><a class="line" href="#EquivariantCW-L493" id="EquivariantCW-L493">493</a> theorem normalSpace_sigma {ι : Type*} {X : ι → Type*}</span>
+<span><a class="line" href="#EquivariantCW-L494" id="EquivariantCW-L494">494</a>     [∀ i, TopologicalSpace (X i)] [∀ i, NormalSpace (X i)] : NormalSpace (Σ i, X i) := by</span>
+<span><a class="line" href="#EquivariantCW-L495" id="EquivariantCW-L495">495</a>   classical</span>
+<span><a class="line" href="#EquivariantCW-L496" id="EquivariantCW-L496">496</a>   constructor</span>
+<span><a class="line" href="#EquivariantCW-L497" id="EquivariantCW-L497">497</a>   intro s t hs ht hd</span>
+<span><a class="line" href="#EquivariantCW-L498" id="EquivariantCW-L498">498</a>   have hi (i : ι) := normal_separation</span>
+<span><a class="line" href="#EquivariantCW-L499" id="EquivariantCW-L499">499</a>     (hs.preimage (continuous_sigmaMk (i := i)))</span>
+<span><a class="line" href="#EquivariantCW-L500" id="EquivariantCW-L500">500</a>     (ht.preimage (continuous_sigmaMk (i := i))) (hd.preimage (Sigma.mk i))</span>
+<span><a class="line" href="#EquivariantCW-L501" id="EquivariantCW-L501">501</a>   choose U V hU hV hsU htV hUV using hi</span>
+<span><a class="line" href="#EquivariantCW-L502" id="EquivariantCW-L502">502</a>   refine ⟨{x | x.2 ∈ U x.1}, {x | x.2 ∈ V x.1}, ?_, ?_, ?_, ?_, ?_⟩</span>
+<span><a class="line" href="#EquivariantCW-L503" id="EquivariantCW-L503">503</a>   · exact isOpen_sigma_iff.mpr hU</span>
+<span><a class="line" href="#EquivariantCW-L504" id="EquivariantCW-L504">504</a>   · exact isOpen_sigma_iff.mpr hV</span>
+<span><a class="line" href="#EquivariantCW-L505" id="EquivariantCW-L505">505</a>   · rintro ⟨i,x⟩ hx; exact hsU i hx</span>
+<span><a class="line" href="#EquivariantCW-L506" id="EquivariantCW-L506">506</a>   · rintro ⟨i,x⟩ hx; exact htV i hx</span>
+<span><a class="line" href="#EquivariantCW-L507" id="EquivariantCW-L507">507</a>   · exact Set.disjoint_left.mpr (fun ⟨i,x⟩ hx hy =&gt; Set.disjoint_left.mp (hUV i) hx hy)</span>
+<span><a class="line" href="#EquivariantCW-L508" id="EquivariantCW-L508">508</a> </span>
+<span><a class="line" href="#EquivariantCW-L509" id="EquivariantCW-L509">509</a> set_option backward.isDefEq.respectTransparency false in</span>
+<span><a class="line" href="#EquivariantCW-L510" id="EquivariantCW-L510">510</a> /-- A discrete family of copies of a normal space is normal. -/</span>
+<span id="doc/BC4lean.ProperActions.normalSpace_discrete_prod"><a class="line" href="#EquivariantCW-L511" id="EquivariantCW-L511">511</a> theorem normalSpace_discrete_prod {D X : Type*} [TopologicalSpace D] [DiscreteTopology D]</span>
+<span><a class="line" href="#EquivariantCW-L512" id="EquivariantCW-L512">512</a>     [TopologicalSpace X] [NormalSpace X] : NormalSpace (D × X) := by</span>
+<span><a class="line" href="#EquivariantCW-L513" id="EquivariantCW-L513">513</a>   let e : (Σ _ : D, X) ≃ₜ D × X :=</span>
+<span><a class="line" href="#EquivariantCW-L514" id="EquivariantCW-L514">514</a>     { toFun := fun p =&gt; (p.1,p.2)</span>
+<span><a class="line" href="#EquivariantCW-L515" id="EquivariantCW-L515">515</a>       invFun := fun p =&gt; ⟨p.1,p.2⟩</span>
+<span><a class="line" href="#EquivariantCW-L516" id="EquivariantCW-L516">516</a>       left_inv := fun _ =&gt; rfl</span>
+<span><a class="line" href="#EquivariantCW-L517" id="EquivariantCW-L517">517</a>       right_inv := fun _ =&gt; rfl</span>
+<span><a class="line" href="#EquivariantCW-L518" id="EquivariantCW-L518">518</a>       continuous_toFun := continuous_sigma (fun _ =&gt; continuous_const.prodMk continuous_id)</span>
+<span><a class="line" href="#EquivariantCW-L519" id="EquivariantCW-L519">519</a>       continuous_invFun := by</span>
+<span><a class="line" href="#EquivariantCW-L520" id="EquivariantCW-L520">520</a>         apply continuous_prod_of_discrete_left.mpr</span>
+<span><a class="line" href="#EquivariantCW-L521" id="EquivariantCW-L521">521</a>         intro d</span>
+<span><a class="line" href="#EquivariantCW-L522" id="EquivariantCW-L522">522</a>         change Continuous (fun x : X =&gt; (⟨d,x⟩ : Σ _ : D, X))</span>
+<span><a class="line" href="#EquivariantCW-L523" id="EquivariantCW-L523">523</a>         exact @continuous_sigmaMk D (fun _ : D =&gt; X) (fun _ =&gt; inferInstance) d }</span>
+<span><a class="line" href="#EquivariantCW-L524" id="EquivariantCW-L524">524</a>   let := normalSpace_sigma (X := fun _ : D =&gt; X)</span>
+<span><a class="line" href="#EquivariantCW-L525" id="EquivariantCW-L525">525</a>   exact e.normalSpace</span>
+<span><a class="line" href="#EquivariantCW-L526" id="EquivariantCW-L526">526</a> </span>
+<span><a class="line" href="#EquivariantCW-L527" id="EquivariantCW-L527">527</a> /-- Glue real-valued functions across a topological pushout. -/</span>
+<span id="doc/BC4lean.ProperActions.pushout_glue_real"><a class="line" href="#EquivariantCW-L528" id="EquivariantCW-L528">528</a> theorem pushout_glue_real</span>
+<span><a class="line" href="#EquivariantCW-L529" id="EquivariantCW-L529">529</a>     {A B X Y : TopCat.{u}} {a : A ⟶ X} {m : A ⟶ B} {f : X ⟶ Y} {g : B ⟶ Y}</span>
+<span><a class="line" href="#EquivariantCW-L530" id="EquivariantCW-L530">530</a>     (sq : IsPushout a m f g) (p : C(X, ℝ)) (q : C(B, ℝ))</span>
+<span><a class="line" href="#EquivariantCW-L531" id="EquivariantCW-L531">531</a>     (h : ∀ z, p (a z) = q (m z)) :</span>
+<span><a class="line" href="#EquivariantCW-L532" id="EquivariantCW-L532">532</a>     ∃ F : C(Y, ℝ), (∀ x, F (f x) = p x) ∧ ∀ b, F (g b) = q b := by</span>
+<span><a class="line" href="#EquivariantCW-L533" id="EquivariantCW-L533">533</a>   let P : X ⟶ TopCat.of (ULift.{u} ℝ) := TopCat.ofHom ⟨fun x =&gt; ⟨p x⟩, continuous_uliftUp.comp p.continuous⟩</span>
+<span><a class="line" href="#EquivariantCW-L534" id="EquivariantCW-L534">534</a>   let Q : B ⟶ TopCat.of (ULift.{u} ℝ) := TopCat.ofHom ⟨fun x =&gt; ⟨q x⟩, continuous_uliftUp.comp q.continuous⟩</span>
+<span><a class="line" href="#EquivariantCW-L535" id="EquivariantCW-L535">535</a>   have hh : a ≫ P = m ≫ Q := by ext x; exact h x</span>
+<span><a class="line" href="#EquivariantCW-L536" id="EquivariantCW-L536">536</a>   let F := sq.desc P Q hh</span>
+<span><a class="line" href="#EquivariantCW-L537" id="EquivariantCW-L537">537</a>   refine ⟨⟨fun y =&gt; (F y).down, continuous_uliftDown.comp F.hom.continuous⟩, ?_, ?_⟩</span>
+<span><a class="line" href="#EquivariantCW-L538" id="EquivariantCW-L538">538</a>   · intro x</span>
+<span><a class="line" href="#EquivariantCW-L539" id="EquivariantCW-L539">539</a>     exact congrArg ULift.down (ConcreteCategory.congr_hom (sq.inl_desc P Q hh) x)</span>
+<span><a class="line" href="#EquivariantCW-L540" id="EquivariantCW-L540">540</a>   · intro x</span>
+<span><a class="line" href="#EquivariantCW-L541" id="EquivariantCW-L541">541</a>     exact congrArg ULift.down (ConcreteCategory.congr_hom (sq.inr_desc P Q hh) x)</span>
+<span><a class="line" href="#EquivariantCW-L542" id="EquivariantCW-L542">542</a> </span>
+<span><a class="line" href="#EquivariantCW-L543" id="EquivariantCW-L543">543</a> /-- A real-valued function extends across attachment along a closed embedding into a normal space. -/</span>
+<span id="doc/BC4lean.ProperActions.pushout_extend_real"><a class="line" href="#EquivariantCW-L544" id="EquivariantCW-L544">544</a> theorem pushout_extend_real</span>
+<span><a class="line" href="#EquivariantCW-L545" id="EquivariantCW-L545">545</a>     {A B X Y : TopCat.{u}} [NormalSpace B]</span>
+<span><a class="line" href="#EquivariantCW-L546" id="EquivariantCW-L546">546</a>     {a : A ⟶ X} {m : A ⟶ B} {f : X ⟶ Y} {g : B ⟶ Y}</span>
+<span><a class="line" href="#EquivariantCW-L547" id="EquivariantCW-L547">547</a>     (sq : IsPushout a m f g) (hm : Topology.IsClosedEmbedding m) (p : C(X, ℝ)) :</span>
+<span><a class="line" href="#EquivariantCW-L548" id="EquivariantCW-L548">548</a>     ∃ F : C(Y, ℝ), ∀ x, F (f x) = p x := by</span>
+<span><a class="line" href="#EquivariantCW-L549" id="EquivariantCW-L549">549</a>   obtain ⟨q, hq⟩ := (p.comp a.hom).exists_extension&#x27; hm</span>
+<span><a class="line" href="#EquivariantCW-L550" id="EquivariantCW-L550">550</a>   obtain ⟨F, hF, _⟩ := pushout_glue_real sq p q (fun z =&gt; (congrFun hq z).symm)</span>
+<span><a class="line" href="#EquivariantCW-L551" id="EquivariantCW-L551">551</a>   exact ⟨F, hF⟩</span>
+<span><a class="line" href="#EquivariantCW-L552" id="EquivariantCW-L552">552</a> </span>
+<span><a class="line" href="#EquivariantCW-L553" id="EquivariantCW-L553">553</a> /-- Normal attached spaces preserve separation by real-valued functions. -/</span>
+<span id="doc/BC4lean.ProperActions.pushout_realSeparatesPoints"><a class="line" href="#EquivariantCW-L554" id="EquivariantCW-L554">554</a> theorem pushout_realSeparatesPoints</span>
+<span><a class="line" href="#EquivariantCW-L555" id="EquivariantCW-L555">555</a>     {A B X Y : TopCat.{u}} [NormalSpace B] [T1Space B]</span>
+<span><a class="line" href="#EquivariantCW-L556" id="EquivariantCW-L556">556</a>     {a : A ⟶ X} {m : A ⟶ B} {f : X ⟶ Y} {g : B ⟶ Y}</span>
+<span><a class="line" href="#EquivariantCW-L557" id="EquivariantCW-L557">557</a>     (sq : IsPushout a m f g) (hm : Topology.IsClosedEmbedding m)</span>
+<span><a class="line" href="#EquivariantCW-L558" id="EquivariantCW-L558">558</a>     (hX : RealSeparatesPoints X) : RealSeparatesPoints Y := by</span>
+<span><a class="line" href="#EquivariantCW-L559" id="EquivariantCW-L559">559</a>   intro x y hxy</span>
+<span><a class="line" href="#EquivariantCW-L560" id="EquivariantCW-L560">560</a>   have repr : ∀ z : Y, (∃ w : X, f w = z) ∨ ∃ b : B, g b = z ∧ b ∉ Set.range m :=</span>
+<span><a class="line" href="#EquivariantCW-L561" id="EquivariantCW-L561">561</a>     Types.eq_or_eq_of_isPushout&#x27; (sq.map (forget TopCat))</span>
+<span><a class="line" href="#EquivariantCW-L562" id="EquivariantCW-L562">562</a>   have new_sep (b : B) (hb : b ∉ Set.range m) (z : Y) (hbz : g b ≠ z) :</span>
+<span><a class="line" href="#EquivariantCW-L563" id="EquivariantCW-L563">563</a>       ∃ F : C(Y, ℝ), F (g b) ≠ F z := by</span>
+<span><a class="line" href="#EquivariantCW-L564" id="EquivariantCW-L564">564</a>     obtain ⟨w, rfl⟩ | ⟨b&#x27;, rfl, _⟩ := repr z</span>
+<span><a class="line" href="#EquivariantCW-L565" id="EquivariantCW-L565">565</a>     · obtain ⟨q, hq0, hq1, _⟩ := exists_continuous_zero_one_of_isClosed</span>
+<span><a class="line" href="#EquivariantCW-L566" id="EquivariantCW-L566">566</a>         hm.isClosed_range (isClosed_singleton (x := b)) (Set.disjoint_singleton_right.mpr hb)</span>
+<span><a class="line" href="#EquivariantCW-L567" id="EquivariantCW-L567">567</a>       obtain ⟨F, hF, hG⟩ := pushout_glue_real sq (ContinuousMap.const _ 0) q</span>
+<span><a class="line" href="#EquivariantCW-L568" id="EquivariantCW-L568">568</a>         (fun t =&gt; (hq0 ⟨t, rfl⟩).symm)</span>
+<span><a class="line" href="#EquivariantCW-L569" id="EquivariantCW-L569">569</a>       refine ⟨F, ?_⟩</span>
+<span><a class="line" href="#EquivariantCW-L570" id="EquivariantCW-L570">570</a>       rw [hG, hF, hq1 (Set.mem_singleton b)]</span>
+<span><a class="line" href="#EquivariantCW-L571" id="EquivariantCW-L571">571</a>       norm_num</span>
+<span><a class="line" href="#EquivariantCW-L572" id="EquivariantCW-L572">572</a>     · have hbb : b ≠ b&#x27; := fun h =&gt; hbz (congrArg g h)</span>
+<span><a class="line" href="#EquivariantCW-L573" id="EquivariantCW-L573">573</a>       have hd : Disjoint (Set.range m ∪ {b&#x27;}) {b} := by</span>
+<span><a class="line" href="#EquivariantCW-L574" id="EquivariantCW-L574">574</a>         apply Set.disjoint_singleton_right.mpr</span>
+<span><a class="line" href="#EquivariantCW-L575" id="EquivariantCW-L575">575</a>         simpa only [Set.mem_union, Set.mem_singleton_iff, not_or] using And.intro hb hbb</span>
+<span><a class="line" href="#EquivariantCW-L576" id="EquivariantCW-L576">576</a>       obtain ⟨q, hq0, hq1, _⟩ := exists_continuous_zero_one_of_isClosed</span>
+<span><a class="line" href="#EquivariantCW-L577" id="EquivariantCW-L577">577</a>         (hm.isClosed_range.union isClosed_singleton) isClosed_singleton hd</span>
+<span><a class="line" href="#EquivariantCW-L578" id="EquivariantCW-L578">578</a>       obtain ⟨F, _, hG⟩ := pushout_glue_real sq (ContinuousMap.const _ 0) q</span>
+<span><a class="line" href="#EquivariantCW-L579" id="EquivariantCW-L579">579</a>         (fun t =&gt; (hq0 (Or.inl ⟨t, rfl⟩)).symm)</span>
+<span><a class="line" href="#EquivariantCW-L580" id="EquivariantCW-L580">580</a>       refine ⟨F, ?_⟩</span>
+<span><a class="line" href="#EquivariantCW-L581" id="EquivariantCW-L581">581</a>       rw [hG, hG, hq1 (Set.mem_singleton b), hq0 (Or.inr (Set.mem_singleton b&#x27;))]</span>
+<span><a class="line" href="#EquivariantCW-L582" id="EquivariantCW-L582">582</a>       norm_num</span>
+<span><a class="line" href="#EquivariantCW-L583" id="EquivariantCW-L583">583</a>   obtain ⟨x&#x27;, rfl⟩ | ⟨b, rfl, hb⟩ := repr x</span>
+<span><a class="line" href="#EquivariantCW-L584" id="EquivariantCW-L584">584</a>   · obtain ⟨y&#x27;, rfl⟩ | ⟨b, rfl, hb⟩ := repr y</span>
+<span><a class="line" href="#EquivariantCW-L585" id="EquivariantCW-L585">585</a>     · obtain ⟨p, hp⟩ := hX x&#x27; y&#x27; (fun h =&gt; hxy (congrArg f h))</span>
+<span><a class="line" href="#EquivariantCW-L586" id="EquivariantCW-L586">586</a>       obtain ⟨F, hF⟩ := pushout_extend_real sq hm p</span>
+<span><a class="line" href="#EquivariantCW-L587" id="EquivariantCW-L587">587</a>       exact ⟨F, by simpa only [hF] using hp⟩</span>
+<span><a class="line" href="#EquivariantCW-L588" id="EquivariantCW-L588">588</a>     · obtain ⟨F, hF⟩ := new_sep b hb _ (Ne.symm hxy)</span>
+<span><a class="line" href="#EquivariantCW-L589" id="EquivariantCW-L589">589</a>       exact ⟨F, Ne.symm hF⟩</span>
+<span><a class="line" href="#EquivariantCW-L590" id="EquivariantCW-L590">590</a>   · exact new_sep b hb y hxy</span>
+<span><a class="line" href="#EquivariantCW-L591" id="EquivariantCW-L591">591</a> </span>
+<span><a class="line" href="#EquivariantCW-L592" id="EquivariantCW-L592">592</a> end BC4lean.ProperActions</span>
+<span><a class="line" href="#EquivariantCW-L593" id="EquivariantCW-L593">593</a> </span>
+<span><a class="line" href="#EquivariantCW-L594" id="EquivariantCW-L594">594</a> namespace BC4lean.ProperActions</span>
+<span><a class="line" href="#EquivariantCW-L595" id="EquivariantCW-L595">595</a> </span>
+<span><a class="line" href="#EquivariantCW-L596" id="EquivariantCW-L596">596</a> private theorem cofan_normal {ι : Type u} {A : ι → TopCat.{u}}</span>
+<span><a class="line" href="#EquivariantCW-L597" id="EquivariantCW-L597">597</a>     (c : Cofan A) (hc : IsColimit c) [∀ j, NormalSpace (A j)] : NormalSpace c.pt := by</span>
+<span><a class="line" href="#EquivariantCW-L598" id="EquivariantCW-L598">598</a>   let : NormalSpace (TopCat.sigmaCofan A).pt := by</span>
+<span><a class="line" href="#EquivariantCW-L599" id="EquivariantCW-L599">599</a>     change NormalSpace (Σ j, A j)</span>
+<span><a class="line" href="#EquivariantCW-L600" id="EquivariantCW-L600">600</a>     exact normalSpace_sigma</span>
+<span><a class="line" href="#EquivariantCW-L601" id="EquivariantCW-L601">601</a>   exact (TopCat.homeoOfIso (hc.coconePointUniqueUpToIso (TopCat.sigmaCofanIsColimit A))).symm.normalSpace</span>
+<span><a class="line" href="#EquivariantCW-L602" id="EquivariantCW-L602">602</a> </span>
+<span><a class="line" href="#EquivariantCW-L603" id="EquivariantCW-L603">603</a> private theorem cofan_t2 {ι : Type u} {A : ι → TopCat.{u}}</span>
+<span><a class="line" href="#EquivariantCW-L604" id="EquivariantCW-L604">604</a>     (c : Cofan A) (hc : IsColimit c) [∀ j, T2Space (A j)] : T2Space c.pt := by</span>
+<span><a class="line" href="#EquivariantCW-L605" id="EquivariantCW-L605">605</a>   let : T2Space (TopCat.sigmaCofan A).pt := by</span>
+<span><a class="line" href="#EquivariantCW-L606" id="EquivariantCW-L606">606</a>     change T2Space (Σ j, A j)</span>
+<span><a class="line" href="#EquivariantCW-L607" id="EquivariantCW-L607">607</a>     infer_instance</span>
+<span><a class="line" href="#EquivariantCW-L608" id="EquivariantCW-L608">608</a>   exact (TopCat.homeoOfIso (hc.coconePointUniqueUpToIso (TopCat.sigmaCofanIsColimit A))).symm.t2Space</span>
+<span><a class="line" href="#EquivariantCW-L609" id="EquivariantCW-L609">609</a> </span>
+<span><a class="line" href="#EquivariantCW-L610" id="EquivariantCW-L610">610</a> variable {Γ : Type u} [Group Γ] [TopologicalSpace Γ] [DiscreteTopology Γ]</span>
+<span><a class="line" href="#EquivariantCW-L611" id="EquivariantCW-L611">611</a> </span>
+<span><a class="line" href="#EquivariantCW-L612" id="EquivariantCW-L612">612</a> private theorem orbitAttachment_topology</span>
+<span><a class="line" href="#EquivariantCW-L613" id="EquivariantCW-L613">613</a>     {A B : Action TopCat.{u} Γ} {i : A ⟶ B} {n : ℕ}</span>
+<span><a class="line" href="#EquivariantCW-L614" id="EquivariantCW-L614">614</a>     (c : HomotopicalAlgebra.AttachCells.{u} (equivariantBasicCell (Γ := Γ) n) i) :</span>
+<span><a class="line" href="#EquivariantCW-L615" id="EquivariantCW-L615">615</a>     Topology.IsClosedEmbedding c.m.hom ∧ NormalSpace c.cofan₂.pt.V ∧ T2Space c.cofan₂.pt.V := by</span>
+<span><a class="line" href="#EquivariantCW-L616" id="EquivariantCW-L616">616</a>   let d₁ : Cofan (fun j =&gt; (topologicalAction Γ</span>
+<span><a class="line" href="#EquivariantCW-L617" id="EquivariantCW-L617">617</a>       (OrbitCell (c.π j).val (TopCat.diskBoundary.{u} n))).V) :=</span>
+<span><a class="line" href="#EquivariantCW-L618" id="EquivariantCW-L618">618</a>     Cofan.mk c.cofan₁.pt.V (fun j =&gt; (c.cofan₁.inj j).hom)</span>
+<span><a class="line" href="#EquivariantCW-L619" id="EquivariantCW-L619">619</a>   let d₂ : Cofan (fun j =&gt; (topologicalAction Γ</span>
+<span><a class="line" href="#EquivariantCW-L620" id="EquivariantCW-L620">620</a>       (OrbitCell (c.π j).val (TopCat.disk.{u} n))).V) :=</span>
+<span><a class="line" href="#EquivariantCW-L621" id="EquivariantCW-L621">621</a>     Cofan.mk c.cofan₂.pt.V (fun j =&gt; (c.cofan₂.inj j).hom)</span>
+<span><a class="line" href="#EquivariantCW-L622" id="EquivariantCW-L622">622</a>   have hd₁ : IsColimit d₁ := isColimitCofanMkObjOfIsColimit (Action.forget TopCat Γ) _ _ c.isColimit₁</span>
+<span><a class="line" href="#EquivariantCW-L623" id="EquivariantCW-L623">623</a>   have hd₂ : IsColimit d₂ := isColimitCofanMkObjOfIsColimit (Action.forget TopCat Γ) _ _ c.isColimit₂</span>
+<span><a class="line" href="#EquivariantCW-L624" id="EquivariantCW-L624">624</a>   have hm : Topology.IsClosedEmbedding c.m.hom := by</span>
+<span><a class="line" href="#EquivariantCW-L625" id="EquivariantCW-L625">625</a>     apply coproduct_isClosedEmbedding hd₁ hd₂</span>
+<span><a class="line" href="#EquivariantCW-L626" id="EquivariantCW-L626">626</a>       (fun j =&gt; (equivariantBasicCell n (c.π j)).hom)</span>
+<span><a class="line" href="#EquivariantCW-L627" id="EquivariantCW-L627">627</a>       (fun j =&gt; OrbitCell.boundaryInclusion_isClosedEmbedding (c.π j).val n) c.m.hom</span>
+<span><a class="line" href="#EquivariantCW-L628" id="EquivariantCW-L628">628</a>     intro j</span>
+<span><a class="line" href="#EquivariantCW-L629" id="EquivariantCW-L629">629</a>     simpa only [d₁, d₂, cofan_mk_inj, Action.comp_hom] using congrArg Action.Hom.hom (c.hm j)</span>
+<span><a class="line" href="#EquivariantCW-L630" id="EquivariantCW-L630">630</a>   let : T2Space (TopCat.disk.{u} n) := by</span>
+<span><a class="line" href="#EquivariantCW-L631" id="EquivariantCW-L631">631</a>     change T2Space (ULift (Metric.closedBall (0 : EuclideanSpace ℝ (Fin n)) 1))</span>
+<span><a class="line" href="#EquivariantCW-L632" id="EquivariantCW-L632">632</a>     exact Homeomorph.ulift.{u,0}.symm.t2Space</span>
+<span><a class="line" href="#EquivariantCW-L633" id="EquivariantCW-L633">633</a>   let : NormalSpace (TopCat.disk.{u} n) := inferInstance</span>
+<span><a class="line" href="#EquivariantCW-L634" id="EquivariantCW-L634">634</a>   let hnormal (j : c.ι) : NormalSpace ((topologicalAction Γ (OrbitCell (c.π j).val (TopCat.disk.{u} n))).V) := by</span>
+<span><a class="line" href="#EquivariantCW-L635" id="EquivariantCW-L635">635</a>     let : DiscreteTopology (Γ ⧸ (c.π j).val) := QuotientGroup.discreteTopology (isOpen_discrete _)</span>
+<span><a class="line" href="#EquivariantCW-L636" id="EquivariantCW-L636">636</a>     exact normalSpace_discrete_prod</span>
+<span><a class="line" href="#EquivariantCW-L637" id="EquivariantCW-L637">637</a>   let ht2 (j : c.ι) : T2Space ((topologicalAction Γ (OrbitCell (c.π j).val (TopCat.disk.{u} n))).V) :=</span>
+<span><a class="line" href="#EquivariantCW-L638" id="EquivariantCW-L638">638</a>     inferInstanceAs (T2Space (OrbitCell (c.π j).val (TopCat.disk.{u} n)))</span>
+<span><a class="line" href="#EquivariantCW-L639" id="EquivariantCW-L639">639</a>   exact ⟨hm, cofan_normal d₂ hd₂, cofan_t2 d₂ hd₂⟩</span>
+<span><a class="line" href="#EquivariantCW-L640" id="EquivariantCW-L640">640</a> </span>
+<span><a class="line" href="#EquivariantCW-L641" id="EquivariantCW-L641">641</a> /-- Continuous real-valued functions extend over any orbit-cell attachment. -/</span>
+<span id="doc/BC4lean.ProperActions.orbitCellAttachment_extend_real"><a class="line" href="#EquivariantCW-L642" id="EquivariantCW-L642">642</a> theorem orbitCellAttachment_extend_real</span>
+<span><a class="line" href="#EquivariantCW-L643" id="EquivariantCW-L643">643</a>     {A B : Action TopCat.{u} Γ} {i : A ⟶ B} {n : ℕ}</span>
+<span><a class="line" href="#EquivariantCW-L644" id="EquivariantCW-L644">644</a>     (c : HomotopicalAlgebra.AttachCells.{u} (equivariantBasicCell (Γ := Γ) n) i)</span>
+<span><a class="line" href="#EquivariantCW-L645" id="EquivariantCW-L645">645</a>     (p : C(A.V, ℝ)) : ∃ F : C(B.V, ℝ), ∀ x, F (i.hom x) = p x := by</span>
+<span><a class="line" href="#EquivariantCW-L646" id="EquivariantCW-L646">646</a>   obtain ⟨hm, hnormal, _⟩ := orbitAttachment_topology c</span>
+<span><a class="line" href="#EquivariantCW-L647" id="EquivariantCW-L647">647</a>   let : NormalSpace ((Action.forget TopCat Γ).obj c.cofan₂.pt) := hnormal</span>
+<span><a class="line" href="#EquivariantCW-L648" id="EquivariantCW-L648">648</a>   exact pushout_extend_real (c.isPushout.map (Action.forget TopCat Γ)) hm p</span>
+<span><a class="line" href="#EquivariantCW-L649" id="EquivariantCW-L649">649</a> </span>
+<span><a class="line" href="#EquivariantCW-L650" id="EquivariantCW-L650">650</a> /-- Separation by real-valued functions survives an orbit-cell attachment. -/</span>
+<span id="doc/BC4lean.ProperActions.orbitCellAttachment_realSeparatesPoints"><a class="line" href="#EquivariantCW-L651" id="EquivariantCW-L651">651</a> theorem orbitCellAttachment_realSeparatesPoints</span>
+<span><a class="line" href="#EquivariantCW-L652" id="EquivariantCW-L652">652</a>     {A B : Action TopCat.{u} Γ} {i : A ⟶ B} {n : ℕ}</span>
+<span><a class="line" href="#EquivariantCW-L653" id="EquivariantCW-L653">653</a>     (c : HomotopicalAlgebra.AttachCells.{u} (equivariantBasicCell (Γ := Γ) n) i)</span>
+<span><a class="line" href="#EquivariantCW-L654" id="EquivariantCW-L654">654</a>     (h : RealSeparatesPoints A.V) : RealSeparatesPoints B.V := by</span>
+<span><a class="line" href="#EquivariantCW-L655" id="EquivariantCW-L655">655</a>   obtain ⟨hm, hnormal, ht2⟩ := orbitAttachment_topology c</span>
+<span><a class="line" href="#EquivariantCW-L656" id="EquivariantCW-L656">656</a>   let : NormalSpace ((Action.forget TopCat Γ).obj c.cofan₂.pt) := hnormal</span>
+<span><a class="line" href="#EquivariantCW-L657" id="EquivariantCW-L657">657</a>   let : T2Space ((Action.forget TopCat Γ).obj c.cofan₂.pt) := ht2</span>
+<span><a class="line" href="#EquivariantCW-L658" id="EquivariantCW-L658">658</a>   exact pushout_realSeparatesPoints (c.isPushout.map (Action.forget TopCat Γ)) hm h</span>
+<span><a class="line" href="#EquivariantCW-L659" id="EquivariantCW-L659">659</a> </span>
+<span><a class="line" href="#EquivariantCW-L660" id="EquivariantCW-L660">660</a> private theorem realTerminal_lifting {A B : TopCat.{u}} {i : A ⟶ B}</span>
+<span><a class="line" href="#EquivariantCW-L661" id="EquivariantCW-L661">661</a>     (h : ∀ p : C(A, ℝ), ∃ F : C(B, ℝ), ∀ x, F (i x) = p x) :</span>
+<span><a class="line" href="#EquivariantCW-L662" id="EquivariantCW-L662">662</a>     HasLiftingProperty i (terminal.from (TopCat.of (ULift.{u} ℝ))) := by</span>
+<span><a class="line" href="#EquivariantCW-L663" id="EquivariantCW-L663">663</a>   constructor</span>
+<span><a class="line" href="#EquivariantCW-L664" id="EquivariantCW-L664">664</a>   intro a b _</span>
+<span><a class="line" href="#EquivariantCW-L665" id="EquivariantCW-L665">665</a>   let p : C(A, ℝ) := ⟨fun x =&gt; (a x).down, continuous_uliftDown.comp a.hom.continuous⟩</span>
+<span><a class="line" href="#EquivariantCW-L666" id="EquivariantCW-L666">666</a>   obtain ⟨F, hF⟩ := h p</span>
+<span><a class="line" href="#EquivariantCW-L667" id="EquivariantCW-L667">667</a>   let L : B ⟶ TopCat.of (ULift.{u} ℝ) :=</span>
+<span><a class="line" href="#EquivariantCW-L668" id="EquivariantCW-L668">668</a>     TopCat.ofHom ⟨fun x =&gt; ⟨F x⟩, continuous_uliftUp.comp F.continuous⟩</span>
+<span><a class="line" href="#EquivariantCW-L669" id="EquivariantCW-L669">669</a>   refine ⟨⟨{ l := L, fac_left := ?_, fac_right := terminalIsTerminal.hom_ext _ _ }⟩⟩</span>
+<span><a class="line" href="#EquivariantCW-L670" id="EquivariantCW-L670">670</a>   ext x</span>
+<span><a class="line" href="#EquivariantCW-L671" id="EquivariantCW-L671">671</a>   exact hF x</span>
+<span><a class="line" href="#EquivariantCW-L672" id="EquivariantCW-L672">672</a> </span>
+<span><a class="line" href="#EquivariantCW-L673" id="EquivariantCW-L673">673</a> private instance : PreservesWellOrderContinuousOfShape ℕ (Action.forget TopCat.{u} Γ) where</span>
+<span><a class="line" href="#EquivariantCW-L674" id="EquivariantCW-L674">674</a> </span>
+<span><a class="line" href="#EquivariantCW-L675" id="EquivariantCW-L675">675</a> private noncomputable def realExtensionSequence</span>
+<span><a class="line" href="#EquivariantCW-L676" id="EquivariantCW-L676">676</a>     {A B : Action TopCat.{u} Γ} {i : A ⟶ B} (c : RelativeEquivariantCWComplex i) :</span>
+<span><a class="line" href="#EquivariantCW-L677" id="EquivariantCW-L677">677</a>     (MorphismProperty.ofHoms (fun _ : Unit =&gt; terminal.from (TopCat.of (ULift.{u} ℝ)))).llp.TransfiniteCompositionOfShape</span>
+<span><a class="line" href="#EquivariantCW-L678" id="EquivariantCW-L678">678</a>       ℕ i.hom where</span>
+<span><a class="line" href="#EquivariantCW-L679" id="EquivariantCW-L679">679</a>   toTransfiniteCompositionOfShape := c.toTransfiniteCompositionOfShape.map (Action.forget TopCat Γ)</span>
+<span><a class="line" href="#EquivariantCW-L680" id="EquivariantCW-L680">680</a>   map_mem n _ := by</span>
+<span><a class="line" href="#EquivariantCW-L681" id="EquivariantCW-L681">681</a>     intro X Y q hq</span>
+<span><a class="line" href="#EquivariantCW-L682" id="EquivariantCW-L682">682</a>     cases hq with</span>
+<span><a class="line" href="#EquivariantCW-L683" id="EquivariantCW-L683">683</a>     | mk z =&gt; exact realTerminal_lifting (orbitCellAttachment_extend_real (c.attachment n))</span>
+<span><a class="line" href="#EquivariantCW-L684" id="EquivariantCW-L684">684</a> </span>
+<span><a class="line" href="#EquivariantCW-L685" id="EquivariantCW-L685">685</a> /-- A continuous real function on any skeleton extends to the entire relative CW complex. -/</span>
+<span id="doc/BC4lean.ProperActions.RelativeEquivariantCWComplex.skeleton_extend_real"><a class="line" href="#EquivariantCW-L686" id="EquivariantCW-L686">686</a> theorem RelativeEquivariantCWComplex.skeleton_extend_real</span>
+<span><a class="line" href="#EquivariantCW-L687" id="EquivariantCW-L687">687</a>     {A B : Action TopCat.{u} Γ} {i : A ⟶ B} (c : RelativeEquivariantCWComplex i)</span>
+<span><a class="line" href="#EquivariantCW-L688" id="EquivariantCW-L688">688</a>     (n : ℕ) (p : C((c.F.obj n).V, ℝ)) :</span>
+<span><a class="line" href="#EquivariantCW-L689" id="EquivariantCW-L689">689</a>     ∃ F : C(B.V, ℝ), ∀ x, F ((c.incl.app n).hom x) = p x := by</span>
+<span><a class="line" href="#EquivariantCW-L690" id="EquivariantCW-L690">690</a>   have hl := (realExtensionSequence c).mem_incl_app n</span>
+<span><a class="line" href="#EquivariantCW-L691" id="EquivariantCW-L691">691</a>   have : HasLiftingProperty (c.incl.app n).hom (terminal.from (TopCat.of (ULift.{u} ℝ))) :=</span>
+<span><a class="line" href="#EquivariantCW-L692" id="EquivariantCW-L692">692</a>     hl _ (MorphismProperty.ofHoms.mk ())</span>
+<span><a class="line" href="#EquivariantCW-L693" id="EquivariantCW-L693">693</a>   let P : (c.F.obj n).V ⟶ TopCat.of (ULift.{u} ℝ) :=</span>
+<span><a class="line" href="#EquivariantCW-L694" id="EquivariantCW-L694">694</a>     TopCat.ofHom ⟨fun x =&gt; ⟨p x⟩, continuous_uliftUp.comp p.continuous⟩</span>
+<span><a class="line" href="#EquivariantCW-L695" id="EquivariantCW-L695">695</a>   let sq : CommSq P (c.incl.app n).hom (terminal.from _) (terminal.from B.V) :=</span>
+<span><a class="line" href="#EquivariantCW-L696" id="EquivariantCW-L696">696</a>     ⟨terminalIsTerminal.hom_ext _ _⟩</span>
+<span><a class="line" href="#EquivariantCW-L697" id="EquivariantCW-L697">697</a>   refine ⟨⟨fun x =&gt; (sq.lift x).down, continuous_uliftDown.comp sq.lift.hom.continuous⟩, ?_⟩</span>
+<span><a class="line" href="#EquivariantCW-L698" id="EquivariantCW-L698">698</a>   intro x</span>
+<span><a class="line" href="#EquivariantCW-L699" id="EquivariantCW-L699">699</a>   exact congrArg ULift.down (ConcreteCategory.congr_hom sq.fac_left x)</span>
+<span><a class="line" href="#EquivariantCW-L700" id="EquivariantCW-L700">700</a> </span>
+<span><a class="line" href="#EquivariantCW-L701" id="EquivariantCW-L701">701</a> end BC4lean.ProperActions</span>
+<span><a class="line" href="#EquivariantCW-L702" id="EquivariantCW-L702">702</a> </span>
+<span><a class="line" href="#EquivariantCW-L703" id="EquivariantCW-L703">703</a> namespace BC4lean.ProperActions</span>
+<span><a class="line" href="#EquivariantCW-L704" id="EquivariantCW-L704">704</a> </span>
+<span><a class="line" href="#EquivariantCW-L705" id="EquivariantCW-L705">705</a> /-- An injective continuous map pulls back point-separating real functions. -/</span>
+<span id="doc/BC4lean.ProperActions.RealSeparatesPoints.of_injective_continuous"><a class="line" href="#EquivariantCW-L706" id="EquivariantCW-L706">706</a> theorem RealSeparatesPoints.of_injective_continuous</span>
+<span><a class="line" href="#EquivariantCW-L707" id="EquivariantCW-L707">707</a>     {X Y : Type*} [TopologicalSpace X] [TopologicalSpace Y]</span>
+<span><a class="line" href="#EquivariantCW-L708" id="EquivariantCW-L708">708</a>     (h : RealSeparatesPoints Y) {f : X → Y} (hi : Function.Injective f) (hc : Continuous f) :</span>
+<span><a class="line" href="#EquivariantCW-L709" id="EquivariantCW-L709">709</a>     RealSeparatesPoints X := by</span>
+<span><a class="line" href="#EquivariantCW-L710" id="EquivariantCW-L710">710</a>   intro x y hxy</span>
+<span><a class="line" href="#EquivariantCW-L711" id="EquivariantCW-L711">711</a>   obtain ⟨p, hp⟩ := h (f x) (f y) (hi.ne hxy)</span>
+<span><a class="line" href="#EquivariantCW-L712" id="EquivariantCW-L712">712</a>   exact ⟨p.comp ⟨f, hc⟩, hp⟩</span>
+<span><a class="line" href="#EquivariantCW-L713" id="EquivariantCW-L713">713</a> </span>
+<span><a class="line" href="#EquivariantCW-L714" id="EquivariantCW-L714">714</a> variable {Γ : Type u} [Group Γ] [TopologicalSpace Γ] [DiscreteTopology Γ]</span>
+<span><a class="line" href="#EquivariantCW-L715" id="EquivariantCW-L715">715</a> </span>
+<span><a class="line" href="#EquivariantCW-L716" id="EquivariantCW-L716">716</a> set_option backward.isDefEq.respectTransparency false in</span>
+<span><a class="line" href="#EquivariantCW-L717" id="EquivariantCW-L717">717</a> /-- Each skeleton inherits point separation from the initial subspace. -/</span>
+<span id="doc/BC4lean.ProperActions.RelativeEquivariantCWComplex.skeleton_realSeparatesPoints"><a class="line" href="#EquivariantCW-L718" id="EquivariantCW-L718">718</a> theorem RelativeEquivariantCWComplex.skeleton_realSeparatesPoints</span>
+<span><a class="line" href="#EquivariantCW-L719" id="EquivariantCW-L719">719</a>     {A B : Action TopCat.{u} Γ} {i : A ⟶ B} (c : RelativeEquivariantCWComplex i)</span>
+<span><a class="line" href="#EquivariantCW-L720" id="EquivariantCW-L720">720</a>     (hA : RealSeparatesPoints A.V) (n : ℕ) : RealSeparatesPoints (c.F.obj n).V := by</span>
+<span><a class="line" href="#EquivariantCW-L721" id="EquivariantCW-L721">721</a>   induction n with</span>
+<span><a class="line" href="#EquivariantCW-L722" id="EquivariantCW-L722">722</a>   | zero =&gt;</span>
+<span><a class="line" href="#EquivariantCW-L723" id="EquivariantCW-L723">723</a>     let e := TopCat.homeoOfIso ((Action.forget TopCat Γ).mapIso c.isoBot)</span>
+<span><a class="line" href="#EquivariantCW-L724" id="EquivariantCW-L724">724</a>     exact hA.of_injective_continuous e.injective e.continuous</span>
+<span><a class="line" href="#EquivariantCW-L725" id="EquivariantCW-L725">725</a>   | succ n hn =&gt; exact orbitCellAttachment_realSeparatesPoints (c.attachment n) hn</span>
+<span><a class="line" href="#EquivariantCW-L726" id="EquivariantCW-L726">726</a> </span>
+<span><a class="line" href="#EquivariantCW-L727" id="EquivariantCW-L727">727</a> /-- Point-separating real functions on the skeleta extend to the final relative CW space. -/</span>
+<span id="doc/BC4lean.ProperActions.RelativeEquivariantCWComplex.realSeparatesPoints"><a class="line" href="#EquivariantCW-L728" id="EquivariantCW-L728">728</a> theorem RelativeEquivariantCWComplex.realSeparatesPoints</span>
+<span><a class="line" href="#EquivariantCW-L729" id="EquivariantCW-L729">729</a>     {A B : Action TopCat.{u} Γ} {i : A ⟶ B} (c : RelativeEquivariantCWComplex i)</span>
+<span><a class="line" href="#EquivariantCW-L730" id="EquivariantCW-L730">730</a>     (hA : RealSeparatesPoints A.V) : RealSeparatesPoints B.V := by</span>
+<span><a class="line" href="#EquivariantCW-L731" id="EquivariantCW-L731">731</a>   intro x y hxy</span>
+<span><a class="line" href="#EquivariantCW-L732" id="EquivariantCW-L732">732</a>   obtain ⟨m, xm, hxm⟩ := c.exists_skeleton_preimage x</span>
+<span><a class="line" href="#EquivariantCW-L733" id="EquivariantCW-L733">733</a>   obtain ⟨n, yn, hyn⟩ := c.exists_skeleton_preimage y</span>
+<span><a class="line" href="#EquivariantCW-L734" id="EquivariantCW-L734">734</a>   let k := max m n</span>
+<span><a class="line" href="#EquivariantCW-L735" id="EquivariantCW-L735">735</a>   let xk := (c.F.map (homOfLE (le_max_left m n))).hom xm</span>
+<span><a class="line" href="#EquivariantCW-L736" id="EquivariantCW-L736">736</a>   let yk := (c.F.map (homOfLE (le_max_right m n))).hom yn</span>
+<span><a class="line" href="#EquivariantCW-L737" id="EquivariantCW-L737">737</a>   have hx : (c.incl.app k).hom xk = x := by</span>
+<span><a class="line" href="#EquivariantCW-L738" id="EquivariantCW-L738">738</a>     have h := ConcreteCategory.congr_hom</span>
+<span><a class="line" href="#EquivariantCW-L739" id="EquivariantCW-L739">739</a>       (congrArg Action.Hom.hom (c.incl.naturality (homOfLE (le_max_left m n)))) xm</span>
+<span><a class="line" href="#EquivariantCW-L740" id="EquivariantCW-L740">740</a>     exact h.trans hxm</span>
+<span><a class="line" href="#EquivariantCW-L741" id="EquivariantCW-L741">741</a>   have hy : (c.incl.app k).hom yk = y := by</span>
+<span><a class="line" href="#EquivariantCW-L742" id="EquivariantCW-L742">742</a>     have h := ConcreteCategory.congr_hom</span>
+<span><a class="line" href="#EquivariantCW-L743" id="EquivariantCW-L743">743</a>       (congrArg Action.Hom.hom (c.incl.naturality (homOfLE (le_max_right m n)))) yn</span>
+<span><a class="line" href="#EquivariantCW-L744" id="EquivariantCW-L744">744</a>     exact h.trans hyn</span>
+<span><a class="line" href="#EquivariantCW-L745" id="EquivariantCW-L745">745</a>   have hne : xk ≠ yk := fun h =&gt; hxy (hx.symm.trans ((congrArg (c.incl.app k).hom h).trans hy))</span>
+<span><a class="line" href="#EquivariantCW-L746" id="EquivariantCW-L746">746</a>   obtain ⟨p, hp⟩ := c.skeleton_realSeparatesPoints hA k xk yk hne</span>
+<span><a class="line" href="#EquivariantCW-L747" id="EquivariantCW-L747">747</a>   obtain ⟨F, hF⟩ := c.skeleton_extend_real k p</span>
+<span><a class="line" href="#EquivariantCW-L748" id="EquivariantCW-L748">748</a>   refine ⟨F, ?_⟩</span>
+<span><a class="line" href="#EquivariantCW-L749" id="EquivariantCW-L749">749</a>   rw [← hx, ← hy, hF, hF]</span>
+<span><a class="line" href="#EquivariantCW-L750" id="EquivariantCW-L750">750</a>   exact hp</span>
+<span><a class="line" href="#EquivariantCW-L751" id="EquivariantCW-L751">751</a> </span>
+<span><a class="line" href="#EquivariantCW-L752" id="EquivariantCW-L752">752</a> /-- Absolute equivariant CW spaces have enough continuous real functions to separate points. -/</span>
+<span id="doc/BC4lean.ProperActions.EquivariantCWComplex.realSeparatesPoints"><a class="line" href="#EquivariantCW-L753" id="EquivariantCW-L753">753</a> theorem EquivariantCWComplex.realSeparatesPoints</span>
+<span><a class="line" href="#EquivariantCW-L754" id="EquivariantCW-L754">754</a>     {A : Action TopCat.{u} Γ} (c : EquivariantCWComplex A) : RealSeparatesPoints A.V := by</span>
+<span><a class="line" href="#EquivariantCW-L755" id="EquivariantCW-L755">755</a>   apply RelativeEquivariantCWComplex.realSeparatesPoints c</span>
+<span><a class="line" href="#EquivariantCW-L756" id="EquivariantCW-L756">756</a>   have hinit := initialIsInitial.isInitialObj (underlyingAction (Γ := Γ))</span>
+<span><a class="line" href="#EquivariantCW-L757" id="EquivariantCW-L757">757</a>   let : IsEmpty ((⊥_ (Action TopCat.{u} Γ)).V) :=</span>
+<span><a class="line" href="#EquivariantCW-L758" id="EquivariantCW-L758">758</a>     (Types.initial_iff_empty _).mp ⟨hinit⟩</span>
+<span><a class="line" href="#EquivariantCW-L759" id="EquivariantCW-L759">759</a>   intro x</span>
+<span><a class="line" href="#EquivariantCW-L760" id="EquivariantCW-L760">760</a>   exact isEmptyElim x</span>
+<span><a class="line" href="#EquivariantCW-L761" id="EquivariantCW-L761">761</a> </span>
+<span><a class="line" href="#EquivariantCW-L762" id="EquivariantCW-L762">762</a> /-- Hausdorffness follows from the categorical equivariant CW data, without an extra premise. -/</span>
+<span id="doc/BC4lean.ProperActions.EquivariantCWComplex.t2Space"><a class="line" href="#EquivariantCW-L763" id="EquivariantCW-L763">763</a> theorem EquivariantCWComplex.t2Space</span>
+<span><a class="line" href="#EquivariantCW-L764" id="EquivariantCW-L764">764</a>     {A : Action TopCat.{u} Γ} (c : EquivariantCWComplex A) : T2Space A.V :=</span>
+<span><a class="line" href="#EquivariantCW-L765" id="EquivariantCW-L765">765</a>   c.realSeparatesPoints.t2Space</span>
+<span><a class="line" href="#EquivariantCW-L766" id="EquivariantCW-L766">766</a> </span>
+<span><a class="line" href="#EquivariantCW-L767" id="EquivariantCW-L767">767</a> end BC4lean.ProperActions</span>
 </pre>
 <h2 id="OrbitCellMaps">OrbitCellMaps.lean</h2><p>源码 SHA-256：<code>4cb73c5c98de04a4e67abc1b32d8fbd511f8e27e615373a165014cdc4324f58d</code></p><pre>
 <span><a class="line" href="#OrbitCellMaps-L1" id="OrbitCellMaps-L1">  1</a> import BC4lean.EquivariantCW</span>
@@ -6301,7 +6597,7 @@ code{overflow-wrap:anywhere}</style></head><body><a href="../../blueprint/">返�
 <span><a class="line" href="#ProperActionPullback-L30" id="ProperActionPullback-L30"> 30</a> </span>
 <span><a class="line" href="#ProperActionPullback-L31" id="ProperActionPullback-L31"> 31</a> end BC4lean.ProperActions</span>
 </pre>
-<h2 id="ProbabilityUniversalTarget">ProbabilityUniversalTarget.lean</h2><p>源码 SHA-256：<code>68e5e6b0bc1717ff82eaeb32b25c4f9472dd99351d0a17970d366b1675b7392d</code></p><pre>
+<h2 id="ProbabilityUniversalTarget">ProbabilityUniversalTarget.lean</h2><p>源码 SHA-256：<code>365fecf3726b344f75747af8cee922b70ae677083fa4af7b6a89c72d1d5db92a</code></p><pre>
 <span><a class="line" href="#ProbabilityUniversalTarget-L1" id="ProbabilityUniversalTarget-L1">  1</a> import BC4lean.ProbabilityFixedPoints</span>
 <span><a class="line" href="#ProbabilityUniversalTarget-L2" id="ProbabilityUniversalTarget-L2">  2</a> import BC4lean.ProbabilityProperAction</span>
 <span><a class="line" href="#ProbabilityUniversalTarget-L3" id="ProbabilityUniversalTarget-L3">  3</a> import BC4lean.ProperActionPullback</span>
@@ -6339,7 +6635,7 @@ code{overflow-wrap:anywhere}</style></head><body><a href="../../blueprint/">返�
 <span><a class="line" href="#ProbabilityUniversalTarget-L35" id="ProbabilityUniversalTarget-L35"> 35</a>   ⟨ProbabilitySimplex.proper, c.probability_homotopyTerminal⟩</span>
 <span><a class="line" href="#ProbabilityUniversalTarget-L36" id="ProbabilityUniversalTarget-L36"> 36</a> </span>
 <span><a class="line" href="#ProbabilityUniversalTarget-L37" id="ProbabilityUniversalTarget-L37"> 37</a> /-- A Hausdorff finite-isotropy equivariant CW space has a proper action for countable Γ.</span>
-<span><a class="line" href="#ProbabilityUniversalTarget-L38" id="ProbabilityUniversalTarget-L38"> 38</a> Hausdorffness remains an explicit premise until it is derived from the categorical CW data. -/</span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L38" id="ProbabilityUniversalTarget-L38"> 38</a> The following unconditional result supplies Hausdorffness from the categorical CW data. -/</span>
 <span id="doc/BC4lean.ProperActions.EquivariantCWComplex.proper_of_t2"><a class="line" href="#ProbabilityUniversalTarget-L39" id="ProbabilityUniversalTarget-L39"> 39</a> theorem EquivariantCWComplex.proper_of_t2 [Countable Γ] [T2Space A]</span>
 <span><a class="line" href="#ProbabilityUniversalTarget-L40" id="ProbabilityUniversalTarget-L40"> 40</a>     (c : EquivariantCWComplex (topologicalAction Γ A)) : ProperSMul Γ A := by</span>
 <span><a class="line" href="#ProbabilityUniversalTarget-L41" id="ProbabilityUniversalTarget-L41"> 41</a>   let : ProperSMul Γ (ProbabilitySimplex Γ) := ProbabilitySimplex.proper</span>
@@ -6347,6 +6643,14 @@ code{overflow-wrap:anywhere}</style></head><body><a href="../../blueprint/">返�
 <span><a class="line" href="#ProbabilityUniversalTarget-L43" id="ProbabilityUniversalTarget-L43"> 43</a>   obtain ⟨f⟩ := c.probability_homotopyTerminal.1</span>
 <span><a class="line" href="#ProbabilityUniversalTarget-L44" id="ProbabilityUniversalTarget-L44"> 44</a>   exact f.properSMul</span>
 <span><a class="line" href="#ProbabilityUniversalTarget-L45" id="ProbabilityUniversalTarget-L45"> 45</a> </span>
-<span><a class="line" href="#ProbabilityUniversalTarget-L46" id="ProbabilityUniversalTarget-L46"> 46</a> end BC4lean.ProperActions</span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L46" id="ProbabilityUniversalTarget-L46"> 46</a> </span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L47" id="ProbabilityUniversalTarget-L47"> 47</a> /-- A finite-isotropy equivariant CW space has a proper action for every countable discrete group.</span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L48" id="ProbabilityUniversalTarget-L48"> 48</a> Hausdorffness is derived from the cellular data, rather than imposed as a separate hypothesis. -/</span>
+<span id="doc/BC4lean.ProperActions.EquivariantCWComplex.proper"><a class="line" href="#ProbabilityUniversalTarget-L49" id="ProbabilityUniversalTarget-L49"> 49</a> theorem EquivariantCWComplex.proper [Countable Γ]</span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L50" id="ProbabilityUniversalTarget-L50"> 50</a>     (c : EquivariantCWComplex (topologicalAction Γ A)) : ProperSMul Γ A := by</span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L51" id="ProbabilityUniversalTarget-L51"> 51</a>   let : T2Space A := c.t2Space</span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L52" id="ProbabilityUniversalTarget-L52"> 52</a>   exact c.proper_of_t2</span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L53" id="ProbabilityUniversalTarget-L53"> 53</a> </span>
+<span><a class="line" href="#ProbabilityUniversalTarget-L54" id="ProbabilityUniversalTarget-L54"> 54</a> end BC4lean.ProperActions</span>
 </pre>
 </body></html>

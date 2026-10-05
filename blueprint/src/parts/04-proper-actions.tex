@@ -6,9 +6,11 @@ actions and their subgroup fixed-point spaces. Continuous equivariant maps,
 homotopies, and their fixed-point restrictions are also verified. The results below
 add homogeneous orbits, proper orbit cells, the fixed-point criterion, a finite-group
 point model, conditional uniqueness, and directed cocompact pieces for a given space.
-Equivariant CW attachment, the general existence and universal property of
-$\underline E\Gamma$, and the locally compact second-countable model choice
-remain formalization targets.
+Equivariant CW attachment, closed skeletal inclusions, Hausdorffness, and
+properness for countable discrete groups are verified. The cellular mapping
+property is also verified for targets satisfying the fixed-point criterion.
+General universal proper CW-model existence and the locally compact
+second-countable model choice remain formalization targets.
 
 \section{Proper actions and compact transporters}
 
@@ -778,19 +780,73 @@ Forget the action and use the corresponding set and topological colimit
 universal properties.
 \end{proof}
 
+\section{Real-valued extension and Hausdorffness}
+
+\begin{proposition}\label{prop:cellular-real-extension}
+\uses{def:equivariant-cellular-data,prop:orbit-boundary-closed-embedding,prop:cellular-closed-inclusions}
+\lean{BC4lean.ProperActions.orbitCellAttachment_extend_real,BC4lean.ProperActions.RelativeEquivariantCWComplex.skeleton_extend_real}
+\leanok
+A continuous real-valued function on the source of an orbit-cell attachment
+extends to its target. More generally, every continuous real-valued function
+on a skeleton $X_n$ of a relative equivariant CW complex extends to the
+whole space $X$. These scalar functions need not be equivariant.
+\end{proposition}
+\begin{proof}
+\leanok
+Each disjoint union of orbit disks is normal, and its boundary is closed
+embedded. Tietze extension and the topological pushout property extend
+functions across an attachment. Express this extension property as a
+lifting property against the terminal map from the real line. Stability
+under transfinite composition gives extension along each skeletal
+inclusion into the colimit.
+\end{proof}
+
+\begin{proposition}\label{prop:equivariant-cw-hausdorff}
+\uses{def:equivariant-cellular-data,prop:cellular-real-extension,prop:cellular-skeletal-topology}
+\lean{BC4lean.ProperActions.pushout_realSeparatesPoints,BC4lean.ProperActions.RelativeEquivariantCWComplex.realSeparatesPoints,BC4lean.ProperActions.EquivariantCWComplex.realSeparatesPoints,BC4lean.ProperActions.EquivariantCWComplex.t2Space}
+\leanok
+Every equivariant CW space built from the stated orbit cells is Hausdorff.
+More precisely, continuous real-valued functions separate its distinct
+points. This conclusion is derived from the categorical cell-attachment
+data; Hausdorffness is not an additional hypothesis.
+\end{proposition}
+\begin{proof}
+\leanok
+Separation by real-valued functions is preserved by attachment: extend
+separating functions on old points, and use Urysohn's lemma on the disk
+coproduct to distinguish new points from the boundary and from each other.
+Induction gives separation on every skeleton, starting from the empty
+space. Any two points of the colimit lie in a common skeletal stage.
+Extend a separating function on that stage to the colimit, and pull back
+disjoint real neighborhoods.
+\end{proof}
+
+\begin{proposition}\label{prop:equivariant-cw-proper}
+\uses{prop:equivariant-cw-hausdorff,prop:hausdorff-equivariant-cw-proper}
+\lean{BC4lean.ProperActions.EquivariantCWComplex.proper}
+\leanok
+Let $\Gamma$ be a countable discrete group. Every equivariant CW space
+whose orbit cells have finite stabilizers has a proper $\Gamma$-action.
+\end{proposition}
+\begin{proof}
+\leanok
+Hausdorffness now follows from the cellular data. Apply the already
+verified properness theorem for Hausdorff equivariant CW spaces, using the
+map to the proper probability-space target.
+\end{proof}
+
 \section{Equivariant CW complexes and a model for $\underline E\Gamma$}
 
 \begin{definition}\label{def:equivariant-cw-complex}
-\uses{def:proper-action,def:equivariant-map,def:equivariant-homotopy,def:orbit-cell,prop:proper-orbit-cells,def:equivariant-cellular-data,prop:orbit-boundary-cell-properties,prop:hausdorff-equivariant-cw-proper,prop:cellular-closed-inclusions,prop:cellular-skeletal-topology}
-\notready
-Using the preceding maps and homotopies, develop $\Gamma$-CW complexes by
-equivariant cell attachment, with cells $\Gamma/H\times D^n$.
-For the proper theory the cell stabilizers $H$ are finite. Establish the
-connection between this cellular condition and topological properness.
-The properness theorem is now verified under an explicit Hausdorff
-hypothesis; derive that hypothesis from the categorical cellular data.
-Closed embeddings of all skeleta and the skeletal colimit topology have now
-been verified. The Hausdorff separation argument remains to be formalized.
+\uses{def:equivariant-cellular-data,prop:cellular-closed-inclusions,prop:cellular-skeletal-topology,prop:equivariant-cw-hausdorff,prop:equivariant-cw-proper}
+\lean{BC4lean.ProperActions.EquivariantCWComplex}
+\leanok
+A finite-isotropy $\Gamma$-CW structure consists of a sequential cellular
+construction from the empty action, with cells $\Gamma/H\times D^n$ for
+finite subgroups $H$. The construction includes the coproduct, pushout,
+and colimit witnesses. Its skeleta are closed embedded subspaces, and
+Hausdorffness follows from the cellular data. For countable discrete
+$\Gamma$, the resulting action is topologically proper.
 \end{definition}
 
 \begin{definition}\label{def:universal-proper-space}
@@ -804,8 +860,9 @@ uniqueness argument have been verified above. The mapping property for equivaria
 equivariant homotopy of CW spaces satisfying the fixed-point criterion are
 now verified. An explicit proper second-countable target satisfying the fixed-point
 criterion and the CW-source mapping property has now been constructed.
-A CW structure or CW replacement for this target, and the derivation of
-Hausdorffness from the categorical CW data, remain unverified.
+Hausdorffness and properness of finite-isotropy equivariant CW spaces
+are now verified. A CW structure or CW replacement for the explicit
+probability-space target remains unverified.
 \end{definition}
 
 \section{Cocompact pieces and model choices}
