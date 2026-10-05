@@ -57,6 +57,11 @@ code{overflow-wrap:anywhere}</style></head><body><a href="../../blueprint/">返�
 <li><a href="#DiskExtension">DiskExtension.lean</a></li>
 <li><a href="#OrbitCellExtension">OrbitCellExtension.lean</a></li>
 <li><a href="#CellularExtension">CellularExtension.lean</a></li>
+<li><a href="#CylinderBoundary">CylinderBoundary.lean</a></li>
+<li><a href="#DiskHomotopyExtension">DiskHomotopyExtension.lean</a></li>
+<li><a href="#DiskPathLifting">DiskPathLifting.lean</a></li>
+<li><a href="#EquivariantPathLifting">EquivariantPathLifting.lean</a></li>
+<li><a href="#CellularHomotopy">CellularHomotopy.lean</a></li>
 </ul></nav>
 <h2 id="GroupAlgebra">GroupAlgebra.lean</h2><p>源码 SHA-256：<code>1c6c0899fe9bc9f7860f291ba7c5573353d18a3c5809258769d689bc39da8ad4</code></p><pre>
 <span><a class="line" href="#L1" id="L1">  1</a> import Mathlib.Algebra.MonoidAlgebra.Basic</span>
@@ -5195,5 +5200,480 @@ code{overflow-wrap:anywhere}</style></head><body><a href="../../blueprint/">返�
 <span><a class="line" href="#CellularExtension-L66" id="CellularExtension-L66"> 66</a>   exact ⟨F⟩</span>
 <span><a class="line" href="#CellularExtension-L67" id="CellularExtension-L67"> 67</a> </span>
 <span><a class="line" href="#CellularExtension-L68" id="CellularExtension-L68"> 68</a> end BC4lean.ProperActions</span>
+</pre>
+<h2 id="CylinderBoundary">CylinderBoundary.lean</h2><p>源码 SHA-256：<code>2dec4351a723bee828d46047c77d07e282e2e40794f61f481d7a44a6dc8e13e0</code></p><pre>
+<span><a class="line" href="#CylinderBoundary-L1" id="CylinderBoundary-L1">  1</a> import BC4lean.DiskExtension</span>
+<span><a class="line" href="#CylinderBoundary-L2" id="CylinderBoundary-L2">  2</a> </span>
+<span><a class="line" href="#CylinderBoundary-L3" id="CylinderBoundary-L3">  3</a> /-! # A quotient presentation of the boundary of a disk cylinder</span>
+<span><a class="line" href="#CylinderBoundary-L4" id="CylinderBoundary-L4">  4</a> </span>
+<span><a class="line" href="#CylinderBoundary-L5" id="CylinderBoundary-L5">  5</a> The product norm on ℝ × E is the max norm. Its unit sphere consists of the</span>
+<span><a class="line" href="#CylinderBoundary-L6" id="CylinderBoundary-L6">  6</a> two disk faces and the cylinder on the unit sphere of E.</span>
+<span><a class="line" href="#CylinderBoundary-L7" id="CylinderBoundary-L7">  7</a> -/</span>
+<span><a class="line" href="#CylinderBoundary-L8" id="CylinderBoundary-L8">  8</a> </span>
+<span><a class="line" href="#CylinderBoundary-L9" id="CylinderBoundary-L9">  9</a> noncomputable section</span>
+<span><a class="line" href="#CylinderBoundary-L10" id="CylinderBoundary-L10"> 10</a> open Metric</span>
+<span><a class="line" href="#CylinderBoundary-L11" id="CylinderBoundary-L11"> 11</a> open scoped unitInterval</span>
+<span><a class="line" href="#CylinderBoundary-L12" id="CylinderBoundary-L12"> 12</a> </span>
+<span><a class="line" href="#CylinderBoundary-L13" id="CylinderBoundary-L13"> 13</a> namespace BC4lean.ProperActions</span>
+<span><a class="line" href="#CylinderBoundary-L14" id="CylinderBoundary-L14"> 14</a> </span>
+<span><a class="line" href="#CylinderBoundary-L15" id="CylinderBoundary-L15"> 15</a> variable {E : Type*} [NormedAddCommGroup E]</span>
+<span><a class="line" href="#CylinderBoundary-L16" id="CylinderBoundary-L16"> 16</a> </span>
+<span><a class="line" href="#CylinderBoundary-L17" id="CylinderBoundary-L17"> 17</a> /-- Affine coordinate identifying the unit interval with [-1,1]. -/</span>
+<span id="doc/BC4lean.ProperActions.signedTime"><a class="line" href="#CylinderBoundary-L18" id="CylinderBoundary-L18"> 18</a> def signedTime (t : I) : ℝ := 2 * (t : ℝ) - 1</span>
+<span><a class="line" href="#CylinderBoundary-L19" id="CylinderBoundary-L19"> 19</a> </span>
+<span id="doc/BC4lean.ProperActions.signedTime_zero"><a class="line" href="#CylinderBoundary-L20" id="CylinderBoundary-L20"> 20</a> @[simp] theorem signedTime_zero : signedTime 0 = -1 := by norm_num [signedTime]</span>
+<span id="doc/BC4lean.ProperActions.signedTime_one"><a class="line" href="#CylinderBoundary-L21" id="CylinderBoundary-L21"> 21</a> @[simp] theorem signedTime_one : signedTime 1 = 1 := by norm_num [signedTime]</span>
+<span><a class="line" href="#CylinderBoundary-L22" id="CylinderBoundary-L22"> 22</a> </span>
+<span id="doc/BC4lean.ProperActions.abs_signedTime_le"><a class="line" href="#CylinderBoundary-L23" id="CylinderBoundary-L23"> 23</a> theorem abs_signedTime_le (t : I) : |signedTime t| ≤ 1 := by</span>
+<span><a class="line" href="#CylinderBoundary-L24" id="CylinderBoundary-L24"> 24</a>   rw [abs_le]</span>
+<span><a class="line" href="#CylinderBoundary-L25" id="CylinderBoundary-L25"> 25</a>   have h := t.2</span>
+<span><a class="line" href="#CylinderBoundary-L26" id="CylinderBoundary-L26"> 26</a>   dsimp [signedTime]</span>
+<span><a class="line" href="#CylinderBoundary-L27" id="CylinderBoundary-L27"> 27</a>   constructor &lt;;&gt; linarith [h.1, h.2]</span>
+<span><a class="line" href="#CylinderBoundary-L28" id="CylinderBoundary-L28"> 28</a> </span>
+<span id="doc/BC4lean.ProperActions.signedTime_injective"><a class="line" href="#CylinderBoundary-L29" id="CylinderBoundary-L29"> 29</a> theorem signedTime_injective : Function.Injective signedTime := by</span>
+<span><a class="line" href="#CylinderBoundary-L30" id="CylinderBoundary-L30"> 30</a>   intro t u h</span>
+<span><a class="line" href="#CylinderBoundary-L31" id="CylinderBoundary-L31"> 31</a>   apply Subtype.ext</span>
+<span><a class="line" href="#CylinderBoundary-L32" id="CylinderBoundary-L32"> 32</a>   dsimp [signedTime] at h</span>
+<span><a class="line" href="#CylinderBoundary-L33" id="CylinderBoundary-L33"> 33</a>   linarith</span>
+<span><a class="line" href="#CylinderBoundary-L34" id="CylinderBoundary-L34"> 34</a> </span>
+<span><a class="line" href="#CylinderBoundary-L35" id="CylinderBoundary-L35"> 35</a> /-- The cylinder parametrized as the max-norm ball. -/</span>
+<span id="doc/BC4lean.ProperActions.cylinderBall"><a class="line" href="#CylinderBoundary-L36" id="CylinderBoundary-L36"> 36</a> def cylinderBall : C(I × closedBall (0 : E) 1, closedBall (0 : ℝ × E) 1) := by</span>
+<span><a class="line" href="#CylinderBoundary-L37" id="CylinderBoundary-L37"> 37</a>   refine ⟨fun p =&gt; ⟨(signedTime p.1, p.2.1), ?_⟩, ?_⟩</span>
+<span><a class="line" href="#CylinderBoundary-L38" id="CylinderBoundary-L38"> 38</a>   · rw [mem_closedBall, dist_zero_right, Prod.norm_mk, Real.norm_eq_abs, max_le_iff]</span>
+<span><a class="line" href="#CylinderBoundary-L39" id="CylinderBoundary-L39"> 39</a>     exact ⟨abs_signedTime_le _, by simpa only [mem_closedBall, dist_zero_right] using p.2.2⟩</span>
+<span><a class="line" href="#CylinderBoundary-L40" id="CylinderBoundary-L40"> 40</a>   · exact (((continuous_subtype_val.comp continuous_fst).const_mul 2 |&gt;.sub continuous_const).prodMk</span>
+<span><a class="line" href="#CylinderBoundary-L41" id="CylinderBoundary-L41"> 41</a>       (continuous_subtype_val.comp continuous_snd)).subtype_mk _</span>
+<span><a class="line" href="#CylinderBoundary-L42" id="CylinderBoundary-L42"> 42</a> </span>
+<span><a class="line" href="#CylinderBoundary-L43" id="CylinderBoundary-L43"> 43</a> /-- The lower disk face of the cylinder boundary. -/</span>
+<span id="doc/BC4lean.ProperActions.cylinderFaceZero"><a class="line" href="#CylinderBoundary-L44" id="CylinderBoundary-L44"> 44</a> def cylinderFaceZero : C(closedBall (0 : E) 1, sphere (0 : ℝ × E) 1) := by</span>
+<span><a class="line" href="#CylinderBoundary-L45" id="CylinderBoundary-L45"> 45</a>   refine ⟨fun x =&gt; ⟨(-1, x.1), ?_⟩, ?_⟩</span>
+<span><a class="line" href="#CylinderBoundary-L46" id="CylinderBoundary-L46"> 46</a>   · have hx : ‖x.1‖ ≤ 1 := by simpa only [mem_closedBall, dist_zero_right] using x.2</span>
+<span><a class="line" href="#CylinderBoundary-L47" id="CylinderBoundary-L47"> 47</a>     simp only [mem_sphere, dist_zero_right, Prod.norm_mk, norm_neg, norm_one, max_eq_left hx]</span>
+<span><a class="line" href="#CylinderBoundary-L48" id="CylinderBoundary-L48"> 48</a>   · exact (continuous_const.prodMk continuous_subtype_val).subtype_mk _</span>
+<span><a class="line" href="#CylinderBoundary-L49" id="CylinderBoundary-L49"> 49</a> </span>
+<span><a class="line" href="#CylinderBoundary-L50" id="CylinderBoundary-L50"> 50</a> /-- The upper disk face of the cylinder boundary. -/</span>
+<span id="doc/BC4lean.ProperActions.cylinderFaceOne"><a class="line" href="#CylinderBoundary-L51" id="CylinderBoundary-L51"> 51</a> def cylinderFaceOne : C(closedBall (0 : E) 1, sphere (0 : ℝ × E) 1) := by</span>
+<span><a class="line" href="#CylinderBoundary-L52" id="CylinderBoundary-L52"> 52</a>   refine ⟨fun x =&gt; ⟨(1, x.1), ?_⟩, ?_⟩</span>
+<span><a class="line" href="#CylinderBoundary-L53" id="CylinderBoundary-L53"> 53</a>   · have hx : ‖x.1‖ ≤ 1 := by simpa only [mem_closedBall, dist_zero_right] using x.2</span>
+<span><a class="line" href="#CylinderBoundary-L54" id="CylinderBoundary-L54"> 54</a>     simp only [mem_sphere, dist_zero_right, Prod.norm_mk, norm_one, max_eq_left hx]</span>
+<span><a class="line" href="#CylinderBoundary-L55" id="CylinderBoundary-L55"> 55</a>   · exact (continuous_const.prodMk continuous_subtype_val).subtype_mk _</span>
+<span><a class="line" href="#CylinderBoundary-L56" id="CylinderBoundary-L56"> 56</a> </span>
+<span><a class="line" href="#CylinderBoundary-L57" id="CylinderBoundary-L57"> 57</a> /-- The cylindrical side of the boundary. -/</span>
+<span id="doc/BC4lean.ProperActions.cylinderSide"><a class="line" href="#CylinderBoundary-L58" id="CylinderBoundary-L58"> 58</a> def cylinderSide : C(I × sphere (0 : E) 1, sphere (0 : ℝ × E) 1) := by</span>
+<span><a class="line" href="#CylinderBoundary-L59" id="CylinderBoundary-L59"> 59</a>   refine ⟨fun p =&gt; ⟨(signedTime p.1, p.2.1), ?_⟩, ?_⟩</span>
+<span><a class="line" href="#CylinderBoundary-L60" id="CylinderBoundary-L60"> 60</a>   · simp only [mem_sphere, dist_zero_right, Prod.norm_mk, Real.norm_eq_abs,</span>
+<span><a class="line" href="#CylinderBoundary-L61" id="CylinderBoundary-L61"> 61</a>       norm_eq_of_mem_sphere, max_eq_right (abs_signedTime_le p.1)]</span>
+<span><a class="line" href="#CylinderBoundary-L62" id="CylinderBoundary-L62"> 62</a>   · exact (((continuous_subtype_val.comp continuous_fst).const_mul 2 |&gt;.sub continuous_const).prodMk</span>
+<span><a class="line" href="#CylinderBoundary-L63" id="CylinderBoundary-L63"> 63</a>       (continuous_subtype_val.comp continuous_snd)).subtype_mk _</span>
+<span><a class="line" href="#CylinderBoundary-L64" id="CylinderBoundary-L64"> 64</a> </span>
+<span><a class="line" href="#CylinderBoundary-L65" id="CylinderBoundary-L65"> 65</a> /-- Disjoint union of the two faces and the cylindrical side. -/</span>
+<span id="doc/BC4lean.ProperActions.CylinderBoundaryPieces"><a class="line" href="#CylinderBoundary-L66" id="CylinderBoundary-L66"> 66</a> abbrev CylinderBoundaryPieces (E : Type*) [NormedAddCommGroup E] :=</span>
+<span><a class="line" href="#CylinderBoundary-L67" id="CylinderBoundary-L67"> 67</a>   closedBall (0 : E) 1 ⊕ (closedBall (0 : E) 1 ⊕ (I × sphere (0 : E) 1))</span>
+<span><a class="line" href="#CylinderBoundary-L68" id="CylinderBoundary-L68"> 68</a> </span>
+<span><a class="line" href="#CylinderBoundary-L69" id="CylinderBoundary-L69"> 69</a> /-- Glue the three boundary pieces into the max-norm unit sphere. -/</span>
+<span id="doc/BC4lean.ProperActions.cylinderBoundaryQuotient"><a class="line" href="#CylinderBoundary-L70" id="CylinderBoundary-L70"> 70</a> def cylinderBoundaryQuotient : C(CylinderBoundaryPieces E, sphere (0 : ℝ × E) 1) :=</span>
+<span><a class="line" href="#CylinderBoundary-L71" id="CylinderBoundary-L71"> 71</a>   ⟨Sum.elim cylinderFaceZero (Sum.elim cylinderFaceOne cylinderSide),</span>
+<span><a class="line" href="#CylinderBoundary-L72" id="CylinderBoundary-L72"> 72</a>     continuous_sum_dom.mpr ⟨cylinderFaceZero.continuous,</span>
+<span><a class="line" href="#CylinderBoundary-L73" id="CylinderBoundary-L73"> 73</a>       continuous_sum_dom.mpr ⟨cylinderFaceOne.continuous, cylinderSide.continuous⟩⟩⟩</span>
+<span><a class="line" href="#CylinderBoundary-L74" id="CylinderBoundary-L74"> 74</a> </span>
+<span><a class="line" href="#CylinderBoundary-L75" id="CylinderBoundary-L75"> 75</a> /-- The three pieces cover the sphere, including in dimension zero. -/</span>
+<span id="doc/BC4lean.ProperActions.cylinderBoundaryQuotient_surjective"><a class="line" href="#CylinderBoundary-L76" id="CylinderBoundary-L76"> 76</a> theorem cylinderBoundaryQuotient_surjective :</span>
+<span><a class="line" href="#CylinderBoundary-L77" id="CylinderBoundary-L77"> 77</a>     Function.Surjective (cylinderBoundaryQuotient (E := E)) := by</span>
+<span><a class="line" href="#CylinderBoundary-L78" id="CylinderBoundary-L78"> 78</a>   intro x</span>
+<span><a class="line" href="#CylinderBoundary-L79" id="CylinderBoundary-L79"> 79</a>   have hx : max |x.1.1| ‖x.1.2‖ = 1 := by</span>
+<span><a class="line" href="#CylinderBoundary-L80" id="CylinderBoundary-L80"> 80</a>     simpa only [mem_sphere, dist_zero_right, Prod.norm_def, Real.norm_eq_abs] using x.2</span>
+<span><a class="line" href="#CylinderBoundary-L81" id="CylinderBoundary-L81"> 81</a>   have hb : ‖x.1.2‖ ≤ 1 := (le_max_right _ _).trans (le_of_eq hx)</span>
+<span><a class="line" href="#CylinderBoundary-L82" id="CylinderBoundary-L82"> 82</a>   let b : closedBall (0 : E) 1 := ⟨x.1.2, by simpa only [mem_closedBall, dist_zero_right] using hb⟩</span>
+<span><a class="line" href="#CylinderBoundary-L83" id="CylinderBoundary-L83"> 83</a>   by_cases h0 : x.1.1 = -1</span>
+<span><a class="line" href="#CylinderBoundary-L84" id="CylinderBoundary-L84"> 84</a>   · exact ⟨Sum.inl b, Subtype.ext (Prod.ext h0.symm rfl)⟩</span>
+<span><a class="line" href="#CylinderBoundary-L85" id="CylinderBoundary-L85"> 85</a>   by_cases h1 : x.1.1 = 1</span>
+<span><a class="line" href="#CylinderBoundary-L86" id="CylinderBoundary-L86"> 86</a>   · exact ⟨Sum.inr (Sum.inl b), Subtype.ext (Prod.ext h1.symm rfl)⟩</span>
+<span><a class="line" href="#CylinderBoundary-L87" id="CylinderBoundary-L87"> 87</a>   have hr : |x.1.1| ≤ 1 := (le_max_left _ _).trans (le_of_eq hx)</span>
+<span><a class="line" href="#CylinderBoundary-L88" id="CylinderBoundary-L88"> 88</a>   have hn : ‖x.1.2‖ = 1 := by</span>
+<span><a class="line" href="#CylinderBoundary-L89" id="CylinderBoundary-L89"> 89</a>     rcases max_eq_iff.mp hx with h | h</span>
+<span><a class="line" href="#CylinderBoundary-L90" id="CylinderBoundary-L90"> 90</a>     · rcases (abs_eq (by norm_num : (0 : ℝ) ≤ 1)).mp h.1 with h | h</span>
+<span><a class="line" href="#CylinderBoundary-L91" id="CylinderBoundary-L91"> 91</a>       · exact False.elim (h1 h)</span>
+<span><a class="line" href="#CylinderBoundary-L92" id="CylinderBoundary-L92"> 92</a>       · exact False.elim (h0 h)</span>
+<span><a class="line" href="#CylinderBoundary-L93" id="CylinderBoundary-L93"> 93</a>     · exact h.1</span>
+<span><a class="line" href="#CylinderBoundary-L94" id="CylinderBoundary-L94"> 94</a>   let t : I := ⟨(x.1.1 + 1) / 2, by constructor &lt;;&gt; linarith [abs_le.mp hr]⟩</span>
+<span><a class="line" href="#CylinderBoundary-L95" id="CylinderBoundary-L95"> 95</a>   let s : sphere (0 : E) 1 := ⟨x.1.2, by simpa only [mem_sphere, dist_zero_right] using hn⟩</span>
+<span><a class="line" href="#CylinderBoundary-L96" id="CylinderBoundary-L96"> 96</a>   refine ⟨Sum.inr (Sum.inr (t,s)), Subtype.ext (Prod.ext ?_ rfl)⟩</span>
+<span><a class="line" href="#CylinderBoundary-L97" id="CylinderBoundary-L97"> 97</a>   change 2 * ((x.1.1 + 1) / 2) - 1 = x.1.1</span>
+<span><a class="line" href="#CylinderBoundary-L98" id="CylinderBoundary-L98"> 98</a>   ring</span>
+<span><a class="line" href="#CylinderBoundary-L99" id="CylinderBoundary-L99"> 99</a> </span>
+<span><a class="line" href="#CylinderBoundary-L100" id="CylinderBoundary-L100">100</a> /-- Compactness of the pieces makes the boundary presentation a quotient map. -/</span>
+<span id="doc/BC4lean.ProperActions.cylinderBoundaryQuotient_isQuotientMap"><a class="line" href="#CylinderBoundary-L101" id="CylinderBoundary-L101">101</a> theorem cylinderBoundaryQuotient_isQuotientMap [ProperSpace E] :</span>
+<span><a class="line" href="#CylinderBoundary-L102" id="CylinderBoundary-L102">102</a>     Topology.IsQuotientMap (cylinderBoundaryQuotient (E := E)) :=</span>
+<span><a class="line" href="#CylinderBoundary-L103" id="CylinderBoundary-L103">103</a>   .of_surjective_continuous cylinderBoundaryQuotient_surjective cylinderBoundaryQuotient.continuous</span>
+<span><a class="line" href="#CylinderBoundary-L104" id="CylinderBoundary-L104">104</a> </span>
+<span><a class="line" href="#CylinderBoundary-L105" id="CylinderBoundary-L105">105</a> end BC4lean.ProperActions</span>
+</pre>
+<h2 id="DiskHomotopyExtension">DiskHomotopyExtension.lean</h2><p>源码 SHA-256：<code>916cd5746a16fcdfc63cbe7543180bc15dad91ac2377d45578e12866f74f4bec</code></p><pre>
+<span><a class="line" href="#DiskHomotopyExtension-L1" id="DiskHomotopyExtension-L1">  1</a> import BC4lean.CylinderBoundary</span>
+<span><a class="line" href="#DiskHomotopyExtension-L2" id="DiskHomotopyExtension-L2">  2</a> </span>
+<span><a class="line" href="#DiskHomotopyExtension-L3" id="DiskHomotopyExtension-L3">  3</a> /-! # Extending prescribed disk endpoint maps and a boundary homotopy -/</span>
+<span><a class="line" href="#DiskHomotopyExtension-L4" id="DiskHomotopyExtension-L4">  4</a> </span>
+<span><a class="line" href="#DiskHomotopyExtension-L5" id="DiskHomotopyExtension-L5">  5</a> noncomputable section</span>
+<span><a class="line" href="#DiskHomotopyExtension-L6" id="DiskHomotopyExtension-L6">  6</a> open Metric</span>
+<span><a class="line" href="#DiskHomotopyExtension-L7" id="DiskHomotopyExtension-L7">  7</a> open scoped unitInterval</span>
+<span><a class="line" href="#DiskHomotopyExtension-L8" id="DiskHomotopyExtension-L8">  8</a> </span>
+<span><a class="line" href="#DiskHomotopyExtension-L9" id="DiskHomotopyExtension-L9">  9</a> namespace BC4lean.ProperActions</span>
+<span><a class="line" href="#DiskHomotopyExtension-L10" id="DiskHomotopyExtension-L10"> 10</a> </span>
+<span><a class="line" href="#DiskHomotopyExtension-L11" id="DiskHomotopyExtension-L11"> 11</a> variable {E Y : Type*} [NormedAddCommGroup E] [TopologicalSpace Y]</span>
+<span><a class="line" href="#DiskHomotopyExtension-L12" id="DiskHomotopyExtension-L12"> 12</a> variable (f₀ f₁ : C(closedBall (0 : E) 1, Y))</span>
+<span><a class="line" href="#DiskHomotopyExtension-L13" id="DiskHomotopyExtension-L13"> 13</a> variable (H : (f₀.comp sphereInclusion).Homotopy (f₁.comp sphereInclusion))</span>
+<span><a class="line" href="#DiskHomotopyExtension-L14" id="DiskHomotopyExtension-L14"> 14</a> </span>
+<span><a class="line" href="#DiskHomotopyExtension-L15" id="DiskHomotopyExtension-L15"> 15</a> /-- Values prescribed on the two disk faces and their common cylindrical side. -/</span>
+<span id="doc/BC4lean.ProperActions.cylinderBoundaryData"><a class="line" href="#DiskHomotopyExtension-L16" id="DiskHomotopyExtension-L16"> 16</a> def cylinderBoundaryData : C(CylinderBoundaryPieces E, Y) :=</span>
+<span><a class="line" href="#DiskHomotopyExtension-L17" id="DiskHomotopyExtension-L17"> 17</a>   ⟨Sum.elim f₀ (Sum.elim f₁ H),</span>
+<span><a class="line" href="#DiskHomotopyExtension-L18" id="DiskHomotopyExtension-L18"> 18</a>     continuous_sum_dom.mpr ⟨f₀.continuous,</span>
+<span><a class="line" href="#DiskHomotopyExtension-L19" id="DiskHomotopyExtension-L19"> 19</a>       continuous_sum_dom.mpr ⟨f₁.continuous, H.continuous⟩⟩⟩</span>
+<span><a class="line" href="#DiskHomotopyExtension-L20" id="DiskHomotopyExtension-L20"> 20</a> </span>
+<span><a class="line" href="#DiskHomotopyExtension-L21" id="DiskHomotopyExtension-L21"> 21</a> private theorem faceZero_side_agree (x : closedBall (0 : E) 1) (p : I × sphere (0 : E) 1)</span>
+<span><a class="line" href="#DiskHomotopyExtension-L22" id="DiskHomotopyExtension-L22"> 22</a>     (h : cylinderFaceZero x = cylinderSide p) : f₀ x = H p := by</span>
+<span><a class="line" href="#DiskHomotopyExtension-L23" id="DiskHomotopyExtension-L23"> 23</a>   have ht : (0 : I) = p.1 := signedTime_injective (by</span>
+<span><a class="line" href="#DiskHomotopyExtension-L24" id="DiskHomotopyExtension-L24"> 24</a>     rw [signedTime_zero]</span>
+<span><a class="line" href="#DiskHomotopyExtension-L25" id="DiskHomotopyExtension-L25"> 25</a>     exact congrArg (fun z : sphere (0 : ℝ × E) 1 =&gt; z.1.1) h)</span>
+<span><a class="line" href="#DiskHomotopyExtension-L26" id="DiskHomotopyExtension-L26"> 26</a>   have hx : x = sphereInclusion p.2 :=</span>
+<span><a class="line" href="#DiskHomotopyExtension-L27" id="DiskHomotopyExtension-L27"> 27</a>     Subtype.ext (congrArg (fun z : sphere (0 : ℝ × E) 1 =&gt; z.1.2) h)</span>
+<span><a class="line" href="#DiskHomotopyExtension-L28" id="DiskHomotopyExtension-L28"> 28</a>   change f₀ x = H (p.1, p.2)</span>
+<span><a class="line" href="#DiskHomotopyExtension-L29" id="DiskHomotopyExtension-L29"> 29</a>   rw [← ht, H.apply_zero]</span>
+<span><a class="line" href="#DiskHomotopyExtension-L30" id="DiskHomotopyExtension-L30"> 30</a>   exact congrArg f₀ hx</span>
+<span><a class="line" href="#DiskHomotopyExtension-L31" id="DiskHomotopyExtension-L31"> 31</a> </span>
+<span><a class="line" href="#DiskHomotopyExtension-L32" id="DiskHomotopyExtension-L32"> 32</a> private theorem faceOne_side_agree (x : closedBall (0 : E) 1) (p : I × sphere (0 : E) 1)</span>
+<span><a class="line" href="#DiskHomotopyExtension-L33" id="DiskHomotopyExtension-L33"> 33</a>     (h : cylinderFaceOne x = cylinderSide p) : f₁ x = H p := by</span>
+<span><a class="line" href="#DiskHomotopyExtension-L34" id="DiskHomotopyExtension-L34"> 34</a>   have ht : (1 : I) = p.1 := signedTime_injective (by</span>
+<span><a class="line" href="#DiskHomotopyExtension-L35" id="DiskHomotopyExtension-L35"> 35</a>     rw [signedTime_one]</span>
+<span><a class="line" href="#DiskHomotopyExtension-L36" id="DiskHomotopyExtension-L36"> 36</a>     exact congrArg (fun z : sphere (0 : ℝ × E) 1 =&gt; z.1.1) h)</span>
+<span><a class="line" href="#DiskHomotopyExtension-L37" id="DiskHomotopyExtension-L37"> 37</a>   have hx : x = sphereInclusion p.2 :=</span>
+<span><a class="line" href="#DiskHomotopyExtension-L38" id="DiskHomotopyExtension-L38"> 38</a>     Subtype.ext (congrArg (fun z : sphere (0 : ℝ × E) 1 =&gt; z.1.2) h)</span>
+<span><a class="line" href="#DiskHomotopyExtension-L39" id="DiskHomotopyExtension-L39"> 39</a>   change f₁ x = H (p.1, p.2)</span>
+<span><a class="line" href="#DiskHomotopyExtension-L40" id="DiskHomotopyExtension-L40"> 40</a>   rw [← ht, H.apply_one]</span>
+<span><a class="line" href="#DiskHomotopyExtension-L41" id="DiskHomotopyExtension-L41"> 41</a>   exact congrArg f₁ hx</span>
+<span><a class="line" href="#DiskHomotopyExtension-L42" id="DiskHomotopyExtension-L42"> 42</a> </span>
+<span><a class="line" href="#DiskHomotopyExtension-L43" id="DiskHomotopyExtension-L43"> 43</a> /-- The endpoint identities are exactly the compatibility conditions for boundary gluing. -/</span>
+<span id="doc/BC4lean.ProperActions.cylinderBoundaryData_factorsThrough"><a class="line" href="#DiskHomotopyExtension-L44" id="DiskHomotopyExtension-L44"> 44</a> theorem cylinderBoundaryData_factorsThrough :</span>
+<span><a class="line" href="#DiskHomotopyExtension-L45" id="DiskHomotopyExtension-L45"> 45</a>     Function.FactorsThrough (cylinderBoundaryData f₀ f₁ H) cylinderBoundaryQuotient := by</span>
+<span><a class="line" href="#DiskHomotopyExtension-L46" id="DiskHomotopyExtension-L46"> 46</a>   intro p q h</span>
+<span><a class="line" href="#DiskHomotopyExtension-L47" id="DiskHomotopyExtension-L47"> 47</a>   rcases p with x | x</span>
+<span><a class="line" href="#DiskHomotopyExtension-L48" id="DiskHomotopyExtension-L48"> 48</a>   · rcases q with y | y</span>
+<span><a class="line" href="#DiskHomotopyExtension-L49" id="DiskHomotopyExtension-L49"> 49</a>     · exact congrArg f₀ (Subtype.ext (congrArg (fun z : sphere (0 : ℝ × E) 1 =&gt; z.1.2) h))</span>
+<span><a class="line" href="#DiskHomotopyExtension-L50" id="DiskHomotopyExtension-L50"> 50</a>     · rcases y with y | y</span>
+<span><a class="line" href="#DiskHomotopyExtension-L51" id="DiskHomotopyExtension-L51"> 51</a>       · have ht := congrArg (fun z : sphere (0 : ℝ × E) 1 =&gt; z.1.1) h</span>
+<span><a class="line" href="#DiskHomotopyExtension-L52" id="DiskHomotopyExtension-L52"> 52</a>         change (-1 : ℝ) = 1 at ht</span>
+<span><a class="line" href="#DiskHomotopyExtension-L53" id="DiskHomotopyExtension-L53"> 53</a>         norm_num at ht</span>
+<span><a class="line" href="#DiskHomotopyExtension-L54" id="DiskHomotopyExtension-L54"> 54</a>       · exact faceZero_side_agree f₀ f₁ H x y h</span>
+<span><a class="line" href="#DiskHomotopyExtension-L55" id="DiskHomotopyExtension-L55"> 55</a>   · rcases x with x | x</span>
+<span><a class="line" href="#DiskHomotopyExtension-L56" id="DiskHomotopyExtension-L56"> 56</a>     · rcases q with y | y</span>
+<span><a class="line" href="#DiskHomotopyExtension-L57" id="DiskHomotopyExtension-L57"> 57</a>       · have ht := congrArg (fun z : sphere (0 : ℝ × E) 1 =&gt; z.1.1) h</span>
+<span><a class="line" href="#DiskHomotopyExtension-L58" id="DiskHomotopyExtension-L58"> 58</a>         change (1 : ℝ) = -1 at ht</span>
+<span><a class="line" href="#DiskHomotopyExtension-L59" id="DiskHomotopyExtension-L59"> 59</a>         norm_num at ht</span>
+<span><a class="line" href="#DiskHomotopyExtension-L60" id="DiskHomotopyExtension-L60"> 60</a>       · rcases y with y | y</span>
+<span><a class="line" href="#DiskHomotopyExtension-L61" id="DiskHomotopyExtension-L61"> 61</a>         · exact congrArg f₁ (Subtype.ext (congrArg (fun z : sphere (0 : ℝ × E) 1 =&gt; z.1.2) h))</span>
+<span><a class="line" href="#DiskHomotopyExtension-L62" id="DiskHomotopyExtension-L62"> 62</a>         · exact faceOne_side_agree f₀ f₁ H x y h</span>
+<span><a class="line" href="#DiskHomotopyExtension-L63" id="DiskHomotopyExtension-L63"> 63</a>     · rcases q with y | y</span>
+<span><a class="line" href="#DiskHomotopyExtension-L64" id="DiskHomotopyExtension-L64"> 64</a>       · exact (faceZero_side_agree f₀ f₁ H y x h.symm).symm</span>
+<span><a class="line" href="#DiskHomotopyExtension-L65" id="DiskHomotopyExtension-L65"> 65</a>       · rcases y with y | y</span>
+<span><a class="line" href="#DiskHomotopyExtension-L66" id="DiskHomotopyExtension-L66"> 66</a>         · exact (faceOne_side_agree f₀ f₁ H y x h.symm).symm</span>
+<span><a class="line" href="#DiskHomotopyExtension-L67" id="DiskHomotopyExtension-L67"> 67</a>         · apply congrArg H</span>
+<span><a class="line" href="#DiskHomotopyExtension-L68" id="DiskHomotopyExtension-L68"> 68</a>           exact Prod.ext</span>
+<span><a class="line" href="#DiskHomotopyExtension-L69" id="DiskHomotopyExtension-L69"> 69</a>             (signedTime_injective (congrArg (fun z : sphere (0 : ℝ × E) 1 =&gt; z.1.1) h))</span>
+<span><a class="line" href="#DiskHomotopyExtension-L70" id="DiskHomotopyExtension-L70"> 70</a>             (Subtype.ext (congrArg (fun z : sphere (0 : ℝ × E) 1 =&gt; z.1.2) h))</span>
+<span><a class="line" href="#DiskHomotopyExtension-L71" id="DiskHomotopyExtension-L71"> 71</a> </span>
+<span><a class="line" href="#DiskHomotopyExtension-L72" id="DiskHomotopyExtension-L72"> 72</a> /-- Glue endpoint maps and a boundary homotopy into a map on the cylinder boundary. -/</span>
+<span id="doc/BC4lean.ProperActions.gluedCylinderBoundary"><a class="line" href="#DiskHomotopyExtension-L73" id="DiskHomotopyExtension-L73"> 73</a> def gluedCylinderBoundary [ProperSpace E] : C(sphere (0 : ℝ × E) 1, Y) :=</span>
+<span><a class="line" href="#DiskHomotopyExtension-L74" id="DiskHomotopyExtension-L74"> 74</a>   cylinderBoundaryQuotient_isQuotientMap.lift (cylinderBoundaryData f₀ f₁ H)</span>
+<span><a class="line" href="#DiskHomotopyExtension-L75" id="DiskHomotopyExtension-L75"> 75</a>     (cylinderBoundaryData_factorsThrough f₀ f₁ H)</span>
+<span><a class="line" href="#DiskHomotopyExtension-L76" id="DiskHomotopyExtension-L76"> 76</a> </span>
+<span id="doc/BC4lean.ProperActions.gluedCylinderBoundary_on_piece"><a class="line" href="#DiskHomotopyExtension-L77" id="DiskHomotopyExtension-L77"> 77</a> @[simp] theorem gluedCylinderBoundary_on_piece [ProperSpace E] (p : CylinderBoundaryPieces E) :</span>
+<span><a class="line" href="#DiskHomotopyExtension-L78" id="DiskHomotopyExtension-L78"> 78</a>     gluedCylinderBoundary f₀ f₁ H (cylinderBoundaryQuotient p) =</span>
+<span><a class="line" href="#DiskHomotopyExtension-L79" id="DiskHomotopyExtension-L79"> 79</a>       cylinderBoundaryData f₀ f₁ H p :=</span>
+<span><a class="line" href="#DiskHomotopyExtension-L80" id="DiskHomotopyExtension-L80"> 80</a>   ContinuousMap.congr_fun (cylinderBoundaryQuotient_isQuotientMap.lift_comp</span>
+<span><a class="line" href="#DiskHomotopyExtension-L81" id="DiskHomotopyExtension-L81"> 81</a>     (cylinderBoundaryData f₀ f₁ H) (cylinderBoundaryData_factorsThrough f₀ f₁ H)) p</span>
+<span><a class="line" href="#DiskHomotopyExtension-L82" id="DiskHomotopyExtension-L82"> 82</a> </span>
+<span><a class="line" href="#DiskHomotopyExtension-L83" id="DiskHomotopyExtension-L83"> 83</a> variable [NormedSpace ℝ E]</span>
+<span><a class="line" href="#DiskHomotopyExtension-L84" id="DiskHomotopyExtension-L84"> 84</a> </span>
+<span><a class="line" href="#DiskHomotopyExtension-L85" id="DiskHomotopyExtension-L85"> 85</a> /-- Into a contractible target, a sphere homotopy extends over the ball with both endpoints fixed. -/</span>
+<span id="doc/BC4lean.ProperActions.contractible_extends_ball_homotopy"><a class="line" href="#DiskHomotopyExtension-L86" id="DiskHomotopyExtension-L86"> 86</a> theorem contractible_extends_ball_homotopy [ProperSpace E] [ContractibleSpace Y] :</span>
+<span><a class="line" href="#DiskHomotopyExtension-L87" id="DiskHomotopyExtension-L87"> 87</a>     ∃ F : f₀.Homotopy f₁, ∀ t s, F (t, sphereInclusion s) = H (t, s) := by</span>
+<span><a class="line" href="#DiskHomotopyExtension-L88" id="DiskHomotopyExtension-L88"> 88</a>   obtain ⟨F, hF⟩ := contractible_extends_ball (gluedCylinderBoundary f₀ f₁ H)</span>
+<span><a class="line" href="#DiskHomotopyExtension-L89" id="DiskHomotopyExtension-L89"> 89</a>   have he (p : CylinderBoundaryPieces E) :</span>
+<span><a class="line" href="#DiskHomotopyExtension-L90" id="DiskHomotopyExtension-L90"> 90</a>       F (sphereInclusion (cylinderBoundaryQuotient p)) = cylinderBoundaryData f₀ f₁ H p :=</span>
+<span><a class="line" href="#DiskHomotopyExtension-L91" id="DiskHomotopyExtension-L91"> 91</a>     (ContinuousMap.congr_fun hF (cylinderBoundaryQuotient p)).trans</span>
+<span><a class="line" href="#DiskHomotopyExtension-L92" id="DiskHomotopyExtension-L92"> 92</a>       (gluedCylinderBoundary_on_piece f₀ f₁ H p)</span>
+<span><a class="line" href="#DiskHomotopyExtension-L93" id="DiskHomotopyExtension-L93"> 93</a>   refine ⟨{ toContinuousMap := F.comp cylinderBall,</span>
+<span><a class="line" href="#DiskHomotopyExtension-L94" id="DiskHomotopyExtension-L94"> 94</a>             map_zero_left := ?_, map_one_left := ?_ }, ?_⟩</span>
+<span><a class="line" href="#DiskHomotopyExtension-L95" id="DiskHomotopyExtension-L95"> 95</a>   · intro x</span>
+<span><a class="line" href="#DiskHomotopyExtension-L96" id="DiskHomotopyExtension-L96"> 96</a>     change F (cylinderBall (0,x)) = f₀ x</span>
+<span><a class="line" href="#DiskHomotopyExtension-L97" id="DiskHomotopyExtension-L97"> 97</a>     calc</span>
+<span><a class="line" href="#DiskHomotopyExtension-L98" id="DiskHomotopyExtension-L98"> 98</a>       F (cylinderBall (0,x)) = F (sphereInclusion (cylinderBoundaryQuotient (Sum.inl x))) := by</span>
+<span><a class="line" href="#DiskHomotopyExtension-L99" id="DiskHomotopyExtension-L99"> 99</a>         apply congrArg F</span>
+<span><a class="line" href="#DiskHomotopyExtension-L100" id="DiskHomotopyExtension-L100">100</a>         apply Subtype.ext</span>
+<span><a class="line" href="#DiskHomotopyExtension-L101" id="DiskHomotopyExtension-L101">101</a>         exact Prod.ext signedTime_zero rfl</span>
+<span><a class="line" href="#DiskHomotopyExtension-L102" id="DiskHomotopyExtension-L102">102</a>       _ = _ := he (Sum.inl x)</span>
+<span><a class="line" href="#DiskHomotopyExtension-L103" id="DiskHomotopyExtension-L103">103</a>   · intro x</span>
+<span><a class="line" href="#DiskHomotopyExtension-L104" id="DiskHomotopyExtension-L104">104</a>     change F (cylinderBall (1,x)) = f₁ x</span>
+<span><a class="line" href="#DiskHomotopyExtension-L105" id="DiskHomotopyExtension-L105">105</a>     calc</span>
+<span><a class="line" href="#DiskHomotopyExtension-L106" id="DiskHomotopyExtension-L106">106</a>       F (cylinderBall (1,x)) = F (sphereInclusion (cylinderBoundaryQuotient (Sum.inr (Sum.inl x)))) := by</span>
+<span><a class="line" href="#DiskHomotopyExtension-L107" id="DiskHomotopyExtension-L107">107</a>         apply congrArg F</span>
+<span><a class="line" href="#DiskHomotopyExtension-L108" id="DiskHomotopyExtension-L108">108</a>         apply Subtype.ext</span>
+<span><a class="line" href="#DiskHomotopyExtension-L109" id="DiskHomotopyExtension-L109">109</a>         exact Prod.ext signedTime_one rfl</span>
+<span><a class="line" href="#DiskHomotopyExtension-L110" id="DiskHomotopyExtension-L110">110</a>       _ = _ := he (Sum.inr (Sum.inl x))</span>
+<span><a class="line" href="#DiskHomotopyExtension-L111" id="DiskHomotopyExtension-L111">111</a>   · intro t s</span>
+<span><a class="line" href="#DiskHomotopyExtension-L112" id="DiskHomotopyExtension-L112">112</a>     exact he (Sum.inr (Sum.inr (t,s)))</span>
+<span><a class="line" href="#DiskHomotopyExtension-L113" id="DiskHomotopyExtension-L113">113</a> </span>
+<span><a class="line" href="#DiskHomotopyExtension-L114" id="DiskHomotopyExtension-L114">114</a> end BC4lean.ProperActions</span>
+</pre>
+<h2 id="DiskPathLifting">DiskPathLifting.lean</h2><p>源码 SHA-256：<code>0a5c896ef02126bf9d042a7d57ec875b38df6315fbd1b9a4534e5af67dbbfd6a</code></p><pre>
+<span><a class="line" href="#DiskPathLifting-L1" id="DiskPathLifting-L1">  1</a> import BC4lean.DiskHomotopyExtension</span>
+<span><a class="line" href="#DiskPathLifting-L2" id="DiskPathLifting-L2">  2</a> </span>
+<span><a class="line" href="#DiskPathLifting-L3" id="DiskPathLifting-L3">  3</a> /-! # Path lifting across the standard disk boundary inclusion -/</span>
+<span><a class="line" href="#DiskPathLifting-L4" id="DiskPathLifting-L4">  4</a> </span>
+<span><a class="line" href="#DiskPathLifting-L5" id="DiskPathLifting-L5">  5</a> noncomputable section</span>
+<span><a class="line" href="#DiskPathLifting-L6" id="DiskPathLifting-L6">  6</a> open scoped unitInterval</span>
+<span><a class="line" href="#DiskPathLifting-L7" id="DiskPathLifting-L7">  7</a> </span>
+<span><a class="line" href="#DiskPathLifting-L8" id="DiskPathLifting-L8">  8</a> namespace BC4lean.ProperActions</span>
+<span><a class="line" href="#DiskPathLifting-L9" id="DiskPathLifting-L9">  9</a> </span>
+<span><a class="line" href="#DiskPathLifting-L10" id="DiskPathLifting-L10"> 10</a> universe u</span>
+<span><a class="line" href="#DiskPathLifting-L11" id="DiskPathLifting-L11"> 11</a> </span>
+<span><a class="line" href="#DiskPathLifting-L12" id="DiskPathLifting-L12"> 12</a> /-- A prescribed boundary homotopy extends over a standard disk, with endpoints unchanged. -/</span>
+<span id="doc/BC4lean.ProperActions.contractible_extends_disk_homotopy"><a class="line" href="#DiskPathLifting-L13" id="DiskPathLifting-L13"> 13</a> theorem contractible_extends_disk_homotopy {Y : Type*} [TopologicalSpace Y]</span>
+<span><a class="line" href="#DiskPathLifting-L14" id="DiskPathLifting-L14"> 14</a>     [ContractibleSpace Y] (n : ℕ) (f₀ f₁ : C(TopCat.disk.{u} n, Y))</span>
+<span><a class="line" href="#DiskPathLifting-L15" id="DiskPathLifting-L15"> 15</a>     (H : (f₀.comp (TopCat.diskBoundaryInclusion n).hom).Homotopy</span>
+<span><a class="line" href="#DiskPathLifting-L16" id="DiskPathLifting-L16"> 16</a>       (f₁.comp (TopCat.diskBoundaryInclusion n).hom)) :</span>
+<span><a class="line" href="#DiskPathLifting-L17" id="DiskPathLifting-L17"> 17</a>     ∃ F : f₀.Homotopy f₁, ∀ t s, F (t, (TopCat.diskBoundaryInclusion n) s) = H (t,s) := by</span>
+<span><a class="line" href="#DiskPathLifting-L18" id="DiskPathLifting-L18"> 18</a>   let b : C(Metric.closedBall (0 : EuclideanSpace ℝ (Fin n)) 1, TopCat.disk.{u} n) :=</span>
+<span><a class="line" href="#DiskPathLifting-L19" id="DiskPathLifting-L19"> 19</a>     ⟨ULift.up, continuous_uliftUp⟩</span>
+<span><a class="line" href="#DiskPathLifting-L20" id="DiskPathLifting-L20"> 20</a>   let s : C(Metric.sphere (0 : EuclideanSpace ℝ (Fin n)) 1, TopCat.diskBoundary.{u} n) :=</span>
+<span><a class="line" href="#DiskPathLifting-L21" id="DiskPathLifting-L21"> 21</a>     ⟨ULift.up, continuous_uliftUp⟩</span>
+<span><a class="line" href="#DiskPathLifting-L22" id="DiskPathLifting-L22"> 22</a>   let h : ((f₀.comp b).comp sphereInclusion).Homotopy ((f₁.comp b).comp sphereInclusion) :=</span>
+<span><a class="line" href="#DiskPathLifting-L23" id="DiskPathLifting-L23"> 23</a>     H.compContinuousMap s</span>
+<span><a class="line" href="#DiskPathLifting-L24" id="DiskPathLifting-L24"> 24</a>   obtain ⟨F, hF⟩ := contractible_extends_ball_homotopy (f₀.comp b) (f₁.comp b) h</span>
+<span><a class="line" href="#DiskPathLifting-L25" id="DiskPathLifting-L25"> 25</a>   let d : C(TopCat.disk.{u} n, Metric.closedBall (0 : EuclideanSpace ℝ (Fin n)) 1) :=</span>
+<span><a class="line" href="#DiskPathLifting-L26" id="DiskPathLifting-L26"> 26</a>     ⟨ULift.down, continuous_uliftDown⟩</span>
+<span><a class="line" href="#DiskPathLifting-L27" id="DiskPathLifting-L27"> 27</a>   exact ⟨F.compContinuousMap d, fun t x =&gt; hF t x.down⟩</span>
+<span><a class="line" href="#DiskPathLifting-L28" id="DiskPathLifting-L28"> 28</a> </span>
+<span><a class="line" href="#DiskPathLifting-L29" id="DiskPathLifting-L29"> 29</a> /-- Endpoint-preserving extension of a continuous family of boundary paths. -/</span>
+<span id="doc/BC4lean.ProperActions.contractible_disk_path_lifting"><a class="line" href="#DiskPathLifting-L30" id="DiskPathLifting-L30"> 30</a> theorem contractible_disk_path_lifting {Y : Type*} [TopologicalSpace Y]</span>
+<span><a class="line" href="#DiskPathLifting-L31" id="DiskPathLifting-L31"> 31</a>     [ContractibleSpace Y] (n : ℕ)</span>
+<span><a class="line" href="#DiskPathLifting-L32" id="DiskPathLifting-L32"> 32</a>     (a : C(TopCat.diskBoundary.{u} n, C(I,Y))) (f₀ f₁ : C(TopCat.disk.{u} n, Y))</span>
+<span><a class="line" href="#DiskPathLifting-L33" id="DiskPathLifting-L33"> 33</a>     (h₀ : ∀ s, a s 0 = f₀ ((TopCat.diskBoundaryInclusion n) s))</span>
+<span><a class="line" href="#DiskPathLifting-L34" id="DiskPathLifting-L34"> 34</a>     (h₁ : ∀ s, a s 1 = f₁ ((TopCat.diskBoundaryInclusion n) s)) :</span>
+<span><a class="line" href="#DiskPathLifting-L35" id="DiskPathLifting-L35"> 35</a>     ∃ F : C(TopCat.disk.{u} n, C(I,Y)),</span>
+<span><a class="line" href="#DiskPathLifting-L36" id="DiskPathLifting-L36"> 36</a>       (∀ s, F ((TopCat.diskBoundaryInclusion n) s) = a s) ∧</span>
+<span><a class="line" href="#DiskPathLifting-L37" id="DiskPathLifting-L37"> 37</a>       (∀ x, F x 0 = f₀ x) ∧ (∀ x, F x 1 = f₁ x) := by</span>
+<span><a class="line" href="#DiskPathLifting-L38" id="DiskPathLifting-L38"> 38</a>   let H : (f₀.comp (TopCat.diskBoundaryInclusion n).hom).Homotopy</span>
+<span><a class="line" href="#DiskPathLifting-L39" id="DiskPathLifting-L39"> 39</a>       (f₁.comp (TopCat.diskBoundaryInclusion n).hom) :=</span>
+<span><a class="line" href="#DiskPathLifting-L40" id="DiskPathLifting-L40"> 40</a>     { toContinuousMap := a.uncurry.comp ContinuousMap.prodSwap,</span>
+<span><a class="line" href="#DiskPathLifting-L41" id="DiskPathLifting-L41"> 41</a>       map_zero_left := h₀, map_one_left := h₁ }</span>
+<span><a class="line" href="#DiskPathLifting-L42" id="DiskPathLifting-L42"> 42</a>   obtain ⟨G, hG⟩ := contractible_extends_disk_homotopy n f₀ f₁ H</span>
+<span><a class="line" href="#DiskPathLifting-L43" id="DiskPathLifting-L43"> 43</a>   refine ⟨(G.toContinuousMap.comp ContinuousMap.prodSwap).curry, ?_, ?_, ?_⟩</span>
+<span><a class="line" href="#DiskPathLifting-L44" id="DiskPathLifting-L44"> 44</a>   · intro s</span>
+<span><a class="line" href="#DiskPathLifting-L45" id="DiskPathLifting-L45"> 45</a>     exact ContinuousMap.ext (fun t =&gt; hG t s)</span>
+<span><a class="line" href="#DiskPathLifting-L46" id="DiskPathLifting-L46"> 46</a>   · exact G.apply_zero</span>
+<span><a class="line" href="#DiskPathLifting-L47" id="DiskPathLifting-L47"> 47</a>   · exact G.apply_one</span>
+<span><a class="line" href="#DiskPathLifting-L48" id="DiskPathLifting-L48"> 48</a> </span>
+<span><a class="line" href="#DiskPathLifting-L49" id="DiskPathLifting-L49"> 49</a> end BC4lean.ProperActions</span>
+</pre>
+<h2 id="EquivariantPathLifting">EquivariantPathLifting.lean</h2><p>源码 SHA-256：<code>b554da811b2a95fb6ba3aeff73ecc81428400d2112c2fbed62d3c3e05bd62464</code></p><pre>
+<span><a class="line" href="#EquivariantPathLifting-L1" id="EquivariantPathLifting-L1">  1</a> import BC4lean.DiskPathLifting</span>
+<span><a class="line" href="#EquivariantPathLifting-L2" id="EquivariantPathLifting-L2">  2</a> import BC4lean.CellularExtension</span>
+<span><a class="line" href="#EquivariantPathLifting-L3" id="EquivariantPathLifting-L3">  3</a> import Mathlib.Topology.ContinuousMap.Algebra</span>
+<span><a class="line" href="#EquivariantPathLifting-L4" id="EquivariantPathLifting-L4">  4</a> </span>
+<span><a class="line" href="#EquivariantPathLifting-L5" id="EquivariantPathLifting-L5">  5</a> /-! # Equivariant path evaluation and lifting across orbit cells -/</span>
+<span><a class="line" href="#EquivariantPathLifting-L6" id="EquivariantPathLifting-L6">  6</a> </span>
+<span><a class="line" href="#EquivariantPathLifting-L7" id="EquivariantPathLifting-L7">  7</a> noncomputable section</span>
+<span><a class="line" href="#EquivariantPathLifting-L8" id="EquivariantPathLifting-L8">  8</a> open scoped unitInterval</span>
+<span><a class="line" href="#EquivariantPathLifting-L9" id="EquivariantPathLifting-L9">  9</a> </span>
+<span><a class="line" href="#EquivariantPathLifting-L10" id="EquivariantPathLifting-L10"> 10</a> namespace BC4lean.ProperActions</span>
+<span><a class="line" href="#EquivariantPathLifting-L11" id="EquivariantPathLifting-L11"> 11</a> </span>
+<span><a class="line" href="#EquivariantPathLifting-L12" id="EquivariantPathLifting-L12"> 12</a> universe u v</span>
+<span><a class="line" href="#EquivariantPathLifting-L13" id="EquivariantPathLifting-L13"> 13</a> </span>
+<span><a class="line" href="#EquivariantPathLifting-L14" id="EquivariantPathLifting-L14"> 14</a> variable {Γ : Type u} {X : Type v} [Group Γ] [TopologicalSpace X]</span>
+<span><a class="line" href="#EquivariantPathLifting-L15" id="EquivariantPathLifting-L15"> 15</a> variable [MulAction Γ X] [ContinuousConstSMul Γ X]</span>
+<span><a class="line" href="#EquivariantPathLifting-L16" id="EquivariantPathLifting-L16"> 16</a> </span>
+<span><a class="line" href="#EquivariantPathLifting-L17" id="EquivariantPathLifting-L17"> 17</a> /-- Evaluation of an equivariant path at a fixed time. -/</span>
+<span id="doc/BC4lean.ProperActions.pathEvaluation"><a class="line" href="#EquivariantPathLifting-L18" id="EquivariantPathLifting-L18"> 18</a> def pathEvaluation (t : I) : EquivariantMap Γ C(I,X) X where</span>
+<span><a class="line" href="#EquivariantPathLifting-L19" id="EquivariantPathLifting-L19"> 19</a>   toFun p := p t</span>
+<span><a class="line" href="#EquivariantPathLifting-L20" id="EquivariantPathLifting-L20"> 20</a>   continuous_toFun := continuous_eval_const t</span>
+<span><a class="line" href="#EquivariantPathLifting-L21" id="EquivariantPathLifting-L21"> 21</a>   map_smul&#x27; _ _ := rfl</span>
+<span><a class="line" href="#EquivariantPathLifting-L22" id="EquivariantPathLifting-L22"> 22</a> </span>
+<span><a class="line" href="#EquivariantPathLifting-L23" id="EquivariantPathLifting-L23"> 23</a> /-- A path fixed by H is a continuous path in the H-fixed-point space. -/</span>
+<span id="doc/BC4lean.ProperActions.fixedPathMap"><a class="line" href="#EquivariantPathLifting-L24" id="EquivariantPathLifting-L24"> 24</a> def fixedPathMap (H : Subgroup Γ) :</span>
+<span><a class="line" href="#EquivariantPathLifting-L25" id="EquivariantPathLifting-L25"> 25</a>     C(FixedPointSpace H C(I,X), C(I,FixedPointSpace H X)) where</span>
+<span><a class="line" href="#EquivariantPathLifting-L26" id="EquivariantPathLifting-L26"> 26</a>   toFun p :=</span>
+<span><a class="line" href="#EquivariantPathLifting-L27" id="EquivariantPathLifting-L27"> 27</a>     ⟨fun t =&gt; ⟨p.1 t, fun h =&gt; congrArg (fun q : C(I,X) =&gt; q t) (p.2 h)⟩,</span>
+<span><a class="line" href="#EquivariantPathLifting-L28" id="EquivariantPathLifting-L28"> 28</a>       p.1.continuous.subtype_mk _⟩</span>
+<span><a class="line" href="#EquivariantPathLifting-L29" id="EquivariantPathLifting-L29"> 29</a>   continuous_toFun := ContinuousMap.continuous_of_continuous_uncurry _</span>
+<span><a class="line" href="#EquivariantPathLifting-L30" id="EquivariantPathLifting-L30"> 30</a>     (((continuous_subtype_val.comp continuous_fst).eval continuous_snd).subtype_mk _)</span>
+<span><a class="line" href="#EquivariantPathLifting-L31" id="EquivariantPathLifting-L31"> 31</a> </span>
+<span><a class="line" href="#EquivariantPathLifting-L32" id="EquivariantPathLifting-L32"> 32</a> /-- A path in the fixed-point space gives an H-fixed path. -/</span>
+<span id="doc/BC4lean.ProperActions.pathFixedMap"><a class="line" href="#EquivariantPathLifting-L33" id="EquivariantPathLifting-L33"> 33</a> def pathFixedMap (H : Subgroup Γ) :</span>
+<span><a class="line" href="#EquivariantPathLifting-L34" id="EquivariantPathLifting-L34"> 34</a>     C(C(I,FixedPointSpace H X), FixedPointSpace H C(I,X)) where</span>
+<span><a class="line" href="#EquivariantPathLifting-L35" id="EquivariantPathLifting-L35"> 35</a>   toFun p := ⟨⟨fun t =&gt; (p t).1, continuous_subtype_val.comp p.continuous⟩,</span>
+<span><a class="line" href="#EquivariantPathLifting-L36" id="EquivariantPathLifting-L36"> 36</a>     fun h =&gt; ContinuousMap.ext (fun t =&gt; (p t).2 h)⟩</span>
+<span><a class="line" href="#EquivariantPathLifting-L37" id="EquivariantPathLifting-L37"> 37</a>   continuous_toFun :=</span>
+<span><a class="line" href="#EquivariantPathLifting-L38" id="EquivariantPathLifting-L38"> 38</a>     (ContinuousMap.continuous_postcomp ⟨Subtype.val, continuous_subtype_val⟩).subtype_mk _</span>
+<span><a class="line" href="#EquivariantPathLifting-L39" id="EquivariantPathLifting-L39"> 39</a> </span>
+<span id="doc/BC4lean.ProperActions.pathFixedMap_fixedPathMap"><a class="line" href="#EquivariantPathLifting-L40" id="EquivariantPathLifting-L40"> 40</a> @[simp] theorem pathFixedMap_fixedPathMap (H : Subgroup Γ) (p : FixedPointSpace H C(I,X)) :</span>
+<span><a class="line" href="#EquivariantPathLifting-L41" id="EquivariantPathLifting-L41"> 41</a>     pathFixedMap H (fixedPathMap H p) = p := by</span>
+<span><a class="line" href="#EquivariantPathLifting-L42" id="EquivariantPathLifting-L42"> 42</a>   apply Subtype.ext</span>
+<span><a class="line" href="#EquivariantPathLifting-L43" id="EquivariantPathLifting-L43"> 43</a>   exact ContinuousMap.ext (fun _ =&gt; rfl)</span>
+<span><a class="line" href="#EquivariantPathLifting-L44" id="EquivariantPathLifting-L44"> 44</a> </span>
+<span id="doc/BC4lean.ProperActions.fixedPathMap_pathFixedMap"><a class="line" href="#EquivariantPathLifting-L45" id="EquivariantPathLifting-L45"> 45</a> @[simp] theorem fixedPathMap_pathFixedMap (H : Subgroup Γ) (p : C(I,FixedPointSpace H X)) :</span>
+<span><a class="line" href="#EquivariantPathLifting-L46" id="EquivariantPathLifting-L46"> 46</a>     fixedPathMap H (pathFixedMap H p) = p := by</span>
+<span><a class="line" href="#EquivariantPathLifting-L47" id="EquivariantPathLifting-L47"> 47</a>   exact ContinuousMap.ext (fun _ =&gt; rfl)</span>
+<span><a class="line" href="#EquivariantPathLifting-L48" id="EquivariantPathLifting-L48"> 48</a> </span>
+<span><a class="line" href="#EquivariantPathLifting-L49" id="EquivariantPathLifting-L49"> 49</a> variable [TopologicalSpace Γ] [DiscreteTopology Γ]</span>
+<span><a class="line" href="#EquivariantPathLifting-L50" id="EquivariantPathLifting-L50"> 50</a> </span>
+<span><a class="line" href="#EquivariantPathLifting-L51" id="EquivariantPathLifting-L51"> 51</a> /-- Lift a family of boundary paths with prescribed disk endpoints across an orbit cell. -/</span>
+<span id="doc/BC4lean.ProperActions.orbitCell_path_lifting"><a class="line" href="#EquivariantPathLifting-L52" id="EquivariantPathLifting-L52"> 52</a> theorem orbitCell_path_lifting (H : Subgroup Γ) [ContractibleSpace (FixedPointSpace H X)]</span>
+<span><a class="line" href="#EquivariantPathLifting-L53" id="EquivariantPathLifting-L53"> 53</a>     (n : ℕ) (a : EquivariantMap Γ (OrbitCell H (TopCat.diskBoundary.{u} n)) C(I,X))</span>
+<span><a class="line" href="#EquivariantPathLifting-L54" id="EquivariantPathLifting-L54"> 54</a>     (f₀ f₁ : EquivariantMap Γ (OrbitCell H (TopCat.disk.{u} n)) X)</span>
+<span><a class="line" href="#EquivariantPathLifting-L55" id="EquivariantPathLifting-L55"> 55</a>     (h₀ : (pathEvaluation 0).comp a = f₀.comp (OrbitCell.boundaryInclusion H n))</span>
+<span><a class="line" href="#EquivariantPathLifting-L56" id="EquivariantPathLifting-L56"> 56</a>     (h₁ : (pathEvaluation 1).comp a = f₁.comp (OrbitCell.boundaryInclusion H n)) :</span>
+<span><a class="line" href="#EquivariantPathLifting-L57" id="EquivariantPathLifting-L57"> 57</a>     ∃ F : EquivariantMap Γ (OrbitCell H (TopCat.disk.{u} n)) C(I,X),</span>
+<span><a class="line" href="#EquivariantPathLifting-L58" id="EquivariantPathLifting-L58"> 58</a>       F.comp (OrbitCell.boundaryInclusion H n) = a ∧</span>
+<span><a class="line" href="#EquivariantPathLifting-L59" id="EquivariantPathLifting-L59"> 59</a>       (pathEvaluation 0).comp F = f₀ ∧ (pathEvaluation 1).comp F = f₁ := by</span>
+<span><a class="line" href="#EquivariantPathLifting-L60" id="EquivariantPathLifting-L60"> 60</a>   let a&#x27; := (fixedPathMap H).comp (cellEvaluation H a)</span>
+<span><a class="line" href="#EquivariantPathLifting-L61" id="EquivariantPathLifting-L61"> 61</a>   obtain ⟨v, hv, hzero, hone⟩ := contractible_disk_path_lifting n a&#x27;</span>
+<span><a class="line" href="#EquivariantPathLifting-L62" id="EquivariantPathLifting-L62"> 62</a>     (cellEvaluation H f₀) (cellEvaluation H f₁)</span>
+<span><a class="line" href="#EquivariantPathLifting-L63" id="EquivariantPathLifting-L63"> 63</a>     (fun s =&gt; Subtype.ext (congrArg (fun f =&gt; f (QuotientGroup.mk 1,s)) h₀))</span>
+<span><a class="line" href="#EquivariantPathLifting-L64" id="EquivariantPathLifting-L64"> 64</a>     (fun s =&gt; Subtype.ext (congrArg (fun f =&gt; f (QuotientGroup.mk 1,s)) h₁))</span>
+<span><a class="line" href="#EquivariantPathLifting-L65" id="EquivariantPathLifting-L65"> 65</a>   let F := cellFromFixed H ((pathFixedMap H).comp v)</span>
+<span><a class="line" href="#EquivariantPathLifting-L66" id="EquivariantPathLifting-L66"> 66</a>   have he : cellEvaluation H F = (pathFixedMap H).comp v :=</span>
+<span><a class="line" href="#EquivariantPathLifting-L67" id="EquivariantPathLifting-L67"> 67</a>     (orbitCellMapEquiv H).apply_symm_apply _</span>
+<span><a class="line" href="#EquivariantPathLifting-L68" id="EquivariantPathLifting-L68"> 68</a>   refine ⟨F, ?_, ?_, ?_⟩</span>
+<span><a class="line" href="#EquivariantPathLifting-L69" id="EquivariantPathLifting-L69"> 69</a>   · apply (orbitCellMapEquiv H).injective</span>
+<span><a class="line" href="#EquivariantPathLifting-L70" id="EquivariantPathLifting-L70"> 70</a>     change cellEvaluation H (F.comp (OrbitCell.map H (TopCat.diskBoundaryInclusion n).hom)) =</span>
+<span><a class="line" href="#EquivariantPathLifting-L71" id="EquivariantPathLifting-L71"> 71</a>       cellEvaluation H a</span>
+<span><a class="line" href="#EquivariantPathLifting-L72" id="EquivariantPathLifting-L72"> 72</a>     rw [cellEvaluation_comp, he]</span>
+<span><a class="line" href="#EquivariantPathLifting-L73" id="EquivariantPathLifting-L73"> 73</a>     apply ContinuousMap.ext</span>
+<span><a class="line" href="#EquivariantPathLifting-L74" id="EquivariantPathLifting-L74"> 74</a>     intro s</span>
+<span><a class="line" href="#EquivariantPathLifting-L75" id="EquivariantPathLifting-L75"> 75</a>     change pathFixedMap H (v ((TopCat.diskBoundaryInclusion n) s)) = cellEvaluation H a s</span>
+<span><a class="line" href="#EquivariantPathLifting-L76" id="EquivariantPathLifting-L76"> 76</a>     rw [hv]</span>
+<span><a class="line" href="#EquivariantPathLifting-L77" id="EquivariantPathLifting-L77"> 77</a>     exact pathFixedMap_fixedPathMap H _</span>
+<span><a class="line" href="#EquivariantPathLifting-L78" id="EquivariantPathLifting-L78"> 78</a>   · apply (orbitCellMapEquiv H).injective</span>
+<span><a class="line" href="#EquivariantPathLifting-L79" id="EquivariantPathLifting-L79"> 79</a>     apply ContinuousMap.ext</span>
+<span><a class="line" href="#EquivariantPathLifting-L80" id="EquivariantPathLifting-L80"> 80</a>     intro x</span>
+<span><a class="line" href="#EquivariantPathLifting-L81" id="EquivariantPathLifting-L81"> 81</a>     apply Subtype.ext</span>
+<span><a class="line" href="#EquivariantPathLifting-L82" id="EquivariantPathLifting-L82"> 82</a>     have hx := congrArg (fun p : FixedPointSpace H C(I,X) =&gt; p.1 0)</span>
+<span><a class="line" href="#EquivariantPathLifting-L83" id="EquivariantPathLifting-L83"> 83</a>       (ContinuousMap.congr_fun he x)</span>
+<span><a class="line" href="#EquivariantPathLifting-L84" id="EquivariantPathLifting-L84"> 84</a>     exact hx.trans (congrArg Subtype.val (hzero x))</span>
+<span><a class="line" href="#EquivariantPathLifting-L85" id="EquivariantPathLifting-L85"> 85</a>   · apply (orbitCellMapEquiv H).injective</span>
+<span><a class="line" href="#EquivariantPathLifting-L86" id="EquivariantPathLifting-L86"> 86</a>     apply ContinuousMap.ext</span>
+<span><a class="line" href="#EquivariantPathLifting-L87" id="EquivariantPathLifting-L87"> 87</a>     intro x</span>
+<span><a class="line" href="#EquivariantPathLifting-L88" id="EquivariantPathLifting-L88"> 88</a>     apply Subtype.ext</span>
+<span><a class="line" href="#EquivariantPathLifting-L89" id="EquivariantPathLifting-L89"> 89</a>     have hx := congrArg (fun p : FixedPointSpace H C(I,X) =&gt; p.1 1)</span>
+<span><a class="line" href="#EquivariantPathLifting-L90" id="EquivariantPathLifting-L90"> 90</a>       (ContinuousMap.congr_fun he x)</span>
+<span><a class="line" href="#EquivariantPathLifting-L91" id="EquivariantPathLifting-L91"> 91</a>     exact hx.trans (congrArg Subtype.val (hone x))</span>
+<span><a class="line" href="#EquivariantPathLifting-L92" id="EquivariantPathLifting-L92"> 92</a> </span>
+<span><a class="line" href="#EquivariantPathLifting-L93" id="EquivariantPathLifting-L93"> 93</a> end BC4lean.ProperActions</span>
+</pre>
+<h2 id="CellularHomotopy">CellularHomotopy.lean</h2><p>源码 SHA-256：<code>7eb1481cc8ab584e5d14c252e546f89239fedc95a31aef133fc0d3013026ec4f</code></p><pre>
+<span><a class="line" href="#CellularHomotopy-L1" id="CellularHomotopy-L1">  1</a> import BC4lean.EquivariantPathLifting</span>
+<span><a class="line" href="#CellularHomotopy-L2" id="CellularHomotopy-L2">  2</a> </span>
+<span><a class="line" href="#CellularHomotopy-L3" id="CellularHomotopy-L3">  3</a> /-! # Homotopy uniqueness for maps from equivariant CW complexes -/</span>
+<span><a class="line" href="#CellularHomotopy-L4" id="CellularHomotopy-L4">  4</a> </span>
+<span><a class="line" href="#CellularHomotopy-L5" id="CellularHomotopy-L5">  5</a> noncomputable section</span>
+<span><a class="line" href="#CellularHomotopy-L6" id="CellularHomotopy-L6">  6</a> open CategoryTheory CategoryTheory.Limits</span>
+<span><a class="line" href="#CellularHomotopy-L7" id="CellularHomotopy-L7">  7</a> open scoped unitInterval</span>
+<span><a class="line" href="#CellularHomotopy-L8" id="CellularHomotopy-L8">  8</a> </span>
+<span><a class="line" href="#CellularHomotopy-L9" id="CellularHomotopy-L9">  9</a> namespace BC4lean.ProperActions</span>
+<span><a class="line" href="#CellularHomotopy-L10" id="CellularHomotopy-L10"> 10</a> </span>
+<span><a class="line" href="#CellularHomotopy-L11" id="CellularHomotopy-L11"> 11</a> universe u</span>
+<span><a class="line" href="#CellularHomotopy-L12" id="CellularHomotopy-L12"> 12</a> </span>
+<span><a class="line" href="#CellularHomotopy-L13" id="CellularHomotopy-L13"> 13</a> variable {Γ : Type u} [Group Γ] [TopologicalSpace Γ] [DiscreteTopology Γ]</span>
+<span><a class="line" href="#CellularHomotopy-L14" id="CellularHomotopy-L14"> 14</a> variable {X : Type u} [TopologicalSpace X] [MulAction Γ X] [ContinuousConstSMul Γ X]</span>
+<span><a class="line" href="#CellularHomotopy-L15" id="CellularHomotopy-L15"> 15</a> </span>
+<span><a class="line" href="#CellularHomotopy-L16" id="CellularHomotopy-L16"> 16</a> /-- The equivariant map recording both endpoints of a path. -/</span>
+<span id="doc/BC4lean.ProperActions.pathEndpointPair"><a class="line" href="#CellularHomotopy-L17" id="CellularHomotopy-L17"> 17</a> def pathEndpointPair : EquivariantMap Γ C(I,X) (X × X) where</span>
+<span><a class="line" href="#CellularHomotopy-L18" id="CellularHomotopy-L18"> 18</a>   toFun p := (p 0, p 1)</span>
+<span><a class="line" href="#CellularHomotopy-L19" id="CellularHomotopy-L19"> 19</a>   continuous_toFun := (continuous_eval_const 0).prodMk (continuous_eval_const 1)</span>
+<span><a class="line" href="#CellularHomotopy-L20" id="CellularHomotopy-L20"> 20</a>   map_smul&#x27; _ _ := rfl</span>
+<span><a class="line" href="#CellularHomotopy-L21" id="CellularHomotopy-L21"> 21</a> </span>
+<span><a class="line" href="#CellularHomotopy-L22" id="CellularHomotopy-L22"> 22</a> /-- Contractible fixed-point targets lift orbit cells against path endpoint evaluation. -/</span>
+<span id="doc/BC4lean.ProperActions.basicCell_path_hasLiftingProperty"><a class="line" href="#CellularHomotopy-L23" id="CellularHomotopy-L23"> 23</a> theorem basicCell_path_hasLiftingProperty (h : FixedPointCriterion Γ X)</span>
+<span><a class="line" href="#CellularHomotopy-L24" id="CellularHomotopy-L24"> 24</a>     (n : ℕ) (H : FiniteIsotropy Γ) :</span>
+<span><a class="line" href="#CellularHomotopy-L25" id="CellularHomotopy-L25"> 25</a>     HasLiftingProperty (equivariantBasicCell n H) (pathEndpointPair (Γ := Γ) (X := X)).toActionHom := by</span>
+<span><a class="line" href="#CellularHomotopy-L26" id="CellularHomotopy-L26"> 26</a>   constructor</span>
+<span><a class="line" href="#CellularHomotopy-L27" id="CellularHomotopy-L27"> 27</a>   intro a b sq</span>
+<span><a class="line" href="#CellularHomotopy-L28" id="CellularHomotopy-L28"> 28</a>   let : ContractibleSpace (FixedPointSpace H.val X) := h.1 H.val H.property</span>
+<span><a class="line" href="#CellularHomotopy-L29" id="CellularHomotopy-L29"> 29</a>   let a&#x27; := EquivariantMap.ofActionHom a</span>
+<span><a class="line" href="#CellularHomotopy-L30" id="CellularHomotopy-L30"> 30</a>   let b&#x27; := EquivariantMap.ofActionHom b</span>
+<span><a class="line" href="#CellularHomotopy-L31" id="CellularHomotopy-L31"> 31</a>   let f₀ : EquivariantMap Γ (OrbitCell H.val (TopCat.disk.{u} n)) X :=</span>
+<span><a class="line" href="#CellularHomotopy-L32" id="CellularHomotopy-L32"> 32</a>     { toFun := fun x =&gt; (b&#x27; x).1,</span>
+<span><a class="line" href="#CellularHomotopy-L33" id="CellularHomotopy-L33"> 33</a>       continuous_toFun := continuous_fst.comp b&#x27;.continuous,</span>
+<span><a class="line" href="#CellularHomotopy-L34" id="CellularHomotopy-L34"> 34</a>       map_smul&#x27; := fun g x =&gt; congrArg Prod.fst (b&#x27;.map_smul g x) }</span>
+<span><a class="line" href="#CellularHomotopy-L35" id="CellularHomotopy-L35"> 35</a>   let f₁ : EquivariantMap Γ (OrbitCell H.val (TopCat.disk.{u} n)) X :=</span>
+<span><a class="line" href="#CellularHomotopy-L36" id="CellularHomotopy-L36"> 36</a>     { toFun := fun x =&gt; (b&#x27; x).2,</span>
+<span><a class="line" href="#CellularHomotopy-L37" id="CellularHomotopy-L37"> 37</a>       continuous_toFun := continuous_snd.comp b&#x27;.continuous,</span>
+<span><a class="line" href="#CellularHomotopy-L38" id="CellularHomotopy-L38"> 38</a>       map_smul&#x27; := fun g x =&gt; congrArg Prod.snd (b&#x27;.map_smul g x) }</span>
+<span><a class="line" href="#CellularHomotopy-L39" id="CellularHomotopy-L39"> 39</a>   obtain ⟨F, hi, h₀, h₁⟩ := orbitCell_path_lifting H.val n a&#x27; f₀ f₁</span>
+<span><a class="line" href="#CellularHomotopy-L40" id="CellularHomotopy-L40"> 40</a>     (EquivariantMap.ext fun x =&gt; congrArg (fun k =&gt; (k.hom x).1) sq.w)</span>
+<span><a class="line" href="#CellularHomotopy-L41" id="CellularHomotopy-L41"> 41</a>     (EquivariantMap.ext fun x =&gt; congrArg (fun k =&gt; (k.hom x).2) sq.w)</span>
+<span><a class="line" href="#CellularHomotopy-L42" id="CellularHomotopy-L42"> 42</a>   refine ⟨⟨{ l := F.toActionHom, fac_left := ?_, fac_right := ?_ }⟩⟩</span>
+<span><a class="line" href="#CellularHomotopy-L43" id="CellularHomotopy-L43"> 43</a>   · exact (congrArg EquivariantMap.toActionHom hi).trans</span>
+<span><a class="line" href="#CellularHomotopy-L44" id="CellularHomotopy-L44"> 44</a>       (EquivariantMap.actionHomEquiv.apply_symm_apply a)</span>
+<span><a class="line" href="#CellularHomotopy-L45" id="CellularHomotopy-L45"> 45</a>   · apply Action.Hom.ext</span>
+<span><a class="line" href="#CellularHomotopy-L46" id="CellularHomotopy-L46"> 46</a>     apply TopCat.hom_ext</span>
+<span><a class="line" href="#CellularHomotopy-L47" id="CellularHomotopy-L47"> 47</a>     apply ContinuousMap.ext</span>
+<span><a class="line" href="#CellularHomotopy-L48" id="CellularHomotopy-L48"> 48</a>     intro x</span>
+<span><a class="line" href="#CellularHomotopy-L49" id="CellularHomotopy-L49"> 49</a>     exact Prod.ext (congrArg (fun f =&gt; f x) h₀) (congrArg (fun f =&gt; f x) h₁)</span>
+<span><a class="line" href="#CellularHomotopy-L50" id="CellularHomotopy-L50"> 50</a> </span>
+<span><a class="line" href="#CellularHomotopy-L51" id="CellularHomotopy-L51"> 51</a> /-- Path endpoint lifting extends from cells to every relative equivariant CW structure. -/</span>
+<span id="doc/BC4lean.ProperActions.RelativeEquivariantCWComplex.path_hasLiftingProperty"><a class="line" href="#CellularHomotopy-L52" id="CellularHomotopy-L52"> 52</a> theorem RelativeEquivariantCWComplex.path_hasLiftingProperty</span>
+<span><a class="line" href="#CellularHomotopy-L53" id="CellularHomotopy-L53"> 53</a>     {A B : Action TopCat.{u} Γ} {i : A ⟶ B}</span>
+<span><a class="line" href="#CellularHomotopy-L54" id="CellularHomotopy-L54"> 54</a>     (c : RelativeEquivariantCWComplex i) (h : FixedPointCriterion Γ X) :</span>
+<span><a class="line" href="#CellularHomotopy-L55" id="CellularHomotopy-L55"> 55</a>     HasLiftingProperty i (pathEndpointPair (Γ := Γ) (X := X)).toActionHom := by</span>
+<span><a class="line" href="#CellularHomotopy-L56" id="CellularHomotopy-L56"> 56</a>   let W := MorphismProperty.ofHoms (fun p : ℕ × FiniteIsotropy Γ =&gt; equivariantBasicCell p.1 p.2)</span>
+<span><a class="line" href="#CellularHomotopy-L57" id="CellularHomotopy-L57"> 57</a>   have hc : ∀ s : c.Cells, W (equivariantBasicCell s.j s.i) :=</span>
+<span><a class="line" href="#CellularHomotopy-L58" id="CellularHomotopy-L58"> 58</a>     fun s =&gt; MorphismProperty.ofHoms.mk (s.j, s.i)</span>
+<span><a class="line" href="#CellularHomotopy-L59" id="CellularHomotopy-L59"> 59</a>   have hr : W.rlp (pathEndpointPair (Γ := Γ) (X := X)).toActionHom := by</span>
+<span><a class="line" href="#CellularHomotopy-L60" id="CellularHomotopy-L60"> 60</a>     intro A B f hf</span>
+<span><a class="line" href="#CellularHomotopy-L61" id="CellularHomotopy-L61"> 61</a>     cases hf with</span>
+<span><a class="line" href="#CellularHomotopy-L62" id="CellularHomotopy-L62"> 62</a>     | mk p =&gt; exact basicCell_path_hasLiftingProperty h p.1 p.2</span>
+<span><a class="line" href="#CellularHomotopy-L63" id="CellularHomotopy-L63"> 63</a>   exact W.transfiniteCompositionsOfShape_pushouts_coproducts_le_llp_rlp ℕ i</span>
+<span><a class="line" href="#CellularHomotopy-L64" id="CellularHomotopy-L64"> 64</a>     ⟨c.transfiniteCompositionOfShape&#x27; hc⟩ _ hr</span>
+<span><a class="line" href="#CellularHomotopy-L65" id="CellularHomotopy-L65"> 65</a> </span>
+<span><a class="line" href="#CellularHomotopy-L66" id="CellularHomotopy-L66"> 66</a> variable {A : Type u} [TopologicalSpace A] [MulAction Γ A] [ContinuousConstSMul Γ A]</span>
+<span><a class="line" href="#CellularHomotopy-L67" id="CellularHomotopy-L67"> 67</a> </span>
+<span><a class="line" href="#CellularHomotopy-L68" id="CellularHomotopy-L68"> 68</a> /-- Any two maps from an equivariant CW complex into a fixed-point-criterion target are homotopic. -/</span>
+<span id="doc/BC4lean.ProperActions.EquivariantCWComplex.homotopic"><a class="line" href="#CellularHomotopy-L69" id="CellularHomotopy-L69"> 69</a> theorem EquivariantCWComplex.homotopic (c : EquivariantCWComplex (topologicalAction Γ A))</span>
+<span><a class="line" href="#CellularHomotopy-L70" id="CellularHomotopy-L70"> 70</a>     (h : FixedPointCriterion Γ X) (f g : EquivariantMap Γ A X) : EquivariantlyHomotopic f g := by</span>
+<span><a class="line" href="#CellularHomotopy-L71" id="CellularHomotopy-L71"> 71</a>   let b : EquivariantMap Γ A (X × X) :=</span>
+<span><a class="line" href="#CellularHomotopy-L72" id="CellularHomotopy-L72"> 72</a>     { toFun := fun x =&gt; (f x, g x), continuous_toFun := f.continuous.prodMk g.continuous,</span>
+<span><a class="line" href="#CellularHomotopy-L73" id="CellularHomotopy-L73"> 73</a>       map_smul&#x27; := fun a x =&gt; Prod.ext (f.map_smul a x) (g.map_smul a x) }</span>
+<span><a class="line" href="#CellularHomotopy-L74" id="CellularHomotopy-L74"> 74</a>   let := c.path_hasLiftingProperty h</span>
+<span><a class="line" href="#CellularHomotopy-L75" id="CellularHomotopy-L75"> 75</a>   let sq : CommSq (initial.to (topologicalAction Γ C(I,X)))</span>
+<span><a class="line" href="#CellularHomotopy-L76" id="CellularHomotopy-L76"> 76</a>       (initial.to (topologicalAction Γ A)) (pathEndpointPair (Γ := Γ) (X := X)).toActionHom</span>
+<span><a class="line" href="#CellularHomotopy-L77" id="CellularHomotopy-L77"> 77</a>       b.toActionHom := ⟨initialIsInitial.hom_ext _ _⟩</span>
+<span><a class="line" href="#CellularHomotopy-L78" id="CellularHomotopy-L78"> 78</a>   let F := EquivariantMap.ofActionHom sq.lift</span>
+<span><a class="line" href="#CellularHomotopy-L79" id="CellularHomotopy-L79"> 79</a>   have he (x : A) : (F x 0, F x 1) = (f x, g x) :=</span>
+<span><a class="line" href="#CellularHomotopy-L80" id="CellularHomotopy-L80"> 80</a>     congrArg (fun k =&gt; k.hom x) sq.fac_right</span>
+<span><a class="line" href="#CellularHomotopy-L81" id="CellularHomotopy-L81"> 81</a>   refine ⟨{ toHomotopy :=</span>
+<span><a class="line" href="#CellularHomotopy-L82" id="CellularHomotopy-L82"> 82</a>     { toFun := fun p =&gt; F p.2 p.1,</span>
+<span><a class="line" href="#CellularHomotopy-L83" id="CellularHomotopy-L83"> 83</a>       continuous_toFun := (F.continuous.comp continuous_snd).eval continuous_fst,</span>
+<span><a class="line" href="#CellularHomotopy-L84" id="CellularHomotopy-L84"> 84</a>       map_zero_left := fun x =&gt; congrArg Prod.fst (he x),</span>
+<span><a class="line" href="#CellularHomotopy-L85" id="CellularHomotopy-L85"> 85</a>       map_one_left := fun x =&gt; congrArg Prod.snd (he x) }, prop&#x27; := ?_ }⟩</span>
+<span><a class="line" href="#CellularHomotopy-L86" id="CellularHomotopy-L86"> 86</a>   intro t a x</span>
+<span><a class="line" href="#CellularHomotopy-L87" id="CellularHomotopy-L87"> 87</a>   exact congrArg (fun p : C(I,X) =&gt; p t) (F.map_smul a x)</span>
+<span><a class="line" href="#CellularHomotopy-L88" id="CellularHomotopy-L88"> 88</a> </span>
+<span><a class="line" href="#CellularHomotopy-L89" id="CellularHomotopy-L89"> 89</a> /-- The fixed-point criterion implies the homotopy-terminal mapping property for CW sources. -/</span>
+<span id="doc/BC4lean.ProperActions.EquivariantCWComplex.homotopyTerminal"><a class="line" href="#CellularHomotopy-L90" id="CellularHomotopy-L90"> 90</a> theorem EquivariantCWComplex.homotopyTerminal (c : EquivariantCWComplex (topologicalAction Γ A))</span>
+<span><a class="line" href="#CellularHomotopy-L91" id="CellularHomotopy-L91"> 91</a>     (h : FixedPointCriterion Γ X) : HomotopyTerminalFor Γ A X := by</span>
+<span><a class="line" href="#CellularHomotopy-L92" id="CellularHomotopy-L92"> 92</a>   obtain ⟨f⟩ := c.nonempty_map h</span>
+<span><a class="line" href="#CellularHomotopy-L93" id="CellularHomotopy-L93"> 93</a>   exact ⟨⟨EquivariantMap.ofActionHom f⟩, c.homotopic h⟩</span>
+<span><a class="line" href="#CellularHomotopy-L94" id="CellularHomotopy-L94"> 94</a> </span>
+<span><a class="line" href="#CellularHomotopy-L95" id="CellularHomotopy-L95"> 95</a> /-- Two equivariant CW spaces satisfying the fixed-point criterion are equivariantly homotopy equivalent. -/</span>
+<span id="doc/BC4lean.ProperActions.EquivariantCWComplex.fixedPointCriterion_unique"><a class="line" href="#CellularHomotopy-L96" id="CellularHomotopy-L96"> 96</a> theorem EquivariantCWComplex.fixedPointCriterion_unique</span>
+<span><a class="line" href="#CellularHomotopy-L97" id="CellularHomotopy-L97"> 97</a>     (cA : EquivariantCWComplex (topologicalAction Γ A))</span>
+<span><a class="line" href="#CellularHomotopy-L98" id="CellularHomotopy-L98"> 98</a>     (cX : EquivariantCWComplex (topologicalAction Γ X))</span>
+<span><a class="line" href="#CellularHomotopy-L99" id="CellularHomotopy-L99"> 99</a>     (hA : FixedPointCriterion Γ A) (hX : FixedPointCriterion Γ X) :</span>
+<span><a class="line" href="#CellularHomotopy-L100" id="CellularHomotopy-L100">100</a>     Nonempty (EquivariantHomotopyEquiv Γ A X) :=</span>
+<span><a class="line" href="#CellularHomotopy-L101" id="CellularHomotopy-L101">101</a>   homotopyTerminal_unique (cA.homotopyTerminal hX) (cX.homotopyTerminal hA)</span>
+<span><a class="line" href="#CellularHomotopy-L102" id="CellularHomotopy-L102">102</a>     (cA.homotopyTerminal hA) (cX.homotopyTerminal hX)</span>
+<span><a class="line" href="#CellularHomotopy-L103" id="CellularHomotopy-L103">103</a> </span>
+<span><a class="line" href="#CellularHomotopy-L104" id="CellularHomotopy-L104">104</a> end BC4lean.ProperActions</span>
 </pre>
 </body></html>

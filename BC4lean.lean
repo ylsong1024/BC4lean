@@ -49,3 +49,8 @@ import BC4lean.OrbitCellMaps
 import BC4lean.DiskExtension
 import BC4lean.OrbitCellExtension
 import BC4lean.CellularExtension
+import BC4lean.CylinderBoundary
+import BC4lean.DiskHomotopyExtension
+import BC4lean.DiskPathLifting
+import BC4lean.EquivariantPathLifting
+import BC4lean.CellularHomotopy

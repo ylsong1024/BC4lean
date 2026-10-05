@@ -564,6 +564,75 @@ Apply it to the relative CW structure. For the final assertion take $A$
 to be the initial, empty action.
 \end{proof}
 
+
+\begin{proposition}\label{prop:disk-homotopy-extension}
+\uses{prop:contractible-disk-extension}
+\lean{BC4lean.ProperActions.contractible_extends_ball_homotopy,BC4lean.ProperActions.contractible_extends_disk_homotopy,BC4lean.ProperActions.contractible_disk_path_lifting}
+Let $Y$ be contractible, let $f_0,f_1:D^n\to Y$ be continuous, and let
+$H:[0,1]\times\partial D^n\to Y$ be a homotopy between their restrictions.
+There is a homotopy $F:[0,1]\times D^n\to Y$ from $f_0$ to $f_1$ satisfying
+$F(t,s)=H(t,s)$ on the whole boundary, including when $n=0$.
+Equivalently, every family of boundary paths with prescribed disk endpoints
+extends to a continuous family of disk paths, with those endpoints unchanged.
+\end{proposition}
+\begin{proof}
+\leanok
+Use the max norm on $\mathbb R\times\mathbb R^n$. Its unit sphere is a quotient
+of the disjoint union of the two disk faces and the cylindrical side.
+The endpoint conditions make $f_0,f_1,H$ agree on the fibers of this quotient.
+Descend them to a boundary map and apply the verified ball extension theorem.
+Parametrizing the resulting max-norm ball by $(t,x)\mapsto(2t-1,x)$ gives
+$F$. The path-family formulation follows by currying; the unit interval is
+locally compact, so evaluation is jointly continuous.
+\end{proof}
+
+\begin{proposition}\label{prop:orbit-cell-path-lifting}
+\uses{prop:disk-homotopy-extension,prop:orbit-cell-extension-reduction}
+\lean{BC4lean.ProperActions.fixedPathMap,BC4lean.ProperActions.pathFixedMap,BC4lean.ProperActions.orbitCell_path_lifting}
+Suppose $X^H$ is contractible. A continuous equivariant family of paths on
+$\Gamma/H\times\partial D^n$ extends to $\Gamma/H\times D^n$ whenever its
+two endpoint maps are prescribed on the disk and agree on the boundary.
+Both endpoint maps and every prescribed boundary path are preserved exactly.
+\end{proposition}
+\begin{proof}
+\leanok
+An $H$-fixed path in $X$ is a path in $X^H$, and this identification is continuous
+in both directions for the compact-open topology. Evaluate on the identity
+coset, apply disk path lifting in $X^H$, and recover the equivariant family
+using the orbit/fixed-point correspondence.
+\end{proof}
+
+\begin{proposition}\label{prop:equivariant-cellular-homotopy-terminal}
+\uses{def:equivariant-cellular-data,prop:equivariant-cellular-extension,prop:orbit-cell-path-lifting,def:proper-model-fixed-point-criterion}
+\lean{BC4lean.ProperActions.RelativeEquivariantCWComplex.path_hasLiftingProperty,BC4lean.ProperActions.EquivariantCWComplex.homotopic,BC4lean.ProperActions.EquivariantCWComplex.homotopyTerminal}
+Let $A$ have a finite-isotropy equivariant CW structure and let $X$ satisfy
+the fixed-point criterion. Continuous equivariant maps $A\to X$ exist,
+and any two such maps are equivariantly homotopic.
+\end{proposition}
+\begin{proof}
+\leanok
+The endpoint evaluation map $C([0,1],X)\to X\times X$ has the right lifting
+property against every generating orbit boundary inclusion. The lifting
+property persists under coproducts, pushouts and sequential composition.
+For the initial inclusion into $A$, lift the pair of endpoint maps to a
+continuous equivariant map $A\to C([0,1],X)$. Joint evaluation produces the
+required equivariant homotopy. Existence was verified by cellular extension.
+\end{proof}
+
+\begin{proposition}\label{prop:cw-fixed-point-uniqueness}
+\uses{prop:equivariant-cellular-homotopy-terminal,prop:conditional-universal-model-uniqueness}
+\lean{BC4lean.ProperActions.EquivariantCWComplex.fixedPointCriterion_unique}
+Any two finite-isotropy equivariant CW spaces satisfying the fixed-point
+criterion are equivariantly homotopy equivalent.
+\end{proposition}
+\begin{proof}
+\leanok
+The preceding mapping theorem supplies maps in both directions and homotopies
+of their composites to the respective identities. Apply the verified
+homotopy-terminal uniqueness argument. This does not assert existence of a
+CW space satisfying the fixed-point criterion.
+\end{proof}
+
 \section{Equivariant CW complexes and a model for $\underline E\Gamma$}
 
 \begin{definition}\label{def:equivariant-cw-complex}
@@ -576,15 +645,16 @@ connection between this cellular condition and topological properness.
 \end{definition}
 
 \begin{definition}\label{def:universal-proper-space}
-\uses{def:equivariant-cw-complex,def:proper-model-fixed-point-criterion,prop:conditional-universal-model-uniqueness,prop:proper-infinite-fixed-points,prop:equivariant-cellular-extension}
+\uses{def:equivariant-cw-complex,def:proper-model-fixed-point-criterion,prop:conditional-universal-model-uniqueness,prop:proper-infinite-fixed-points,prop:equivariant-cellular-homotopy-terminal,prop:cw-fixed-point-uniqueness}
 \notready
 A universal proper $\Gamma$-CW complex has contractible fixed-point space
 for every finite subgroup and empty fixed-point space for every infinite
 subgroup. Develop existence, the universal property, and uniqueness up to
 equivariant homotopy. The fixed-point predicate, the finite-group point case, and the conditional
-uniqueness argument have been verified above. Existence of maps from equivariant CW complexes into a target satisfying
-the fixed-point criterion is now verified. General model existence and
-uniqueness of these maps up to equivariant homotopy remain unverified.
+uniqueness argument have been verified above. The mapping property for equivariant CW sources and uniqueness up to
+equivariant homotopy of CW spaces satisfying the fixed-point criterion are
+now verified. Construction of such a CW space, and the proof that the
+resulting full action is topologically proper, remain unverified.
 \end{definition}
 
 \section{Cocompact pieces and model choices}
