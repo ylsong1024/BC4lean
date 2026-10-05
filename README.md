@@ -44,7 +44,13 @@ second-countable universal proper CW model for every countable discrete
 group, via the verified equivariant prism homeomorphism. Chapter 4 now
 has proofs for all of its blueprint targets, with only the standard Lean
 logical axioms in their audits.
-Equivariant KK-theory and the assembly construction are later milestones.
+Chapter 5 now constructs the complete adjointable operator algebra, compact
+module operators, general module gradings and compatible discrete group actions.
+Raw even/odd Kasparov cycle data, standard identity-cycle data and fixed-module
+operator homotopies are checked prerequisites. The KK homotopy groups, Kasparov
+product and comparison with operator K-theory remain unverified; see the
+[Chapter 5 verification record](docs/CHAPTER5_VERIFICATION.md).
+The assembly construction remains a later milestone.
 Consult the [roadmap](docs/ROADMAP.md) and individual blueprint nodes
 for precise boundaries; a green prerequisite does not verify its successors.
 

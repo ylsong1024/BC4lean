@@ -13,7 +13,7 @@ Completion requires a reviewed implementation and the checks in
 | Reduced group C*-algebra | Group algebra, regular representation, reduced completion and comparisons | Examples, API refinement, independent review |
 | Operator K-theory | K₀/K₁ constructions, functoriality, nonunital comparisons and homotopy modules | Review exact hypotheses and extend structural results in bounded steps |
 | Proper actions | Equivariant CW attachment, Hausdorffness, properness, cellular mapping, finite-group models, proper weak labeled join with genuine CW structure and fixed-point criterion, universal mapping and uniqueness, locally compact second-countable telescope model, cocompact indexing | API refinement, examples and independent review |
-| Equivariant KK-theory | Right Hilbert-module foundations, adjointable maps and rank-one operators | Compact module operators, grading, actions, cycles, products and comparison |
+| Equivariant KK-theory | Complete adjointable C*-algebra, compact ideal, general module gradings, compatible discrete actions, raw even/odd cycles, standard identity cycle and fixed-module operator homotopies | Full homotopy quotient and KK groups, interior tensor products, Kasparov products, parity equivalences and operator K-theory comparison |
 | Topological side and assembly | Blueprint specifications | Transition maps, colimit, descent, cut-off classes and compatibility |
 
 This table describes source organization, not a new verification certificate.
@@ -105,26 +105,58 @@ locally compact second-countable model choice is now proved;
 the verified realization, fixed-point contraction and CW attachments together
 prove universal proper CW existence for every discrete group.
 
-### KK-01 — Hilbert C*-module prerequisites (first milestone verified)
+### KK-01 — Hilbert C*-module prerequisites (verified)
 
-The pinned API inventory, opposite-algebra convention for right modules,
-adjointable maps and rank-one operators are checked. The standard right module
-B_B is verified as a concrete example. See [the Chapter 5 verification
-record](CHAPTER5_VERIFICATION.md) for exact declarations and the remaining scope.
-The full `def:hilbert-modules` target remains incomplete.
+Right-module conventions, coefficient inner products, adjointable maps and
+rank-one operators are verified. The complete adjointable endomorphism
+C*-algebra, closed compact-operator ideal, general coefficient/module gradings,
+and compatible continuous discrete group actions now complete the
+`def:hilbert-modules` blueprint target. On the standard module B_B, compact
+operators are isometrically star-isomorphic to B, including nonunital B.
+See [the Chapter 5 verification record](CHAPTER5_VERIFICATION.md).
 
-### KK-02 — Adjointable operator algebra and compact module operators
+### KK-02 — Cycle data and operator homotopies (verified prerequisites)
 
-**Suitable for:** an operator-algebra contributor working with a Lean developer.
-Prove adjoint norm preservation and the C*-identity, construct the complete
-adjointable endomorphism algebra for complete modules, and take the operator-norm
-closure of the span of rank-one maps. Use the verified composition identities
-to establish the compact module operators as an adjoint-closed two-sided ideal.
+Even graded cycles and the ungraded odd-cycle picture have all four localized
+compactness conditions and permit degenerate representations. For separable B,
+the standard module is countably generated and supplies the standard identity
+cycle with F = 0. Fixed-module norm-continuous operator paths produce actual
+cycles at every parameter; constant, reversed and concatenated paths are
+constructed. These prerequisites do not yet construct KK groups or product laws.
 
-**Done when:** these precise statements compile without extra axioms, the
-standard module example is checked, and the appropriate blueprint nodes have
-individually audited declarations. Grading and equivariant Kasparov cycles are
-subsequent tasks, not consequences of this milestone alone.
+### KK-03 — Full homotopy quotient and parity
+
+Construct Hilbert modules over C([0,1],B), evaluation fibres and transport of
+compact defects, or prove equivalence with a fully justified operator-homotopy
+presentation. Bundle modules of varying types and quotient by genuine cycle
+isomorphisms and homotopy. Prove direct-sum congruence, degenerate classes vanish,
+and all abelian group laws. Identify odd cycles with the Clifford-graded picture
+and prove the parity equivalences needed for products.
+
+**Done when:** the actual KK groups, both parities and the full homotopy relation
+are constructed, with all laws strictly compiled and axiom-audited.
+
+### KK-04 — Interior tensor product and Kasparov product
+
+Construct the balanced interior Hilbert-module tensor product and its complete
+coefficient-valued inner product. Prove creation-map adjointability; creation
+maps are not automatically compact, as the verified scalar counterexample shows.
+Develop connections, positivity modulo the compact ideal, and the Kasparov
+technical theorem. Prove product existence, uniqueness up to homotopy,
+well-definedness, associativity, unit laws and functoriality in both variables.
+
+**Done when:** the full `prop:kasparov-product` statement holds without assuming
+existence of a product operator or replacing actual KK groups by another object.
+
+### KK-05 — Comparison with operator K-theory
+
+Construct the projection/unitary cycle maps and inverse Hilbert-module index
+maps, prove invariance and naturality, and establish both comparison
+isomorphisms with the existing `OperatorK0 B` and `OperatorK1 B`. Treat the
+nonunital scalar-quotient kernels and both parities explicitly.
+
+**Done when:** the full `prop:kk-k-theory` statement is proved for separable
+possibly nonunital B and the trivial group, with genuine inverse maps.
 
 ## Longer-term dependencies
 

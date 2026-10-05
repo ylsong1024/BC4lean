@@ -117,24 +117,218 @@ Use the existing complete $C^*$-algebra norm and evaluate the inner product
 and rank-one construction on the opposite-algebra model of $B_B$.
 \end{proof}
 
+\begin{proposition}\label{prop:adjointable-module-norms}
+\uses{def:adjointable-module-map}
+\lean{BC4lean.KKTheory.AdjointableMap.norm_adjoint_toCLM,BC4lean.KKTheory.AdjointableMap.norm_toCLM_adjoint_comp_self}
+\leanok
+Adjoints preserve the operator norm and satisfy $\|T^*T\|=\|T\|^2$,
+also for maps between different right pre-Hilbert modules.
+\end{proposition}
+\begin{proof}\leanok
+Use $\|Tx\|^2=\|\langle x,T^*Tx\rangle\|$, Cauchy--Schwarz and the
+operator-norm bound, first for adjoint norm preservation and then for the
+square-root bound in the $C^*$-identity.
+\end{proof}
+
+\begin{proposition}\label{prop:complete-adjointable-algebra}
+\uses{prop:adjointable-module-norms,prop:adjointable-module-map-laws}
+\lean{BC4lean.KKTheory.AdjointableMap.instNormedAddCommGroup,BC4lean.KKTheory.AdjointableMap.instNormedAlgebra,BC4lean.KKTheory.AdjointableMap.instStarRing,BC4lean.KKTheory.AdjointableMap.isClosed_range_toCLMPair,BC4lean.KKTheory.AdjointableMap.toCLMPair_isometry,BC4lean.KKTheory.AdjointableMap.instCompleteSpace,BC4lean.KKTheory.AdjointableMap.instCStarAlgebra}
+\leanok
+Adjointable maps carry the norm $\|T\|=\|T:E\to F\|$.
+For complete $E,F$ this space is complete. Adjointable endomorphisms of
+complete $E$ form a unital complex $C^*$-algebra, with multiplication by
+composition and involution by adjoint.
+\end{proposition}
+\begin{proof}\leanok
+The adjoint identity defines a closed subset of the product of the two
+bounded-operator spaces. Pairing $T$ with $T^*$ is an isometry because
+$\|T^*\|=\|T\|$. Transport completeness from that closed subset, and use
+the already proved composition, scalar, involution and $C^*$-norm laws.
+\end{proof}
+
+\begin{definition}\label{def:compact-module-operators}
+\uses{prop:complete-adjointable-algebra,def:module-rank-one}
+\lean{BC4lean.KKTheory.moduleFiniteRank,BC4lean.KKTheory.moduleCompact,BC4lean.KKTheory.IsModuleCompact,BC4lean.KKTheory.mem_moduleCompact_iff_approx}
+\leanok
+The finite-rank module maps are the complex linear span of the $\theta_{x,y}$.
+The compact module maps $\mathcal K_B(E,F)$ are its operator-norm closure.
+Equivalently, for every $\epsilon>0$ a compact map has a finite-rank module
+approximation within $\epsilon$. This definition does not use complex
+finite-dimensionality of the range.
+\end{definition}
+
+\begin{proposition}\label{prop:compact-module-ideal}
+\uses{def:compact-module-operators,prop:module-rank-one-laws}
+\lean{BC4lean.KKTheory.moduleCompact_isClosed,BC4lean.KKTheory.moduleCompact_adjoint,BC4lean.KKTheory.comp_mem_moduleCompact,BC4lean.KKTheory.mem_moduleCompact_comp,BC4lean.KKTheory.compactModuleOperatorIdeal_isTwoSided,BC4lean.KKTheory.compactModuleOperator_nonUnitalCStarAlgebra}
+\leanok
+Compact module maps are closed under adjoints. Composition with an
+adjointable map on either side preserves compactness. Thus
+$\mathcal K_B(E)$ is a closed adjoint-stable two-sided ideal of
+$\mathcal L_B(E)$, and is a possibly nonunital $C^*$-algebra for complete $E$.
+\end{proposition}
+\begin{proof}\leanok
+The rank-one formulas give the assertions on the linear span. Boundedness
+of composition and adjoint norm preservation extend them to its closure.
+\end{proof}
+
+\begin{definition}\label{def:module-gradings}
+\uses{def:adjointable-module-map}
+\lean{BC4lean.KKTheory.CStarGrading,BC4lean.KKTheory.GradedHilbertModule,BC4lean.KKTheory.GradedHilbertModule.IsEven,BC4lean.KKTheory.GradedHilbertModule.IsOdd}
+\leanok
+A coefficient grading is an involutive complex star-algebra automorphism
+$\beta$ of $B$. A compatible module grading is an involutive complex-linear
+isometry $J$ with $\langle Jx,Jy\rangle=\beta(\langle x,y\rangle)$.
+An operator is even when it commutes with the grading and odd when it
+anticommutes. For trivially graded coefficients, $J$ is a selfadjoint unitary
+adjointable operator. Completeness of the module is imposed when using it as
+a Hilbert module.
+\end{definition}
+
+\begin{definition}\label{def:compatible-module-actions}
+\uses{def:module-gradings}
+\lean{BC4lean.KKTheory.CStarAlgebraAction,BC4lean.KKTheory.EquivariantHilbertModule,BC4lean.KKTheory.EquivariantHilbertModule.map_op_smul,BC4lean.KKTheory.EquivariantHilbertModule.continuous_action,BC4lean.KKTheory.EquivariantHilbertModule.PreservesGrading}
+\leanok
+For a discrete group $\Gamma$ acting on $B$ by complex star-algebra
+automorphisms $\alpha_g$, a compatible action on $E$ consists of
+complex-linear isometries $U_g$ satisfying the group laws and
+$\langle U_gx,U_gy\rangle=\alpha_g(\langle x,y\rangle)$.
+Then $U_g(xb)=(U_gx)\alpha_g(b)$, and the action is jointly continuous.
+A graded action also commutes with $J$. The individual $U_g$ are generally
+semilinear over $B$.
+\end{definition}
+
+\begin{proposition}\label{prop:equivariant-compact-conjugation}
+\uses{def:compatible-module-actions,prop:compact-module-ideal}
+\lean{BC4lean.KKTheory.EquivariantHilbertModule.conjugateOperator,BC4lean.KKTheory.EquivariantHilbertModule.conjugateMap_mem_moduleCompact,BC4lean.KKTheory.EquivariantHilbertModule.conjugateOperator_mem_moduleCompact}
+\leanok
+Conjugation $T\mapsto U_gTU_{g^{-1}}$ preserves adjointability, its operator
+norm, and compact module operators. This applies to compatible maps between
+different modules as well as endomorphisms.
+\end{proposition}
+\begin{proof}\leanok
+Transport the adjoint identity through the coefficient automorphism.
+Isometries preserve the norm, and conjugation sends $\theta_{x,y}$ to
+$\theta_{U_gx,U_gy}$, so it preserves the closed rank-one span.
+\end{proof}
+
+\begin{definition}\label{def:countably-generated-module}
+\uses{def:hilbert-modules}
+\lean{BC4lean.KKTheory.moduleGeneratingSpan,BC4lean.KKTheory.IsCountablyGeneratedModule,BC4lean.KKTheory.moduleGeneratingSpan_closure_eq_top_iff,BC4lean.KKTheory.IsCountablyGeneratedModule.map_linearIsometryEquiv}
+\leanok
+A right Hilbert module is countably generated if there is a sequence $\xi_n$
+such that the complex linear span of the vectors $\xi_n b$, $b\in B$, is norm
+dense. This property is preserved by coefficient-compatible complex-linear
+isometric module isomorphisms, including semilinear coefficient twists.
+\end{definition}
+
+\begin{proposition}\label{prop:standard-module-compact-algebra}
+\uses{prop:standard-module-rank-one,prop:compact-module-ideal}
+\lean{BC4lean.KKTheory.standardLeftMul,BC4lean.KKTheory.norm_standardLeftMul,BC4lean.KKTheory.moduleCompact_standard_eq_range,BC4lean.KKTheory.standardCompactEquiv,BC4lean.KKTheory.norm_standardCompactEquiv}
+\leanok
+Left multiplication identifies $B$ isometrically as a complex star-algebra
+with $\mathcal K_B(B_B)$, also for nonunital $B$.
+\end{proposition}
+\begin{proof}\leanok
+Test left multiplication by $b$ on $b^*$ to obtain its norm. Its image is
+closed and contains every rank-one module operator. An approximate unit
+shows conversely that every left multiplication is in the compact closure.
+\end{proof}
+
 \begin{definition}\label{def:hilbert-modules}
-\uses{prop:module-rank-one-laws,prop:standard-module-rank-one}
-\notready
-Develop graded Hilbert $C^*$-modules, adjointable operators, compact module
-operators, and continuous compatible group actions.
-The ungraded adjointable-map and rank-one foundations above are verified.
-The next step is the operator-norm closure of the span of rank-one maps,
-including its two-sided ideal and adjoint properties; grading and group
-actions remain to be developed.
+\uses{prop:complete-adjointable-algebra,prop:compact-module-ideal,def:module-gradings,def:compatible-module-actions,prop:standard-module-compact-algebra}
+\lean{BC4lean.KKTheory.GradedHilbertModule,BC4lean.KKTheory.EquivariantHilbertModule,BC4lean.KKTheory.AdjointableMap.instCStarAlgebra,BC4lean.KKTheory.CompactModuleOperator}
+\leanok
+The preceding constructions give graded right Hilbert $C^*$-modules,
+with a complete module norm, their adjointable and compact operators, and
+continuous compatible actions of discrete groups. Coefficient algebras may be
+nonunital and may have a nontrivial grading. Module completeness is an explicit
+hypothesis, and compatibility of actions with the grading is explicit.
 \end{definition}
 
 \section{Equivariant Kasparov cycles}
+\begin{definition}\label{def:even-kasparov-cycle}
+\uses{def:countably-generated-module,def:module-gradings,def:compatible-module-actions,def:compact-module-operators}
+\lean{BC4lean.KKTheory.KasparovCycle,BC4lean.KKTheory.KasparovCycle.IsDegenerate,BC4lean.KKTheory.KasparovCycle.zeroRepresentation,BC4lean.KKTheory.KasparovCycle.zeroRepresentation_isDegenerate}
+\leanok
+For trivially graded complex possibly nonunital $A,B$ and a discrete group
+$\Gamma$, an even equivariant Kasparov cycle consists of a complete,
+countably generated graded right Hilbert $B$-module $E$, a compatible action
+commuting with the grading, an even equivariant possibly degenerate
+star representation $\phi:A\to\mathcal L_B(E)$ and an odd adjointable
+operator $F$. For all $a\in A$ and $g\in\Gamma$ require
+\[
+ (F-F^*)\phi(a),\quad (F^2-1)\phi(a),\quad
+ F\phi(a)-\phi(a)F,\quad (U_gFU_{g^{-1}}-F)\phi(a)
+ \ \in\ \mathcal K_B(E).
+\]
+A degenerate cycle has all four expressions zero. A zero representation with
+zero operator is such a cycle on every countably generated compatible graded
+module. The group action on $F$ is required only modulo compactness in the
+stated local sense.
+\end{definition}
+
+\begin{definition}\label{def:odd-kasparov-cycle-data}
+\uses{def:even-kasparov-cycle}
+\lean{BC4lean.KKTheory.OddKasparovCycle,BC4lean.KKTheory.OddKasparovCycle.IsDegenerate,BC4lean.KKTheory.OddKasparovCycle.zeroRepresentation,BC4lean.KKTheory.OddKasparovCycle.zeroRepresentation_isDegenerate}
+\leanok
+The ungraded Fredholm picture of odd cycles uses the same complete,
+countably generated equivariant module and the same four compactness
+conditions, with no module grading. Its equivalence to the Clifford-graded
+picture, and the homotopy quotient in either parity, require further proofs.
+\end{definition}
+
+\begin{proposition}\label{prop:standard-identity-cycle}
+\uses{def:even-kasparov-cycle,prop:standard-module-compact-algebra}
+\lean{BC4lean.KKTheory.standard_module_isCountablyGenerated,BC4lean.KKTheory.standardIdentityCycle,BC4lean.KKTheory.standardIdentityCycle_operator,BC4lean.KKTheory.standardIdentityCycle_representation}
+\leanok
+For separable possibly nonunital $B$, the standard right module $B_B$ is
+countably generated. With all-even grading, the coefficient action, left
+multiplication representation and $F=0$, it is an actual even equivariant
+Kasparov cycle. These are the standard identity-cycle data; product unit
+laws require the product construction below.
+\end{proposition}
+\begin{proof}\leanok
+A countable dense sequence and an approximate unit give countable generation.
+The square defect is $-L_b$, compact by the standard-module identification,
+and the other defects vanish. Coefficient automorphisms give equivariance.
+\end{proof}
+
+\begin{definition}\label{def:fixed-module-operator-homotopy}
+\uses{def:even-kasparov-cycle}
+\lean{BC4lean.KKTheory.KasparovCycle.OperatorConditions,BC4lean.KKTheory.KasparovCycle.withOperator,BC4lean.KKTheory.KasparovOperatorHomotopy,BC4lean.KKTheory.KasparovOperatorHomotopy.cycleAt,BC4lean.KKTheory.KasparovOperatorHomotopy.continuous_operator,BC4lean.KKTheory.KasparovOperatorHomotopy.source_cycleAt,BC4lean.KKTheory.KasparovOperatorHomotopy.target_cycleAt,BC4lean.KKTheory.KasparovOperatorHomotopy.refl,BC4lean.KKTheory.KasparovOperatorHomotopy.symm,BC4lean.KKTheory.KasparovOperatorHomotopy.trans}
+\leanok
+On a fixed module, grading, representation and action, an operator homotopy
+is an operator-norm-continuous path satisfying oddness and all four compact
+defect conditions at every parameter. It yields actual cycles throughout,
+including both endpoints. Constant paths, reversal and concatenation preserve
+these conditions. Equivalence to homotopies over $C([0,1],B)$ and the full
+KK quotient are further targets.
+\end{definition}
+
+\begin{proposition}\label{prop:scalar-creation-map-caution}
+\lean{BC4lean.KKTheory.scalarCreationMap_adjoint_identity,BC4lean.KKTheory.scalarCreationMap_one_not_compact}
+\leanok
+Scalar creation maps in $\mathbb C\otimes_{\mathbb C}H$ are bounded
+adjointable maps, but are not automatically compact. In the scalar correspondence
+$\mathbb C\otimes_{\mathbb C}\ell^2(\mathbb N)\cong\ell^2(\mathbb N)$,
+creation at $1$ is the identity under this identification, hence is not a
+compact Hilbert-space operator.
+\end{proposition}
+\begin{proof}\leanok
+The scalar tensor isometric identification gives the bounded adjoint
+explicitly. Composing creation at $1$ with that identification yields the
+identity. Its compactness would force $\ell^2(\mathbb N)$ to be
+finite-dimensional, contradicting its independent delta vectors.
+\end{proof}
+
 \begin{definition}\label{def:equivariant-kk}
 \uses{def:hilbert-modules}
 \notready
 For separable $\Gamma$-$C^*$-algebras $A,B$, construct $KK_i^\Gamma(A,B)$
-from graded equivariant Kasparov cycles and homotopy. Specify all cycle
-conditions and the parity convention before forming the abelian groups.
+from graded equivariant Kasparov cycles and homotopy. The raw even and ungraded odd cycle conditions are specified above.
+Construct a homotopy quotient with direct sum and inverse laws, and prove the
+parity identification before claiming the resulting abelian groups. For the
+intended applications, $A,B$ are separable and $\Gamma$ is countable discrete.
 \end{definition}
 
 \section{Kasparov products and functoriality}

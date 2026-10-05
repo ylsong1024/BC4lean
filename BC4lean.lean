@@ -139,3 +139,17 @@ import BC4lean.OrbitCellFixedSpace
 import BC4lean.HilbertCStarModule
 import BC4lean.AdjointableOperator
 import BC4lean.RankOneOperator
+import BC4lean.AdjointableNorm
+import BC4lean.AdjointableAlgebra
+import BC4lean.AdjointableComplete
+import BC4lean.CompactModuleOperator
+import BC4lean.CountablyGeneratedModule
+import BC4lean.GradedHilbertModule
+import BC4lean.EquivariantHilbertModule
+import BC4lean.EquivariantCompactOperator
+import BC4lean.KasparovCycle
+import BC4lean.StandardModuleOperator
+import BC4lean.HilbertModuleCreationMap
+import BC4lean.StandardHilbertModuleActions
+import BC4lean.StandardKasparovCycle
+import BC4lean.KasparovOperatorHomotopy

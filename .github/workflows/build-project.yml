@@ -9,6 +9,8 @@ on:
       - 'lakefile.toml'
       - 'lake-manifest.json'
       - 'scripts/check_project_imports.py'
+      - 'scripts/audit_chapter5.py'
+      - 'blueprint/src/parts/05-equivariant-kk.tex'
       - '.github/workflows/build-project.yml'
   # Run for every PR so a required check is never left pending by a path filter.
   pull_request:
@@ -45,3 +47,6 @@ jobs:
 
       - name: Build project with warnings as errors
         run: lake --wfail build BC4lean
+
+      - name: Audit Chapter 5 declarations and report unfinished targets
+        run: python3 scripts/audit_chapter5.py
