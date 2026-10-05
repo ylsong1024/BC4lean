@@ -94,4 +94,3 @@ theorem projection_surjective : Function.Surjective (projection (Γ := Γ)) := b
     ring
 
 end BC4lean.ProperActions.LabeledPrismInverse
-

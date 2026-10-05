@@ -255,9 +255,3 @@ theorem proper_orbitFaceSpace [TopologicalSpace Γ] [DiscreteTopology Γ]
   properlyDiscontinuousSMul_iff_properSMul.mp (properlyDiscontinuous_orbitFaceSpace F)
 
 end BC4lean.ProperActions.LabeledOrbitRealization
-
-
-
-
-
-

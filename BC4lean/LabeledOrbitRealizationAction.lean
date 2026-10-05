@@ -181,6 +181,3 @@ theorem exists_fixed_chart (H : Subgroup Γ) (x : LabeledOrbitRealization Γ)
   rfl
 
 end BC4lean.ProperActions.LabeledOrbitRealization
-
-
-

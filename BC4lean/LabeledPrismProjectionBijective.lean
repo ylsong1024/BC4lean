@@ -279,4 +279,3 @@ theorem projection_bijective : Function.Bijective (projection (Γ := Γ)) :=
   ⟨projection_injective, LabeledPrismInverse.projection_surjective⟩
 
 end BC4lean.ProperActions.LabeledPrismProjection
-
