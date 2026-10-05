@@ -61,7 +61,7 @@ do not run `lake update` as a routine setup step.
 For a changed module, first run, for example:
 
 ```sh
-lake env lean --wfail BC4lean/EquivariantMaps.lean
+lake env lean -DwarningAsError=true BC4lean/EquivariantMaps.lean
 ```
 
 The full build is still required before merging Lean changes. See

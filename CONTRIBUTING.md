@@ -38,7 +38,7 @@ and its Lean implementation together.
    distinctions such as unital/nonunital, reduced/maximal, and hypotheses on
    topological spaces. A conditional result must remain explicitly conditional.
 2. Compile each changed module, for example:
-   `lake env lean --wfail BC4lean/EquivariantMaps.lean`.
+   `lake env lean -DwarningAsError=true BC4lean/EquivariantMaps.lean`.
    Build imported changed modules first if their compiled files are out of date.
 3. Add new modules to `BC4lean.lean`, with one `import BC4lean.ModuleName` per line.
    Run `python3 scripts/check_project_imports.py` and
