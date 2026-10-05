@@ -724,10 +724,64 @@ Choose the map to $P(\Gamma)$ supplied by the cellular mapping theorem and
 transfer properness along that equivariant map.
 \end{proof}
 
+\section{Closed skeletal inclusions and the colimit topology}
+
+\begin{proposition}\label{prop:orbit-boundary-closed-embedding}
+\uses{def:orbit-cell,prop:orbit-boundary-cell-properties}
+\lean{BC4lean.ProperActions.OrbitCell.boundaryInclusion_isClosedEmbedding}
+\leanok
+For every subgroup $H\leq\Gamma$ and every $n\geq0$, the inclusion
+$\Gamma/H\times\partial D^n\longrightarrow\Gamma/H\times D^n$ is a closed embedding.
+\end{proposition}
+\begin{proof}
+\leanok
+The disk boundary is compact and the disk is Hausdorff, so the boundary
+inclusion is a closed embedding. Take its product with the identity on
+$\Gamma/H$. Finiteness of $H$ is not required here.
+\end{proof}
+
+\begin{proposition}\label{prop:cellular-closed-inclusions}
+\uses{def:equivariant-cellular-data,prop:orbit-boundary-closed-embedding}
+\lean{BC4lean.ProperActions.orbitCellAttachment_isClosedEmbedding,BC4lean.ProperActions.RelativeEquivariantCWComplex.skeletonMap_isClosedEmbedding,BC4lean.ProperActions.RelativeEquivariantCWComplex.skeletonInclusion_isClosedEmbedding,BC4lean.ProperActions.RelativeEquivariantCWComplex.isClosedEmbedding}
+\leanok
+Let $A\longrightarrow X$ carry a relative equivariant CW structure, with
+skeletal sequence $(X_n)_{n\geq0}$. The map $A\longrightarrow X$, every
+transition $X_m\longrightarrow X_n$ for $m\leq n$, and every inclusion
+$X_n\longrightarrow X$ are closed embeddings. In particular, no distinct
+points of a skeleton are identified in later stages or in the colimit.
+\end{proposition}
+\begin{proof}
+\leanok
+Coproducts and pushouts preserve closed embeddings in the category of
+topological spaces. This proves the assertion for successive attachments,
+and composition gives all finite transitions. The underlying set functor
+preserves colimits; stability of injective maps under these cellular
+colimits proves injectivity of the skeletal inclusions. For a closed subset
+of one skeleton, its inverse image on an earlier skeleton is a continuous
+preimage, and on a later skeleton is a closed image. The colimit topology
+therefore makes its image closed in $X$.
+\end{proof}
+
+\begin{proposition}\label{prop:cellular-skeletal-topology}
+\uses{def:equivariant-cellular-data}
+\lean{BC4lean.ProperActions.RelativeEquivariantCWComplex.exists_skeleton_preimage,BC4lean.ProperActions.RelativeEquivariantCWComplex.isOpen_iff,BC4lean.ProperActions.RelativeEquivariantCWComplex.isClosed_iff,BC4lean.ProperActions.RelativeEquivariantCWComplex.continuous_iff}
+\leanok
+Every point of $X$ comes from some finite skeletal stage. A subset of $X$
+is open, respectively closed, exactly when its inverse image in every
+$X_n$ is open, respectively closed. A function $X\longrightarrow Z$ into
+any topological space is continuous exactly when its restriction to every
+skeletal stage is continuous.
+\end{proposition}
+\begin{proof}
+\leanok
+Forget the action and use the corresponding set and topological colimit
+universal properties.
+\end{proof}
+
 \section{Equivariant CW complexes and a model for $\underline E\Gamma$}
 
 \begin{definition}\label{def:equivariant-cw-complex}
-\uses{def:proper-action,def:equivariant-map,def:equivariant-homotopy,def:orbit-cell,prop:proper-orbit-cells,def:equivariant-cellular-data,prop:orbit-boundary-cell-properties,prop:hausdorff-equivariant-cw-proper}
+\uses{def:proper-action,def:equivariant-map,def:equivariant-homotopy,def:orbit-cell,prop:proper-orbit-cells,def:equivariant-cellular-data,prop:orbit-boundary-cell-properties,prop:hausdorff-equivariant-cw-proper,prop:cellular-closed-inclusions,prop:cellular-skeletal-topology}
 \notready
 Using the preceding maps and homotopies, develop $\Gamma$-CW complexes by
 equivariant cell attachment, with cells $\Gamma/H\times D^n$.
@@ -735,6 +789,8 @@ For the proper theory the cell stabilizers $H$ are finite. Establish the
 connection between this cellular condition and topological properness.
 The properness theorem is now verified under an explicit Hausdorff
 hypothesis; derive that hypothesis from the categorical cellular data.
+Closed embeddings of all skeleta and the skeletal colimit topology have now
+been verified. The Hausdorff separation argument remains to be formalized.
 \end{definition}
 
 \begin{definition}\label{def:universal-proper-space}
