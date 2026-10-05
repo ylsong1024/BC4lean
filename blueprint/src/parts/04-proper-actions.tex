@@ -9,8 +9,11 @@ point model, conditional uniqueness, and directed cocompact pieces for a given s
 Equivariant CW attachment, closed skeletal inclusions, Hausdorffness, and
 properness for countable discrete groups are verified. The cellular mapping
 property is also verified for targets satisfying the fixed-point criterion.
-General universal proper CW-model existence and the locally compact
-second-countable model choice remain formalization targets.
+A countable proper zero-skeleton containing a fixed vertex for every finite
+subgroup is now constructed. For finite groups, a genuine locally compact
+second-countable universal proper CW model is verified. General universal
+proper CW-model existence and the locally compact second-countable model
+choice remain formalization targets.
 
 \section{Proper actions and compact transporters}
 
@@ -835,6 +838,60 @@ verified properness theorem for Hausdorff equivariant CW spaces, using the
 map to the proper probability-space target.
 \end{proof}
 
+\section{Constructed zero-skeleta and finite-group CW models}
+
+\begin{proposition}\label{prop:orbit-zero-skeleton-cw}
+\uses{def:equivariant-cellular-data,def:equivariant-cw-complex}
+\lean{BC4lean.ProperActions.identityCellAttachment,BC4lean.ProperActions.EquivariantCWComplex.ofZeroAttachment,BC4lean.ProperActions.OrbitZeroSkeleton,BC4lean.ProperActions.OrbitZeroSkeleton.attachment,BC4lean.ProperActions.OrbitZeroSkeleton.cwComplex}
+For any family of finite subgroups $(H_i)_{i\in J}$, the disjoint union
+\[
+  \coprod_{i\in J} \Gamma/H_i\times D^0
+\]
+has a zero-dimensional equivariant CW structure.
+\end{proposition}
+\begin{proof}
+\leanok
+The boundaries of zero-disks are empty. The explicit orbit-cell coproduct
+is a pushout from the empty action. Extend this attachment to a sequential
+CW construction by taking a constant tail; each later attachment has an
+empty cell family. The coproduct, pushout, and colimit witnesses are
+constructed in Lean.
+\end{proof}
+
+\begin{proposition}\label{prop:universal-zero-skeleton}
+\uses{prop:orbit-zero-skeleton-cw,prop:equivariant-cw-proper,prop:proper-infinite-fixed-points}
+\lean{BC4lean.ProperActions.finiteIsotropy_countable,BC4lean.ProperActions.UniversalZeroSkeleton,BC4lean.ProperActions.UniversalZeroSkeleton.fixedVertex,BC4lean.ProperActions.UniversalZeroSkeleton.cwComplex,BC4lean.ProperActions.UniversalZeroSkeleton.countable,BC4lean.ProperActions.UniversalZeroSkeleton.locallyCompact_secondCountable,BC4lean.ProperActions.UniversalZeroSkeleton.proper,BC4lean.ProperActions.UniversalZeroSkeleton.infinite_fixedPoints_empty}
+For countable discrete $\Gamma$, take one zero-cell orbit $\Gamma/H$ for
+every finite subgroup $H$. The resulting space is countable, discrete,
+locally compact, second countable, and proper. Every finite subgroup has
+an explicitly constructed fixed vertex, and infinite subgroups have no
+fixed vertices.
+\end{proposition}
+\begin{proof}
+\leanok
+Finite subgroups inject into the finite subsets of $\Gamma$, so there are
+countably many of them. The corresponding orbit coproduct is countable.
+The identity coset in the $\Gamma/H$ summand is fixed by $H$. Properness
+follows from the verified CW structure. This is a starting zero-skeleton;
+contractibility of its fixed-point spaces is not asserted.
+\end{proof}
+
+\begin{proposition}\label{prop:finite-group-genuine-cw-model}
+\uses{prop:orbit-zero-skeleton-cw,prop:equivariant-cw-proper,prop:equivariant-cellular-homotopy-terminal}
+\lean{BC4lean.ProperActions.FiniteGroupCWModel,BC4lean.ProperActions.FiniteGroupCWModel.cwComplex,BC4lean.ProperActions.FiniteGroupCWModel.fixedPoints_contractible,BC4lean.ProperActions.FiniteGroupCWModel.fixedPointCriterion,BC4lean.ProperActions.FiniteGroupCWModel.proper_locallyCompact_secondCountable,BC4lean.ProperActions.FiniteGroupCWModel.homotopyTerminal}
+For finite $\Gamma$, the single zero-cell orbit $\Gamma/\Gamma\times D^0$
+is a locally compact second-countable universal proper equivariant CW
+model, with contractible subgroup fixed-point spaces and the universal
+mapping property for equivariant CW sources.
+\end{proposition}
+\begin{proof}
+\leanok
+The constructed space has a single point and a genuine orbit-cell CW
+structure. Every subgroup fixed-point space is a singleton. Apply the
+verified cellular mapping theorem. All topological and properness
+properties are proved for this explicit model.
+\end{proof}
+
 \section{Equivariant CW complexes and a model for $\underline E\Gamma$}
 
 \begin{definition}\label{def:equivariant-cw-complex}
@@ -850,7 +907,7 @@ $\Gamma$, the resulting action is topologically proper.
 \end{definition}
 
 \begin{definition}\label{def:universal-proper-space}
-\uses{def:equivariant-cw-complex,def:proper-model-fixed-point-criterion,prop:conditional-universal-model-uniqueness,prop:proper-infinite-fixed-points,prop:equivariant-cellular-homotopy-terminal,prop:cw-fixed-point-uniqueness,prop:probability-cellular-target}
+\uses{def:equivariant-cw-complex,def:proper-model-fixed-point-criterion,prop:conditional-universal-model-uniqueness,prop:proper-infinite-fixed-points,prop:equivariant-cellular-homotopy-terminal,prop:cw-fixed-point-uniqueness,prop:probability-cellular-target,prop:universal-zero-skeleton,prop:finite-group-genuine-cw-model}
 \notready
 A universal proper $\Gamma$-CW complex has contractible fixed-point space
 for every finite subgroup and empty fixed-point space for every infinite
@@ -861,8 +918,11 @@ equivariant homotopy of CW spaces satisfying the fixed-point criterion are
 now verified. An explicit proper second-countable target satisfying the fixed-point
 criterion and the CW-source mapping property has now been constructed.
 Hausdorffness and properness of finite-isotropy equivariant CW spaces
-are now verified. A CW structure or CW replacement for the explicit
-probability-space target remains unverified.
+are now verified. A genuine CW point model is now verified for finite groups. For general
+countable groups, a proper countable zero-skeleton with all required fixed
+vertices is constructed, but the higher cells and contractibility of its
+finite-subgroup fixed-point spaces remain to be constructed. A CW structure
+or CW replacement for the probability-space target also remains unverified.
 \end{definition}
 
 \section{Cocompact pieces and model choices}
@@ -876,4 +936,5 @@ quotient $X/\Gamma$. Justify the model choice and the directed indexing system.
 
 The preceding cocompact indexing construction is verified for a given ambient
 space. What remains in this target is the justified choice and construction of
-a locally compact second-countable universal proper model.
+a locally compact second-countable universal proper model for general
+countable groups. The finite-group case is now verified above.

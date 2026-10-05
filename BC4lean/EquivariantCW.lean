@@ -1,4 +1,5 @@
 import BC4lean.ProperOrbitCells
+import Mathlib.CategoryTheory.Functor.OfSequence
 import Mathlib.Topology.CWComplex.Abstract.Basic
 import Mathlib.CategoryTheory.Action.Limits
 import Mathlib.CategoryTheory.Types.Monomorphisms
@@ -765,3 +766,282 @@ theorem EquivariantCWComplex.t2Space
   c.realSeparatesPoints.t2Space
 
 end BC4lean.ProperActions
+
+noncomputable section
+set_option backward.isDefEq.respectTransparency false
+open CategoryTheory CategoryTheory.Limits
+
+namespace BC4lean.ProperActions
+variable {Γ : Type u} [Group Γ] [TopologicalSpace Γ] [DiscreteTopology Γ]
+
+private def emptyCofan {C : Type*} [Category C] [HasInitial C] (F : PEmpty.{u+1} → C) :
+    Cofan F := Cofan.mk (⊥_ C) (fun j => j.elim)
+
+private def emptyCofanColimit {C : Type*} [Category C] [HasInitial C] (F : PEmpty.{u+1} → C) :
+    IsColimit (emptyCofan F) :=
+  Cofan.IsColimit.mk _ (fun s => initial.to s.pt) (fun _ j => j.elim)
+    (fun _ _ _ => initialIsInitial.hom_ext _ _)
+
+/-- Attaching no cells realizes the identity, in any dimension. -/
+def identityCellAttachment (X : Action TopCat.{u} Γ) (n : ℕ) :
+    HomotopicalAlgebra.AttachCells.{u} (equivariantBasicCell (Γ := Γ) n) (𝟙 X) where
+  ι := PEmpty
+  π := PEmpty.elim
+  cofan₁ := emptyCofan _
+  cofan₂ := emptyCofan _
+  isColimit₁ := emptyCofanColimit _
+  isColimit₂ := emptyCofanColimit _
+  m := 𝟙 _
+  hm j := j.elim
+  g₁ := initial.to X
+  g₂ := initial.to X
+  isPushout := IsPushout.of_id_snd
+
+private abbrev zeroSkeletonObj (X : Action TopCat.{u} Γ) : ℕ → Action TopCat.{u} Γ
+  | 0 => ⊥_ _
+  | _ + 1 => X
+
+private abbrev zeroSkeletonMap (X : Action TopCat.{u} Γ) :
+    (n : ℕ) → zeroSkeletonObj X n ⟶ zeroSkeletonObj X (n+1)
+  | 0 => initial.to X
+  | _ + 1 => 𝟙 X
+
+private abbrev zeroSkeletonSequence (X : Action TopCat.{u} Γ) : ℕ ⥤ Action TopCat.{u} Γ :=
+  Functor.ofSequence (zeroSkeletonMap X)
+
+private def zeroSkeletonInclusion (X : Action TopCat.{u} Γ) :
+    zeroSkeletonSequence X ⟶ (Functor.const ℕ).obj X :=
+  NatTrans.ofSequence (fun n => match n with | 0 => initial.to X | _+1 => 𝟙 X)
+    (fun n => by
+      cases n with
+      | zero => change initial.to X ≫ 𝟙 X = initial.to X ≫ 𝟙 X; rfl
+      | succ n =>
+        simp only [zeroSkeletonSequence, Functor.ofSequence_map_homOfLE_succ]
+        rfl)
+
+private def zeroSkeletonColimit (X : Action TopCat.{u} Γ) :
+    IsColimit (Cocone.mk X (zeroSkeletonInclusion X)) where
+  desc s := s.ι.app 1
+  fac s n := by
+    cases n with
+    | zero => exact initialIsInitial.hom_ext _ _
+    | succ n =>
+      change 𝟙 X ≫ s.ι.app 1 = s.ι.app (n+1)
+      simp only [Category.id_comp]
+      induction n with
+      | zero => rfl
+      | succ n hn =>
+        have h := s.w (homOfLE (Nat.le_succ (n+1)))
+        simp only [zeroSkeletonSequence, Functor.ofSequence_map_homOfLE_succ,
+          zeroSkeletonMap] at h
+        exact hn.trans h.symm
+  uniq s m h := by
+    have hh := h 1
+    change 𝟙 X ≫ m = s.ι.app 1 at hh
+    exact (Category.id_comp m).symm.trans hh
+
+/-- A zero-cell attachment from the empty action extends to a genuine CW structure
+by taking a constant tail and attaching no higher-dimensional cells. -/
+def EquivariantCWComplex.ofZeroAttachment {X : Action TopCat.{u} Γ}
+    (c : HomotopicalAlgebra.AttachCells.{u} (equivariantBasicCell (Γ := Γ) 0)
+      (initial.to X)) : EquivariantCWComplex X where
+  F := zeroSkeletonSequence X
+  isoBot := Iso.refl _
+  incl := zeroSkeletonInclusion X
+  isColimit := zeroSkeletonColimit X
+  fac := initialIsInitial.hom_ext _ _
+  attachCells n _ := by
+    cases n with
+    | zero => simpa only [zeroSkeletonSequence, Functor.ofSequence_map_homOfLE_succ,
+        zeroSkeletonMap] using c
+    | succ n => simpa only [zeroSkeletonSequence, Functor.ofSequence_map_homOfLE_succ,
+        zeroSkeletonMap] using identityCellAttachment X (n+1)
+
+end BC4lean.ProperActions
+
+namespace BC4lean.ProperActions
+variable {Γ : Type u} [Group Γ] [TopologicalSpace Γ] [DiscreteTopology Γ]
+
+private instance diskZeroSubsingleton : Subsingleton (TopCat.disk.{u} 0) := by
+  change Subsingleton (ULift (Metric.closedBall (0 : EuclideanSpace ℝ (Fin 0)) 1))
+  infer_instance
+
+private instance diskZeroDiscrete : DiscreteTopology (TopCat.disk.{u} 0) := inferInstance
+
+private instance boundaryZeroEmpty : IsEmpty (TopCat.diskBoundary.{u} 0) := by
+  constructor
+  intro x
+  have h := x.down.property
+  have hx : x.down.val = 0 := Subsingleton.elim _ _
+  simp [hx] at h
+
+/-- A disjoint union of zero-dimensional orbit cells. -/
+def OrbitZeroSkeleton {ι : Type u} (p : ι → FiniteIsotropy Γ) :=
+  Σ i, OrbitCell (p i).val (TopCat.disk.{u} 0)
+
+namespace OrbitZeroSkeleton
+variable {ι : Type u} (p : ι → FiniteIsotropy Γ)
+instance : TopologicalSpace (OrbitZeroSkeleton p) :=
+  inferInstanceAs (TopologicalSpace (Σ i, OrbitCell (p i).val (TopCat.disk.{u} 0)))
+instance : DiscreteTopology (OrbitZeroSkeleton p) := by
+  change DiscreteTopology (Σ i, OrbitCell (p i).val (TopCat.disk.{u} 0))
+  let (i : ι) : DiscreteTopology (Γ ⧸ (p i).val) := QuotientGroup.discreteTopology (isOpen_discrete _)
+  let (i : ι) : DiscreteTopology (OrbitCell (p i).val (TopCat.disk.{u} 0)) :=
+    inferInstanceAs (DiscreteTopology ((Γ ⧸ (p i).val) × TopCat.disk.{u} 0))
+  infer_instance
+instance : MulAction Γ (OrbitZeroSkeleton p) where
+  smul g x := ⟨x.1, g • x.2⟩
+  one_smul x := congrArg (Sigma.mk x.1) (one_smul Γ x.2)
+  mul_smul g h x := congrArg (Sigma.mk x.1) (mul_smul g h x.2)
+instance : ContinuousConstSMul Γ (OrbitZeroSkeleton p) := ⟨fun _ => continuous_of_discreteTopology⟩
+
+/-- The inclusion of one orbit zero-cell. -/
+def inclusion (i : ι) : EquivariantMap Γ (OrbitCell (p i).val (TopCat.disk.{u} 0))
+    (OrbitZeroSkeleton p) where
+  toFun x := ⟨i,x⟩
+  continuous_toFun := by
+    exact @continuous_sigmaMk ι (fun j => OrbitCell (p j).val (TopCat.disk.{u} 0))
+      (fun j => inferInstance) i
+  map_smul' _ _ := rfl
+
+private def cellCofan : Cofan (fun i => topologicalAction Γ
+    (OrbitCell (p i).val (TopCat.disk.{u} 0))) :=
+  Cofan.mk (topologicalAction Γ (OrbitZeroSkeleton p)) (fun i => (inclusion p i).toActionHom)
+
+private def cellCofanColimit : IsColimit (cellCofan p) := by
+  refine Cofan.IsColimit.mk (cellCofan p) (fun s => ?_) ?_ ?_
+  · change topologicalAction Γ (OrbitZeroSkeleton p) ⟶ s.pt
+    exact {
+      hom := TopCat.ofHom ⟨fun x => (s.inj x.1).hom x.2,
+        continuous_sigma (fun i => (s.inj i).hom.hom.continuous)⟩
+      comm := fun g => by
+        apply TopCat.hom_ext
+        apply ContinuousMap.ext
+        intro x
+        exact ConcreteCategory.congr_hom (s.inj x.1 |>.comm g) x.2 }
+  · intro s i
+    rfl
+  · intro s m hm
+    apply Action.Hom.ext
+    apply TopCat.hom_ext
+    apply ContinuousMap.ext
+    intro ⟨i,x⟩
+    exact ConcreteCategory.congr_hom (congrArg Action.Hom.hom (hm i)) x
+
+private def boundaryInitial (i : ι) : IsInitial (topologicalAction Γ
+    (OrbitCell (p i).val (TopCat.diskBoundary.{u} 0))) := by
+  let h (Y : Action TopCat.{u} Γ) : Unique
+      (topologicalAction Γ (OrbitCell (p i).val (TopCat.diskBoundary.{u} 0)) ⟶ Y) :=
+    { default :=
+        { hom := TopCat.ofHom ⟨fun x => isEmptyElim x.2, by fun_prop⟩
+          comm := fun _ => by ext x; exact isEmptyElim x.2 }
+      uniq := fun f => by ext x; exact isEmptyElim x.2 }
+  exact IsInitial.ofUnique _
+
+private def boundaryCofan : Cofan (fun i => topologicalAction Γ
+    (OrbitCell (p i).val (TopCat.diskBoundary.{u} 0))) :=
+  Cofan.mk (⊥_ _) (fun i => (boundaryInitial p i).to _)
+
+private def boundaryCofanColimit : IsColimit (boundaryCofan p) :=
+  Cofan.IsColimit.mk _ (fun s => initial.to s.pt)
+    (fun _ i => (boundaryInitial p i).hom_ext _ _)
+    (fun _ _ _ => initialIsInitial.hom_ext _ _)
+
+/-- Construct the zero-cell attachment with explicit coproduct and pushout witnesses. -/
+def attachment : HomotopicalAlgebra.AttachCells.{u} (equivariantBasicCell (Γ := Γ) 0)
+    (initial.to (topologicalAction Γ (OrbitZeroSkeleton p))) where
+  ι := ι
+  π := p
+  cofan₁ := boundaryCofan p
+  cofan₂ := cellCofan p
+  isColimit₁ := boundaryCofanColimit p
+  isColimit₂ := cellCofanColimit p
+  m := initial.to _
+  hm i := (boundaryInitial p i).hom_ext _ _
+  g₁ := 𝟙 _
+  g₂ := 𝟙 _
+  isPushout := IsPushout.of_id_fst
+
+/-- A disjoint union of finite-isotropy orbit zero-cells has a genuine equivariant CW structure. -/
+def cwComplex : EquivariantCWComplex (topologicalAction Γ (OrbitZeroSkeleton p)) :=
+  .ofZeroAttachment (attachment p)
+
+end OrbitZeroSkeleton
+end BC4lean.ProperActions
+
+namespace BC4lean.ProperActions
+variable {Γ : Type u} [Group Γ] [TopologicalSpace Γ] [DiscreteTopology Γ]
+
+omit [TopologicalSpace Γ] [DiscreteTopology Γ] in
+/-- A countable group has only countably many finite subgroups. -/
+theorem finiteIsotropy_countable [Countable Γ] : Countable (FiniteIsotropy Γ) := by
+  classical
+  have hf (H : FiniteIsotropy Γ) : (H.val : Set Γ).Finite := by
+    let := H.property
+    exact Set.toFinite _
+  let f : FiniteIsotropy Γ → Finset Γ := fun H => (hf H).toFinset
+  have hi : Function.Injective f := by
+    intro H K h
+    apply Subtype.ext
+    apply SetLike.coe_injective
+    have hh := congrArg (fun s : Finset Γ => (s : Set Γ)) h
+    simpa only [f, Set.Finite.coe_toFinset] using hh
+  exact hi.countable
+
+namespace OrbitZeroSkeleton
+variable {ι : Type u} (p : ι → FiniteIsotropy Γ)
+
+omit [TopologicalSpace Γ] [DiscreteTopology Γ] in
+/-- Countably many zero-cell orbits for a countable group give a countable space. -/
+theorem countable [Countable Γ] [Countable ι] : Countable (OrbitZeroSkeleton p) := by
+  change Countable (Σ i, OrbitCell (p i).val (TopCat.disk.{u} 0))
+  let (i : ι) : Countable (Γ ⧸ (p i).val) :=
+    (QuotientGroup.mk_surjective (s := (p i).val)).countable
+  let : Countable (TopCat.disk.{u} 0) := inferInstance
+  let (i : ι) : Countable (OrbitCell (p i).val (TopCat.disk.{u} 0)) :=
+    inferInstanceAs (Countable ((Γ ⧸ (p i).val) × TopCat.disk.{u} 0))
+  infer_instance
+
+/-- The constructed zero-skeleton is locally compact. -/
+theorem locallyCompact : LocallyCompactSpace (OrbitZeroSkeleton p) := inferInstance
+
+/-- Under countability assumptions the constructed zero-skeleton is second countable. -/
+theorem secondCountable [Countable Γ] [Countable ι] :
+    SecondCountableTopology (OrbitZeroSkeleton p) := by
+  let := countable p
+  infer_instance
+end OrbitZeroSkeleton
+
+/-- The zero-skeleton containing one orbit Γ/H for every finite subgroup H. -/
+abbrev UniversalZeroSkeleton (Γ : Type u) [Group Γ] [TopologicalSpace Γ] :=
+  OrbitZeroSkeleton (fun H : FiniteIsotropy Γ => H)
+
+namespace UniversalZeroSkeleton
+/-- An explicit finite-subgroup-fixed vertex in the universal zero-skeleton. -/
+def fixedVertex (H : Subgroup Γ) [Finite H] : FixedPointSpace H (UniversalZeroSkeleton Γ) := by
+  let z : TopCat.disk.{u} 0 := ⟨⟨0, by simp⟩⟩
+  refine ⟨⟨⟨H,inferInstance⟩, (QuotientGroup.mk 1, z)⟩, ?_⟩
+  intro h
+  change (⟨⟨H,inferInstance⟩, ((h : Γ) • (QuotientGroup.mk 1 : Γ ⧸ H), z)⟩ :
+    UniversalZeroSkeleton Γ) = _
+  rw [subgroup_fixes_identity_coset]
+
+/-- The universal zero-skeleton has a verified equivariant CW structure. -/
+def cwComplex : EquivariantCWComplex (topologicalAction Γ (UniversalZeroSkeleton Γ)) :=
+  OrbitZeroSkeleton.cwComplex _
+
+omit [DiscreteTopology Γ] in
+/-- It is a countable space for a countable group. -/
+theorem countable [Countable Γ] : Countable (UniversalZeroSkeleton Γ) := by
+  let := finiteIsotropy_countable (Γ := Γ)
+  exact OrbitZeroSkeleton.countable _
+
+/-- The universal zero-skeleton is locally compact and second countable. -/
+theorem locallyCompact_secondCountable [Countable Γ] :
+    LocallyCompactSpace (UniversalZeroSkeleton Γ) ∧ SecondCountableTopology (UniversalZeroSkeleton Γ) := by
+  let := finiteIsotropy_countable (Γ := Γ)
+  exact ⟨OrbitZeroSkeleton.locallyCompact _, OrbitZeroSkeleton.secondCountable _⟩
+end UniversalZeroSkeleton
+end BC4lean.ProperActions
+
+end
