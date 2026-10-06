@@ -16,6 +16,59 @@ import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
 ALLOWED = {'propext', 'Classical.choice', 'Quot.sound'}
+REQUIRED_TARGETS = ('def:equivariant-kk', 'prop:kasparov-product', 'prop:kk-k-theory')
+
+
+def tex_code_only(s: str) -> str:
+    """Remove TeX comments, preserving escaped percent signs."""
+    lines = []
+    for line in s.splitlines():
+        for i, char in enumerate(line):
+            if char != '%':
+                continue
+            preceding_slashes = len(line[:i]) - len(line[:i].rstrip('\\'))
+            if preceding_slashes % 2 == 0:
+                line = line[:i]
+                break
+        lines.append(line)
+    return '\n'.join(lines)
+
+
+def audit_blueprint(tex: str) -> tuple[list[str], list[str], dict[str, dict]]:
+    """Require the three main statements even while they remain unverified.
+
+    A missing statement, duplicate target, or ready marker without actual Lean
+    links must never make the chapter completeness check succeed.
+    """
+    tex = tex_code_only(tex)
+    links = sorted({n.strip() for group in re.findall(r'\\lean\{([^}]+)\}', tex)
+                    for n in group.split(',') if n.strip()})
+    blocks = re.findall(r'\\begin\{(definition|proposition|theorem|lemma)\}(.*?)'
+                        r'\\end\{\1\}', tex, re.S)
+    notready, targets = [], {name: [] for name in REQUIRED_TARGETS}
+    for kind, body in blocks:
+        labels = re.findall(r'\\label\{([^}]+)\}', body)
+        pending = bool(re.search(r'\\notready\b', body))
+        block_links = sorted({n.strip() for group in re.findall(r'\\lean\{([^}]+)\}', body)
+                              for n in group.split(',') if n.strip()})
+        if pending:
+            notready.extend(labels or ['<unlabelled>'])
+        for label in labels:
+            if label in targets:
+                targets[label].append({
+                    'statement_kind': kind, 'notready': pending,
+                    'linked_declarations': block_links,
+                    'leanok': bool(re.search(r'\\leanok\b', body)),
+                })
+    inventory = {}
+    for label, matches in targets.items():
+        if len(matches) != 1:
+            raise ValueError(f'Required Chapter 5 target {label!r} occurs {len(matches)} times.')
+        target = matches[0]
+        if not target['notready'] and (not target['leanok'] or not target['linked_declarations']):
+            raise ValueError(f'Ready Chapter 5 target {label!r} needs Lean links and \\leanok.')
+        inventory[label] = target
+    return links, sorted(set(notready)), inventory
 
 
 def code_only(s: str) -> str:
@@ -60,14 +113,7 @@ def main() -> int:
     args = parser.parse_args()
     chapter = ROOT / 'blueprint/src/parts/05-equivariant-kk.tex'
     tex = chapter.read_text()
-    links = sorted({n.strip() for group in re.findall(r'\\lean\{([^}]+)\}', tex)
-                    for n in group.split(',') if n.strip()})
-    notready = []
-    for block in re.findall(r'\\begin\{(?:definition|proposition|theorem|lemma)\}.*?'
-                           r'\\end\{(?:definition|proposition|theorem|lemma)\}', tex, re.S):
-        if r'\notready' in block:
-            label = re.search(r'\\label\{([^}]+)\}', block)
-            notready.append(label.group(1) if label else '<unlabelled>')
+    links, notready, target_inventory = audit_blueprint(tex)
     sources = sorted(p for p in (ROOT / 'BC4lean').glob('*.lean')
                      if 'namespace BC4lean.KKTheory' in p.read_text())
     violations = []
@@ -79,6 +125,7 @@ def main() -> int:
         raise RuntimeError(f'Forbidden proof tokens: {violations}')
     modules = [f'BC4lean.{p.stem}' for p in sources]
     module_array = '#[' + ', '.join(json.dumps(m) for m in modules) + ']'
+    link_array = '#[' + ', '.join(f'``{name}' for name in links) + ']'
     checks = '\n'.join(f'#check {n}\n#print axioms {n}' for n in links)
     lean = f'''import BC4lean
 import Lean
@@ -87,6 +134,14 @@ open Lean Elab Command
 run_cmd do
   let env ← getEnv
   let modules := {module_array}
+  let links := {link_array}
+  for n in links do
+    let axioms ← collectAxioms n
+    for a in axioms do
+      unless #[``propext, ``Classical.choice, ``Quot.sound].contains a do
+        throwError "Unexpected axiom {{a}} in blueprint link {{n}}"
+    let axiomText := String.intercalate "," (axioms.toList.map Name.toString)
+    logInfo m!"LINK_AXIOMS|{{n.toString}}|{{axiomText}}"
   let moduleNames := env.header.moduleNames
   let mut count : Nat := 0
   for (n, _) in env.constants.toList do
@@ -105,20 +160,29 @@ run_cmd do
     with tempfile.TemporaryDirectory(prefix='chapter5-audit-') as temp:
         source = Path(temp) / 'Chapter5Audit.lean'
         source.write_text(lean)
-        result = subprocess.run(['lake', 'env', 'lean', '-j2', '-DwarningAsError=true', str(source)],
+        result = subprocess.run(['lake', 'env', 'lean', '-j2', '-DwarningAsError=true',
+                                 '-DautoImplicit=false', '-DrelaxedAutoImplicit=false', str(source)],
                                 cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
                                 text=True, env=os.environ)
     if result.returncode:
         print(result.stdout)
         return result.returncode
-    declarations, axioms = [], set()
+    declarations, link_axioms, axioms = [], {}, set()
     for line in result.stdout.splitlines():
+        if line.startswith('LINK_AXIOMS|'):
+            _, name, ax = line.split('|', 2)
+            if name in link_axioms:
+                raise RuntimeError(f'Duplicate blueprint-link axiom evidence: {name}')
+            link_axioms[name] = ax
+            axioms.update(re.findall(r'\b(?:propext|Classical\.choice|Quot\.sound)\b', ax))
         if line.startswith('AUDIT|'):
             _, module, name, ax = line.split('|', 3)
             declarations.append({'module': module, 'name': name, 'axioms': ax})
             axioms.update(re.findall(r'\b(?:propext|Classical\.choice|Quot\.sound)\b', ax))
     if not declarations:
         raise RuntimeError('No module declarations audited.')
+    if sorted(link_axioms) != links:
+        raise RuntimeError('Blueprint-link axiom evidence does not match the link inventory.')
     count = re.search(r'^AUDIT_COUNT\|(\d+)$', result.stdout, re.M)
     if not count or int(count.group(1)) != len(declarations):
         raise RuntimeError('Declaration evidence does not match the Lean audit count.')
@@ -129,13 +193,17 @@ run_cmd do
         raise RuntimeError(f'Unaudited Chapter 5 modules: {module_counts}')
     evidence = {
         'modules': modules, 'linked_declarations': links,
+        'linked_declaration_axioms': link_axioms,
         'module_declaration_counts': module_counts,
         'declaration_count': len(declarations), 'declarations': sorted(declarations, key=lambda d: d['name']),
         'axioms': sorted(axioms), 'forbidden_source_tokens': violations,
         'notready_targets': notready, 'chapter_complete': not notready,
+        'required_target_inventory': target_inventory,
         'source_sha256': {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest()
                           for p in [*sources, chapter, ROOT / 'BC4lean.lean',
-                                    ROOT / 'scripts/audit_chapter5.py']},
+                                    ROOT / 'scripts/audit_chapter5.py',
+                                    ROOT / 'scripts/test_audit_chapter5.py',
+                                    ROOT / '.github/workflows/build-project.yml']},
     }
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)

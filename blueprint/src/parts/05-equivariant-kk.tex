@@ -467,6 +467,265 @@ every vector in the same positive matrix form. This uses actual second-module
 inner products, with no assumed tensor norm or separation axiom.
 \end{proposition}
 
+\begin{proposition}\label{prop:nonunital-cstar-hom-range}
+\lean{BC4lean.KKTheory.nonUnitalCStarHom_exists_norm_eq_lift,BC4lean.KKTheory.nonUnitalCStarHom_quotient_norm_mk,BC4lean.KKTheory.nonUnitalCStarHomQuotientIsometry,BC4lean.KKTheory.nonUnitalCStarHom_isClosed_range}
+\leanok
+Every nonunital complex star homomorphism of complete $C^*$-algebras has
+closed range. The norm on its actual kernel quotient equals the image norm,
+and every element in the image has a lift with exactly its image norm.
+Continuous functional calculus trims a representative without changing its
+image and gives the quotient isometry.
+\end{proposition}
+
+\begin{proposition}\label{prop:coefficient-au-on-modules}
+\uses{prop:module-action-bound}
+\lean{BC4lean.KKTheory.tendsto_coefficient_approximateUnit_smul,BC4lean.KKTheory.exists_positive_selfadjoint_contraction_smul_approx_on}
+\leanok
+The actual increasing positive contractive coefficient approximate unit acts
+strongly as the identity on every right Hilbert module. A finite family of
+vectors can be approximated simultaneously by one positive selfadjoint
+contractive coefficient. A unit, completeness of the module and an extra
+essentiality hypothesis are not required.
+\end{proposition}
+
+\begin{proposition}\label{prop:positive-module-form-quotient}
+\uses{prop:module-action-bound}
+\lean{BC4lean.KKTheory.PositiveModuleForm,BC4lean.KKTheory.PositiveModuleForm.inner_mul_inner_swap_le,BC4lean.KKTheory.PositiveModuleForm.formNorm_triangle,BC4lean.KKTheory.PositiveModuleForm.nullRadical,BC4lean.KKTheory.PositiveModuleQuotient,BC4lean.KKTheory.PositiveModuleQuotient.instCStarModule}
+\leanok
+A positive semidefinite coefficient-valued module form satisfies
+Cauchy--Schwarz and gives the seminorm
+$\|x\|_q=\sqrt{\|\langle x,x\rangle\|}$. Its null vectors form a
+coefficient-invariant complex submodule. Quotienting that actual radical,
+with this induced form norm, constructs a separated pre-Hilbert module.
+No definiteness or pre-existing vector norm is assumed.
+\end{proposition}
+
+\begin{proposition}\label{prop:completed-interior-module-tensor}
+\uses{def:balanced-module-tensor-algebraic,prop:balanced-module-tensor-positivity,prop:hilbert-module-completion}
+\lean{BC4lean.KKTheory.moduleTensorInner_eq_zero_of_self,BC4lean.KKTheory.moduleTensorNull,BC4lean.KKTheory.preModuleTensorCStarModule,BC4lean.KKTheory.PreHilbertModuleTensor,BC4lean.KKTheory.InteriorModuleTensor,BC4lean.KKTheory.interiorModuleTensorInner_mk_mk,BC4lean.KKTheory.interiorModuleTensorMk_balance,BC4lean.KKTheory.interiorModuleTensor_span_dense}
+\leanok
+For complete Hilbert modules and an actual possibly degenerate nonunital
+left representation, the tensor form's zero quadratic vectors are precisely
+its pairing radical. The coefficient action descends through that radical.
+The induced norm on the separated balancing quotient and its actual norm
+completion construct $E\otimes_B F$. Elementary tensors have the prescribed
+inner product, obey balance and span a dense subspace.
+\end{proposition}
+
+\begin{proposition}\label{prop:interior-tensor-operators}
+\uses{prop:completed-interior-module-tensor,prop:complete-adjointable-algebra}
+\lean{BC4lean.KKTheory.interiorModuleTensorOperator,BC4lean.KKTheory.interiorModuleTensorOperator_mk,BC4lean.KKTheory.interiorModuleTensorOperator_norm_le,BC4lean.KKTheory.interiorModuleTensorOperatorHom,BC4lean.KKTheory.interiorModuleTensorOperator_adjoint}
+\leanok
+An adjointable coefficient-linear $T:E\to E$ induces the actual
+$T\otimes1$ on the completed interior tensor. It maps
+$x\otimes y$ to $Tx\otimes y$, has norm at most $\|T\|$, and
+preserves adjoints. The construction is a unital complex star-algebra
+homomorphism on the adjointable endomorphism algebra.
+\end{proposition}
+
+\begin{proposition}\label{prop:standard-tensor-essential-range}
+\uses{prop:completed-interior-module-tensor,prop:standard-module-compact-algebra}
+\lean{BC4lean.KKTheory.moduleTensorInner_standard_eq,BC4lean.KKTheory.standardInteriorModuleTensorEvaluationCLM_norm,BC4lean.KKTheory.standardInteriorModuleTensorEvaluation_range,BC4lean.KKTheory.standardInteriorModuleTensorEquivEssential,BC4lean.KKTheory.standardInteriorModuleTensorHilbertEquiv}
+\leanok
+For a possibly degenerate left representation $\Psi:B\to\mathcal L_C(F)$,
+the actual map $b\otimes y\mapsto\Psi(b)y$ identifies $B_B\otimes_B F$
+unitarily with the closed complex span of $\Psi(B)F$. Surjectivity onto
+all of $F$ is not asserted for a degenerate representation, and no
+complement for this essential range is assumed.
+\end{proposition}
+
+\begin{definition}\label{def:general-graded-kasparov-cycle}
+\uses{def:even-kasparov-cycle,def:module-gradings}
+\lean{BC4lean.KKTheory.GradedKasparovCycle,BC4lean.KKTheory.GradedKasparovCycle.trivialEquiv,BC4lean.KKTheory.GradedKasparovCycleIso,BC4lean.KKTheory.GradedKasparovCycleIso.symm,BC4lean.KKTheory.GradedKasparovCycleIso.trans}
+\leanok
+For compatible algebra gradings $\delta_A,\delta_B$, a genuine graded
+cycle uses a $\delta_B$-semilinear module grading, an equivariant graded
+representation, an odd Fredholm operator, and the same localized compact
+defects with commutator
+$F\phi(a)-\phi(\delta_A(a))F$. Algebra actions preserve their gradings.
+The trivial-grading specialization is exactly the earlier even cycle
+definition. Actual whole-cycle unitaries give reflexive, symmetric and
+transitive isomorphisms across module carriers.
+\end{definition}
+
+\begin{proposition}\label{prop:complex-clifford-one}
+\lean{BC4lean.KKTheory.CliffordOne.grading,BC4lean.KKTheory.CliffordOne.epsilon_square,BC4lean.KKTheory.CliffordOne.epsilon_odd,BC4lean.KKTheory.CliffordOne.existsUnique_lift}
+\leanok
+The complex one-generator Clifford algebra is the actual $C^*$-algebra
+$\mathbb C\times\mathbb C$ with grading exchanging the coordinates.
+Its odd generator $\varepsilon=(1,-1)$ is a selfadjoint unitary.
+Every selfadjoint unitary in a unital complex $C^*$-algebra gives a unique
+unital star homomorphism sending $\varepsilon$ to that unitary.
+\end{proposition}
+
+\begin{proposition}\label{prop:clifford-coefficient-tensor}
+\uses{prop:complex-clifford-one}
+\lean{BC4lean.KKTheory.cliffordTensorCoordinates_tmul,BC4lean.KKTheory.cliffordTensorNorm_cstar,BC4lean.KKTheory.cliffordTensorCoordinateStarAlgEquiv,BC4lean.KKTheory.CliffordCommutingRepresentation.maximalNorm_eq}
+\leanok
+The actual algebraic tensor $B\otimes_{\mathbb C}\mathrm{Cl}_1$ has
+coordinate map $b\otimes(z_+,z_-)\mapsto(z_+b,z_-b)$ and norm
+$\max(\|b_+\|,\|b_-\|)$. Its constructed complete $C^*$-algebra is
+star-isomorphic to $B\times B$. The norm is the maximal norm over commuting
+representations, including nonunital and degenerate coefficient
+representations. No spatial tensor-norm comparison is claimed here.
+\end{proposition}
+
+\begin{proposition}\label{prop:cycle-sum-unitaries-and-inverse-rotation}
+\uses{prop:kasparov-cycle-direct-sum,def:fixed-module-operator-homotopy}
+\lean{BC4lean.KKTheory.KasparovCycleIso.directSum,BC4lean.KKTheory.KasparovCycleIso.sumComm,BC4lean.KKTheory.KasparovCycleIso.sumAssoc,BC4lean.KKTheory.KasparovCycle.opposite,BC4lean.KKTheory.KasparovOperatorHomotopy.inverseRotation,BC4lean.KKTheory.KasparovOperatorHomotopy.inverseRotation_target_isDegenerate,BC4lean.KKTheory.KasparovOperatorHomotopy.directSum}
+\leanok
+Actual summed whole-cycle unitaries give exchange and associativity of
+even raw direct sums. A cycle's opposite reverses its grading and Fredholm
+operator. The explicit cosine--sine rotation on the sum of a cycle and its
+opposite is an admissible norm-continuous operator homotopy ending at
+the exactly degenerate flip cycle. Operator homotopies can be summed.
+These statements do not themselves construct the full homotopy quotient.
+\end{proposition}
+
+\begin{proposition}\label{prop:operator-path-as-interval-cycle}
+\uses{def:fixed-module-operator-homotopy,prop:continuous-section-hilbert-module}
+\lean{BC4lean.KKTheory.CStarAlgebraAction.continuousSections,BC4lean.KKTheory.KasparovOperatorHomotopy.intervalCycle,BC4lean.KKTheory.KasparovOperatorHomotopy.fibreCycleIso,BC4lean.KKTheory.KasparovOperatorHomotopy.fibreCycleZeroIso,BC4lean.KKTheory.KasparovOperatorHomotopy.fibreCycleOneIso}
+\leanok
+An admissible fixed-module operator path gives an actual equivariant cycle
+on the continuous-section Hilbert $C([0,1],B)$-module. Its evaluation-kernel
+fibres carry the induced whole cycles, and genuine cycle unitaries identify
+them with the original parameterwise cycles, including the endpoints.
+This does not assert that every interval cycle has a fixed-module path model.
+\end{proposition}
+
+\begin{proposition}\label{prop:interior-tensor-creation}
+\uses{prop:completed-interior-module-tensor,prop:rectangular-module-compactness}
+\lean{BC4lean.KKTheory.moduleCreationMap,BC4lean.KKTheory.moduleCreationMap_adjoint_mk,BC4lean.KKTheory.moduleCreationMap_norm_le,BC4lean.KKTheory.moduleCreationMap_adjoint_comp,BC4lean.KKTheory.moduleCreationMap_isModuleCompact_iff,BC4lean.KKTheory.moduleCreationMap_isModuleCompact_of_compact_left_action}
+\leanok
+Creation $\theta_\xi(y)=\xi\otimes y$ on the actual completed tensor is
+adjointable, has norm at most $\|\xi\|$, and satisfies
+$\theta_\xi^*(\zeta\otimes y)=\Psi(\langle\xi,\zeta\rangle)y$ and
+$\theta_\xi^*\theta_\zeta=\Psi(\langle\xi,\zeta\rangle)$.
+Precisely, $\theta_\xi$ is compact if and only if
+$\Psi(\langle\xi,\xi\rangle)$ is compact. Compactness of the entire left
+action is sufficient; arbitrary creation maps are not asserted compact.
+\end{proposition}
+
+\begin{proposition}\label{prop:interior-tensor-countable-generation}
+\uses{prop:completed-interior-module-tensor,prop:interior-tensor-creation,def:countably-generated-module}
+\lean{BC4lean.KKTheory.IsCountablyGeneratedModule.interiorTensor}
+\leanok
+The actual completed interior tensor of two countably generated Hilbert
+modules is countably generated. Pairing the two generating sequences and
+using the bounded tensor maps proves density. Nonunital coefficients and
+a degenerate left representation are allowed.
+\end{proposition}
+
+\begin{definition}\label{def:actual-kasparov-connection}
+\uses{prop:interior-tensor-creation,def:even-kasparov-cycle}
+\lean{BC4lean.KKTheory.KasparovConnection,BC4lean.KKTheory.KasparovConnection.add_compact}
+\leanok
+The analytic $S$-connection predicate on the actual tensor records both the operator and
+adjoint compactness conditions
+$\theta_\xi S-(-1)^{|\xi|}R\theta_\xi\in\mathcal K$
+for every homogeneous $\xi$, with the analogous condition for $S^*,R^*$.
+A globally compact perturbation of $R$ preserves all four compactness conditions.
+The odd degree of a graded connection must be proved separately for the actual
+tensor grading; preserving that degree also requires an odd perturbation.
+Existence of a graded connection or a Kasparov product is not assumed.
+\end{definition}
+
+\begin{proposition}\label{prop:actual-interior-creation-counterexample}
+\uses{prop:scalar-creation-map-caution,prop:interior-tensor-creation}
+\lean{BC4lean.KKTheory.InteriorCreationCycleCounterexample.creationAtOne_adjoint_comp,BC4lean.KKTheory.InteriorCreationCycleCounterexample.creationAtOne_not_moduleCompact,BC4lean.KKTheory.InteriorCreationCycleCounterexample.fullCycleCounterexample}
+\leanok
+For the two full scalar input cycles described above, creation at $1$
+into the constructed general interior tensor is noncompact. Its actual
+adjoint square is the identity on the infinite-dimensional second module.
+This verifies the counterexample within the constructed tensor, without
+substituting a different tensor model.
+\end{proposition}
+
+\begin{proposition}\label{prop:gram-coefficient-quadratic-positivity}
+\uses{prop:module-action-bound}
+\lean{BC4lean.KKTheory.moduleGram_quadratic_eq_inner,BC4lean.KKTheory.moduleGram_quadratic_nonneg}
+\leanok
+Every finite Gram coefficient quadratic expression
+$\sum_{i,j} b_i^*\langle x_i,x_j\rangle b_j$ equals
+$\langle\sum_i x_i b_i,\sum_j x_j b_j\rangle$ and is positive.
+This follows directly from the coefficient inner-product identities and
+does not assume a tensor norm or tensor positivity.
+\end{proposition}
+
+\begin{proposition}\label{prop:arbitrary-hilbert-module-fibres}
+\uses{prop:positive-module-form-quotient,prop:hilbert-module-completion}
+\lean{BC4lean.KKTheory.HilbertModuleFibre,BC4lean.KKTheory.hilbertModuleFibre_inner_mk,BC4lean.KKTheory.hilbertModuleFibreMk_denseRange,BC4lean.KKTheory.IsCountablyGeneratedModule.fibre,BC4lean.KKTheory.hilbertModuleFibreOperatorHom,BC4lean.KKTheory.IsModuleCompact.fibre}
+\leanok
+For an arbitrary Hilbert $C(X,B)$-module over compact Hausdorff $X$,
+evaluate its actual inner product at $t$, quotient its null radical,
+and complete the resulting pre-Hilbert module. This constructs the fibre
+$E_t$ and its canonical dense map, with the prescribed evaluated inner
+product. Countable generation descends. Adjointable operators induce a
+contractive unital star homomorphism on fibres, and rank-one evaluation
+proves that compact module operators descend to compact operators.
+\end{proposition}
+
+\begin{proposition}\label{prop:arbitrary-module-fibre-quotient-norm}
+\uses{prop:arbitrary-hilbert-module-fibres,prop:coefficient-au-on-modules}
+\lean{BC4lean.KKTheory.hilbertModuleBanachFibre_norm_mk,BC4lean.KKTheory.hilbertModuleBanachFibreEquiv,BC4lean.KKTheory.evaluatedModuleQuotient_completeSpace,BC4lean.KKTheory.hilbertModuleFibreMk_surjective}
+\leanok
+For complete $E$ over compact Hausdorff $X$, its actual closed evaluated
+radical quotient has Banach quotient norm equal to the evaluated inner-product
+norm. Continuous cutoffs and the coefficient approximate unit give arbitrarily
+close norm-controlled representatives. Consequently the evaluated quotient
+is already complete and the canonical map $E\to E_t$ is surjective.
+\end{proposition}
+
+
+\begin{proposition}\label{prop:compact-au-acts-strongly}
+\uses{prop:compact-module-ideal,prop:module-rank-one-laws}
+\lean{BC4lean.KKTheory.moduleRankOne_self_norm,BC4lean.KKTheory.compact_approximateUnit_vector_error_sq_le,BC4lean.KKTheory.tendsto_canonical_compact_approximateUnit_apply,BC4lean.KKTheory.tendsto_compact_sequence_apply}
+\leanok
+The exact identity $\|\theta_{x,x}\|=\|x\|^2$ implies that the actual
+compact-operator approximate unit acts strongly as the identity on $E$.
+The residual rank-one compression bounds vector errors by compact
+approximate-unit errors. This uses the original $B$-valued inner product;
+it does not retype $E$ as a module with a compact-operator-valued inner product.
+\end{proposition}
+
+\begin{proposition}\label{prop:arbitrary-interval-cycle-fibres}
+\uses{prop:arbitrary-hilbert-module-fibres,def:even-kasparov-cycle}
+\lean{BC4lean.KKTheory.GradedHilbertModule.fibre,BC4lean.KKTheory.EquivariantHilbertModule.fibre,BC4lean.KKTheory.KasparovCycle.fibre,BC4lean.KKTheory.KasparovCycle.isDegenerate_fibre,BC4lean.KKTheory.KasparovOperatorHomotopy.intervalFibreIso}
+\leanok
+An actual equivariant Kasparov cycle on an arbitrary complete countably
+generated Hilbert $C(X,B)$-module, with coefficient action acting pointwise
+and fixing $X$, induces a whole cycle on every evaluated fibre.
+Its grading, semilinear action, representation and Fredholm operator
+are the induced actual fibre maps, and all four compact defects descend.
+Degeneracy is preserved. For a fixed-module operator path, these general
+fibres are unitarily identified with its original parameterwise cycles.
+\end{proposition}
+
+\begin{proposition}\label{prop:compact-fibre-epimorphism-and-kernel}
+\uses{prop:arbitrary-module-fibre-quotient-norm,prop:nonunital-cstar-hom-range,prop:compact-au-acts-strongly}
+\lean{BC4lean.KKTheory.hilbertModuleCompactFibreHom,BC4lean.KKTheory.hilbertModuleCompactFibreHom_surjective,BC4lean.KKTheory.exists_compactFibre_lift_norm_eq,BC4lean.KKTheory.compact_fibreKernel_eq_fibreNullCompact}
+\leanok
+Evaluation gives a surjective nonunital star homomorphism
+$\mathcal K_{C(X,B)}(E)\to\mathcal K_B(E_t)$, with norm-preserving lifts.
+Its kernel is exactly the closed complex span of the rank-one maps
+$\theta_{x,y}$ with $x_t=0$. Fibre-vector surjectivity lifts rank-one maps;
+closed $C^*$-homomorphism range gives the full epimorphism, and the actual
+compact-algebra approximate unit proves the kernel description.
+\end{proposition}
+
+\begin{proposition}\label{prop:cone-hilbert-module}
+\uses{prop:continuous-section-hilbert-module,prop:coefficient-au-on-modules}
+\lean{BC4lean.KKTheory.ConeHilbertModule,BC4lean.KKTheory.ConeHilbertModule.instCStarModule,BC4lean.KKTheory.coneRampMap_denseRange,BC4lean.KKTheory.cone_isCountablyGenerated,BC4lean.KKTheory.coneOperatorHom}
+\leanok
+The actual closed section space $\{x\in C([0,1],E):x(0)=0\}$ is a complete
+Hilbert $C([0,1],B)$-module with pointwise form and action. Uniform ramp
+regularization proves the density needed for its explicit countable
+generators when $E$ is countably generated. Constant adjointable operators
+act on this cone and give a norm-contracting unital star homomorphism.
+No general closed-submodule countable-generation assertion is used.
+\end{proposition}
+
+
 \begin{definition}\label{def:equivariant-kk}
 \uses{def:hilbert-modules}
 \notready

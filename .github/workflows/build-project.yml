@@ -10,6 +10,7 @@ on:
       - 'lake-manifest.json'
       - 'scripts/check_project_imports.py'
       - 'scripts/audit_chapter5.py'
+      - 'scripts/test_audit_chapter5.py'
       - 'blueprint/src/parts/05-equivariant-kk.tex'
       - '.github/workflows/build-project.yml'
   # Run for every PR so a required check is never left pending by a path filter.
@@ -34,6 +35,9 @@ jobs:
 
       - name: Check project imports
         run: python3 scripts/check_project_imports.py
+
+      - name: Check Chapter 5 target inventory safeguards
+        run: python3 -B scripts/test_audit_chapter5.py
 
       - name: Install Lean and get the pinned Mathlib cache
         uses: leanprover/lean-action@50fcf42d2e460296f1a34b402e990d1b24f8b596 # v1.6.0
