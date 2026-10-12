@@ -52,5 +52,5 @@ jobs:
       - name: Build project with warnings as errors
         run: lake --wfail build BC4lean
 
-      - name: Audit Chapter 5 declarations and report unfinished targets
-        run: python3 scripts/audit_chapter5.py
+      - name: Audit Chapter 5 declarations and require complete targets
+        run: python3 scripts/audit_chapter5.py --require-complete
