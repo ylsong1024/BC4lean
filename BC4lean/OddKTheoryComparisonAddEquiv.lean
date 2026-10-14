@@ -31,14 +31,28 @@ theorem oddKTheoryMatrixUnitaryCycle_operatorK1Index {ι : Type} [Fintype ι] [D
     (hu : unitizationScalarMatrix (u : CStarMatrix ι ι (Unitization ℂ B)) = 1) :
     (oddKTheoryMatrixUnitaryCycle (Γ := PUnit) u hu).operatorK1Index =
       oddFredholmScalarIdentityUnitaryIndex u hu := by
-  rw [oddFredholmScalarCycle_operatorK1Index]
-  exact (oddFredholmStabilizedIndex_finiteExponentialCorner
-    oddKTheoryCountableFiniteRows_isCountablyGenerated (oddKTheoryMatrixLoopSelfAdjoint u)
-    (oddKTheoryMatrixLoopPullback_square_isModuleCompact u hu)
-    oddKTheoryTwoRowFiniteInclusion oddKTheoryTwoRowFiniteInclusion_isometry
-    (oddKTheoryFiniteExponentialRecovery u) (oddKTheoryFiniteExponentialRecovery_scalar u hu)
-    (oddKTheoryMatrixLoopExponential_twoRowCorner u)).trans
-      (oddKTheoryFiniteExponentialRecovery_operatorK1 u hu)
+  have hscalar : (oddKTheoryMatrixUnitaryCycle (Γ := PUnit) u hu).operatorK1Index =
+      oddFredholmStabilizedIndex
+        (oddKTheoryCountableFiniteRows_isCountablyGenerated (B := B) (ι := ι))
+        (oddKTheoryMatrixLoopSelfAdjoint (B := B) (ι := ι) u)
+        (oddKTheoryMatrixLoopPullback_square_isModuleCompact (B := B) (ι := ι) u hu) := by
+    simpa only [oddKTheoryMatrixUnitaryCycle, oddKTheoryMatrixLoopSelfAdjoint] using
+      (oddFredholmScalarCycle_operatorK1Index (B := B)
+        (E := CountableHilbertModuleSum B (FiniteStandardModule B ι))
+        (oddKTheoryCountableFiniteRows_isCountablyGenerated (B := B) (ι := ι))
+        (oddKTheoryMatrixLoopSelfAdjoint (B := B) (ι := ι) u)
+        (oddKTheoryMatrixLoopPullback_square_isModuleCompact (B := B) (ι := ι) u hu))
+  exact hscalar.trans ((oddFredholmStabilizedIndex_finiteExponentialCorner (B := B)
+    (E := CountableHilbertModuleSum B (FiniteStandardModule B ι)) (ι := ι ⊕ ι)
+    (oddKTheoryCountableFiniteRows_isCountablyGenerated (B := B) (ι := ι))
+    (oddKTheoryMatrixLoopSelfAdjoint (B := B) (ι := ι) u)
+    (oddKTheoryMatrixLoopPullback_square_isModuleCompact (B := B) (ι := ι) u hu)
+    (oddKTheoryTwoRowFiniteInclusion (B := B) (ι := ι))
+    (oddKTheoryTwoRowFiniteInclusion_isometry (B := B) (ι := ι))
+    (oddKTheoryFiniteExponentialRecovery (A := Unitization ℂ B) (ι := ι) u)
+    (oddKTheoryFiniteExponentialRecovery_scalar (B := B) (ι := ι) u hu)
+    (oddKTheoryMatrixLoopExponential_twoRowCorner (B := B) (ι := ι) u)).trans
+      (oddKTheoryFiniteExponentialRecovery_operatorK1 (B := B) (ι := ι) u hu))
 
 theorem oddOperatorK1KKInverse_rightInverse_index :
     Function.RightInverse (oddOperatorK1KKInverse (B := B))

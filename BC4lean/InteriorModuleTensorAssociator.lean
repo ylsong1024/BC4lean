@@ -255,4 +255,3 @@ theorem right_clm_ext {P : Type*} [NormedAddCommGroup P] [NormedSpace ℂ P]
   exact DFunLike.congr_fun hh w
 
 end BC4lean.KKTheory.InteriorModuleTensorAssociator
-

@@ -28,81 +28,116 @@ local instance standardFiniteProjectionAlignedAbsorptionLocalInstance02 {M N : T
     CompleteSpace (HilbertModuleSum B M N) := hilbertModuleSum_complete
 
 def finiteStandardPrefixEquiv : HilbertModuleEquiv B (HilbertModuleSum B FinMod Std) Std :=
-  ((oddKTheoryFiniteReindexEquiv (Fintype.equivFin ι)).sum
-    (HilbertModuleEquiv.refl (B := B) (E := Std))).trans
-      (oddKTheoryStandardPrefixEquiv (Fintype.card ι))
+  HilbertModuleEquiv.trans (B := B)
+    (E := HilbertModuleSum B FinMod Std)
+    (F := HilbertModuleSum B (FiniteStandardModule B (Fin (Fintype.card ι))) Std)
+    (G := Std)
+    (HilbertModuleEquiv.sum (B := B) (E := FinMod) (F := Std)
+      (G := FiniteStandardModule B (Fin (Fintype.card ι))) (H := Std)
+      (oddKTheoryFiniteReindexEquiv (B := B) (ι := ι) (κ := Fin (Fintype.card ι))
+        (Fintype.equivFin ι))
+      (HilbertModuleEquiv.refl (B := B) (E := Std)))
+    (oddKTheoryStandardPrefixEquiv (B := B) (Fintype.card ι))
 
 def finiteStandardPrefixInclusion : AdjointableMap B FinMod Std :=
-  finiteStandardPrefixEquiv.toAdjointable.comp (sumInl (B := B) (E := FinMod) (F := Std))
+  (finiteStandardPrefixEquiv (B := B) (ι := ι)).toAdjointable.comp
+    (sumInl (B := B) (E := FinMod) (F := Std))
 
+omit [TopologicalSpace.SeparableSpace B] [DecidableEq ι] in
 @[simp] theorem finiteStandardPrefixInclusion_apply (x : FinMod) :
     finiteStandardPrefixInclusion x = oddFredholmStandardFiniteInclusion (Fintype.card ι)
       (oddKTheoryFiniteReindexEquiv (Fintype.equivFin ι) x) := by
-  change oddKTheoryStandardPrefixEquiv (Fintype.card ι)
-    (sumMk (oddKTheoryFiniteReindexEquiv (Fintype.equivFin ι) x) 0) = _
-  exact oddKTheoryStandardPrefixEquiv_inl _ _
+  change oddKTheoryStandardPrefixEquiv (B := B) (Fintype.card ι)
+    (sumMk (B := B)
+      (oddKTheoryFiniteReindexEquiv (B := B) (ι := ι) (κ := Fin (Fintype.card ι))
+        (Fintype.equivFin ι) x) (0 : Std)) = _
+  exact oddKTheoryStandardPrefixEquiv_inl (B := B) (Fintype.card ι) _
 
+omit [TopologicalSpace.SeparableSpace B] [DecidableEq ι] in
 theorem finiteStandardPrefixInclusion_adjoint_comp :
     (finiteStandardPrefixInclusion (B := B) (ι := ι)).adjoint.comp
       finiteStandardPrefixInclusion = AdjointableMap.id := by
-  ext x
+  apply AdjointableMap.ext
+  intro x
   change ((finiteStandardPrefixEquiv (B := B) (ι := ι)).symm
-    (finiteStandardPrefixEquiv (sumMk x 0))).fst = x
-  rw [HilbertModuleEquiv.symm_apply_apply]
-  rfl
+    (finiteStandardPrefixEquiv (B := B) (ι := ι) (sumMk (B := B) x (0 : Std)))).fst = x
+  exact congrArg (fun y : HilbertModuleSum B FinMod Std => y.fst)
+    (HilbertModuleEquiv.symm_apply_apply (finiteStandardPrefixEquiv (B := B) (ι := ι))
+      (sumMk (B := B) x (0 : Std)))
 
 def finiteProjectionAlignedAbsorption (P : AdjointableMap B FinMod FinMod)
     (hP : IsStarProjection P) : HilbertModuleEquiv B
     (HilbertModuleSum B (ProjectionModule P) Std) Std :=
-  (projectionModuleAlignedStabilization P hP
-    finiteStandardModule_isCountablyGenerated_nonunital).trans finiteStandardPrefixEquiv
+  HilbertModuleEquiv.trans (B := B)
+    (E := HilbertModuleSum B (ProjectionModule P) Std)
+    (F := HilbertModuleSum B FinMod Std) (G := Std)
+    (projectionModuleAlignedStabilization (B := B) (E := FinMod) P hP
+      (finiteStandardModule_isCountablyGenerated_nonunital (B := B) (ι := ι)))
+    (finiteStandardPrefixEquiv (B := B) (ι := ι))
 
 @[simp] theorem finiteProjectionAlignedAbsorption_inl
     (P : AdjointableMap B FinMod FinMod) (hP : IsStarProjection P) (x : ProjectionModule P) :
     finiteProjectionAlignedAbsorption P hP (sumMk x 0) = finiteStandardPrefixInclusion (x : FinMod) := by
-  change finiteStandardPrefixEquiv
-    (projectionModuleAlignedStabilization P hP
-      finiteStandardModule_isCountablyGenerated_nonunital (sumMk x 0)) = _
-  rw [projectionModuleAlignedStabilization_inl]
-  rfl
+  change finiteStandardPrefixEquiv (B := B) (ι := ι)
+    (projectionModuleAlignedStabilization (B := B) (E := FinMod) P hP
+      (finiteStandardModule_isCountablyGenerated_nonunital (B := B) (ι := ι))
+      (sumMk (B := B) x (0 : Std))) =
+    finiteStandardPrefixEquiv (B := B) (ι := ι) (sumMk (B := B) (x : FinMod) (0 : Std))
+  exact congrArg (finiteStandardPrefixEquiv (B := B) (ι := ι))
+    (projectionModuleAlignedStabilization_inl (B := B) (E := FinMod) P hP
+      (finiteStandardModule_isCountablyGenerated_nonunital (B := B) (ι := ι)) x)
 
 def finiteProjectionAlignedFredholm (P Q : AdjointableMap B FinMod FinMod)
     (hP : IsStarProjection P) (hQ : IsStarProjection Q) : AdjointableMap B Std Std :=
-  (finiteProjectionAlignedAbsorption P hP).transportMap
-    (finiteProjectionAlignedAbsorption Q hQ)
-      (augmentedRectangularFredholm (projectionCrossMap P Q hP hQ))
+  HilbertModuleEquiv.transportMap (B := B)
+    (E := HilbertModuleSum B (ProjectionModule P) Std) (F := Std)
+    (G := HilbertModuleSum B (ProjectionModule Q) Std) (H := Std)
+    (finiteProjectionAlignedAbsorption (B := B) (ι := ι) P hP)
+    (finiteProjectionAlignedAbsorption (B := B) (ι := ι) Q hQ)
+    (augmentedRectangularFredholm (B := B) (E := ProjectionModule P) (F := ProjectionModule Q)
+      (projectionCrossMap (B := B) (E := FinMod) P Q hP hQ))
 
 theorem finiteProjectionAlignedFredholm_on_range
     (P Q : AdjointableMap B FinMod FinMod) (hP : IsStarProjection P) (hQ : IsStarProjection Q)
     (x : ProjectionModule P) :
     finiteProjectionAlignedFredholm P Q hP hQ (finiteStandardPrefixInclusion (x : FinMod)) =
       finiteStandardPrefixInclusion (Q (x : FinMod)) := by
-  rw [← finiteProjectionAlignedAbsorption_inl P hP x]
-  change finiteProjectionAlignedAbsorption Q hQ
-    (augmentedRectangularFredholm (projectionCrossMap P Q hP hQ)
-      ((finiteProjectionAlignedAbsorption P hP).symm
-        (finiteProjectionAlignedAbsorption P hP (sumMk x 0)))) = _
+  rw [← finiteProjectionAlignedAbsorption_inl (B := B) (ι := ι) P hP x]
+  change finiteProjectionAlignedAbsorption (B := B) (ι := ι) Q hQ
+    (augmentedRectangularFredholm (B := B) (E := ProjectionModule P) (F := ProjectionModule Q)
+      (projectionCrossMap (B := B) (E := FinMod) P Q hP hQ)
+      ((finiteProjectionAlignedAbsorption (B := B) (ι := ι) P hP).symm
+        (finiteProjectionAlignedAbsorption (B := B) (ι := ι) P hP
+          (sumMk (B := B) x (0 : Std))))) = _
   rw [HilbertModuleEquiv.symm_apply_apply]
-  change finiteProjectionAlignedAbsorption Q hQ
-    (sumMk (projectionCrossMap P Q hP hQ x) 0) = _
-  rw [finiteProjectionAlignedAbsorption_inl]
-  rfl
+  simp only [augmentedRectangularFredholm, sumMap_apply, sumMk_fst, sumMk_snd,
+    AdjointableMap.one_apply, finiteProjectionAlignedAbsorption_inl, projectionCrossMap_coe]
 
+set_option maxRecDepth 2048 in
 theorem finiteProjectionAlignedFredholm_comp_prefixProjection
     (P Q : AdjointableMap B FinMod FinMod) (hP : IsStarProjection P) (hQ : IsStarProjection Q) :
     (finiteProjectionAlignedFredholm P Q hP hQ).comp (finiteStandardPrefixInclusion.comp P) =
       (finiteStandardPrefixInclusion.comp Q).comp P := by
-  ext x
-  exact finiteProjectionAlignedFredholm_on_range P Q hP hQ (projectionCorestrict P hP x)
+  apply AdjointableMap.ext
+  intro x
+  simp only [AdjointableMap.comp_apply]
+  let y : ProjectionModule P := projectionCorestrict (B := B) (E := FinMod) P hP x
+  have hy : (y : FinMod) = P x := projectionCorestrict_coe (B := B) (E := FinMod) P hP x
+  have h : finiteProjectionAlignedFredholm (B := B) (ι := ι) P Q hP hQ
+      (finiteStandardPrefixInclusion (B := B) (ι := ι) (y : FinMod)) =
+    finiteStandardPrefixInclusion (B := B) (ι := ι) (Q (y : FinMod)) :=
+    finiteProjectionAlignedFredholm_on_range (B := B) (ι := ι) P Q hP hQ y
+  rw [hy] at h
+  exact h
 
 @[simp] theorem finiteProjectionAlignedFredholm_adjoint
     (P Q : AdjointableMap B FinMod FinMod) (hP : IsStarProjection P) (hQ : IsStarProjection Q) :
     (finiteProjectionAlignedFredholm P Q hP hQ).adjoint =
       finiteProjectionAlignedFredholm Q P hQ hP := by
-  rw [finiteProjectionAlignedFredholm, HilbertModuleEquiv.transportMap_adjoint]
-  congr 1
-  rw [augmentedRectangularFredholm, sumMap_adjoint, projectionCrossMap_adjoint]
-  rfl
+  have hOne : (1 : AdjointableMap B Std Std).adjoint = 1 :=
+    AdjointableMap.adjoint_id (B := B) (E := Std)
+  simp only [finiteProjectionAlignedFredholm, HilbertModuleEquiv.transportMap_adjoint,
+    augmentedRectangularFredholm, sumMap_adjoint, projectionCrossMap_adjoint, hOne]
 
 theorem finiteProjectionAlignedFredholm_norm_le_one
     (P Q : AdjointableMap B FinMod FinMod) (hP : IsStarProjection P) (hQ : IsStarProjection Q) :
@@ -110,12 +145,20 @@ theorem finiteProjectionAlignedFredholm_norm_le_one
   rw [finiteProjectionAlignedFredholm, HilbertModuleEquiv.transportMap_norm]
   exact augmentedRectangularFredholm_norm_le_one _ (projectionCrossMap_norm_le_one P Q hP hQ)
 
+omit [TopologicalSpace.SeparableSpace B] [DecidableEq ι] in
 theorem finiteStandardPrefixEquiv_transport_corner (A : AdjointableMap B FinMod FinMod) :
     (finiteStandardPrefixEquiv (B := B) (ι := ι)).transport
       (sumMap A (0 : AdjointableMap B Std Std)) =
         (finiteStandardPrefixInclusion.comp A).comp finiteStandardPrefixInclusion.adjoint := by
-  ext x
-  rfl
+  apply AdjointableMap.ext
+  intro x
+  change finiteStandardPrefixEquiv (B := B) (ι := ι)
+      (sumMap A (0 : AdjointableMap B Std Std)
+        ((finiteStandardPrefixEquiv (B := B) (ι := ι)).symm x)) =
+    finiteStandardPrefixEquiv (B := B) (ι := ι)
+      (sumMk (B := B) (A (((finiteStandardPrefixEquiv (B := B) (ι := ι)).symm x).fst))
+        (0 : Std))
+  rw [sumMap_apply, AdjointableMap.coe_zero_apply]
 
 theorem finiteProjectionAlignedFredholm_source_defect
     (P Q : AdjointableMap B FinMod FinMod) (hP : IsStarProjection P) (hQ : IsStarProjection Q) :

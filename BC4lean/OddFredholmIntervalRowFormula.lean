@@ -312,4 +312,3 @@ theorem oddFredholmIntervalRawFormula_eq_periodic
 
 end ActualTransfer
 end BC4lean.KKTheory
-

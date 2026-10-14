@@ -40,6 +40,8 @@ local instance standardScalarRelativeProjectionCoefficientNaturalityLocalInstanc
     [SMul Cᵐᵒᵖ N] [CStarModule Cᵐᵒᵖ N] [CompleteSpace N] :
     CompleteSpace (HilbertModuleSum C M N) := hilbertModuleSum_complete
 
+omit [PartialOrder B] [StarOrderedRing B] [PartialOrder C] [StarOrderedRing C]
+  [TopologicalSpace.SeparableSpace B] [TopologicalSpace.SeparableSpace C] in
 /-- The existing scalar-kernel coefficient homomorphism maps the genuine finite pair. -/
 theorem operatorK0Map_equalScalarProjectionDifference (f : B →⋆ₙₐ[ℂ] C)
     (p q : MatrixProjection (Unitization ℂ B) ι)
@@ -74,8 +76,10 @@ theorem nonunitalRelativeK0KasparovMapAtZero_equalScalarPair_natural
   calc
     _ = KasparovHomotopyClass.mk (BundledKasparovCycle.of (c₀.cycle.scalarCoefficientTensor f)) := by
       unfold nonunitalRelativeK0KasparovMapAtUniverse
-      rw [AddMonoidHom.comp_apply, nonunitalRelativeK0KasparovMap_equalScalarProjectionDifference,
-        GroupShrinkEvenBridge.addEquivalence_mk]
+      rw [AddMonoidHom.comp_apply, nonunitalRelativeK0KasparovMap_equalScalarProjectionDifference]
+      change GroupUniverseOrdinaryEven.coefficientPushforward f
+        (GroupShrinkEvenBridge.addEquivalence (KasparovHomotopyClass.mk c)) = _
+      rw [GroupShrinkEvenBridge.addEquivalence_mk]
       simpa only [c₀, c, BundledKasparovCycle.of_storedCycle] using
         GroupUniverseOrdinaryEven.coefficientPushforward_mk_scalarCoefficientTensor c₀.cycle f
     _ = KasparovHomotopyClass.mk (BundledKasparovCycle.of d) :=

@@ -31,35 +31,50 @@ local instance oddContinuationCoefficientImageFiniteUnitaryLocalInstance06 (f : 
   finiteHilbertModuleSum_complete
 local instance oddContinuationCoefficientImageFiniteUnitaryLocalInstance07 : CompleteSpace (FiniteStandardModule C ι) := finiteStandardModule_complete
 
+omit [PartialOrder B] [StarOrderedRing B] [PartialOrder C] [StarOrderedRing C]
+  [TopologicalSpace.SeparableSpace C] in
 theorem oddKTheoryMatrixMap_scalarIdentity (f : B →⋆ₙₐ[ℂ] C)
     (u : MatrixUnitary (Unitization ℂ B) ι)
     (hu : unitizationScalarMatrix (u : CStarMatrix ι ι (Unitization ℂ B)) = 1) :
     unitizationScalarMatrix (matrixUnitaryMap (Unitization.starMap f) u :
       CStarMatrix ι ι (Unitization ℂ C)) = 1 := by
-  calc
-    _ = unitizationScalarMatrix (u : CStarMatrix ι ι (Unitization ℂ B)) := by
-      ext i j
-      rfl
-    _ = 1 := hu
+  change matrixMap (scalarQuotient C)
+      (matrixMap (Unitization.starMap f) (u : CStarMatrix ι ι (Unitization ℂ B))) = 1
+  rw [← StarAlgHom.comp_apply, ← matrixMap_comp, scalarQuotient_natural]
+  exact hu
 
+set_option maxHeartbeats 4000000 in
+omit [PartialOrder B] [StarOrderedRing B] [PartialOrder C] [StarOrderedRing C]
+  [TopologicalSpace.SeparableSpace C] in
 theorem oddFredholmScalarIdentityUnitaryIndex_map (f : B →⋆ₙₐ[ℂ] C)
     (u : MatrixUnitary (Unitization ℂ B) ι)
     (hu : unitizationScalarMatrix (u : CStarMatrix ι ι (Unitization ℂ B)) = 1) :
-    operatorK1Map f (oddFredholmScalarIdentityUnitaryIndex u hu) =
-      oddFredholmScalarIdentityUnitaryIndex (matrixUnitaryMap (Unitization.starMap f) u)
-        (oddKTheoryMatrixMap_scalarIdentity f u hu) := by
+    operatorK1Map (A := B) (B := C) f
+        (oddFredholmScalarIdentityUnitaryIndex (B := B) (ι := ι) u hu) =
+      oddFredholmScalarIdentityUnitaryIndex (B := C) (ι := ι)
+        (matrixUnitaryMap (A := Unitization ℂ B) (B := Unitization ℂ C) (ι := ι)
+          (Unitization.starMap f) u)
+        (oddKTheoryMatrixMap_scalarIdentity (B := B) (C := C) (ι := ι) f u hu) := by
   apply Subtype.ext
-  rfl
+  change k1Map (Unitization.starMap f) (K1.of (FiniteUnitary.ofUnitary u)) =
+    K1.of (FiniteUnitary.ofUnitary (matrixUnitaryMap (Unitization.starMap f) u))
+  exact k1Map_of (Unitization.starMap f) (FiniteUnitary.ofUnitary u)
 
 def coefficientImageFiniteIntervalUnitary (f : B →⋆ₙₐ[ℂ] C)
     (u : MatrixUnitary (Unitization ℂ B) ι) :=
   finiteHilbertModuleCoefficientUnitary (coefficientImageIntervalLeftMul f) u
 
+omit [TopologicalSpace.SeparableSpace C] in
 theorem coefficientImageFiniteIntervalUnitary_compact (f : B →⋆ₙₐ[ℂ] C)
     (u : MatrixUnitary (Unitization ℂ B) ι)
     (hu : unitizationScalarMatrix (u : CStarMatrix ι ι (Unitization ℂ B)) = 1) :
-    IsModuleCompact ((coefficientImageFiniteIntervalUnitary f u : _) - 1) :=
-  finiteHilbertModuleCoefficientUnitary_compact _
+    IsModuleCompact ((coefficientImageFiniteIntervalUnitary f u :
+      AdjointableMap C(unitInterval, C)
+        (FiniteHilbertModuleSum C(unitInterval, C) (CoefficientImageIntervalModule f) ι)
+        (FiniteHilbertModuleSum C(unitInterval, C) (CoefficientImageIntervalModule f) ι)) - 1) := by
+  exact finiteHilbertModuleCoefficientUnitary_compact
+    (A := B) (B := C(unitInterval, C)) (E := CoefficientImageIntervalModule f) (ι := ι)
+    (coefficientImageIntervalLeftMul f)
     (coefficientImageIntervalLeftMul_isModuleCompact f) u hu
 
 theorem coefficientImageFiniteZeroFibreEquiv_unitary (f : B →⋆ₙₐ[ℂ] C)

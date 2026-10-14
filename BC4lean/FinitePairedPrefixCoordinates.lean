@@ -12,6 +12,8 @@ range projection with the prescribed paired cutoff.
 noncomputable section
 namespace BC4lean.KKTheory
 
+set_option synthInstance.maxSize 512
+
 variable {B : Type*} {ι : Type} [NonUnitalCStarAlgebra B] [PartialOrder B] [StarOrderedRing B]
   [TopologicalSpace.SeparableSpace B] [Fintype ι] [DecidableEq ι]
 local notation "Std" => StandardCountableHilbertModule B
@@ -28,8 +30,10 @@ def finitePairedPrefixReindex : ι ⊕ ι ≃ PairedStandardFiniteIndex (Fintype
 
 def finitePairedPrefixCoordinateInclusion :
     AdjointableMap B (FiniteStandardModule B (ι ⊕ ι)) (HilbertModuleSum B Std Std) :=
-  finitePairedPrefixInclusion.comp (oddKTheoryFiniteSumEquiv (B := B) (ι := ι) (κ := ι)).toAdjointable
+  (finitePairedPrefixInclusion (B := B) (ι := ι)).comp
+    (oddKTheoryFiniteSumEquiv (B := B) (ι := ι) (κ := ι)).toAdjointable
 
+omit [TopologicalSpace.SeparableSpace B] [DecidableEq ι] in
 theorem finiteStandardPrefixInclusion_eq_reindex :
     finiteStandardPrefixInclusion (B := B) (ι := ι) =
       (oddFredholmStandardFiniteInclusion (Fintype.card ι)).comp
@@ -37,6 +41,7 @@ theorem finiteStandardPrefixInclusion_eq_reindex :
   ext x
   exact finiteStandardPrefixInclusion_apply x
 
+omit [TopologicalSpace.SeparableSpace B] [DecidableEq ι] in
 @[simp] theorem finiteStandardPrefixInclusion_adjoint_apply (x : Std) (i : ι) :
     (finiteStandardPrefixInclusion (B := B) (ι := ι)).adjoint x i =
       standardCountableEvaluation ((Fintype.equivFin ι i).val) x := by
@@ -45,6 +50,7 @@ theorem finiteStandardPrefixInclusion_eq_reindex :
       (Fintype.equivFin ι i) = _
   exact oddFredholmStandardFiniteInclusion_adjoint_apply _ _ _
 
+omit [TopologicalSpace.SeparableSpace B] [DecidableEq ι] in
 theorem finitePairedPrefixCoordinateInclusion_eq_reindex :
     finitePairedPrefixCoordinateInclusion (B := B) (ι := ι) =
       (pairedStandardFiniteInclusion (Fintype.card ι)).comp
@@ -53,15 +59,19 @@ theorem finitePairedPrefixCoordinateInclusion_eq_reindex :
       (oddKTheoryFiniteReindexEquiv (B := B) (finitePairedPrefixReindex (ι := ι))).toAdjointable.adjoint.comp
         (pairedStandardFiniteInclusion (Fintype.card ι)).adjoint := by
     ext x i
+    simp only [finitePairedPrefixCoordinateInclusion, AdjointableMap.adjoint_comp,
+      finitePairedPrefixInclusion, sumMap_adjoint, AdjointableMap.comp_apply,
+      HilbertModuleEquiv.toAdjointable_adjoint, HilbertModuleEquiv.toAdjointable_apply,
+      sumMap_apply]
     cases i with
     | inl i =>
-      change finiteStandardPrefixInclusion.adjoint x.fst i =
+      change (finiteStandardPrefixInclusion (B := B) (ι := ι)).adjoint x.fst i =
         (pairedStandardFiniteInclusion (Fintype.card ι)).adjoint x
           (Sum.inl (Fintype.equivFin ι i))
       rw [finiteStandardPrefixInclusion_adjoint_apply,
         pairedStandardFiniteInclusion_adjoint_apply, pairedStandardCoordinateInclusion_adjoint_apply]
     | inr i =>
-      change finiteStandardPrefixInclusion.adjoint x.snd i =
+      change (finiteStandardPrefixInclusion (B := B) (ι := ι)).adjoint x.snd i =
         (pairedStandardFiniteInclusion (Fintype.card ι)).adjoint x
           (Sum.inr (Fintype.equivFin ι i))
       rw [finiteStandardPrefixInclusion_adjoint_apply,
@@ -69,6 +79,7 @@ theorem finitePairedPrefixCoordinateInclusion_eq_reindex :
   have h := congrArg AdjointableMap.adjoint ha
   simpa only [AdjointableMap.adjoint_adjoint, AdjointableMap.adjoint_comp] using h
 
+omit [TopologicalSpace.SeparableSpace B] [DecidableEq ι] in
 theorem finitePairedPrefixCoordinateInclusion_comp_adjoint :
     (finitePairedPrefixCoordinateInclusion (B := B) (ι := ι)).comp
       finitePairedPrefixCoordinateInclusion.adjoint = standardCountablePairedCutoff (Fintype.card ι) := by
@@ -76,12 +87,19 @@ theorem finitePairedPrefixCoordinateInclusion_comp_adjoint :
   have he :
       (oddKTheoryFiniteReindexEquiv (B := B) (finitePairedPrefixReindex (ι := ι))).toAdjointable.comp
         (oddKTheoryFiniteReindexEquiv (B := B) (finitePairedPrefixReindex (ι := ι))).toAdjointable.adjoint =
-          AdjointableMap.id := by
-    ext x
-    exact HilbertModuleEquiv.apply_symm_apply _ x
+          (AdjointableMap.id : AdjointableMap B
+            (FiniteStandardModule B (PairedStandardFiniteIndex (Fintype.card ι)))
+            (FiniteStandardModule B (PairedStandardFiniteIndex (Fintype.card ι)))) := by
+    apply AdjointableMap.ext
+    intro x
+    exact HilbertModuleEquiv.apply_symm_apply (B := B)
+      (oddKTheoryFiniteReindexEquiv (B := B) (finitePairedPrefixReindex (ι := ι))) x
   calc
-    _ = ((pairedStandardFiniteInclusion (Fintype.card ι)).comp
-        AdjointableMap.id).comp (pairedStandardFiniteInclusion (Fintype.card ι)).adjoint := by
+    _ = ((pairedStandardFiniteInclusion (B := B) (Fintype.card ι)).comp
+        (AdjointableMap.id : AdjointableMap B
+          (FiniteStandardModule B (PairedStandardFiniteIndex (Fintype.card ι)))
+          (FiniteStandardModule B (PairedStandardFiniteIndex (Fintype.card ι))))).comp
+            (pairedStandardFiniteInclusion (B := B) (Fintype.card ι)).adjoint := by
       rw [← he]
       ext x
       rfl

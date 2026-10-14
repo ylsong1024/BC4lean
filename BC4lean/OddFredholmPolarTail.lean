@@ -111,4 +111,3 @@ theorem oddFredholmUnitary_left_tail (u : unitary A) (q : A) (hq : star q = q)
   simpa only [star_mul, star_star, hq] using congrArg star hstar
 
 end BC4lean.KKTheory
-

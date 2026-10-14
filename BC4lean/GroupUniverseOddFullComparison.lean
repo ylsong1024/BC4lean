@@ -42,9 +42,17 @@ def oddKKOperatorK1AllModuleUniversesAddEquiv :
 theorem oddKKOperatorK1Index_allModuleUniverses_bijective :
     Function.Bijective (oddKKOperatorK1Index : OddKK.{0, 0, uB, uE} α₁ β₁ →
       OperatorKTheory.OperatorK1 B) := by
-  simpa only [oddKKOperatorK1AllModuleUniversesAddEquiv_apply] using
-    (oddKKOperatorK1AllModuleUniversesAddEquiv (B := B) :
-      OddKK.{0, 0, uB, uE} α₁ β₁ ≃+ OperatorKTheory.OperatorK1 B).bijective
+  have hfun :
+      ((oddKKOperatorK1AllModuleUniversesAddEquiv (B := B) :
+        OddKK.{0, 0, uB, uE} α₁ β₁ ≃+ OperatorKTheory.OperatorK1 B) :
+        OddKK.{0, 0, uB, uE} α₁ β₁ → OperatorKTheory.OperatorK1 B) =
+      (oddKKOperatorK1Index : OddKK.{0, 0, uB, uE} α₁ β₁ →
+        OperatorKTheory.OperatorK1 B) := by
+    funext x
+    exact oddKKOperatorK1AllModuleUniversesAddEquiv_apply x
+  rw [← hfun]
+  exact (oddKKOperatorK1AllModuleUniversesAddEquiv (B := B) :
+    OddKK.{0, 0, uB, uE} α₁ β₁ ≃+ OperatorKTheory.OperatorK1 B).bijective
 
 def scalarCliffordOperatorK1AllModuleUniversesAddEquiv :
     GradedKasparovHomotopyClass.{0, 0, uB, uE} α₁ (cliffordTensorAction β₁)

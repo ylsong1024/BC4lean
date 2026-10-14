@@ -69,9 +69,6 @@ theorem externalClass_evenClass_ulift
       (GroupUniverseExternalEvenClass.externalClass (GroupUniverseEvenBridge.evenClass x)) := by
   refine Quotient.inductionOn x ?_
   intro c
-  simp only [GradedKasparovHomotopyClass.ulift_mk, GroupUniverseEvenBridge.evenClass_mk,
-    GroupUniverseExternalEvenClass.externalClass_mk, GroupUniverseEvenBase.toEven,
-    GradedKasparovCycle.ofKasparovCycle_toKasparovCycle]
   exact GradedKasparovHomotopyClass.mk_eq_of_iso
     ((CliffordExternalEvenCycle.iso c.cycle.uliftIso).symm.trans
       ((CliffordExternalEvenCycle.cycle c.cycle).uliftIso))
@@ -95,20 +92,27 @@ variable {Γ : Type uΓ} {A : Type uA} {B : Type uB} [Group Γ] [Countable Γ]
   [TopologicalSpace.SeparableSpace A] [TopologicalSpace.SeparableSpace B]
   {α : CStarAlgebraAction Γ A} {β : CStarAlgebraAction Γ B}
 
+omit [PartialOrder A] [StarOrderedRing A] in
 /-- The genuine ambient standard unit acts on both even and odd classes. -/
 theorem right_identity (p : Bool)
     (x : KKParityGroup.{uΓ,uA,uB,max uE (max uA uB)} p α β) :
     rightEvenProduct p x (identity.{uΓ,uB,max uE (max uA uB)} β) = x := by
   cases p
-  · apply GroupUniverseEvenBridge.gradedClass_injective
-    rw [rightEvenProduct, GroupUniverseParityProduct.gradedClass_evenProduct,
+  · dsimp only [KKParityGroup] at x
+    change GroupUniverseParityProduct.evenProduct x
+      (identity.{uΓ,uB,max uE (max uA uB)} β) = x
+    apply GroupUniverseEvenBridge.gradedClass_injective
+    rw [GroupUniverseParityProduct.gradedClass_evenProduct,
       identity, GroupUniverseEvenBridge.gradedClass_evenClass,
-      ← GroupUniverseProduct.product_ulift_second, GroupUniverseProduct.product_right_identity]
+      ← GroupUniverseProduct.product_ulift_second, GroupUniverseProduct.product_right_identity.{uΓ,uA,uB,max uE (max uA uB)}]
     exact GradedKasparovHomotopyClass.ulift_eq_self.{uΓ,uA,uB,0,max uE (max uA uB)} _
-  · apply GroupUniverseCliffordCoordinateBridge.gradedOddClass_injective
-    rw [rightEvenProduct, GroupUniverseOddFirstParityProduct.gradedOddClass_oddEvenProduct,
+  · dsimp only [KKParityGroup] at x
+    change GroupUniverseOddFirstParityProduct.oddEvenProduct x
+      (identity.{uΓ,uB,max uE (max uA uB)} β) = x
+    apply GroupUniverseCliffordCoordinateBridge.gradedOddClass_injective
+    rw [GroupUniverseOddFirstParityProduct.gradedOddClass_oddEvenProduct,
       externalClass_identity, ← GroupUniverseProduct.product_ulift_second,
-      GroupUniverseProduct.product_right_identity]
+      GroupUniverseProduct.product_right_identity.{uΓ,uA,uB,max uE (max uA uB)}]
     exact GradedKasparovHomotopyClass.ulift_eq_self.{uΓ,uA,uB,0,max uE (max uA uB)} _
 
 /-- The same genuine ambient standard unit acts from the first algebra. -/
@@ -116,15 +120,21 @@ theorem left_identity (p : Bool)
     (x : KKParityGroup.{uΓ,uA,uB,max uE (max uA uB)} p α β) :
     leftEvenProduct p (identity.{uΓ,uA,max uE (max uA uB)} α) x = x := by
   cases p
-  · apply GroupUniverseEvenBridge.gradedClass_injective
-    rw [leftEvenProduct, GroupUniverseParityProduct.gradedClass_evenProduct,
+  · dsimp only [KKParityGroup] at x
+    change GroupUniverseParityProduct.evenProduct
+      (identity.{uΓ,uA,max uE (max uA uB)} α) x = x
+    apply GroupUniverseEvenBridge.gradedClass_injective
+    rw [GroupUniverseParityProduct.gradedClass_evenProduct,
       identity, GroupUniverseEvenBridge.gradedClass_evenClass,
-      ← GroupUniverseProduct.product_ulift_first, GroupUniverseProduct.product_left_identity]
+      ← GroupUniverseProduct.product_ulift_first, GroupUniverseProduct.product_left_identity.{uΓ,uA,uB,max uE (max uA uB)}]
     exact GradedKasparovHomotopyClass.ulift_eq_self.{uΓ,uA,uB,0,max uE (max uA uB)} _
-  · apply GroupUniverseCliffordCoordinateBridge.gradedOddClass_injective
-    rw [leftEvenProduct, GroupUniverseOddFirstParityProduct.coordinateClass_evenOddProduct,
+  · dsimp only [KKParityGroup] at x
+    change GroupUniverseParityProduct.evenOddProduct
+      (identity.{uΓ,uA,max uE (max uA uB)} α) x = x
+    apply GroupUniverseCliffordCoordinateBridge.gradedOddClass_injective
+    rw [GroupUniverseOddFirstParityProduct.coordinateClass_evenOddProduct,
       identity, GroupUniverseEvenBridge.gradedClass_evenClass,
-      ← GroupUniverseProduct.product_ulift_first, GroupUniverseProduct.product_left_identity]
+      ← GroupUniverseProduct.product_ulift_first, GroupUniverseProduct.product_left_identity.{uΓ,uA,uB,max uE (max uA uB)}]
     exact GradedKasparovHomotopyClass.ulift_eq_self.{uΓ,uA,uB,0,max uE (max uA uB)} _
 
 end Units

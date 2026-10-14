@@ -59,7 +59,7 @@ def product (p q : Bool) :
 theorem product_add_first (p q : Bool)
     (x x' : KKParityGroup.{uΓ,uA,uB,max u (max uA (max uB uC))} p α β)
     (y : KKParityGroup.{uΓ,uB,uC,max u (max uA (max uB uC))} q β γ) :
-    product p q (x + x') y = product p q x y + product p q x' y := by
+    product.{uΓ,uA,uB,uC,u} p q (x + x') y = product.{uΓ,uA,uB,uC,u} p q x y + product.{uΓ,uA,uB,uC,u} p q x' y := by
   cases p <;> cases q
   · exact GroupUniverseParityProduct.evenProduct_add_first x x' y
   · exact GroupUniverseParityProduct.evenOddProduct_add_first x x' y
@@ -69,7 +69,7 @@ theorem product_add_first (p q : Bool)
 theorem product_add_second (p q : Bool)
     (x : KKParityGroup.{uΓ,uA,uB,max u (max uA (max uB uC))} p α β)
     (y y' : KKParityGroup.{uΓ,uB,uC,max u (max uA (max uB uC))} q β γ) :
-    product p q x (y + y') = product p q x y + product p q x y' := by
+    product.{uΓ,uA,uB,uC,u} p q x (y + y') = product.{uΓ,uA,uB,uC,u} p q x y + product.{uΓ,uA,uB,uC,u} p q x y' := by
   cases p <;> cases q
   · exact GroupUniverseParityProduct.evenProduct_add_second x y y'
   · exact GroupUniverseParityProduct.evenOddProduct_add_second x y y'
@@ -81,8 +81,8 @@ def productAddHom (p q : Bool) :
     KKParityGroup.{uΓ,uA,uB,max u (max uA (max uB uC))} p α β →+
     (KKParityGroup.{uΓ,uB,uC,max u (max uA (max uB uC))} q β γ →+
       KKParityGroup.{uΓ,uA,uC,max u (max uA (max uB uC))} (Bool.xor p q) α γ) :=
-  AddMonoidHom.mk' (fun x => AddMonoidHom.mk' (product p q x) (product_add_second p q x))
-    (by intro x x'; ext y; exact product_add_first p q x x' y)
+  AddMonoidHom.mk' (fun x => AddMonoidHom.mk' (product.{uΓ,uA,uB,uC,u} p q x) (product_add_second.{uΓ,uA,uB,uC,u} p q x))
+    (by intro x x'; ext y; exact product_add_first.{uΓ,uA,uB,uC,u} p q x x' y)
 
 end Pairs
 
@@ -114,14 +114,14 @@ theorem product_assoc (p q r : Bool)
       KKParityGroup.{uΓ,uA,uD,max u (max uA (max uB (max uC uD)))}
         (Bool.xor (Bool.xor p q) r) α η) := by
   cases p <;> cases q <;> cases r
-  · exact GroupUniverseParityProduct.evenProduct_assoc x y z
-  · exact GroupUniverseParityProduct.evenEvenOddProduct_assoc x y z
-  · exact GroupUniverseOddFirstParityProduct.evenOddEvenProduct_assoc x y z
-  · exact GroupUniverseOddFirstParityProduct.evenOddOddProduct_assoc x y z
-  · exact GroupUniverseOddFirstParityProduct.oddEvenEvenProduct_assoc x y z
-  · exact GroupUniverseOddFirstParityProduct.oddEvenOddProduct_assoc x y z
-  · exact GroupUniverseOddFirstParityProduct.oddOddEvenProduct_assoc x y z
-  · exact GroupUniverseOddFirstParityProduct.oddOddOddProduct_assoc x y z
+  · exact GroupUniverseParityProduct.evenProduct_assoc.{uΓ,uA,uB,uC,uD,max u (max uA (max uB (max uC uD))),max u (max uA (max uB (max uC uD))),max u (max uA (max uB (max uC uD)))} x y z
+  · exact GroupUniverseParityProduct.evenEvenOddProduct_assoc.{uΓ,uA,uB,uC,uD,max u (max uA (max uB (max uC uD))),max u (max uA (max uB (max uC uD))),max u (max uA (max uB (max uC uD)))} x y z
+  · exact GroupUniverseOddFirstParityProduct.evenOddEvenProduct_assoc.{uΓ,uA,uB,uC,uD,max u (max uA (max uB (max uC uD))),max u (max uA (max uB (max uC uD))),max u (max uA (max uB (max uC uD)))} x y z
+  · exact GroupUniverseOddFirstParityProduct.evenOddOddProduct_assoc.{uΓ,uA,uB,uC,uD,max u (max uA (max uB (max uC uD))),max u (max uA (max uB (max uC uD))),max u (max uA (max uB (max uC uD)))} x y z
+  · exact GroupUniverseOddFirstParityProduct.oddEvenEvenProduct_assoc.{uΓ,uA,uB,uC,uD,max u (max uA (max uB (max uC uD))),max u (max uA (max uB (max uC uD))),max u (max uA (max uB (max uC uD)))} x y z
+  · exact GroupUniverseOddFirstParityProduct.oddEvenOddProduct_assoc.{uΓ,uA,uB,uC,uD,max u (max uA (max uB (max uC uD))),max u (max uA (max uB (max uC uD))),max u (max uA (max uB (max uC uD)))} x y z
+  · exact GroupUniverseOddFirstParityProduct.oddOddEvenProduct_assoc.{uΓ,uA,uB,uC,uD,max u (max uA (max uB (max uC uD)))} x y z
+  · exact GroupUniverseOddFirstParityProduct.oddOddOddProduct_assoc.{uΓ,uA,uB,uC,uD,max u (max uA (max uB (max uC uD)))} x y z
 
 end Triples
 end BC4lean.KKTheory.GroupUniverseCommonParityProduct

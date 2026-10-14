@@ -227,4 +227,3 @@ theorem oddFredholmRowExponentialPullbackCycle_class (hE : IsCountablyGeneratedM
 
 end ActualRows
 end BC4lean.KKTheory
-

@@ -21,6 +21,7 @@ local instance standardFiniteRelativeProjectionK0IndexRecoveryLocalInstance01 : 
 local instance standardFiniteRelativeProjectionK0IndexRecoveryLocalInstance02 (A : Type*) [CStarAlgebra A] : PartialOrder A := CStarAlgebra.spectralOrder A
 local instance standardFiniteRelativeProjectionK0IndexRecoveryLocalInstance03 (A : Type*) [CStarAlgebra A] : StarOrderedRing A := CStarAlgebra.spectralOrderedRing A
 
+set_option maxHeartbeats 4000000 in
 /-- Genuine finite-pair recovery of the raw rectangular index. -/
 theorem unitizedRelativeProjectionCycle_operatorK0Index
     (p q : MatrixProjection (Unitization ℂ B) ι)
@@ -31,7 +32,8 @@ theorem unitizedRelativeProjectionCycle_operatorK0Index
   let Q : AdjointableMap B FinMod FinMod := unitizedProjectionOperator q
   have hP : IsStarProjection P := unitizedProjectionOperator_isStarProjection p
   have hQ : IsStarProjection Q := unitizedProjectionOperator_isStarProjection q
-  have hc : IsModuleCompact (P - Q) := unitizedModuleMatrixRepresentation_sub_isModuleCompact p q h
+  have hc : IsModuleCompact (P - Q) := unitizedModuleMatrixRepresentation_sub_isModuleCompact (B := B) (ι := ι)
+      (p : CStarMatrix ι ι (Unitization ℂ B)) (q : CStarMatrix ι ι (Unitization ℂ B)) h
   let T := projectionCrossMap P Q hP hQ
   have hs : IsModuleCompact (1 - T.adjoint.comp T) :=
     projectionCrossMap_source_defect_isModuleCompact P Q hP hQ hc
@@ -52,7 +54,9 @@ theorem unitizedRelativeProjectionCycle_operatorK0Index
     apply CStarMatrix.ext
     intro i j
     exact h i j
-  have hClass : unitizationRelativeProjectionK0 p q p.property q.property hScalar =
+  have hClass : unitizationRelativeProjectionK0
+      (p : CStarMatrix ι ι (Unitization ℂ B)) (q : CStarMatrix ι ι (Unitization ℂ B))
+      p.property q.property hScalar =
       equalScalarProjectionDifference p q h := by
     apply operatorK0Inclusion_injective B
     rw [operatorK0Inclusion_unitizationRelativeProjectionK0,

@@ -26,7 +26,7 @@ local notation "β₁" => (CStarAlgebraAction.trivial : CStarAlgebraAction PUnit
 
 def oddFredholmCompactExponentialPullbackCycleIso
     (hE : IsCountablyGeneratedModule B E) (F : selfAdjoint (AdjointableMap B E E))
-    (hF : IsModuleCompact ((F : AdjointableMap B E E) * F - 1))
+    (hF : IsModuleCompact ((F : AdjointableMap B E E) * (F : AdjointableMap B E E) - 1))
     (hnorm : ‖(F : AdjointableMap B E E)‖ ≤ 1) :
     OddKasparovCycleIso
       (oddFredholmCompactUnitaryPullbackCycle (Γ := PUnit) hE (oddFredholmExponential F)
@@ -37,15 +37,22 @@ def oddFredholmCompactExponentialPullbackCycleIso
   representation_intertwine _ _ := rfl
   operator_intertwine _ := rfl
 
+set_option maxHeartbeats 4000000 in
 theorem oddOperatorK1KKInverse_standardFredholmIndex
     (F : selfAdjoint (OddFredholmStandardOperator B))
     (hF : IsModuleCompact ((F : OddFredholmStandardOperator B) ^ 2 - 1))
     (hnorm : ‖(F : OddFredholmStandardOperator B)‖ ≤ 1) :
     oddOperatorK1KKInverse (oddFredholmStandardIndex F hF) =
-      OddKK.mk (BundledOddKasparovCycle.of (oddKTheoryScalarFredholmCycle (Γ := PUnit)
-        standardCountableHilbertModule_isCountablyGenerated F F.property
+      OddKK.mk (BundledOddKasparovCycle.of (Γ := PUnit) (A := ℂ) (B := B)
+      (E := StandardCountableHilbertModule B)
+      (oddKTheoryScalarFredholmCycle (Γ := PUnit) (B := B)
+        (E := StandardCountableHilbertModule B)
+        (standardCountableHilbertModule_isCountablyGenerated (B := B))
+        (F : OddFredholmStandardOperator B)
+        (show IsSelfAdjoint (F : OddFredholmStandardOperator B) from F.property)
         (by simpa only [pow_two] using hF))) := by
-  have hs : IsModuleCompact ((F : OddFredholmStandardOperator B) * F - 1) := by
+  have hs : IsModuleCompact
+      ((F : OddFredholmStandardOperator B) * (F : OddFredholmStandardOperator B) - 1) := by
     simpa only [pow_two] using hF
   calc
     _ = OddKK.mk (BundledOddKasparovCycle.of
@@ -56,8 +63,12 @@ theorem oddOperatorK1KKInverse_standardFredholmIndex
     _ = OddKK.mk (BundledOddKasparovCycle.of
         (oddFredholmRowExponentialPullbackCycle (Γ := PUnit)
           standardCountableHilbertModule_isCountablyGenerated F hs hnorm)) :=
-      OddKK.mk_eq_of_iso (oddFredholmCompactExponentialPullbackCycleIso _ F hs hnorm)
-    _ = _ := oddFredholmRowExponentialPullbackCycle_class _ F hs hnorm
+      OddKK.mk_eq_of_iso (oddFredholmCompactExponentialPullbackCycleIso (B := B)
+        (E := StandardCountableHilbertModule B)
+        (standardCountableHilbertModule_isCountablyGenerated (B := B)) F hs hnorm)
+    _ = _ := oddFredholmRowExponentialPullbackCycle_class (Γ := PUnit) (B := B)
+      (E := StandardCountableHilbertModule B)
+      (standardCountableHilbertModule_isCountablyGenerated (B := B)) F hs hnorm
 
 theorem OddKasparovCycle.operatorK1Index_inverse_class (c : OddKasparovCycle α₁ β₁ E) :
     oddOperatorK1KKInverse c.operatorK1Index = OddKK.mk (BundledOddKasparovCycle.of c) := by

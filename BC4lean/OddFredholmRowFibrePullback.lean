@@ -24,13 +24,18 @@ def oddFredholmRowFibreOperatorHom (t : X) :
     AdjointableMap C(X, B) (CountableHilbertModuleSum C(X, B) M)
       (CountableHilbertModuleSum C(X, B) M) →⋆ₐ[ℂ]
         OddKTheoryCountableOperator B (HilbertModuleFibre B M t) :=
-  (countableModuleFibreEquiv t).transportStarAlgEquiv.toStarAlgHom.comp (hilbertModuleFibreOperatorHom t)
+  (countableModuleFibreEquiv (B := B) (X := X) (M := M) t).transportStarAlgEquiv.toStarAlgHom.comp
+    (hilbertModuleFibreOperatorHom (B := B) (X := X)
+      (M := CountableHilbertModuleSum C(X, B) M) t)
 
 theorem oddFredholmRowFibreOperatorHom_inclusion (t : X)
     (T : OddKTheoryCountableOperator C(X, B) M) (z : ℤ) (x : M) :
     oddFredholmRowFibreOperatorHom t T
       (oddKTheoryRowIntegerInclusion z (hilbertModuleFibreMk (B := B) t x)) =
         countableModuleFibreEvaluation t (T (oddKTheoryRowIntegerInclusion z x)) := by
+  change oddFredholmRowFibreOperatorHom t T
+      (countableModuleInclusion (oddKTheoryRowIntegerIndex z)
+        (hilbertModuleFibreMk (B := B) t x)) = _
   rw [← countableModuleFibreEquiv_mk_inclusion]
   change (countableModuleFibreEquiv t).transport
     (hilbertModuleFibreOperator (B := B) t T)
@@ -46,8 +51,12 @@ theorem oddFredholmRowFibreOperatorHom_diagonal (t : X) (T : AdjointableMap C(X,
   intro z x
   obtain ⟨y, rfl⟩ := hilbertModuleFibreMk_surjective (B := B) (M := M) t x
   rw [oddFredholmRowFibreOperatorHom_inclusion, oddKTheoryRowDiagonal_integerInclusion,
-    countableModuleFibreEvaluation_inclusion, oddKTheoryRowDiagonal_integerInclusion,
-    hilbertModuleFibreOperator_mk]
+    oddKTheoryRowDiagonal_integerInclusion, hilbertModuleFibreOperator_mk]
+  change countableModuleFibreEvaluation t
+      (countableModuleInclusion (oddKTheoryRowIntegerIndex z) (T y)) =
+    countableModuleInclusion (oddKTheoryRowIntegerIndex z)
+      (hilbertModuleFibreMk (B := B) t (T y))
+  exact countableModuleFibreEvaluation_inclusion t _ _
 
 theorem oddFredholmRowFibreOperatorHom_fixed (t : X) (i : OddKTheoryLoopTerm) :
     oddFredholmRowFibreOperatorHom t (oddKTheoryRowLoopTermOperator i) =
@@ -55,14 +64,21 @@ theorem oddFredholmRowFibreOperatorHom_fixed (t : X) (i : OddKTheoryLoopTerm) :
   apply oddKTheoryRowOperator_ext_integerCoordinates
   intro z x
   obtain ⟨y, rfl⟩ := hilbertModuleFibreMk_surjective (B := B) (M := M) t x
-  rw [oddFredholmRowFibreOperatorHom_inclusion, oddKTheoryRowLoopTermOperator_coordinateRule,
-    map_smul, countableModuleFibreEvaluation_inclusion, map_smul,
+  rw [oddFredholmRowFibreOperatorHom_inclusion,
+    oddKTheoryRowLoopTermOperator_coordinateRule,
     oddKTheoryRowLoopTermOperator_coordinateRule]
+  change countableModuleFibreEvaluation t
+      (countableModuleInclusion (oddKTheoryRowIntegerIndex (oddKTheoryLoopTermTarget i z))
+        (oddKTheoryLoopTermWeight i z • y)) =
+    countableModuleInclusion (oddKTheoryRowIntegerIndex (oddKTheoryLoopTermTarget i z))
+      (oddKTheoryLoopTermWeight i z • hilbertModuleFibreMk (B := B) t y)
+  rw [countableModuleFibreEvaluation_inclusion, map_smul]
 
 def oddFredholmModuleFibreUnitary (t : X) (U : unitary (AdjointableMap C(X, B) M M)) :
     unitary (AdjointableMap B (HilbertModuleFibre B M t) (HilbertModuleFibre B M t)) :=
   ⟨hilbertModuleFibreOperator (B := B) t U, Unitary.map_mem (hilbertModuleFibreOperatorHom t) U.property⟩
 
+set_option maxHeartbeats 4000000 in
 theorem oddFredholmRowFibreOperatorHom_pullback (t : X)
     (U : unitary (AdjointableMap C(X, B) M M)) :
     oddFredholmRowFibreOperatorHom t (oddFredholmRowUnitaryPullback U) =
@@ -72,16 +88,27 @@ theorem oddFredholmRowFibreOperatorHom_pullback (t : X)
   apply Finset.sum_congr rfl
   intro i _
   rw [map_mul, oddFredholmRowFibreOperatorHom_diagonal, oddFredholmRowFibreOperatorHom_fixed]
-  rw [oddKTheoryCircleCFC_map (hilbertModuleFibreOperatorHom t) (map_continuous _)
-    U (oddFredholmModuleFibreUnitary t U) rfl]
+  have hcalc := oddKTheoryCircleCFC_map
+    (A := AdjointableMap C(X, B) M M)
+    (C := AdjointableMap B (HilbertModuleFibre B M t) (HilbertModuleFibre B M t))
+    (hilbertModuleFibreOperatorHom (B := B) (X := X) (M := M) t) (map_continuous _)
+    U (oddFredholmModuleFibreUnitary t U) rfl (oddKTheoryLoopTermCoefficient i)
+  exact congrArg (fun S : AdjointableMap B (HilbertModuleFibre B M t)
+      (HilbertModuleFibre B M t) => countableModuleDiagonal S *
+        oddKTheoryRowLoopTermOperator i) hcalc
 
+omit [T2Space X] in
 theorem oddFredholmModuleFibreUnitary_compact (t : X)
     (U : unitary (AdjointableMap C(X, B) M M))
     (hU : IsModuleCompact ((U : AdjointableMap C(X, B) M M) - 1)) :
-    IsModuleCompact ((oddFredholmModuleFibreUnitary t U : _) - 1) := by
-  simpa only [oddFredholmModuleFibreUnitary, hilbertModuleFibreOperator_sub,
+    IsModuleCompact ((oddFredholmModuleFibreUnitary t U :
+      AdjointableMap B (HilbertModuleFibre B M t) (HilbertModuleFibre B M t)) - 1) := by
+  change IsModuleCompact (hilbertModuleFibreOperator (B := B) t
+    (U : AdjointableMap C(X, B) M M) - 1)
+  simpa only [hilbertModuleFibreOperator_sub,
     hilbertModuleFibreOperator_one] using hU.fibre t
 
+set_option maxHeartbeats 4000000 in
 /-- The fibre of the actual interval row cycle is identified as a whole
 cycle, including its scalar representation and action, by the proved
 completed row-fibre unitary. -/
@@ -102,7 +129,13 @@ def oddFredholmCompactUnitaryPullbackFibreIso [TopologicalSpace.SeparableSpace B
   representation_intertwine a x := by
     obtain ⟨y, rfl⟩ := hilbertModuleFibreMk_surjective (B := B)
       (M := CountableHilbertModuleSum C(X, B) M) t x
-    rw [OddKasparovCycle.fibre_representation_mk]
+    change countableModuleFibreEquiv t
+        (hilbertModuleFibreOperator (B := B)
+          (M := CountableHilbertModuleSum C(X, B) M) t
+          (scalarModuleRepresentation (B := C(X, B))
+            (E := CountableHilbertModuleSum C(X, B) M) a)
+          (hilbertModuleFibreMk (B := B) t y)) = _
+    rw [hilbertModuleFibreOperator_mk]
     change countableModuleFibreEquiv t (hilbertModuleFibreMk (B := B) t (a • y)) =
       a • countableModuleFibreEquiv t (hilbertModuleFibreMk (B := B) t y)
     rw [map_smul, (countableModuleFibreEquiv t).map_smul]

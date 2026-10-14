@@ -37,16 +37,35 @@ theorem finiteJuliaCompressionRoot_scalar_zero
     (hScalar : unitizationScalarMatrix (p : CStarMatrix ι ι (Unitization ℂ B)) =
       unitizationScalarMatrix (q : CStarMatrix ι ι (Unitization ℂ B))) :
     unitizationScalarMatrix (finiteJuliaCompressionRoot p q) = 0 := by
+  let : NonUnitalContinuousFunctionalCalculus ℝ
+      (CStarMatrix ι ι (Unitization ℂ B)) IsSelfAdjoint := by
+    with_unfolding_all
+      exact (IsSelfAdjoint.instNonUnitalIsometricContinuousFunctionalCalculus
+        (A := CStarMatrix ι ι (Unitization ℂ B))).toNonUnitalContinuousFunctionalCalculus
+  let : NonnegSpectrumClass ℝ (CStarMatrix ι ι (Unitization ℂ B)) := by
+    with_unfolding_all
+      exact CStarAlgebra.instNonnegSpectrumClass' (A := CStarMatrix ι ι (Unitization ℂ B))
+  let : NonUnitalContinuousFunctionalCalculus ℝ (CStarMatrix ι ι ℂ) IsSelfAdjoint := by
+    with_unfolding_all
+      exact (IsSelfAdjoint.instNonUnitalIsometricContinuousFunctionalCalculus
+        (A := CStarMatrix ι ι ℂ)).toNonUnitalContinuousFunctionalCalculus
+  let : NonnegSpectrumClass ℝ (CStarMatrix ι ι ℂ) := by
+    with_unfolding_all
+      exact CStarAlgebra.instNonnegSpectrumClass' (A := CStarMatrix ι ι ℂ)
   let φ := matrixMap (ι := ι) (scalarQuotient B)
   have hz : φ (finiteJuliaCompression p q) = 0 := finiteJuliaCompression_scalar_zero p q hScalar
-  change φ (CFC.sqrt (finiteJuliaCompression p q)) = 0
-  rw [CFC.sqrt_eq_cfc]
+  change φ (cfcₙ NNReal.sqrt (finiteJuliaCompression p q)) = 0
   have hφ : Continuous φ :=
     AddMonoidHomClass.continuous_of_bound φ 1 (fun a => by
       simpa only [one_mul] using NonUnitalStarAlgHom.norm_apply_le φ a)
-  rw [φ.map_cfc (R := NNReal) NNReal.sqrt (finiteJuliaCompression p q)
-    NNReal.continuous_sqrt.continuousOn hφ
-    (finiteJuliaCompression_nonneg p q) (by rw [hz]; exact le_rfl), hz]
+  have hmap := φ.toNonUnitalStarAlgHom.map_cfcₙ (R := NNReal) NNReal.sqrt
+    (finiteJuliaCompression p q) NNReal.continuous_sqrt.continuousOn NNReal.sqrt_zero hφ
+    (finiteJuliaCompression_nonneg p q) (by
+      change 0 ≤ φ (finiteJuliaCompression p q)
+      rw [hz])
+  change φ (cfcₙ NNReal.sqrt (finiteJuliaCompression p q)) =
+    cfcₙ NNReal.sqrt (φ (finiteJuliaCompression p q)) at hmap
+  rw [hmap, hz]
   simp
 
 theorem finiteJuliaRecoveryProjection_difference_fourBlocks
@@ -76,15 +95,39 @@ theorem finiteJuliaRecoveryProjection_difference_fourBlocks
       (projectionMatrix q * projectionMatrix p * s)
       (projectionMatrix q * projectionMatrix p * projectionMatrix q - projectionMatrix q)
   simp only [Matrix.fromBlocks_conjTranspose, Matrix.conjTranspose_mul, projectionMatrix_star,
-    Matrix.conjTranspose_zero, Matrix.fromBlocks_multiply, Matrix.zero_mul, Matrix.mul_zero,
-    add_zero, zero_add, hs]
-  rw [← Matrix.fromBlocks_add, ← Matrix.fromBlocks_sub]
-  congr 1
-  · simpa only [add_zero, sub_zero] using hss
-  · simp only [add_zero, sub_zero, Matrix.mul_assoc]
-  · simp only [add_zero, sub_zero]
-  · rw [hprod]
-    abel
+    Matrix.conjTranspose_zero, Matrix.fromBlocks_multiply, Matrix.mul_zero,
+    add_zero, hs]
+  rw [Matrix.fromBlocks_add]
+  apply Matrix.ext
+  intro i j
+  cases i with
+  | inl i =>
+    cases j with
+    | inl j =>
+      change (s * s) i j + 0 - 0 =
+        (projectionMatrix p - projectionMatrix p * projectionMatrix q * projectionMatrix p) i j
+      rw [add_zero, sub_zero, hss]
+    | inr j =>
+      change (s * (projectionMatrix p * projectionMatrix q)) i j + 0 - 0 =
+        (s * projectionMatrix p * projectionMatrix q) i j
+      rw [add_zero, sub_zero, Matrix.mul_assoc]
+  | inr i =>
+    cases j with
+    | inl j =>
+      change (projectionMatrix q * projectionMatrix p * s) i j + 0 - 0 =
+        (projectionMatrix q * projectionMatrix p * s) i j
+      rw [add_zero, sub_zero]
+    | inr j =>
+      change ((projectionMatrix q * projectionMatrix p) *
+        (projectionMatrix p * projectionMatrix q)) i j +
+          (1 - projectionMatrix q) i j - (1 : Matrix ι ι (Unitization ℂ B)) i j =
+        (projectionMatrix q * projectionMatrix p * projectionMatrix q - projectionMatrix q) i j
+      rw [hprod]
+      change (projectionMatrix q * projectionMatrix p * projectionMatrix q) i j +
+        ((1 : Matrix ι ι (Unitization ℂ B)) i j - projectionMatrix q i j) -
+          (1 : Matrix ι ι (Unitization ℂ B)) i j =
+        (projectionMatrix q * projectionMatrix p * projectionMatrix q) i j - projectionMatrix q i j
+      abel
 
 theorem finiteJuliaRecoveryProjection_scalar
     (p q : MatrixProjection (Unitization ℂ B) ι)
@@ -108,7 +151,9 @@ theorem finiteJuliaRecoveryProjection_scalar
     | inr i =>
       cases j with
       | inl j =>
-        change (matrixMap (scalarQuotient B) (q * p)) i j = r i j
+        change (matrixMap (scalarQuotient B)
+          ((q : CStarMatrix ι ι (Unitization ℂ B)) *
+            (p : CStarMatrix ι ι (Unitization ℂ B)))) i j = r i j
         rw [map_mul]
         change (unitizationScalarMatrix (q : CStarMatrix ι ι (Unitization ℂ B)) * r) i j = r i j
         rw [← hScalar, hr.isIdempotentElem.eq]
@@ -127,7 +172,8 @@ theorem finiteJuliaRecoveryProjection_scalar
       | inr j =>
         change unitizationScalarMatrix (1 - (q : CStarMatrix ι ι (Unitization ℂ B))) i j = (1 - r) i j
         rw [unitizationScalarMatrix_sub, hOne, ← hScalar]
-  change unitizationScalarMatrix (finiteJuliaRecoveryRange p q + finiteJuliaRecoveryComplement q) = _
+  change unitizationScalarMatrix (finiteJuliaRecoveryRange p q +
+    (finiteJuliaRecoveryComplement q : CStarMatrix (ι ⊕ ι) (ι ⊕ ι) (Unitization ℂ B))) = _
   rw [unitizationScalarMatrix_add, finiteJuliaRecoveryRange,
     unitizationScalarMatrix_mul, unitizationScalarMatrix_star, hV, hC]
   change Matrix.fromBlocks (0 : Matrix ι ι ℂ) 0 (CStarMatrix.ofMatrix.symm r) 0 *
@@ -138,15 +184,19 @@ theorem finiteJuliaRecoveryProjection_scalar
   have hrr : CStarMatrix.ofMatrix.symm r * CStarMatrix.ofMatrix.symm r =
       CStarMatrix.ofMatrix.symm r := hr.isIdempotentElem.eq
   simp only [Matrix.fromBlocks_conjTranspose, Matrix.conjTranspose_zero,
-    Matrix.fromBlocks_multiply, Matrix.zero_mul, Matrix.mul_zero, zero_add, add_zero,
-    hrs, hrr, ← Matrix.fromBlocks_add, add_sub_cancel_left]
+    Matrix.fromBlocks_multiply, Matrix.zero_mul, Matrix.mul_zero, add_zero,
+    hrs, hrr]
+  rw [Matrix.fromBlocks_add]
+  congr 1 <;> abel
 
 theorem finiteJuliaRecoveryProjection_relativeK0
     (p q : MatrixProjection (Unitization ℂ B) ι)
     (hScalar : unitizationScalarMatrix (p : CStarMatrix ι ι (Unitization ℂ B)) =
       unitizationScalarMatrix (q : CStarMatrix ι ι (Unitization ℂ B))) :
-    unitizationRelativeProjectionK0 (finiteJuliaRecoveryProjection p q)
-      (matrixBlockSum (0 : CStarMatrix ι ι (Unitization ℂ B)) 1)
+    unitizationRelativeProjectionK0 (B := B) (ι := ι ⊕ ι)
+      (finiteJuliaRecoveryProjection p q : CStarMatrix (ι ⊕ ι) (ι ⊕ ι) (Unitization ℂ B))
+      (matrixBlockSum (0 : CStarMatrix ι ι (Unitization ℂ B))
+        (1 : CStarMatrix ι ι (Unitization ℂ B)))
       (finiteJuliaRecoveryProjection p q).property
       (projectionBlockSum (Projection.zero : MatrixProjection (Unitization ℂ B) ι) Projection.one).property
       (by
@@ -160,7 +210,9 @@ theorem finiteJuliaRecoveryProjection_relativeK0
           cases j with
           | inl j => rfl
           | inr j => exact (congrArg (fun M => M i j) hOne).symm) =
-      unitizationRelativeProjectionK0 p q p.property q.property hScalar := by
+      unitizationRelativeProjectionK0 (B := B) (ι := ι)
+        (p : CStarMatrix ι ι (Unitization ℂ B))
+        (q : CStarMatrix ι ι (Unitization ℂ B)) p.property q.property hScalar := by
   apply Subtype.ext
   exact finiteJuliaRecoveryProjection_k0 p q
 

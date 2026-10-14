@@ -51,6 +51,7 @@ def homClass (f : A →⋆ₙₐ[ℂ] B)
       (GroupUniverseCoefficientPushforward.homClass α.preservesGrading_trivial
         β.preservesGrading_trivial f hact (fun _ => rfl)))
 
+omit [PartialOrder A] [StarOrderedRing A] [TopologicalSpace.SeparableSpace A] in
 @[simp] theorem gradedClass_homClass (f : A →⋆ₙₐ[ℂ] B)
     (hact : ∀ k a, f (α.automorphism k a) = β.automorphism k (f a)) :
     GroupUniverseEvenBridge.gradedClass (homClass.{uΓ,uA,uB,v} f hact) =
@@ -70,6 +71,7 @@ variable {Γ : Type uΓ} {A : Type uA} {B : Type uB} {C : Type uC} [Group Γ] [C
   [TopologicalSpace.SeparableSpace C]
   {α : CStarAlgebraAction Γ A} {β : CStarAlgebraAction Γ B} {γ : CStarAlgebraAction Γ C}
 
+omit [PartialOrder A] [StarOrderedRing A] in
 /-- Composition in a common actual module universe comes from true raw
 homomorphism-cycle products and genuine full uniqueness. -/
 theorem homClass_product (f : A →⋆ₙₐ[ℂ] B) (g : B →⋆ₙₐ[ℂ] C)
@@ -79,14 +81,31 @@ theorem homClass_product (f : A →⋆ₙₐ[ℂ] B) (g : B →⋆ₙₐ[ℂ] C)
       (homClass.{uΓ,uA,uB,max v (max uA (max uB uC))} f hactf)
       (homClass.{uΓ,uB,uC,max v (max uA (max uB uC))} g hactg) =
     homClass.{uΓ,uA,uC,max v (max uA (max uB uC))} (g.comp f)
-      (fun k a => by change g (f (α.automorphism k a)) = _; rw [hactf, hactg]) := by
+      (fun k a => by change g (f (α.automorphism k a)) = _; rw [hactf, hactg]; rfl) := by
   apply GroupUniverseEvenBridge.gradedClass_injective
   rw [GroupUniverseParityProduct.gradedClass_evenProduct, gradedClass_homClass,
     gradedClass_homClass, gradedClass_homClass,
     ← GroupUniverseProduct.product_ulift_first, ← GroupUniverseProduct.product_ulift_second,
-    GradedKasparovHomotopyClass.ulift_eq_self,
-    GroupUniverseCoefficientPushforward.homClass_product,
-    ulift_ulift]
+    GradedKasparovHomotopyClass.ulift_eq_self]
+  have hprod :
+      GroupUniverseProduct.product.{uΓ,uA,uB,uC,uB,uC}
+        (GroupUniverseCoefficientPushforward.homClass
+          α.preservesGrading_trivial β.preservesGrading_trivial f hactf (fun _ => rfl))
+        (GroupUniverseCoefficientPushforward.homClass
+          β.preservesGrading_trivial γ.preservesGrading_trivial g hactg (fun _ => rfl)) =
+      GradedKasparovHomotopyClass.ulift.{uΓ,uA,uC,uC,uB}
+        (GroupUniverseCoefficientPushforward.homClass
+          α.preservesGrading_trivial γ.preservesGrading_trivial (g.comp f)
+          (fun k a => by change g (f (α.automorphism k a)) = _; rw [hactf, hactg]; rfl)
+          (fun _ => rfl)) :=
+    GroupUniverseCoefficientPushforward.homClass_product.{uΓ,uA,uB,uC}
+      (β := α) (γ := β) (η := γ)
+      α.preservesGrading_trivial β.preservesGrading_trivial γ.preservesGrading_trivial
+      f g hactf (fun _ => rfl) hactg (fun _ => rfl)
+  exact (congrArg
+    (GradedKasparovHomotopyClass.ulift.{uΓ,uA,uC,max uB uC,max v (max uA (max uB uC))})
+    hprod).trans
+      (ulift_ulift.{uΓ,uA,uC,uC,uB,max v (max uA (max uB uC))} _)
 
 end Composition
 end BC4lean.KKTheory.GroupUniverseParityHomCycle

@@ -59,8 +59,25 @@ def oddKTheoryMatrixUnitaryCoefficientTensorIso (f : B →⋆ₙₐ[ℂ] C)
   have htransport := oddKTheoryCompactUnitaryTransportIso hTensor hImage
     (coefficientImageFiniteTensorEquiv f) (oddFredholmTensorOperatorUnitary φ U)
     (oddFredholmTensorOperatorUnitary_compact f U hU)
-  rw [coefficientImageFiniteTensorEquiv_unitary] at htransport
+  have he : oddKTheoryTransportOperatorUnitary (coefficientImageFiniteTensorEquiv f)
+      (oddFredholmTensorOperatorUnitary φ U) =
+      finiteHilbertModuleCoefficientUnitary (coefficientImageLeftMul f) u :=
+    coefficientImageFiniteTensorEquiv_unitary f u
+  have htransport' : OddKasparovCycleIso
+      (oddFredholmCompactUnitaryPullbackCycle (Γ := PUnit) (B := C)
+        (E := InteriorModuleTensor (E := FiniteStandardModule B ι) φ)
+        hTensor (oddFredholmTensorOperatorUnitary φ U)
+        (oddFredholmTensorOperatorUnitary_compact f U hU))
+      (oddFredholmCompactUnitaryPullbackCycle (Γ := PUnit) (B := C)
+        (E := FiniteHilbertModuleSum C (CoefficientImageRightModule f) ι)
+        hImage
+        (finiteHilbertModuleCoefficientUnitary (A := B) (B := C)
+          (E := CoefficientImageRightModule f) (ι := ι) (coefficientImageLeftMul f) u)
+        (finiteHilbertModuleCoefficientUnitary_compact (A := B) (B := C)
+          (E := CoefficientImageRightModule f) (ι := ι) (coefficientImageLeftMul f)
+          (coefficientImageLeftMul_isModuleCompact f) u hu)) := by
+    simpa only [he] using htransport
   exact ((oddKTheoryMatrixCompactPullbackCycleIso u hu).coefficientTensor f).trans
-    ((oddKTheoryCompactUnitaryCoefficientTensorIso hE U hU f).trans htransport)
+    ((oddKTheoryCompactUnitaryCoefficientTensorIso hE U hU f).trans htransport')
 
 end BC4lean.KKTheory

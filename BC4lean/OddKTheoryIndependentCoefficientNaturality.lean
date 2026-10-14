@@ -80,15 +80,48 @@ theorem oddKKOperatorK1Index_independentCoefficientPushforward
     _ = _ := congrArg (operatorK1Map f)
       (oddKKOperatorK1Index_shrink_anyModuleUniverse.{uB, uE, uB} x)
 
+set_option maxHeartbeats 4000000 in
 theorem oddScalarKasparovOperatorK1Index_coefficientTensor {E : Type uE}
     [NormedAddCommGroup E] [NormedSpace ℂ E] [SMul Bᵐᵒᵖ E]
     [CStarModule Bᵐᵒᵖ E] [CompleteSpace E]
     (c : OddKasparovCycle α₁ β₁ E) (f : B →⋆ₙₐ[ℂ] C) :
     (c.coefficientTensor f).operatorK1Index = operatorK1Map f c.operatorK1Index := by
-  simpa only [GroupUniverseOrdinaryOdd.coefficientPushforward_mk_coefficientTensor,
-    oddKKOperatorK1Index_mk] using
-    oddKKOperatorK1Index_independentCoefficientPushforward f
-      (OddKK.mk (BundledOddKasparovCycle.of c))
+  let d : OddKasparovCycle.{0, 0, uB, uE}
+      (CStarAlgebraAction.trivial : CStarAlgebraAction (PUnit : Type) ℂ)
+      (CStarAlgebraAction.trivial : CStarAlgebraAction (PUnit : Type) B) E :=
+    { countablyGenerated := c.countablyGenerated
+      groupAction := EquivariantHilbertModule.trivial
+      representation := c.representation
+      representation_equivariant := by
+        intro g a
+        have hg : g = 1 := Subsingleton.elim g 1
+        subst g
+        rw [EquivariantHilbertModule.conjugateOperator, EquivariantHilbertModule.conjugateMap_one]
+        rfl
+      operator := c.operator
+      selfadjoint_mod_compact := c.selfadjoint_mod_compact
+      square_mod_compact := c.square_mod_compact
+      commutator_compact := c.commutator_compact
+      equivariance_mod_compact := by
+        intro g a
+        have hg : g = 1 := Subsingleton.elim g 1
+        subst g
+        rw [EquivariantHilbertModule.conjugateOperator, EquivariantHilbertModule.conjugateMap_one,
+          sub_self, zero_mul]
+        exact IsModuleCompact.zero }
+  have hd : d.operatorK1Index = c.operatorK1Index := rfl
+  have hdf : (d.coefficientTensor f).operatorK1Index = (c.coefficientTensor f).operatorK1Index := rfl
+  calc
+    _ = (d.coefficientTensor f).operatorK1Index := hdf.symm
+    _ = operatorK1Map f d.operatorK1Index := by
+      have hh := oddKKOperatorK1Index_independentCoefficientPushforward (B := B) (C := C) f
+        (OddKK.mk (Γ := (PUnit : Type)) (A := ℂ) (B := B)
+          (BundledOddKasparovCycle.of (Γ := (PUnit : Type)) (A := ℂ) (B := B) (E := E) d))
+      rw [GroupUniverseOrdinaryOdd.coefficientPushforward_mk_coefficientTensor,
+        oddKKOperatorK1Index_mk, oddKKOperatorK1Index_mk] at hh
+      change (d.coefficientTensor f).operatorK1Index = operatorK1Map f d.operatorK1Index at hh
+      exact hh
+    _ = _ := congrArg (operatorK1Map f) hd
 
 /-- The actual coefficient product may be represented in any target module
 universe by its genuine full-homotopy shrinking equivalence. -/

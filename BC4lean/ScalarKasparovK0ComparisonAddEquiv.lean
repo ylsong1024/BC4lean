@@ -32,13 +32,24 @@ theorem scalarKKOperatorK0Index_nonunitalRelativeK0KasparovMap_leftInverse :
   obtain ⟨ι, hι, dι, P, Q, hP, hQ, hs, hx⟩ := unitizationRelativeProjectionK0_surjective x
   let := hι
   let := dι
+  let p : MatrixProjection (Unitization ℂ B) ι := ⟨P, hP⟩
+  let q : MatrixProjection (Unitization ℂ B) ι := ⟨Q, hQ⟩
+  have h : ∀ i j, (p.val i j).fst = (q.val i j).fst := by
+    intro i j
+    exact congrArg (fun M : CStarMatrix ι ι ℂ => M i j) hs
+  have hClass : equalScalarProjectionDifference p q h =
+      unitizationRelativeProjectionK0 P Q hP hQ hs := by
+    apply operatorK0Inclusion_injective B
+    have hInclusion := equalScalarProjectionDifference_inclusion p q h
+    have hFiniteClasses := congrArg₂ (fun a b : K0 (Unitization ℂ B) => a - b)
+      (k0Projection_finiteProjectionOfMatrix p) (k0Projection_finiteProjectionOfMatrix q)
+    exact hInclusion.trans (hFiniteClasses.trans
+      (operatorK0Inclusion_unitizationRelativeProjectionK0 P Q hP hQ hs).symm)
   rw [← hx, nonunitalRelativeK0KasparovMap_unitizationRelativeProjectionK0,
     scalarKKOperatorK0Index_mk]
-  apply operatorK0Inclusion_injective B
-  rw [unitizedRelativeProjectionCycle_operatorK0Index,
-    equalScalarProjectionDifference_inclusion,
-    operatorK0Inclusion_unitizationRelativeProjectionK0]
-  simp only [k0Projection_finiteProjectionOfMatrix, unitizationFiniteProjection]
+  change (unitizedRelativeProjectionCycle (Γ := PUnit) p q h).operatorK0Index =
+    unitizationRelativeProjectionK0 P Q hP hQ hs
+  exact (unitizedRelativeProjectionCycle_operatorK0Index p q h).trans hClass
 
 /-- The actual left inverse is valid in every independent chosen module universe. -/
 theorem nonunitalRelativeK0KasparovMapAtUniverse_leftInverse :

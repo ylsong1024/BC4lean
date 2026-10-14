@@ -57,11 +57,15 @@ theorem oddKTheoryStandardShift_finalProjection (n : ℕ) :
     rfl
 
 def oddKTheoryStandardTailShiftEquiv (n : ℕ) : HilbertModuleEquiv B
-    (StandardCountableHilbertModule B) (ProjectionModule (1 - standardCountableCutoff n)) :=
-  oddKTheoryProjectionOneEquiv.trans
-    (projectionRangeEquiv 1 (1 - standardCountableCutoff n)
-      (standardCountableEmbedding (oddKTheoryStandardShiftEmbedding n))
-      (standardCountableEmbedding_adjoint_comp_self _) (oddKTheoryStandardShift_finalProjection n))
+    (StandardCountableHilbertModule B) (ProjectionModule (1 - standardCountableCutoff (B := B) n)) :=
+  (oddKTheoryProjectionOneEquiv (B := B) (E := StandardCountableHilbertModule B)).trans
+    (projectionRangeEquiv (B := B) (E := StandardCountableHilbertModule B)
+      (F := StandardCountableHilbertModule B)
+      (1 : AdjointableMap B (StandardCountableHilbertModule B) (StandardCountableHilbertModule B))
+      (1 - standardCountableCutoff (B := B) n)
+      (standardCountableEmbedding (B := B) (oddKTheoryStandardShiftEmbedding n))
+      (standardCountableEmbedding_adjoint_comp_self (B := B) (oddKTheoryStandardShiftEmbedding n))
+      (oddKTheoryStandardShift_finalProjection (B := B) n))
 
 @[simp] theorem oddKTheoryStandardTailShiftEquiv_coe (n : ℕ)
     (x : StandardCountableHilbertModule B) :
@@ -82,6 +86,7 @@ def oddKTheoryStandardPrefixEquiv (n : ℕ) : HilbertModuleEquiv B
   ((HilbertModuleEquiv.refl (B := B) (E := FiniteStandardModule B (Fin n))).sum
     (oddKTheoryStandardTailShiftEquiv n)).trans (oddKTheoryStandardFiniteSplitEquiv n).symm
 
+omit [TopologicalSpace.SeparableSpace B] in
 @[simp] theorem oddKTheoryStandardPrefixEquiv_inl (n : ℕ)
     (x : FiniteStandardModule B (Fin n)) :
     oddKTheoryStandardPrefixEquiv n (sumMk x 0) = oddFredholmStandardFiniteInclusion n x := by
@@ -90,11 +95,15 @@ def oddKTheoryStandardPrefixEquiv (n : ℕ) : HilbertModuleEquiv B
   rw [HilbertModuleEquiv.map_zero]
   exact add_zero _
 
+omit [TopologicalSpace.SeparableSpace B] in
 @[simp] theorem oddKTheoryStandardPrefixEquiv_inr (n : ℕ)
     (x : StandardCountableHilbertModule B) :
     oddKTheoryStandardPrefixEquiv n (sumMk 0 x) =
       standardCountableEmbedding (oddKTheoryStandardShiftEmbedding n) x := by
-  change oddFredholmStandardFiniteInclusion n 0 + (oddKTheoryStandardTailShiftEquiv n x : _) = _
+  change oddFredholmStandardFiniteInclusion (B := B) n
+      (0 : FiniteStandardModule B (Fin n)) +
+    (oddKTheoryStandardTailShiftEquiv (B := B) n x : StandardCountableHilbertModule B) =
+    standardCountableEmbedding (B := B) (oddKTheoryStandardShiftEmbedding n) x
   rw [map_zero, zero_add, oddKTheoryStandardTailShiftEquiv_coe]
 
 end BC4lean.KKTheory

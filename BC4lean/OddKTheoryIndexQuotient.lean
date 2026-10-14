@@ -19,6 +19,7 @@ variable {B : Type uB} [NonUnitalCStarAlgebra B] [PartialOrder B] [StarOrderedRi
 local notation "α₁" => (CStarAlgebraAction.trivial : CStarAlgebraAction PUnit ℂ)
 local notation "β₁" => (CStarAlgebraAction.trivial : CStarAlgebraAction PUnit B)
 
+omit [TopologicalSpace.SeparableSpace B] in
 theorem oddScalarKasparovOperatorK1Index_full
     {c d : BundledOddKasparovCycle.{0, 0, uB, uE} α₁ β₁}
     (h : FullOddKasparovHomotopy c d) : c.cycle.operatorK1Index = d.cycle.operatorK1Index := by

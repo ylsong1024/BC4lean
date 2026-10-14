@@ -1,0 +1,22 @@
+{
+  "scope": "Raw kernel subprocess evidence only; audit gates and chapter readiness are reported separately in the successful audit result.",
+  "command": [
+    "lake",
+    "env",
+    "lean",
+    "-j2",
+    "-DwarningAsError=true",
+    "-DautoImplicit=false",
+    "-DrelaxedAutoImplicit=false",
+    "/var/folders/_4/cjl9v4654tb9m6kztgmr8pzr0000gn/T/chapter5-audit-d8a_7wq7/Chapter5Audit.lean"
+  ],
+  "exit_code": 0,
+  "generated_source": {
+    "path": "/Users/yanlisong/Documents/Codex/2026-10-05/task-2/chapter5-recovery-20261008T1503/ROOT_ACTUAL_COMPLETE_READY_CHAPTER5_ALL435_KERNEL18199_AXIOM3_20261013/CHAPTER5_AUDIT_COMPLETE_READY.json.kernel-xt1phcqi/Chapter5Audit.lean",
+    "sha256": "6b407de007ecd9bfea8fe89647e9f1883ceb6a5a5c0fa07d7aefe23367278b48"
+  },
+  "stdout_stderr": {
+    "path": "/Users/yanlisong/Documents/Codex/2026-10-05/task-2/chapter5-recovery-20261008T1503/ROOT_ACTUAL_COMPLETE_READY_CHAPTER5_ALL435_KERNEL18199_AXIOM3_20261013/CHAPTER5_AUDIT_COMPLETE_READY.json.kernel-xt1phcqi/stdout-stderr.log",
+    "sha256": "c7b3a606b4715f5c46e9cd862a5987d13c872796d37aa1372649f1e9fa1aae56"
+  }
+}

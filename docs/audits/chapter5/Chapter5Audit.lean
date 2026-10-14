@@ -1,0 +1,898 @@
+import BC4lean
+import Lean
+open Lean Elab Command
+#check BC4lean.KKTheory.AdjointableMap
+#print axioms BC4lean.KKTheory.AdjointableMap
+#check BC4lean.KKTheory.AdjointableMap.adjoint_add
+#print axioms BC4lean.KKTheory.AdjointableMap.adjoint_add
+#check BC4lean.KKTheory.AdjointableMap.adjoint_adjoint
+#print axioms BC4lean.KKTheory.AdjointableMap.adjoint_adjoint
+#check BC4lean.KKTheory.AdjointableMap.adjoint_comp
+#print axioms BC4lean.KKTheory.AdjointableMap.adjoint_comp
+#check BC4lean.KKTheory.AdjointableMap.adjoint_smul
+#print axioms BC4lean.KKTheory.AdjointableMap.adjoint_smul
+#check BC4lean.KKTheory.AdjointableMap.adjoint_unique
+#print axioms BC4lean.KKTheory.AdjointableMap.adjoint_unique
+#check BC4lean.KKTheory.AdjointableMap.comp_assoc
+#print axioms BC4lean.KKTheory.AdjointableMap.comp_assoc
+#check BC4lean.KKTheory.AdjointableMap.comp_id
+#print axioms BC4lean.KKTheory.AdjointableMap.comp_id
+#check BC4lean.KKTheory.AdjointableMap.completion
+#print axioms BC4lean.KKTheory.AdjointableMap.completion
+#check BC4lean.KKTheory.AdjointableMap.completionHom
+#print axioms BC4lean.KKTheory.AdjointableMap.completionHom
+#check BC4lean.KKTheory.AdjointableMap.id_comp
+#print axioms BC4lean.KKTheory.AdjointableMap.id_comp
+#check BC4lean.KKTheory.AdjointableMap.instCStarAlgebra
+#print axioms BC4lean.KKTheory.AdjointableMap.instCStarAlgebra
+#check BC4lean.KKTheory.AdjointableMap.instCompleteSpace
+#print axioms BC4lean.KKTheory.AdjointableMap.instCompleteSpace
+#check BC4lean.KKTheory.AdjointableMap.instNormedAddCommGroup
+#print axioms BC4lean.KKTheory.AdjointableMap.instNormedAddCommGroup
+#check BC4lean.KKTheory.AdjointableMap.instNormedAlgebra
+#print axioms BC4lean.KKTheory.AdjointableMap.instNormedAlgebra
+#check BC4lean.KKTheory.AdjointableMap.instStarRing
+#print axioms BC4lean.KKTheory.AdjointableMap.instStarRing
+#check BC4lean.KKTheory.AdjointableMap.isClosed_range_toCLMPair
+#print axioms BC4lean.KKTheory.AdjointableMap.isClosed_range_toCLMPair
+#check BC4lean.KKTheory.AdjointableMap.map_op_smul
+#print axioms BC4lean.KKTheory.AdjointableMap.map_op_smul
+#check BC4lean.KKTheory.AdjointableMap.norm_adjoint_toCLM
+#print axioms BC4lean.KKTheory.AdjointableMap.norm_adjoint_toCLM
+#check BC4lean.KKTheory.AdjointableMap.norm_completion
+#print axioms BC4lean.KKTheory.AdjointableMap.norm_completion
+#check BC4lean.KKTheory.AdjointableMap.norm_sub_comp_sq_le
+#print axioms BC4lean.KKTheory.AdjointableMap.norm_sub_comp_sq_le
+#check BC4lean.KKTheory.AdjointableMap.norm_toCLM_adjoint_comp_self
+#print axioms BC4lean.KKTheory.AdjointableMap.norm_toCLM_adjoint_comp_self
+#check BC4lean.KKTheory.AdjointableMap.toCLMPair_isometry
+#print axioms BC4lean.KKTheory.AdjointableMap.toCLMPair_isometry
+#check BC4lean.KKTheory.BalancedModuleTensor
+#print axioms BC4lean.KKTheory.BalancedModuleTensor
+#check BC4lean.KKTheory.BundledGradedKasparovCycle.fullHomotopySetoid
+#print axioms BC4lean.KKTheory.BundledGradedKasparovCycle.fullHomotopySetoid
+#check BC4lean.KKTheory.BundledKasparovCycle
+#print axioms BC4lean.KKTheory.BundledKasparovCycle
+#check BC4lean.KKTheory.BundledKasparovCycle.homotopic_directSum
+#print axioms BC4lean.KKTheory.BundledKasparovCycle.homotopic_directSum
+#check BC4lean.KKTheory.BundledKasparovCycle.homotopic_iff_full
+#print axioms BC4lean.KKTheory.BundledKasparovCycle.homotopic_iff_full
+#check BC4lean.KKTheory.BundledKasparovCycle.isomorphismSetoid
+#print axioms BC4lean.KKTheory.BundledKasparovCycle.isomorphismSetoid
+#check BC4lean.KKTheory.BundledOddKasparovCycle.fullHomotopySetoid
+#print axioms BC4lean.KKTheory.BundledOddKasparovCycle.fullHomotopySetoid
+#check BC4lean.KKTheory.BundledOddKasparovCycle.homotopic_iff_full
+#print axioms BC4lean.KKTheory.BundledOddKasparovCycle.homotopic_iff_full
+#check BC4lean.KKTheory.CStarAlgebraAction
+#print axioms BC4lean.KKTheory.CStarAlgebraAction
+#check BC4lean.KKTheory.CStarAlgebraAction.continuousSections
+#print axioms BC4lean.KKTheory.CStarAlgebraAction.continuousSections
+#check BC4lean.KKTheory.CStarGrading
+#print axioms BC4lean.KKTheory.CStarGrading
+#check BC4lean.KKTheory.CliffordCommutingRepresentation.maximalNorm_eq
+#print axioms BC4lean.KKTheory.CliffordCommutingRepresentation.maximalNorm_eq
+#check BC4lean.KKTheory.CliffordExternalOddCoefficient.grading_tmul
+#print axioms BC4lean.KKTheory.CliffordExternalOddCoefficient.grading_tmul
+#check BC4lean.KKTheory.CliffordExternalOddCoefficient.mul_tmul
+#print axioms BC4lean.KKTheory.CliffordExternalOddCoefficient.mul_tmul
+#check BC4lean.KKTheory.CliffordExternalOddCoefficient.starTensor_tmul
+#print axioms BC4lean.KKTheory.CliffordExternalOddCoefficient.starTensor_tmul
+#check BC4lean.KKTheory.CliffordOne.epsilon_odd
+#print axioms BC4lean.KKTheory.CliffordOne.epsilon_odd
+#check BC4lean.KKTheory.CliffordOne.epsilon_square
+#print axioms BC4lean.KKTheory.CliffordOne.epsilon_square
+#check BC4lean.KKTheory.CliffordOne.existsUnique_lift
+#print axioms BC4lean.KKTheory.CliffordOne.existsUnique_lift
+#check BC4lean.KKTheory.CliffordOne.grading
+#print axioms BC4lean.KKTheory.CliffordOne.grading
+#check BC4lean.KKTheory.CliffordTwoGradedTensor.grading_tensor
+#print axioms BC4lean.KKTheory.CliffordTwoGradedTensor.grading_tensor
+#check BC4lean.KKTheory.CliffordTwoGradedTensor.star_tensor
+#print axioms BC4lean.KKTheory.CliffordTwoGradedTensor.star_tensor
+#check BC4lean.KKTheory.CliffordTwoGradedTensor.tensor_mul
+#print axioms BC4lean.KKTheory.CliffordTwoGradedTensor.tensor_mul
+#check BC4lean.KKTheory.CompactModuleOperator
+#print axioms BC4lean.KKTheory.CompactModuleOperator
+#check BC4lean.KKTheory.ConeHilbertModule
+#print axioms BC4lean.KKTheory.ConeHilbertModule
+#check BC4lean.KKTheory.ConeHilbertModule.instCStarModule
+#print axioms BC4lean.KKTheory.ConeHilbertModule.instCStarModule
+#check BC4lean.KKTheory.CountableHilbertModuleSum
+#print axioms BC4lean.KKTheory.CountableHilbertModuleSum
+#check BC4lean.KKTheory.EquivariantHilbertModule
+#print axioms BC4lean.KKTheory.EquivariantHilbertModule
+#check BC4lean.KKTheory.EquivariantHilbertModule.PreservesGrading
+#print axioms BC4lean.KKTheory.EquivariantHilbertModule.PreservesGrading
+#check BC4lean.KKTheory.EquivariantHilbertModule.conjugateMap_mem_moduleCompact
+#print axioms BC4lean.KKTheory.EquivariantHilbertModule.conjugateMap_mem_moduleCompact
+#check BC4lean.KKTheory.EquivariantHilbertModule.conjugateOperator
+#print axioms BC4lean.KKTheory.EquivariantHilbertModule.conjugateOperator
+#check BC4lean.KKTheory.EquivariantHilbertModule.conjugateOperator_mem_moduleCompact
+#print axioms BC4lean.KKTheory.EquivariantHilbertModule.conjugateOperator_mem_moduleCompact
+#check BC4lean.KKTheory.EquivariantHilbertModule.continuous_action
+#print axioms BC4lean.KKTheory.EquivariantHilbertModule.continuous_action
+#check BC4lean.KKTheory.EquivariantHilbertModule.fibre
+#print axioms BC4lean.KKTheory.EquivariantHilbertModule.fibre
+#check BC4lean.KKTheory.EquivariantHilbertModule.map_op_smul
+#print axioms BC4lean.KKTheory.EquivariantHilbertModule.map_op_smul
+#check BC4lean.KKTheory.FiniteStandardModule
+#print axioms BC4lean.KKTheory.FiniteStandardModule
+#check BC4lean.KKTheory.FullGradedKasparovHomotopy
+#print axioms BC4lean.KKTheory.FullGradedKasparovHomotopy
+#check BC4lean.KKTheory.FullKasparovHomotopy
+#print axioms BC4lean.KKTheory.FullKasparovHomotopy
+#check BC4lean.KKTheory.FullKasparovHomotopy.degenerateCone
+#print axioms BC4lean.KKTheory.FullKasparovHomotopy.degenerateCone
+#check BC4lean.KKTheory.FullKasparovHomotopy.directSum
+#print axioms BC4lean.KKTheory.FullKasparovHomotopy.directSum
+#check BC4lean.KKTheory.FullKasparovHomotopy.inverseRotation
+#print axioms BC4lean.KKTheory.FullKasparovHomotopy.inverseRotation
+#check BC4lean.KKTheory.FullKasparovHomotopy.refl
+#print axioms BC4lean.KKTheory.FullKasparovHomotopy.refl
+#check BC4lean.KKTheory.FullKasparovHomotopy.symm
+#print axioms BC4lean.KKTheory.FullKasparovHomotopy.symm
+#check BC4lean.KKTheory.FullKasparovHomotopy.trans
+#print axioms BC4lean.KKTheory.FullKasparovHomotopy.trans
+#check BC4lean.KKTheory.GradedHilbertModule
+#print axioms BC4lean.KKTheory.GradedHilbertModule
+#check BC4lean.KKTheory.GradedHilbertModule.IsEven
+#print axioms BC4lean.KKTheory.GradedHilbertModule.IsEven
+#check BC4lean.KKTheory.GradedHilbertModule.IsOdd
+#print axioms BC4lean.KKTheory.GradedHilbertModule.IsOdd
+#check BC4lean.KKTheory.GradedHilbertModule.fibre
+#print axioms BC4lean.KKTheory.GradedHilbertModule.fibre
+#check BC4lean.KKTheory.GradedKasparovConnection
+#print axioms BC4lean.KKTheory.GradedKasparovConnection
+#check BC4lean.KKTheory.GradedKasparovCycle
+#print axioms BC4lean.KKTheory.GradedKasparovCycle
+#check BC4lean.KKTheory.GradedKasparovCycle.trivialEquiv
+#print axioms BC4lean.KKTheory.GradedKasparovCycle.trivialEquiv
+#check BC4lean.KKTheory.GradedKasparovCycleIso
+#print axioms BC4lean.KKTheory.GradedKasparovCycleIso
+#check BC4lean.KKTheory.GradedKasparovCycleIso.symm
+#print axioms BC4lean.KKTheory.GradedKasparovCycleIso.symm
+#check BC4lean.KKTheory.GradedKasparovCycleIso.trans
+#print axioms BC4lean.KKTheory.GradedKasparovCycleIso.trans
+#check BC4lean.KKTheory.GradedKasparovHomotopyClass
+#print axioms BC4lean.KKTheory.GradedKasparovHomotopyClass
+#check BC4lean.KKTheory.GroupUniverseCommonParityProduct.product
+#print axioms BC4lean.KKTheory.GroupUniverseCommonParityProduct.product
+#check BC4lean.KKTheory.GroupUniverseCommonParityProduct.productAddHom
+#print axioms BC4lean.KKTheory.GroupUniverseCommonParityProduct.productAddHom
+#check BC4lean.KKTheory.GroupUniverseCommonParityProduct.product_add_first
+#print axioms BC4lean.KKTheory.GroupUniverseCommonParityProduct.product_add_first
+#check BC4lean.KKTheory.GroupUniverseCommonParityProduct.product_add_second
+#print axioms BC4lean.KKTheory.GroupUniverseCommonParityProduct.product_add_second
+#check BC4lean.KKTheory.GroupUniverseCommonParityProduct.product_assoc
+#print axioms BC4lean.KKTheory.GroupUniverseCommonParityProduct.product_assoc
+#check BC4lean.KKTheory.GroupUniverseCommonParityProduct.universeEquivalence
+#print axioms BC4lean.KKTheory.GroupUniverseCommonParityProduct.universeEquivalence
+#check BC4lean.KKTheory.GroupUniverseExternalOddSemantics.action_tmul
+#print axioms BC4lean.KKTheory.GroupUniverseExternalOddSemantics.action_tmul
+#check BC4lean.KKTheory.GroupUniverseExternalOddSemantics.grading_tmul
+#print axioms BC4lean.KKTheory.GroupUniverseExternalOddSemantics.grading_tmul
+#check BC4lean.KKTheory.GroupUniverseExternalOddSemantics.inner_tmul
+#print axioms BC4lean.KKTheory.GroupUniverseExternalOddSemantics.inner_tmul
+#check BC4lean.KKTheory.GroupUniverseExternalOddSemantics.moduleEquiv
+#print axioms BC4lean.KKTheory.GroupUniverseExternalOddSemantics.moduleEquiv
+#check BC4lean.KKTheory.GroupUniverseExternalOddSemantics.op_smul_tmul
+#print axioms BC4lean.KKTheory.GroupUniverseExternalOddSemantics.op_smul_tmul
+#check BC4lean.KKTheory.GroupUniverseExternalOddSemantics.operator_tmul
+#print axioms BC4lean.KKTheory.GroupUniverseExternalOddSemantics.operator_tmul
+#check BC4lean.KKTheory.GroupUniverseExternalOddSemantics.representation_tmul
+#print axioms BC4lean.KKTheory.GroupUniverseExternalOddSemantics.representation_tmul
+#check BC4lean.KKTheory.GroupUniverseMatrixMoritaBridge.addEquivalence
+#print axioms BC4lean.KKTheory.GroupUniverseMatrixMoritaBridge.addEquivalence
+#check BC4lean.KKTheory.GroupUniverseMatrixMoritaBridge.coefficient_roundtrip
+#print axioms BC4lean.KKTheory.GroupUniverseMatrixMoritaBridge.coefficient_roundtrip
+#check BC4lean.KKTheory.GroupUniverseMatrixMoritaBridge.matrix_roundtrip
+#print axioms BC4lean.KKTheory.GroupUniverseMatrixMoritaBridge.matrix_roundtrip
+#check BC4lean.KKTheory.GroupUniverseMatrixMoritaProduct.toCoefficientClass_eq_product
+#print axioms BC4lean.KKTheory.GroupUniverseMatrixMoritaProduct.toCoefficientClass_eq_product
+#check BC4lean.KKTheory.GroupUniverseMatrixMoritaProduct.toCoefficientClass_product
+#print axioms BC4lean.KKTheory.GroupUniverseMatrixMoritaProduct.toCoefficientClass_product
+#check BC4lean.KKTheory.GroupUniverseMatrixMoritaProduct.toMatrixClass_eq_product
+#print axioms BC4lean.KKTheory.GroupUniverseMatrixMoritaProduct.toMatrixClass_eq_product
+#check BC4lean.KKTheory.GroupUniverseOddFirstParityProduct.evenOddEvenProduct_assoc
+#print axioms BC4lean.KKTheory.GroupUniverseOddFirstParityProduct.evenOddEvenProduct_assoc
+#check BC4lean.KKTheory.GroupUniverseOddFirstParityProduct.evenOddOddProduct_assoc
+#print axioms BC4lean.KKTheory.GroupUniverseOddFirstParityProduct.evenOddOddProduct_assoc
+#check BC4lean.KKTheory.GroupUniverseOddFirstParityProduct.oddEvenEvenProduct_assoc
+#print axioms BC4lean.KKTheory.GroupUniverseOddFirstParityProduct.oddEvenEvenProduct_assoc
+#check BC4lean.KKTheory.GroupUniverseOddFirstParityProduct.oddEvenOddProduct_assoc
+#print axioms BC4lean.KKTheory.GroupUniverseOddFirstParityProduct.oddEvenOddProduct_assoc
+#check BC4lean.KKTheory.GroupUniverseOddFirstParityProduct.oddEvenProduct
+#print axioms BC4lean.KKTheory.GroupUniverseOddFirstParityProduct.oddEvenProduct
+#check BC4lean.KKTheory.GroupUniverseOddFirstParityProduct.oddOddEvenProduct_assoc
+#print axioms BC4lean.KKTheory.GroupUniverseOddFirstParityProduct.oddOddEvenProduct_assoc
+#check BC4lean.KKTheory.GroupUniverseOddFirstParityProduct.oddOddOddProduct_assoc
+#print axioms BC4lean.KKTheory.GroupUniverseOddFirstParityProduct.oddOddOddProduct_assoc
+#check BC4lean.KKTheory.GroupUniverseOddFirstParityProduct.oddOddProduct
+#print axioms BC4lean.KKTheory.GroupUniverseOddFirstParityProduct.oddOddProduct
+#check BC4lean.KKTheory.GroupUniverseOrdinaryEven.coefficientPushforward_shrink
+#print axioms BC4lean.KKTheory.GroupUniverseOrdinaryEven.coefficientPushforward_shrink
+#check BC4lean.KKTheory.GroupUniverseOrdinaryOdd.coefficientPushforward_mk_coefficientTensor
+#print axioms BC4lean.KKTheory.GroupUniverseOrdinaryOdd.coefficientPushforward_mk_coefficientTensor
+#check BC4lean.KKTheory.GroupUniverseParityFunctoriality.coefficientPushforwardHom
+#print axioms BC4lean.KKTheory.GroupUniverseParityFunctoriality.coefficientPushforwardHom
+#check BC4lean.KKTheory.GroupUniverseParityFunctoriality.coefficientPushforward_comp
+#print axioms BC4lean.KKTheory.GroupUniverseParityFunctoriality.coefficientPushforward_comp
+#check BC4lean.KKTheory.GroupUniverseParityFunctoriality.coefficientPushforward_graded_even
+#print axioms BC4lean.KKTheory.GroupUniverseParityFunctoriality.coefficientPushforward_graded_even
+#check BC4lean.KKTheory.GroupUniverseParityFunctoriality.coefficientPushforward_graded_odd
+#print axioms BC4lean.KKTheory.GroupUniverseParityFunctoriality.coefficientPushforward_graded_odd
+#check BC4lean.KKTheory.GroupUniverseParityFunctoriality.coefficientPushforward_id
+#print axioms BC4lean.KKTheory.GroupUniverseParityFunctoriality.coefficientPushforward_id
+#check BC4lean.KKTheory.GroupUniverseParityFunctoriality.coefficientPushforward_product
+#print axioms BC4lean.KKTheory.GroupUniverseParityFunctoriality.coefficientPushforward_product
+#check BC4lean.KKTheory.GroupUniverseParityFunctoriality.coefficientPushforward_product_eq_sourcePullback
+#print axioms BC4lean.KKTheory.GroupUniverseParityFunctoriality.coefficientPushforward_product_eq_sourcePullback
+#check BC4lean.KKTheory.GroupUniverseParityFunctoriality.homClass_leftProduct_eq_sourcePullback
+#print axioms BC4lean.KKTheory.GroupUniverseParityFunctoriality.homClass_leftProduct_eq_sourcePullback
+#check BC4lean.KKTheory.GroupUniverseParityFunctoriality.sourcePullbackHom
+#print axioms BC4lean.KKTheory.GroupUniverseParityFunctoriality.sourcePullbackHom
+#check BC4lean.KKTheory.GroupUniverseParityFunctoriality.sourcePullback_coefficientPushforward
+#print axioms BC4lean.KKTheory.GroupUniverseParityFunctoriality.sourcePullback_coefficientPushforward
+#check BC4lean.KKTheory.GroupUniverseParityFunctoriality.sourcePullback_comp
+#print axioms BC4lean.KKTheory.GroupUniverseParityFunctoriality.sourcePullback_comp
+#check BC4lean.KKTheory.GroupUniverseParityFunctoriality.sourcePullback_graded_even
+#print axioms BC4lean.KKTheory.GroupUniverseParityFunctoriality.sourcePullback_graded_even
+#check BC4lean.KKTheory.GroupUniverseParityFunctoriality.sourcePullback_graded_odd
+#print axioms BC4lean.KKTheory.GroupUniverseParityFunctoriality.sourcePullback_graded_odd
+#check BC4lean.KKTheory.GroupUniverseParityFunctoriality.sourcePullback_id
+#print axioms BC4lean.KKTheory.GroupUniverseParityFunctoriality.sourcePullback_id
+#check BC4lean.KKTheory.GroupUniverseParityFunctoriality.sourcePullback_product
+#print axioms BC4lean.KKTheory.GroupUniverseParityFunctoriality.sourcePullback_product
+#check BC4lean.KKTheory.GroupUniverseParityGroup.KKParityGroup
+#print axioms BC4lean.KKTheory.GroupUniverseParityGroup.KKParityGroup
+#check BC4lean.KKTheory.GroupUniverseParityGroup.evenParityIdentification
+#print axioms BC4lean.KKTheory.GroupUniverseParityGroup.evenParityIdentification
+#check BC4lean.KKTheory.GroupUniverseParityGroup.kkParityGroupAddCommGroup
+#print axioms BC4lean.KKTheory.GroupUniverseParityGroup.kkParityGroupAddCommGroup
+#check BC4lean.KKTheory.GroupUniverseParityGroup.oddParityIdentification
+#print axioms BC4lean.KKTheory.GroupUniverseParityGroup.oddParityIdentification
+#check BC4lean.KKTheory.GroupUniverseParityProduct.evenEvenOddProduct_assoc
+#print axioms BC4lean.KKTheory.GroupUniverseParityProduct.evenEvenOddProduct_assoc
+#check BC4lean.KKTheory.GroupUniverseParityProduct.evenOddProduct
+#print axioms BC4lean.KKTheory.GroupUniverseParityProduct.evenOddProduct
+#check BC4lean.KKTheory.GroupUniverseParityProduct.evenProduct
+#print axioms BC4lean.KKTheory.GroupUniverseParityProduct.evenProduct
+#check BC4lean.KKTheory.GroupUniverseParityProduct.evenProduct_assoc
+#print axioms BC4lean.KKTheory.GroupUniverseParityProduct.evenProduct_assoc
+#check BC4lean.KKTheory.GroupUniverseParityUnits.identity
+#print axioms BC4lean.KKTheory.GroupUniverseParityUnits.identity
+#check BC4lean.KKTheory.GroupUniverseParityUnits.left_identity
+#print axioms BC4lean.KKTheory.GroupUniverseParityUnits.left_identity
+#check BC4lean.KKTheory.GroupUniverseParityUnits.right_identity
+#print axioms BC4lean.KKTheory.GroupUniverseParityUnits.right_identity
+#check BC4lean.KKTheory.GroupUniverseProduct.bundledProduct_fullHomotopic_first
+#print axioms BC4lean.KKTheory.GroupUniverseProduct.bundledProduct_fullHomotopic_first
+#check BC4lean.KKTheory.GroupUniverseProduct.bundledProduct_fullHomotopic_second
+#print axioms BC4lean.KKTheory.GroupUniverseProduct.bundledProduct_fullHomotopic_second
+#check BC4lean.KKTheory.GroupUniverseProduct.identity
+#print axioms BC4lean.KKTheory.GroupUniverseProduct.identity
+#check BC4lean.KKTheory.GroupUniverseProduct.product
+#print axioms BC4lean.KKTheory.GroupUniverseProduct.product
+#check BC4lean.KKTheory.GroupUniverseProduct.productOperator
+#print axioms BC4lean.KKTheory.GroupUniverseProduct.productOperator
+#check BC4lean.KKTheory.GroupUniverseProduct.productOperator_isProduct
+#print axioms BC4lean.KKTheory.GroupUniverseProduct.productOperator_isProduct
+#check BC4lean.KKTheory.GroupUniverseProduct.product_assoc
+#print axioms BC4lean.KKTheory.GroupUniverseProduct.product_assoc
+#check BC4lean.KKTheory.GroupUniverseProduct.product_left_identity
+#print axioms BC4lean.KKTheory.GroupUniverseProduct.product_left_identity
+#check BC4lean.KKTheory.GroupUniverseProduct.product_mk_eq_of_isProduct
+#print axioms BC4lean.KKTheory.GroupUniverseProduct.product_mk_eq_of_isProduct
+#check BC4lean.KKTheory.GroupUniverseProduct.product_right_identity
+#print axioms BC4lean.KKTheory.GroupUniverseProduct.product_right_identity
+#check BC4lean.KKTheory.HilbertModuleEquiv
+#print axioms BC4lean.KKTheory.HilbertModuleEquiv
+#check BC4lean.KKTheory.HilbertModuleEquiv.toAdjointable
+#print axioms BC4lean.KKTheory.HilbertModuleEquiv.toAdjointable
+#check BC4lean.KKTheory.HilbertModuleEquiv.transportMap_isModuleCompact_iff
+#print axioms BC4lean.KKTheory.HilbertModuleEquiv.transportMap_isModuleCompact_iff
+#check BC4lean.KKTheory.HilbertModuleEquiv.transportMap_norm
+#print axioms BC4lean.KKTheory.HilbertModuleEquiv.transportMap_norm
+#check BC4lean.KKTheory.HilbertModuleEquiv.transportStarAlgEquiv
+#print axioms BC4lean.KKTheory.HilbertModuleEquiv.transportStarAlgEquiv
+#check BC4lean.KKTheory.HilbertModuleFibre
+#print axioms BC4lean.KKTheory.HilbertModuleFibre
+#check BC4lean.KKTheory.HilbertModuleSum
+#print axioms BC4lean.KKTheory.HilbertModuleSum
+#check BC4lean.KKTheory.InteriorCreationCycleCounterexample.creationAtOne_adjoint_comp
+#print axioms BC4lean.KKTheory.InteriorCreationCycleCounterexample.creationAtOne_adjoint_comp
+#check BC4lean.KKTheory.InteriorCreationCycleCounterexample.creationAtOne_not_moduleCompact
+#print axioms BC4lean.KKTheory.InteriorCreationCycleCounterexample.creationAtOne_not_moduleCompact
+#check BC4lean.KKTheory.InteriorCreationCycleCounterexample.fullCycleCounterexample
+#print axioms BC4lean.KKTheory.InteriorCreationCycleCounterexample.fullCycleCounterexample
+#check BC4lean.KKTheory.InteriorModuleTensor
+#print axioms BC4lean.KKTheory.InteriorModuleTensor
+#check BC4lean.KKTheory.InteriorModuleTensorFirstFactorEquiv.hilbertEquiv
+#print axioms BC4lean.KKTheory.InteriorModuleTensorFirstFactorEquiv.hilbertEquiv
+#check BC4lean.KKTheory.InteriorModuleTensorFirstFactorEquiv.hilbertEquiv_operator
+#print axioms BC4lean.KKTheory.InteriorModuleTensorFirstFactorEquiv.hilbertEquiv_operator
+#check BC4lean.KKTheory.InteriorModuleTensorSecondDirectSum.hilbertEquiv
+#print axioms BC4lean.KKTheory.InteriorModuleTensorSecondDirectSum.hilbertEquiv
+#check BC4lean.KKTheory.InteriorModuleTensorSecondDirectSum.hilbertEquiv_action
+#print axioms BC4lean.KKTheory.InteriorModuleTensorSecondDirectSum.hilbertEquiv_action
+#check BC4lean.KKTheory.InteriorModuleTensorSecondDirectSum.hilbertEquiv_creation
+#print axioms BC4lean.KKTheory.InteriorModuleTensorSecondDirectSum.hilbertEquiv_creation
+#check BC4lean.KKTheory.InteriorModuleTensorSecondDirectSum.hilbertEquiv_creation_adjoint
+#print axioms BC4lean.KKTheory.InteriorModuleTensorSecondDirectSum.hilbertEquiv_creation_adjoint
+#check BC4lean.KKTheory.InteriorModuleTensorSecondDirectSum.hilbertEquiv_grading
+#print axioms BC4lean.KKTheory.InteriorModuleTensorSecondDirectSum.hilbertEquiv_grading
+#check BC4lean.KKTheory.IsCountablyGeneratedModule
+#print axioms BC4lean.KKTheory.IsCountablyGeneratedModule
+#check BC4lean.KKTheory.IsCountablyGeneratedModule.completion
+#print axioms BC4lean.KKTheory.IsCountablyGeneratedModule.completion
+#check BC4lean.KKTheory.IsCountablyGeneratedModule.fibre
+#print axioms BC4lean.KKTheory.IsCountablyGeneratedModule.fibre
+#check BC4lean.KKTheory.IsCountablyGeneratedModule.interiorTensor
+#print axioms BC4lean.KKTheory.IsCountablyGeneratedModule.interiorTensor
+#check BC4lean.KKTheory.IsCountablyGeneratedModule.map_linearIsometryEquiv
+#print axioms BC4lean.KKTheory.IsCountablyGeneratedModule.map_linearIsometryEquiv
+#check BC4lean.KKTheory.IsCountablyGeneratedModule.separableSpace
+#print axioms BC4lean.KKTheory.IsCountablyGeneratedModule.separableSpace
+#check BC4lean.KKTheory.IsCountablyGeneratedModule.sum
+#print axioms BC4lean.KKTheory.IsCountablyGeneratedModule.sum
+#check BC4lean.KKTheory.IsGradedKasparovProductOperator
+#print axioms BC4lean.KKTheory.IsGradedKasparovProductOperator
+#check BC4lean.KKTheory.IsModuleCompact
+#print axioms BC4lean.KKTheory.IsModuleCompact
+#check BC4lean.KKTheory.IsModuleCompact.cfcAbs
+#print axioms BC4lean.KKTheory.IsModuleCompact.cfcAbs
+#check BC4lean.KKTheory.IsModuleCompact.fibre
+#print axioms BC4lean.KKTheory.IsModuleCompact.fibre
+#check BC4lean.KKTheory.IsModuleCompact.of_adjoint_comp_self
+#print axioms BC4lean.KKTheory.IsModuleCompact.of_adjoint_comp_self
+#check BC4lean.KKTheory.IsModuleCompact.posPart
+#print axioms BC4lean.KKTheory.IsModuleCompact.posPart
+#check BC4lean.KKTheory.IsModuleCompact.sumMap
+#print axioms BC4lean.KKTheory.IsModuleCompact.sumMap
+#check BC4lean.KKTheory.IsPositiveModuloModuleCompact
+#print axioms BC4lean.KKTheory.IsPositiveModuloModuleCompact
+#check BC4lean.KKTheory.IsPositiveModuloModuleCompact.add
+#print axioms BC4lean.KKTheory.IsPositiveModuloModuleCompact.add
+#check BC4lean.KKTheory.IsPositiveModuloModuleCompact.star_left_conjugate
+#print axioms BC4lean.KKTheory.IsPositiveModuloModuleCompact.star_left_conjugate
+#check BC4lean.KKTheory.KasparovConnection
+#print axioms BC4lean.KKTheory.KasparovConnection
+#check BC4lean.KKTheory.KasparovConnection.add_compact
+#print axioms BC4lean.KKTheory.KasparovConnection.add_compact
+#check BC4lean.KKTheory.KasparovCycle
+#print axioms BC4lean.KKTheory.KasparovCycle
+#check BC4lean.KKTheory.KasparovCycle.IsDegenerate
+#print axioms BC4lean.KKTheory.KasparovCycle.IsDegenerate
+#check BC4lean.KKTheory.KasparovCycle.OperatorConditions
+#print axioms BC4lean.KKTheory.KasparovCycle.OperatorConditions
+#check BC4lean.KKTheory.KasparovCycle.directSum
+#print axioms BC4lean.KKTheory.KasparovCycle.directSum
+#check BC4lean.KKTheory.KasparovCycle.directSum_isDegenerate
+#print axioms BC4lean.KKTheory.KasparovCycle.directSum_isDegenerate
+#check BC4lean.KKTheory.KasparovCycle.fibre
+#print axioms BC4lean.KKTheory.KasparovCycle.fibre
+#check BC4lean.KKTheory.KasparovCycle.isDegenerate_fibre
+#print axioms BC4lean.KKTheory.KasparovCycle.isDegenerate_fibre
+#check BC4lean.KKTheory.KasparovCycle.operatorConditions_affine_compactPerturbation
+#print axioms BC4lean.KKTheory.KasparovCycle.operatorConditions_affine_compactPerturbation
+#check BC4lean.KKTheory.KasparovCycle.opposite
+#print axioms BC4lean.KKTheory.KasparovCycle.opposite
+#check BC4lean.KKTheory.KasparovCycle.transport
+#print axioms BC4lean.KKTheory.KasparovCycle.transport
+#check BC4lean.KKTheory.KasparovCycle.transportIso
+#print axioms BC4lean.KKTheory.KasparovCycle.transportIso
+#check BC4lean.KKTheory.KasparovCycle.transport_isDegenerate
+#print axioms BC4lean.KKTheory.KasparovCycle.transport_isDegenerate
+#check BC4lean.KKTheory.KasparovCycle.withOperator
+#print axioms BC4lean.KKTheory.KasparovCycle.withOperator
+#check BC4lean.KKTheory.KasparovCycle.zeroRepresentation
+#print axioms BC4lean.KKTheory.KasparovCycle.zeroRepresentation
+#check BC4lean.KKTheory.KasparovCycle.zeroRepresentation_isDegenerate
+#print axioms BC4lean.KKTheory.KasparovCycle.zeroRepresentation_isDegenerate
+#check BC4lean.KKTheory.KasparovCycleIso
+#print axioms BC4lean.KKTheory.KasparovCycleIso
+#check BC4lean.KKTheory.KasparovCycleIso.directSum
+#print axioms BC4lean.KKTheory.KasparovCycleIso.directSum
+#check BC4lean.KKTheory.KasparovCycleIso.fibreDirectSum
+#print axioms BC4lean.KKTheory.KasparovCycleIso.fibreDirectSum
+#check BC4lean.KKTheory.KasparovCycleIso.refl
+#print axioms BC4lean.KKTheory.KasparovCycleIso.refl
+#check BC4lean.KKTheory.KasparovCycleIso.sumAssoc
+#print axioms BC4lean.KKTheory.KasparovCycleIso.sumAssoc
+#check BC4lean.KKTheory.KasparovCycleIso.sumComm
+#print axioms BC4lean.KKTheory.KasparovCycleIso.sumComm
+#check BC4lean.KKTheory.KasparovCycleIso.symm
+#print axioms BC4lean.KKTheory.KasparovCycleIso.symm
+#check BC4lean.KKTheory.KasparovCycleIso.trans
+#print axioms BC4lean.KKTheory.KasparovCycleIso.trans
+#check BC4lean.KKTheory.KasparovHomotopyClass
+#print axioms BC4lean.KKTheory.KasparovHomotopyClass
+#check BC4lean.KKTheory.KasparovHomotopyClass.instAddCommGroup
+#print axioms BC4lean.KKTheory.KasparovHomotopyClass.instAddCommGroup
+#check BC4lean.KKTheory.KasparovHomotopyClass.mk_directSum
+#print axioms BC4lean.KKTheory.KasparovHomotopyClass.mk_directSum
+#check BC4lean.KKTheory.KasparovHomotopyClass.mk_eq_mk_iff_full
+#print axioms BC4lean.KKTheory.KasparovHomotopyClass.mk_eq_mk_iff_full
+#check BC4lean.KKTheory.KasparovHomotopyClass.mk_eq_zero_of_degenerate
+#print axioms BC4lean.KKTheory.KasparovHomotopyClass.mk_eq_zero_of_degenerate
+#check BC4lean.KKTheory.KasparovHomotopyClass.mk_opposite
+#print axioms BC4lean.KKTheory.KasparovHomotopyClass.mk_opposite
+#check BC4lean.KKTheory.KasparovOperatorHomotopy
+#print axioms BC4lean.KKTheory.KasparovOperatorHomotopy
+#check BC4lean.KKTheory.KasparovOperatorHomotopy.compactPerturbation
+#print axioms BC4lean.KKTheory.KasparovOperatorHomotopy.compactPerturbation
+#check BC4lean.KKTheory.KasparovOperatorHomotopy.continuous_operator
+#print axioms BC4lean.KKTheory.KasparovOperatorHomotopy.continuous_operator
+#check BC4lean.KKTheory.KasparovOperatorHomotopy.cycleAt
+#print axioms BC4lean.KKTheory.KasparovOperatorHomotopy.cycleAt
+#check BC4lean.KKTheory.KasparovOperatorHomotopy.directSum
+#print axioms BC4lean.KKTheory.KasparovOperatorHomotopy.directSum
+#check BC4lean.KKTheory.KasparovOperatorHomotopy.fibreCycleIso
+#print axioms BC4lean.KKTheory.KasparovOperatorHomotopy.fibreCycleIso
+#check BC4lean.KKTheory.KasparovOperatorHomotopy.fibreCycleOneIso
+#print axioms BC4lean.KKTheory.KasparovOperatorHomotopy.fibreCycleOneIso
+#check BC4lean.KKTheory.KasparovOperatorHomotopy.fibreCycleZeroIso
+#print axioms BC4lean.KKTheory.KasparovOperatorHomotopy.fibreCycleZeroIso
+#check BC4lean.KKTheory.KasparovOperatorHomotopy.intervalCycle
+#print axioms BC4lean.KKTheory.KasparovOperatorHomotopy.intervalCycle
+#check BC4lean.KKTheory.KasparovOperatorHomotopy.intervalFibreIso
+#print axioms BC4lean.KKTheory.KasparovOperatorHomotopy.intervalFibreIso
+#check BC4lean.KKTheory.KasparovOperatorHomotopy.inverseRotation
+#print axioms BC4lean.KKTheory.KasparovOperatorHomotopy.inverseRotation
+#check BC4lean.KKTheory.KasparovOperatorHomotopy.inverseRotation_target_isDegenerate
+#print axioms BC4lean.KKTheory.KasparovOperatorHomotopy.inverseRotation_target_isDegenerate
+#check BC4lean.KKTheory.KasparovOperatorHomotopy.refl
+#print axioms BC4lean.KKTheory.KasparovOperatorHomotopy.refl
+#check BC4lean.KKTheory.KasparovOperatorHomotopy.source_cycleAt
+#print axioms BC4lean.KKTheory.KasparovOperatorHomotopy.source_cycleAt
+#check BC4lean.KKTheory.KasparovOperatorHomotopy.symm
+#print axioms BC4lean.KKTheory.KasparovOperatorHomotopy.symm
+#check BC4lean.KKTheory.KasparovOperatorHomotopy.target_cycleAt
+#print axioms BC4lean.KKTheory.KasparovOperatorHomotopy.target_cycleAt
+#check BC4lean.KKTheory.KasparovOperatorHomotopy.trans
+#print axioms BC4lean.KKTheory.KasparovOperatorHomotopy.trans
+#check BC4lean.KKTheory.OddKK
+#print axioms BC4lean.KKTheory.OddKK
+#check BC4lean.KKTheory.OddKK.instAddCommGroup
+#print axioms BC4lean.KKTheory.OddKK.instAddCommGroup
+#check BC4lean.KKTheory.OddKasparovCycle
+#print axioms BC4lean.KKTheory.OddKasparovCycle
+#check BC4lean.KKTheory.OddKasparovCycle.IsDegenerate
+#print axioms BC4lean.KKTheory.OddKasparovCycle.IsDegenerate
+#check BC4lean.KKTheory.OddKasparovCycle.directSum
+#print axioms BC4lean.KKTheory.OddKasparovCycle.directSum
+#check BC4lean.KKTheory.OddKasparovCycle.directSum_isDegenerate
+#print axioms BC4lean.KKTheory.OddKasparovCycle.directSum_isDegenerate
+#check BC4lean.KKTheory.OddKasparovCycle.zeroRepresentation
+#print axioms BC4lean.KKTheory.OddKasparovCycle.zeroRepresentation
+#check BC4lean.KKTheory.OddKasparovCycle.zeroRepresentation_isDegenerate
+#print axioms BC4lean.KKTheory.OddKasparovCycle.zeroRepresentation_isDegenerate
+#check BC4lean.KKTheory.PositiveModuleForm
+#print axioms BC4lean.KKTheory.PositiveModuleForm
+#check BC4lean.KKTheory.PositiveModuleForm.formNorm_triangle
+#print axioms BC4lean.KKTheory.PositiveModuleForm.formNorm_triangle
+#check BC4lean.KKTheory.PositiveModuleForm.inner_mul_inner_swap_le
+#print axioms BC4lean.KKTheory.PositiveModuleForm.inner_mul_inner_swap_le
+#check BC4lean.KKTheory.PositiveModuleForm.nullRadical
+#print axioms BC4lean.KKTheory.PositiveModuleForm.nullRadical
+#check BC4lean.KKTheory.PositiveModuleQuotient
+#print axioms BC4lean.KKTheory.PositiveModuleQuotient
+#check BC4lean.KKTheory.PositiveModuleQuotient.instCStarModule
+#print axioms BC4lean.KKTheory.PositiveModuleQuotient.instCStarModule
+#check BC4lean.KKTheory.PreHilbertModuleTensor
+#print axioms BC4lean.KKTheory.PreHilbertModuleTensor
+#check BC4lean.KKTheory.ScalarCreationCycleCounterexample.firstCycle
+#print axioms BC4lean.KKTheory.ScalarCreationCycleCounterexample.firstCycle
+#check BC4lean.KKTheory.ScalarCreationCycleCounterexample.fullCycleCounterexample
+#print axioms BC4lean.KKTheory.ScalarCreationCycleCounterexample.fullCycleCounterexample
+#check BC4lean.KKTheory.ScalarCreationCycleCounterexample.secondCycle
+#print axioms BC4lean.KKTheory.ScalarCreationCycleCounterexample.secondCycle
+#check BC4lean.KKTheory.ScalarCreationCycleCounterexample.secondCycle_isDegenerate
+#print axioms BC4lean.KKTheory.ScalarCreationCycleCounterexample.secondCycle_isDegenerate
+#check BC4lean.KKTheory.ScalarHilbertModule.isCompactOperator_of_isModuleCompact
+#print axioms BC4lean.KKTheory.ScalarHilbertModule.isCompactOperator_of_isModuleCompact
+#check BC4lean.KKTheory.affineKasparovOperator_square_defect
+#print axioms BC4lean.KKTheory.affineKasparovOperator_square_defect
+#check BC4lean.KKTheory.cfc_sub_value_mul_isModuleCompact
+#print axioms BC4lean.KKTheory.cfc_sub_value_mul_isModuleCompact
+#check BC4lean.KKTheory.cliffordTensorCoordinateStarAlgEquiv
+#print axioms BC4lean.KKTheory.cliffordTensorCoordinateStarAlgEquiv
+#check BC4lean.KKTheory.cliffordTensorCoordinates_tmul
+#print axioms BC4lean.KKTheory.cliffordTensorCoordinates_tmul
+#check BC4lean.KKTheory.cliffordTensorNorm_cstar
+#print axioms BC4lean.KKTheory.cliffordTensorNorm_cstar
+#check BC4lean.KKTheory.cliffordTensorParityAddEquiv
+#print axioms BC4lean.KKTheory.cliffordTensorParityAddEquiv
+#check BC4lean.KKTheory.comp_mem_moduleCompact
+#print axioms BC4lean.KKTheory.comp_mem_moduleCompact
+#check BC4lean.KKTheory.comp_moduleRankOne
+#print axioms BC4lean.KKTheory.comp_moduleRankOne
+#check BC4lean.KKTheory.compactModuleOperatorIdeal_isTwoSided
+#print axioms BC4lean.KKTheory.compactModuleOperatorIdeal_isTwoSided
+#check BC4lean.KKTheory.compactModuleOperator_nonUnitalCStarAlgebra
+#print axioms BC4lean.KKTheory.compactModuleOperator_nonUnitalCStarAlgebra
+#check BC4lean.KKTheory.compact_approximateUnit_vector_error_sq_le
+#print axioms BC4lean.KKTheory.compact_approximateUnit_vector_error_sq_le
+#check BC4lean.KKTheory.compact_fibreKernel_eq_fibreNullCompact
+#print axioms BC4lean.KKTheory.compact_fibreKernel_eq_fibreNullCompact
+#check BC4lean.KKTheory.completionCStarModule
+#print axioms BC4lean.KKTheory.completionCStarModule
+#check BC4lean.KKTheory.completionInner_coe
+#print axioms BC4lean.KKTheory.completionInner_coe
+#check BC4lean.KKTheory.completionModuleSMul
+#print axioms BC4lean.KKTheory.completionModuleSMul
+#check BC4lean.KKTheory.completion_norm_eq_sqrt_inner
+#print axioms BC4lean.KKTheory.completion_norm_eq_sqrt_inner
+#check BC4lean.KKTheory.coneOperatorHom
+#print axioms BC4lean.KKTheory.coneOperatorHom
+#check BC4lean.KKTheory.coneRampMap_denseRange
+#print axioms BC4lean.KKTheory.coneRampMap_denseRange
+#check BC4lean.KKTheory.cone_isCountablyGenerated
+#print axioms BC4lean.KKTheory.cone_isCountablyGenerated
+#check BC4lean.KKTheory.continuousSectionCStarModule
+#print axioms BC4lean.KKTheory.continuousSectionCStarModule
+#check BC4lean.KKTheory.continuousSectionFibreIsometryEquiv
+#print axioms BC4lean.KKTheory.continuousSectionFibreIsometryEquiv
+#check BC4lean.KKTheory.continuousSectionFibreModuleEquiv
+#print axioms BC4lean.KKTheory.continuousSectionFibreModuleEquiv
+#check BC4lean.KKTheory.continuousSectionOperator
+#print axioms BC4lean.KKTheory.continuousSectionOperator
+#check BC4lean.KKTheory.continuousSectionOperator_isModuleCompact
+#print axioms BC4lean.KKTheory.continuousSectionOperator_isModuleCompact
+#check BC4lean.KKTheory.continuousSection_isCountablyGenerated
+#print axioms BC4lean.KKTheory.continuousSection_isCountablyGenerated
+#check BC4lean.KKTheory.continuous_eventually_uniform_moduleSandwich
+#print axioms BC4lean.KKTheory.continuous_eventually_uniform_moduleSandwich
+#check BC4lean.KKTheory.contractiveJuliaEquiv
+#print axioms BC4lean.KKTheory.contractiveJuliaEquiv
+#check BC4lean.KKTheory.contractiveJuliaEquiv_apply
+#print axioms BC4lean.KKTheory.contractiveJuliaEquiv_apply
+#check BC4lean.KKTheory.countableModuleEvaluation_sequenceSum
+#print axioms BC4lean.KKTheory.countableModuleEvaluation_sequenceSum
+#check BC4lean.KKTheory.countableModuleFinitePositiveForm
+#print axioms BC4lean.KKTheory.countableModuleFinitePositiveForm
+#check BC4lean.KKTheory.countableModuleFinite_nullRadical_eq_bot
+#print axioms BC4lean.KKTheory.countableModuleFinite_nullRadical_eq_bot
+#check BC4lean.KKTheory.countableModuleSequenceSum
+#print axioms BC4lean.KKTheory.countableModuleSequenceSum
+#check BC4lean.KKTheory.countableModuleSequenceSum_inner
+#print axioms BC4lean.KKTheory.countableModuleSequenceSum_inner
+#check BC4lean.KKTheory.evaluatedModuleQuotient_completeSpace
+#print axioms BC4lean.KKTheory.evaluatedModuleQuotient_completeSpace
+#check BC4lean.KKTheory.exists_actualGradedKasparovProductOperator
+#print axioms BC4lean.KKTheory.exists_actualGradedKasparovProductOperator
+#check BC4lean.KKTheory.exists_compactFibre_lift_norm_eq
+#print axioms BC4lean.KKTheory.exists_compactFibre_lift_norm_eq
+#check BC4lean.KKTheory.exists_finite_partition_approximation
+#print axioms BC4lean.KKTheory.exists_finite_partition_approximation
+#check BC4lean.KKTheory.exists_fullGradedKasparovProductOperatorHomotopy
+#print axioms BC4lean.KKTheory.exists_fullGradedKasparovProductOperatorHomotopy
+#check BC4lean.KKTheory.exists_internally_quasicentral_approximate_unit_sequence
+#print axioms BC4lean.KKTheory.exists_internally_quasicentral_approximate_unit_sequence
+#check BC4lean.KKTheory.exists_kasparovDiscreteTechnicalPartition
+#print axioms BC4lean.KKTheory.exists_kasparovDiscreteTechnicalPartition
+#check BC4lean.KKTheory.exists_odd_gradedKasparovConnection
+#print axioms BC4lean.KKTheory.exists_odd_gradedKasparovConnection
+#check BC4lean.KKTheory.exists_positive_contractive_approximate_unit_sequence
+#print axioms BC4lean.KKTheory.exists_positive_contractive_approximate_unit_sequence
+#check BC4lean.KKTheory.exists_positive_selfadjoint_contraction_smul_approx_on
+#print axioms BC4lean.KKTheory.exists_positive_selfadjoint_contraction_smul_approx_on
+#check BC4lean.KKTheory.exists_standardModuleCompactSynthesis_denseRange
+#print axioms BC4lean.KKTheory.exists_standardModuleCompactSynthesis_denseRange
+#check BC4lean.KKTheory.exists_standardModuleStabilization
+#print axioms BC4lean.KKTheory.exists_standardModuleStabilization
+#check BC4lean.KKTheory.globalFredholmNormalization
+#print axioms BC4lean.KKTheory.globalFredholmNormalization
+#check BC4lean.KKTheory.hilbertModuleBanachFibreEquiv
+#print axioms BC4lean.KKTheory.hilbertModuleBanachFibreEquiv
+#check BC4lean.KKTheory.hilbertModuleBanachFibre_norm_mk
+#print axioms BC4lean.KKTheory.hilbertModuleBanachFibre_norm_mk
+#check BC4lean.KKTheory.hilbertModuleCompactFibreHom
+#print axioms BC4lean.KKTheory.hilbertModuleCompactFibreHom
+#check BC4lean.KKTheory.hilbertModuleCompactFibreHom_surjective
+#print axioms BC4lean.KKTheory.hilbertModuleCompactFibreHom_surjective
+#check BC4lean.KKTheory.hilbertModuleFibreMk_denseRange
+#print axioms BC4lean.KKTheory.hilbertModuleFibreMk_denseRange
+#check BC4lean.KKTheory.hilbertModuleFibreMk_surjective
+#print axioms BC4lean.KKTheory.hilbertModuleFibreMk_surjective
+#check BC4lean.KKTheory.hilbertModuleFibreOperatorHom
+#print axioms BC4lean.KKTheory.hilbertModuleFibreOperatorHom
+#check BC4lean.KKTheory.hilbertModuleFibre_inner_mk
+#print axioms BC4lean.KKTheory.hilbertModuleFibre_inner_mk
+#check BC4lean.KKTheory.hilbertModuleSum_complete
+#print axioms BC4lean.KKTheory.hilbertModuleSum_complete
+#check BC4lean.KKTheory.hilbertModuleToCompletion
+#print axioms BC4lean.KKTheory.hilbertModuleToCompletion
+#check BC4lean.KKTheory.hilbertModuleToCompletion_denseRange
+#print axioms BC4lean.KKTheory.hilbertModuleToCompletion_denseRange
+#check BC4lean.KKTheory.injectiveStarHom_isSelfAdjoint_iff
+#print axioms BC4lean.KKTheory.injectiveStarHom_isSelfAdjoint_iff
+#check BC4lean.KKTheory.injectiveStarHom_le_iff
+#print axioms BC4lean.KKTheory.injectiveStarHom_le_iff
+#check BC4lean.KKTheory.injectiveStarHom_nonneg_iff
+#print axioms BC4lean.KKTheory.injectiveStarHom_nonneg_iff
+#check BC4lean.KKTheory.inner_sum
+#print axioms BC4lean.KKTheory.inner_sum
+#check BC4lean.KKTheory.interiorModuleTensorInner_mk_mk
+#print axioms BC4lean.KKTheory.interiorModuleTensorInner_mk_mk
+#check BC4lean.KKTheory.interiorModuleTensorMk_balance
+#print axioms BC4lean.KKTheory.interiorModuleTensorMk_balance
+#check BC4lean.KKTheory.interiorModuleTensorOperator
+#print axioms BC4lean.KKTheory.interiorModuleTensorOperator
+#check BC4lean.KKTheory.interiorModuleTensorOperatorHom
+#print axioms BC4lean.KKTheory.interiorModuleTensorOperatorHom
+#check BC4lean.KKTheory.interiorModuleTensorOperator_adjoint
+#print axioms BC4lean.KKTheory.interiorModuleTensorOperator_adjoint
+#check BC4lean.KKTheory.interiorModuleTensorOperator_mk
+#print axioms BC4lean.KKTheory.interiorModuleTensorOperator_mk
+#check BC4lean.KKTheory.interiorModuleTensorOperator_norm_le
+#print axioms BC4lean.KKTheory.interiorModuleTensorOperator_norm_le
+#check BC4lean.KKTheory.interiorModuleTensor_span_dense
+#print axioms BC4lean.KKTheory.interiorModuleTensor_span_dense
+#check BC4lean.KKTheory.intervalMatchedCompactPairEquiv
+#print axioms BC4lean.KKTheory.intervalMatchedCompactPairEquiv
+#check BC4lean.KKTheory.intervalMatchedOperator_isModuleCompact
+#print axioms BC4lean.KKTheory.intervalMatchedOperator_isModuleCompact
+#check BC4lean.KKTheory.intervalMatchedRankPairAlgebra_eq_compactPairAlgebra
+#print axioms BC4lean.KKTheory.intervalMatchedRankPairAlgebra_eq_compactPairAlgebra
+#check BC4lean.KKTheory.isCompact_eventually_uniform_moduleSandwich
+#print axioms BC4lean.KKTheory.isCompact_eventually_uniform_moduleSandwich
+#check BC4lean.KKTheory.isCountablyGeneratedModule_of_separableSpace
+#print axioms BC4lean.KKTheory.isCountablyGeneratedModule_of_separableSpace
+#check BC4lean.KKTheory.isModuleCompact_iff_adjoint_comp_self
+#print axioms BC4lean.KKTheory.isModuleCompact_iff_adjoint_comp_self
+#check BC4lean.KKTheory.isModuleCompact_tendsto_comp_left_of_strong_contractions
+#print axioms BC4lean.KKTheory.isModuleCompact_tendsto_comp_left_of_strong_contractions
+#check BC4lean.KKTheory.isModuleCompact_tendsto_comp_right_of_strong_selfadjoint_contractions
+#print axioms BC4lean.KKTheory.isModuleCompact_tendsto_comp_right_of_strong_selfadjoint_contractions
+#check BC4lean.KKTheory.isPositiveModuloModuleCompact_iff_of_sub_compact
+#print axioms BC4lean.KKTheory.isPositiveModuloModuleCompact_iff_of_sub_compact
+#check BC4lean.KKTheory.isPositiveModuloModuleCompact_iff_star_square
+#print axioms BC4lean.KKTheory.isPositiveModuloModuleCompact_iff_star_square
+#check BC4lean.KKTheory.juliaDefect_intertwine
+#print axioms BC4lean.KKTheory.juliaDefect_intertwine
+#check BC4lean.KKTheory.juliaSourceDefect
+#print axioms BC4lean.KKTheory.juliaSourceDefect
+#check BC4lean.KKTheory.juliaTargetDefect
+#print axioms BC4lean.KKTheory.juliaTargetDefect
+#check BC4lean.KKTheory.mem_moduleCompact_comp
+#print axioms BC4lean.KKTheory.mem_moduleCompact_comp
+#check BC4lean.KKTheory.mem_moduleCompact_iff_approx
+#print axioms BC4lean.KKTheory.mem_moduleCompact_iff_approx
+#check BC4lean.KKTheory.moduleCompact
+#print axioms BC4lean.KKTheory.moduleCompact
+#check BC4lean.KKTheory.moduleCompact_adjoint
+#print axioms BC4lean.KKTheory.moduleCompact_adjoint
+#check BC4lean.KKTheory.moduleCompact_isClosed
+#print axioms BC4lean.KKTheory.moduleCompact_isClosed
+#check BC4lean.KKTheory.moduleCompact_standard_eq_range
+#print axioms BC4lean.KKTheory.moduleCompact_standard_eq_range
+#check BC4lean.KKTheory.moduleCreationMap
+#print axioms BC4lean.KKTheory.moduleCreationMap
+#check BC4lean.KKTheory.moduleCreationMap_adjoint_comp
+#print axioms BC4lean.KKTheory.moduleCreationMap_adjoint_comp
+#check BC4lean.KKTheory.moduleCreationMap_adjoint_mk
+#print axioms BC4lean.KKTheory.moduleCreationMap_adjoint_mk
+#check BC4lean.KKTheory.moduleCreationMap_isModuleCompact_iff
+#print axioms BC4lean.KKTheory.moduleCreationMap_isModuleCompact_iff
+#check BC4lean.KKTheory.moduleCreationMap_isModuleCompact_of_compact_left_action
+#print axioms BC4lean.KKTheory.moduleCreationMap_isModuleCompact_of_compact_left_action
+#check BC4lean.KKTheory.moduleCreationMap_norm_le
+#print axioms BC4lean.KKTheory.moduleCreationMap_norm_le
+#check BC4lean.KKTheory.moduleFiniteRank
+#print axioms BC4lean.KKTheory.moduleFiniteRank
+#check BC4lean.KKTheory.moduleGeneratingSpan
+#print axioms BC4lean.KKTheory.moduleGeneratingSpan
+#check BC4lean.KKTheory.moduleGeneratingSpan_closure_eq_top_iff
+#print axioms BC4lean.KKTheory.moduleGeneratingSpan_closure_eq_top_iff
+#check BC4lean.KKTheory.moduleGramMatrix_nonneg
+#print axioms BC4lean.KKTheory.moduleGramMatrix_nonneg
+#check BC4lean.KKTheory.moduleGramSynthesis
+#print axioms BC4lean.KKTheory.moduleGramSynthesis
+#check BC4lean.KKTheory.moduleGram_quadratic_eq_inner
+#print axioms BC4lean.KKTheory.moduleGram_quadratic_eq_inner
+#check BC4lean.KKTheory.moduleGram_quadratic_nonneg
+#print axioms BC4lean.KKTheory.moduleGram_quadratic_nonneg
+#check BC4lean.KKTheory.moduleMatrixPairing_eq_zero_of_quadratic
+#print axioms BC4lean.KKTheory.moduleMatrixPairing_eq_zero_of_quadratic
+#check BC4lean.KKTheory.moduleMatrixQuadratic_nonneg
+#print axioms BC4lean.KKTheory.moduleMatrixQuadratic_nonneg
+#check BC4lean.KKTheory.moduleMatrixRepresentation
+#print axioms BC4lean.KKTheory.moduleMatrixRepresentation
+#check BC4lean.KKTheory.moduleMatrixRepresentation_injective
+#print axioms BC4lean.KKTheory.moduleMatrixRepresentation_injective
+#check BC4lean.KKTheory.moduleRankOne
+#print axioms BC4lean.KKTheory.moduleRankOne
+#check BC4lean.KKTheory.moduleRankOneCLM
+#print axioms BC4lean.KKTheory.moduleRankOneCLM
+#check BC4lean.KKTheory.moduleRankOne_adjoint
+#print axioms BC4lean.KKTheory.moduleRankOne_adjoint
+#check BC4lean.KKTheory.moduleRankOne_comp
+#print axioms BC4lean.KKTheory.moduleRankOne_comp
+#check BC4lean.KKTheory.moduleRankOne_comp_moduleRankOne
+#print axioms BC4lean.KKTheory.moduleRankOne_comp_moduleRankOne
+#check BC4lean.KKTheory.moduleRankOne_norm_le
+#print axioms BC4lean.KKTheory.moduleRankOne_norm_le
+#check BC4lean.KKTheory.moduleRankOne_self_norm
+#print axioms BC4lean.KKTheory.moduleRankOne_self_norm
+#check BC4lean.KKTheory.moduleTensorInner
+#print axioms BC4lean.KKTheory.moduleTensorInner
+#check BC4lean.KKTheory.moduleTensorInner_eq_zero_of_self
+#print axioms BC4lean.KKTheory.moduleTensorInner_eq_zero_of_self
+#check BC4lean.KKTheory.moduleTensorInner_self_nonneg
+#print axioms BC4lean.KKTheory.moduleTensorInner_self_nonneg
+#check BC4lean.KKTheory.moduleTensorInner_standard_eq
+#print axioms BC4lean.KKTheory.moduleTensorInner_standard_eq
+#check BC4lean.KKTheory.moduleTensorInner_star
+#print axioms BC4lean.KKTheory.moduleTensorInner_star
+#check BC4lean.KKTheory.moduleTensorInner_sum_mk_self_nonneg
+#print axioms BC4lean.KKTheory.moduleTensorInner_sum_mk_self_nonneg
+#check BC4lean.KKTheory.moduleTensorLift
+#print axioms BC4lean.KKTheory.moduleTensorLift
+#check BC4lean.KKTheory.moduleTensorLift_unique
+#print axioms BC4lean.KKTheory.moduleTensorLift_unique
+#check BC4lean.KKTheory.moduleTensorMk_balance
+#print axioms BC4lean.KKTheory.moduleTensorMk_balance
+#check BC4lean.KKTheory.moduleTensorNull
+#print axioms BC4lean.KKTheory.moduleTensorNull
+#check BC4lean.KKTheory.moduleTensorPureInner
+#print axioms BC4lean.KKTheory.moduleTensorPureInner
+#check BC4lean.KKTheory.moduleTensorPureInner_norm_le
+#print axioms BC4lean.KKTheory.moduleTensorPureInner_norm_le
+#check BC4lean.KKTheory.moduleTensorPureInner_self_nonneg
+#print axioms BC4lean.KKTheory.moduleTensorPureInner_self_nonneg
+#check BC4lean.KKTheory.moduleVectorCreation_compact
+#print axioms BC4lean.KKTheory.moduleVectorCreation_compact
+#check BC4lean.KKTheory.module_add_smul
+#print axioms BC4lean.KKTheory.module_add_smul
+#check BC4lean.KKTheory.module_complex_smul
+#print axioms BC4lean.KKTheory.module_complex_smul
+#check BC4lean.KKTheory.module_inner_ext_left
+#print axioms BC4lean.KKTheory.module_inner_ext_left
+#check BC4lean.KKTheory.module_inner_ext_right
+#print axioms BC4lean.KKTheory.module_inner_ext_right
+#check BC4lean.KKTheory.module_mul_smul
+#print axioms BC4lean.KKTheory.module_mul_smul
+#check BC4lean.KKTheory.module_norm_smul_le
+#print axioms BC4lean.KKTheory.module_norm_smul_le
+#check BC4lean.KKTheory.module_smul_add
+#print axioms BC4lean.KKTheory.module_smul_add
+#check BC4lean.KKTheory.nonUnitalCStarHomQuotientIsometry
+#print axioms BC4lean.KKTheory.nonUnitalCStarHomQuotientIsometry
+#check BC4lean.KKTheory.nonUnitalCStarHom_exists_norm_eq_lift
+#print axioms BC4lean.KKTheory.nonUnitalCStarHom_exists_norm_eq_lift
+#check BC4lean.KKTheory.nonUnitalCStarHom_isClosed_range
+#print axioms BC4lean.KKTheory.nonUnitalCStarHom_isClosed_range
+#check BC4lean.KKTheory.nonUnitalCStarHom_quotient_norm_mk
+#print axioms BC4lean.KKTheory.nonUnitalCStarHom_quotient_norm_mk
+#check BC4lean.KKTheory.nonunitalRelativeK0KasparovMapAtUniverse_leftInverse
+#print axioms BC4lean.KKTheory.nonunitalRelativeK0KasparovMapAtUniverse_leftInverse
+#check BC4lean.KKTheory.nonunitalRelativeK0KasparovMapAtUniverse_rightInverse
+#print axioms BC4lean.KKTheory.nonunitalRelativeK0KasparovMapAtUniverse_rightInverse
+#check BC4lean.KKTheory.nonunitalRelativeK0KasparovMapAtZero_natural
+#print axioms BC4lean.KKTheory.nonunitalRelativeK0KasparovMapAtZero_natural
+#check BC4lean.KKTheory.norm_globalFredholmNormalization_le
+#print axioms BC4lean.KKTheory.norm_globalFredholmNormalization_le
+#check BC4lean.KKTheory.norm_standardCompactEquiv
+#print axioms BC4lean.KKTheory.norm_standardCompactEquiv
+#check BC4lean.KKTheory.norm_standardLeftMul
+#print axioms BC4lean.KKTheory.norm_standardLeftMul
+#check BC4lean.KKTheory.norm_sum
+#print axioms BC4lean.KKTheory.norm_sum
+#check BC4lean.KKTheory.oddKKIndependentCoefficientPushforward_comparison_square
+#print axioms BC4lean.KKTheory.oddKKIndependentCoefficientPushforward_comparison_square
+#check BC4lean.KKTheory.oddKKOperatorK1AllModuleUniversesAddEquiv
+#print axioms BC4lean.KKTheory.oddKKOperatorK1AllModuleUniversesAddEquiv
+#check BC4lean.KKTheory.oddKKOperatorK1AllModuleUniversesAddEquiv_independentCoefficient_natural
+#print axioms BC4lean.KKTheory.oddKKOperatorK1AllModuleUniversesAddEquiv_independentCoefficient_natural
+#check BC4lean.KKTheory.oddKKOperatorK1Index_independentCoefficientPushforward_anyModuleUniverse
+#print axioms BC4lean.KKTheory.oddKKOperatorK1Index_independentCoefficientPushforward_anyModuleUniverse
+#check BC4lean.KKTheory.oddOperatorK1KKInverseAllModuleUniverses_independentCoefficient_natural
+#print axioms BC4lean.KKTheory.oddOperatorK1KKInverseAllModuleUniverses_independentCoefficient_natural
+#check BC4lean.KKTheory.oddOperatorK1KKInverseAllModuleUniverses_leftInverse_index
+#print axioms BC4lean.KKTheory.oddOperatorK1KKInverseAllModuleUniverses_leftInverse_index
+#check BC4lean.KKTheory.oddOperatorK1KKInverseAllModuleUniverses_rightInverse_index
+#print axioms BC4lean.KKTheory.oddOperatorK1KKInverseAllModuleUniverses_rightInverse_index
+#check BC4lean.KKTheory.preModuleTensorCStarModule
+#print axioms BC4lean.KKTheory.preModuleTensorCStarModule
+#check BC4lean.KKTheory.scalarCliffordOperatorK1AllModuleUniversesAddEquiv
+#print axioms BC4lean.KKTheory.scalarCliffordOperatorK1AllModuleUniversesAddEquiv
+#check BC4lean.KKTheory.scalarCreationMap_adjoint_identity
+#print axioms BC4lean.KKTheory.scalarCreationMap_adjoint_identity
+#check BC4lean.KKTheory.scalarCreationMap_one_not_compact
+#print axioms BC4lean.KKTheory.scalarCreationMap_one_not_compact
+#check BC4lean.KKTheory.scalarCreationModuleMap_one_not_moduleCompact
+#print axioms BC4lean.KKTheory.scalarCreationModuleMap_one_not_moduleCompact
+#check BC4lean.KKTheory.scalarKKOperatorK0AddEquiv
+#print axioms BC4lean.KKTheory.scalarKKOperatorK0AddEquiv
+#check BC4lean.KKTheory.scalarKKOperatorK0AddEquiv_natural
+#print axioms BC4lean.KKTheory.scalarKKOperatorK0AddEquiv_natural
+#check BC4lean.KKTheory.scalarKKOperatorK0IndexHom
+#print axioms BC4lean.KKTheory.scalarKKOperatorK0IndexHom
+#check BC4lean.KKTheory.scalarKKOperatorK0IndexHom_natural
+#print axioms BC4lean.KKTheory.scalarKKOperatorK0IndexHom_natural
+#check BC4lean.KKTheory.scalarKKOperatorK0Index_universe
+#print axioms BC4lean.KKTheory.scalarKKOperatorK0Index_universe
+#check BC4lean.KKTheory.standardCompactEquiv
+#print axioms BC4lean.KKTheory.standardCompactEquiv
+#check BC4lean.KKTheory.standardCountableCutoff_mul_mul_tendsto
+#print axioms BC4lean.KKTheory.standardCountableCutoff_mul_mul_tendsto
+#check BC4lean.KKTheory.standardCountableInfiniteSumEquiv
+#print axioms BC4lean.KKTheory.standardCountableInfiniteSumEquiv
+#check BC4lean.KKTheory.standardCountablePairedCutoff_commutes_reference
+#print axioms BC4lean.KKTheory.standardCountablePairedCutoff_commutes_reference
+#check BC4lean.KKTheory.standardCountableReferenceCompression_tendsto
+#print axioms BC4lean.KKTheory.standardCountableReferenceCompression_tendsto
+#check BC4lean.KKTheory.standardIdentityCycle
+#print axioms BC4lean.KKTheory.standardIdentityCycle
+#check BC4lean.KKTheory.standardIdentityCycle_operator
+#print axioms BC4lean.KKTheory.standardIdentityCycle_operator
+#check BC4lean.KKTheory.standardIdentityCycle_representation
+#print axioms BC4lean.KKTheory.standardIdentityCycle_representation
+#check BC4lean.KKTheory.standardInteriorModuleTensorEquivEssential
+#print axioms BC4lean.KKTheory.standardInteriorModuleTensorEquivEssential
+#check BC4lean.KKTheory.standardInteriorModuleTensorEvaluationCLM_norm
+#print axioms BC4lean.KKTheory.standardInteriorModuleTensorEvaluationCLM_norm
+#check BC4lean.KKTheory.standardInteriorModuleTensorEvaluation_range
+#print axioms BC4lean.KKTheory.standardInteriorModuleTensorEvaluation_range
+#check BC4lean.KKTheory.standardInteriorModuleTensorHilbertEquiv
+#print axioms BC4lean.KKTheory.standardInteriorModuleTensorHilbertEquiv
+#check BC4lean.KKTheory.standardLeftMul
+#print axioms BC4lean.KKTheory.standardLeftMul
+#check BC4lean.KKTheory.standardModuleAbsorptionOfDenseSynthesis
+#print axioms BC4lean.KKTheory.standardModuleAbsorptionOfDenseSynthesis
+#check BC4lean.KKTheory.standardModuleAnalysis_square_hasSum
+#print axioms BC4lean.KKTheory.standardModuleAnalysis_square_hasSum
+#check BC4lean.KKTheory.standardModuleStabilization
+#print axioms BC4lean.KKTheory.standardModuleStabilization
+#check BC4lean.KKTheory.standardModuleSynthesis_adjoint_apply
+#print axioms BC4lean.KKTheory.standardModuleSynthesis_adjoint_apply
+#check BC4lean.KKTheory.standardModuleSynthesis_compact
+#print axioms BC4lean.KKTheory.standardModuleSynthesis_compact
+#check BC4lean.KKTheory.standard_moduleRankOne
+#print axioms BC4lean.KKTheory.standard_moduleRankOne
+#check BC4lean.KKTheory.standard_module_complete
+#print axioms BC4lean.KKTheory.standard_module_complete
+#check BC4lean.KKTheory.standard_module_inner
+#print axioms BC4lean.KKTheory.standard_module_inner
+#check BC4lean.KKTheory.standard_module_isCountablyGenerated
+#print axioms BC4lean.KKTheory.standard_module_isCountablyGenerated
+#check BC4lean.KKTheory.sumAssoc
+#print axioms BC4lean.KKTheory.sumAssoc
+#check BC4lean.KKTheory.sumMap
+#print axioms BC4lean.KKTheory.sumMap
+#check BC4lean.KKTheory.sumSwap
+#print axioms BC4lean.KKTheory.sumSwap
+#check BC4lean.KKTheory.tendsto_canonical_compact_approximateUnit_apply
+#print axioms BC4lean.KKTheory.tendsto_canonical_compact_approximateUnit_apply
+#check BC4lean.KKTheory.tendsto_coefficient_approximateUnit_smul
+#print axioms BC4lean.KKTheory.tendsto_coefficient_approximateUnit_smul
+#check BC4lean.KKTheory.tendsto_compact_sequence_apply
+#print axioms BC4lean.KKTheory.tendsto_compact_sequence_apply
+#check BC4lean.KKTheory.zero_mem_closure_convexHull_of_weak_tendsto
+#print axioms BC4lean.KKTheory.zero_mem_closure_convexHull_of_weak_tendsto
+run_cmd do
+  let env ← getEnv
+  let modules := #["BC4lean.AdjointableAlgebra", "BC4lean.AdjointableComplete", "BC4lean.AdjointableCompletion", "BC4lean.AdjointableIsometricCornerHom", "BC4lean.AdjointableNorm", "BC4lean.AdjointableOperator", "BC4lean.AdjointableUnitaryHilbertModuleEquiv", "BC4lean.BalancedModuleTensor", "BC4lean.BundledGradedKasparovCycle", "BC4lean.BundledKasparovCycle", "BC4lean.BundledKasparovDirectSum", "BC4lean.BundledOddKasparovCycle", "BC4lean.BundledOddKasparovOperations", "BC4lean.CFCAlmostCommute", "BC4lean.CStarFunctionalDecomposition", "BC4lean.CStarGeneratedApproximateUnit", "BC4lean.CStarHomClosedRange", "BC4lean.CStarHomCutoffScalar", "BC4lean.CStarQuasicentralRoute", "BC4lean.CStarSigmaUnitalQuasicentral", "BC4lean.CanonicalGradedSumHomogeneousEquiv", "BC4lean.CliffordAlgebraTensor", "BC4lean.CliffordCoefficientGrading", "BC4lean.CliffordCoefficientRange", "BC4lean.CliffordCoordinateKasparovClassEquiv", "BC4lean.CliffordCycleIso", "BC4lean.CliffordDirectSumIso", "BC4lean.CliffordEvenOddCornerCycle", "BC4lean.CliffordEvenOddSourceCriterion", "BC4lean.CliffordEvenOddSourceHilbert", "BC4lean.CliffordExternalEvenBalancedCompatibility", "BC4lean.CliffordExternalEvenBalancedCreation", "BC4lean.CliffordExternalEvenBalancedTensor", "BC4lean.CliffordExternalEvenConnectionExtraction", "BC4lean.CliffordExternalEvenCycle", "BC4lean.CliffordExternalEvenCycleIso", "BC4lean.CliffordExternalEvenIdentity", "BC4lean.CliffordExternalEvenInterval", "BC4lean.CliffordExternalEvenMonoidalConnection", "BC4lean.CliffordExternalEvenMonoidalHilbert", "BC4lean.CliffordExternalEvenMonoidalPositivity", "BC4lean.CliffordExternalEvenOperator", "BC4lean.CliffordExternalEvenQuotient", "BC4lean.CliffordExternalEvenRepresentation", "BC4lean.CliffordExternalEvenTensor", "BC4lean.CliffordExternalOddAction", "BC4lean.CliffordExternalOddCoefficient", "BC4lean.CliffordExternalOddCoordinates", "BC4lean.CliffordExternalOddForm", "BC4lean.CliffordExternalOddGrading", "BC4lean.CliffordExternalOddHilbertModule", "BC4lean.CliffordExternalOddModule", "BC4lean.CliffordExternalOddSource", "BC4lean.CliffordIntervalCoefficients", "BC4lean.CliffordIntervalExpansionFibre", "BC4lean.CliffordIntervalRangeFibre", "BC4lean.CliffordOddBalancedTensor", "BC4lean.CliffordOddBalancedTensorCompatibility", "BC4lean.CliffordOddBalancedTensorConnection", "BC4lean.CliffordOddBalancedTensorPositivity", "BC4lean.CliffordOddConditionalConnection", "BC4lean.CliffordOddConditionalPauli", "BC4lean.CliffordOddConditionalPositivity", "BC4lean.CliffordOddEvenCornerCycle", "BC4lean.CliffordOddOddCoordinateCycle", "BC4lean.CliffordOddOddFourier", "BC4lean.CliffordOddOddFourierCompatibility", "BC4lean.CliffordOddOddFourierConnection", "BC4lean.CliffordOddOddSourceCriterion", "BC4lean.CliffordOddOddSourceHilbert", "BC4lean.CliffordOddPauliRotation", "BC4lean.CliffordOddSourceCycle", "BC4lean.CliffordOddSourceCycleIso", "BC4lean.CliffordOddSourceDirectSumIso", "BC4lean.CliffordOddSourceEvenCriterion", "BC4lean.CliffordOddSourceEvenHilbert", "BC4lean.CliffordOne", "BC4lean.CliffordPairFirstCorner", "BC4lean.CliffordPairModule", "BC4lean.CliffordPairSecondConnectionExtraction", "BC4lean.CliffordPairSecondTensor", "BC4lean.CliffordPairSecondTensorCompatibility", "BC4lean.CliffordPairStandardTensor", "BC4lean.CliffordParityCycle", "BC4lean.CliffordParityDirectSum", "BC4lean.CliffordParityGroup", "BC4lean.CliffordParityQuotient", "BC4lean.CliffordQuarterPhase", "BC4lean.CliffordQuarterPhaseConnection", "BC4lean.CliffordQuarterPhasePositivity", "BC4lean.CliffordTensorGrading", "BC4lean.CliffordTensorHom", "BC4lean.CliffordTensorOrder", "BC4lean.CliffordTensorParityGroup", "BC4lean.CliffordTensorParityQuotient", "BC4lean.CliffordTensorSeparable", "BC4lean.CliffordTwoCoefficientTensor", "BC4lean.CliffordTwoCoordinates", "BC4lean.CliffordTwoGradedTensor", "BC4lean.CliffordTwoMatrix", "BC4lean.CliffordTwoUnital", "BC4lean.CliffordTwoUniversal", "BC4lean.ClosedRightHilbertModule", "BC4lean.ClosedStarHomKernelActions", "BC4lean.ClosedStarHomKernelModule", "BC4lean.CoefficientImageFiniteFibreEquiv", "BC4lean.CoefficientImageFiniteTensorEquiv", "BC4lean.CoefficientImageFiniteUnitary", "BC4lean.CoefficientImageIntervalModule", "BC4lean.CoefficientImageIntervalRepresentation", "BC4lean.CoefficientImageRelativeProjectionHomotopy", "BC4lean.CoefficientImageRightModule", "BC4lean.CompactFirstModuleConnection", "BC4lean.CompactModuleApproximateUnit", "BC4lean.CompactModuleCountableApproximateUnit", "BC4lean.CompactModuleOperator", "BC4lean.CompactModuleOperatorCriterion", "BC4lean.CompactModuleSeparability", "BC4lean.CompactModuleStrongCutoff", "BC4lean.CompactModuleStrongResolution", "BC4lean.CompactModuleUniformCutoff", "BC4lean.ConeHilbertModule", "BC4lean.ConeKasparovHomotopy", "BC4lean.ContinuousMapFiniteApproximation", "BC4lean.ContractiveModuleCoordinateAnalysis", "BC4lean.CountableHilbertModuleFibre", "BC4lean.CountableHilbertModuleSum", "BC4lean.CountableHilbertModuleTensor", "BC4lean.CountableModuleCompactColumn", "BC4lean.CountableModuleGrading", "BC4lean.CountableModuleOperator", "BC4lean.CountableModuleRectangularDefect", "BC4lean.CountableModuleSequence", "BC4lean.CountablyGeneratedModule", "BC4lean.DoubledAdjointableUnitaryPath", "BC4lean.EquivariantCompactOperator", "BC4lean.EquivariantHilbertModule", "BC4lean.EquivariantOperatorAutomorphism", "BC4lean.EssentialModulePositivity", "BC4lean.EssentialModulePositivityFibre", "BC4lean.EssentialModuleSpectrumCutoff", "BC4lean.EssentialModuleSquareCutoffNormalization", "BC4lean.EvenGradedKasparovClassEquiv", "BC4lean.EvenKasparovProduct", "BC4lean.FiniteHilbertModuleCoefficientMatrix", "BC4lean.FiniteHilbertModuleEquiv", "BC4lean.FiniteHilbertModuleFibre", "BC4lean.FiniteHilbertModuleSum", "BC4lean.FiniteHilbertModuleTensor", "BC4lean.FiniteJuliaAlignedCorner", "BC4lean.FiniteJuliaProjectionIndexRecovery", "BC4lean.FiniteJuliaProjectionRecovery", "BC4lean.FiniteMatrixProjectionIndex", "BC4lean.FiniteModuleCompactMatrix", "BC4lean.FiniteModuleCountableGeneration", "BC4lean.FinitePairedPrefixCoordinates", "BC4lean.FiniteProjectionAlignedAbsorption", "BC4lean.FiniteProjectionBlockSum", "BC4lean.FiniteProjectionKasparovCycle", "BC4lean.FiniteProjectionModule", "BC4lean.FiniteProjectionOrthogonalK0", "BC4lean.FiniteRelativeProjectionK0IndexRecovery", "BC4lean.FredholmJuliaProjection", "BC4lean.FullCliffordParityHomotopy", "BC4lean.FullGradedCoefficientTransport", "BC4lean.FullGradedKasparovHomotopy", "BC4lean.FullGradedKasparovHomotopyEquivalence", "BC4lean.FullOddKasparovOperations", "BC4lean.GlobalFredholmNormalization", "BC4lean.GlobalFredholmNormalizationFixed", "BC4lean.GlobalFredholmNormalizationHomotopy", "BC4lean.GlobalFredholmScalarCycle", "BC4lean.GlobalFredholmScalarCycleK0Index", "BC4lean.GlobalFredholmStabilizationCycleIso", "BC4lean.GlobalFredholmStandardClass", "BC4lean.GlobalModuleContractiveNormalization", "BC4lean.GradedCoefficientDirectSum", "BC4lean.GradedCoefficientFibreTransport", "BC4lean.GradedCompactCorrespondenceCycle", "BC4lean.GradedConnectionDefectAlgebra", "BC4lean.GradedConnectionDefectsWithFirstOperator", "BC4lean.GradedCycleCoefficientEquiv", "BC4lean.GradedCycleCoefficientTransport", "BC4lean.GradedEquivariantInteriorModuleTensor", "BC4lean.GradedHilbertModule", "BC4lean.GradedHilbertModuleHomogeneousSplit", "BC4lean.GradedHomogeneousModuleFibreEquiv", "BC4lean.GradedInteriorModuleTensorCoefficientEquiv", "BC4lean.GradedIntervalKasparovCycleGluing", "BC4lean.GradedIntervalKasparovFibre", "BC4lean.GradedIntervalKasparovNormalization", "BC4lean.GradedIntervalKasparovReversal", "BC4lean.GradedKasparovCoefficientProduct", "BC4lean.GradedKasparovCoefficientTensorInputs", "BC4lean.GradedKasparovCompactSecondProduct", "BC4lean.GradedKasparovConnectionExistence", "BC4lean.GradedKasparovCycle", "BC4lean.GradedKasparovCycleIso", "BC4lean.GradedKasparovCycleOperatorTransport", "BC4lean.GradedKasparovCycleTransport", "BC4lean.GradedKasparovDirectSum", "BC4lean.GradedKasparovFirstFibreProduct", "BC4lean.GradedKasparovFirstInputProductHomotopy", "BC4lean.GradedKasparovFirstIsoProduct", "BC4lean.GradedKasparovFirstSumProduct", "BC4lean.GradedKasparovFullDirectSum", "BC4lean.GradedKasparovIntervalSectionsCycle", "BC4lean.GradedKasparovLeftUnitHomotopy", "BC4lean.GradedKasparovLocalCompactPerturbation", "BC4lean.GradedKasparovNormalization", "BC4lean.GradedKasparovProductAssociativity", "BC4lean.GradedKasparovProductAssociativityClass", "BC4lean.GradedKasparovProductCriterion", "BC4lean.GradedKasparovProductFirstAdditivity", "BC4lean.GradedKasparovProductHomotopyClass", "BC4lean.GradedKasparovProductSecondAdditivity", "BC4lean.GradedKasparovProductSourcePullback", "BC4lean.GradedKasparovSecondFibreProduct", "BC4lean.GradedKasparovSecondInputProductHomotopy", "BC4lean.GradedKasparovSecondIsoProduct", "BC4lean.GradedKasparovSecondSumProduct", "BC4lean.GradedKasparovSecondTensorUnitary", "BC4lean.GradedKasparovSourcePullback", "BC4lean.GradedKasparovSourcePullbackClass", "BC4lean.GradedKasparovSourcePullbackFunctoriality", "BC4lean.GradedKasparovTensorCycleTransport", "BC4lean.GradedKasparovTripleAssociativity", "BC4lean.GradedMatrixMoritaColumn", "BC4lean.GradedMatrixMoritaCompact", "BC4lean.GradedMatrixMoritaCompletion", "BC4lean.GradedMatrixMoritaContractions", "BC4lean.GradedMatrixMoritaCycle", "BC4lean.GradedMatrixMoritaEquivariant", "BC4lean.GradedMatrixMoritaEvaluatedTensorExtension", "BC4lean.GradedMatrixMoritaEvenBase", "BC4lean.GradedMatrixMoritaFibreCreationCompatibility", "BC4lean.GradedMatrixMoritaFibreEvaluation", "BC4lean.GradedMatrixMoritaFibreTensor", "BC4lean.GradedMatrixMoritaFibreTensorCompatibility", "BC4lean.GradedMatrixMoritaFirstTensorUnitary", "BC4lean.GradedMatrixMoritaInverse", "BC4lean.GradedMatrixMoritaMatrix", "BC4lean.GradedMatrixMoritaRow", "BC4lean.GradedMatrixMoritaSecondFibreTensor", "BC4lean.GradedMatrixMoritaSecondFibreTensorCompatibility", "BC4lean.GradedMatrixMoritaSectionRepresentation", "BC4lean.GradedMatrixMoritaSeparable", "BC4lean.GradedMatrixMoritaTensorDirectSum", "BC4lean.GradedMatrixMoritaTensorDirectSumCycle", "BC4lean.GradedMatrixMoritaTensorUnitary", "BC4lean.GradedMatrixMoritaUnitary", "BC4lean.GradedModuleConnectionComposition", "BC4lean.GradedModuleFrameConnection", "BC4lean.GradedRectangularConnectionTransfer", "BC4lean.GradedStandardIdentityCycle", "BC4lean.GradedStandardModuleHomCycle", "BC4lean.GradedTensorAnticommutatorCommute", "BC4lean.GradedTripleAnticommutatorConnection", "BC4lean.GradingConjugateOperator", "BC4lean.GroupShrinkEvenBridge", "BC4lean.GroupShrinkGradedEquivalence", "BC4lean.GroupShrinkGradedHomotopy", "BC4lean.GroupShrinkHilbertModule", "BC4lean.GroupShrinkOddEquivalence", "BC4lean.GroupShrinkOddHomotopy", "BC4lean.GroupShrinkRawCycles", "BC4lean.GroupULiftFibre", "BC4lean.GroupULiftHilbertModule", "BC4lean.GroupULiftRawCycles", "BC4lean.GroupUniverseCliffordBridge", "BC4lean.GroupUniverseCliffordCoordinateBridge", "BC4lean.GroupUniverseCoefficientPushforward", "BC4lean.GroupUniverseCoefficientPushforwardComposition", "BC4lean.GroupUniverseCommonParityProduct", "BC4lean.GroupUniverseCompactCorrespondenceInterval", "BC4lean.GroupUniverseCompactCorrespondenceProduct", "BC4lean.GroupUniverseEvenBase", "BC4lean.GroupUniverseEvenBridge", "BC4lean.GroupUniverseEvenOddCoordinateCoherence", "BC4lean.GroupUniverseEvenOddSourceProduct", "BC4lean.GroupUniverseExternalEvenClass", "BC4lean.GroupUniverseExternalEvenInterval", "BC4lean.GroupUniverseExternalEvenMonoidalClass", "BC4lean.GroupUniverseExternalOddClass", "BC4lean.GroupUniverseExternalOddSemantics", "BC4lean.GroupUniverseMatrixMoritaBridge", "BC4lean.GroupUniverseMatrixMoritaProduct", "BC4lean.GroupUniverseMatrixMoritaTransport", "BC4lean.GroupUniverseOddFirstParityAssociativity", "BC4lean.GroupUniverseOddFirstParityBilinear", "BC4lean.GroupUniverseOddFirstParityProduct", "BC4lean.GroupUniverseOddFullComparison", "BC4lean.GroupUniverseOddMoritaProductReduction", "BC4lean.GroupUniverseOddOddSourceProduct", "BC4lean.GroupUniverseOddSourceClass", "BC4lean.GroupUniverseOddSourceEvenProduct", "BC4lean.GroupUniverseOddSourceInterval", "BC4lean.GroupUniverseOrdinaryEven", "BC4lean.GroupUniverseOrdinaryEvenShrink", "BC4lean.GroupUniverseOrdinaryOdd", "BC4lean.GroupUniverseParityFunctoriality", "BC4lean.GroupUniverseParityGroup", "BC4lean.GroupUniverseParityHomCycle", "BC4lean.GroupUniverseParityMapCoherence", "BC4lean.GroupUniverseParityProduct", "BC4lean.GroupUniverseParityUnits", "BC4lean.GroupUniverseProduct", "BC4lean.GroupUniverseProductCoefficientEquivalence", "BC4lean.GroupUniverseProductLift", "BC4lean.GroupUniverseProductSource", "BC4lean.HeterogeneousFullGradedKasparovHomotopy", "BC4lean.HilbertCStarModule", "BC4lean.HilbertModuleApproximateUnit", "BC4lean.HilbertModuleCoefficientApproximateUnit", "BC4lean.HilbertModuleCoefficientEquiv", "BC4lean.HilbertModuleCoefficientTransport", "BC4lean.HilbertModuleCompletion", "BC4lean.HilbertModuleCountableGenerationSeparable", "BC4lean.HilbertModuleCreationMap", "BC4lean.HilbertModuleEquiv", "BC4lean.HilbertModuleFibreInteriorTensor", "BC4lean.HilbertModuleFibreSum", "BC4lean.HilbertModuleJuliaDecay", "BC4lean.HilbertModuleJuliaRecursion", "BC4lean.HilbertModuleJuliaSqrt", "BC4lean.HilbertModuleJuliaSurjective", "BC4lean.HilbertModuleJuliaSynthesis", "BC4lean.HilbertModuleJuliaUnitary", "BC4lean.HilbertModuleSum", "BC4lean.HomogeneousModuleParsevalFrame", "BC4lean.InjectiveStarHomPositivity", "BC4lean.InteriorCreationCycleCounterexample", "BC4lean.InteriorModuleTensor", "BC4lean.InteriorModuleTensorAssociator", "BC4lean.InteriorModuleTensorAssociatorCompatibility", "BC4lean.InteriorModuleTensorCoefficientEquiv", "BC4lean.InteriorModuleTensorCoefficientOperators", "BC4lean.InteriorModuleTensorCountableGeneration", "BC4lean.InteriorModuleTensorCreationComposition", "BC4lean.InteriorModuleTensorFirstFactorEquiv", "BC4lean.InteriorModuleTensorFormCompletion", "BC4lean.InteriorModuleTensorFrame", "BC4lean.InteriorModuleTensorFrameColumn", "BC4lean.InteriorModuleTensorIsometry", "BC4lean.InteriorModuleTensorSecondDirectSum", "BC4lean.InteriorModuleTensorSecondDirectSumCompatibility", "BC4lean.IntervalCoefficientGluing", "BC4lean.IntervalHilbertModule", "BC4lean.IntervalKasparovCycleGluing", "BC4lean.IntervalKasparovFibre", "BC4lean.IntervalKasparovGluing", "BC4lean.IntervalKasparovHomotopy", "BC4lean.IntervalKasparovReversal", "BC4lean.IntervalMatchedCompactPairs", "BC4lean.IntervalModuleCompactFibre", "BC4lean.IntervalModuleFibre", "BC4lean.IntervalModuleFibreNorm", "BC4lean.KasparovAugmentedAlgebra", "BC4lean.KasparovBandCompactLimits", "BC4lean.KasparovBandControl", "BC4lean.KasparovBandCoordinates", "BC4lean.KasparovBandIdealControls", "BC4lean.KasparovCommonComparisonProduct", "BC4lean.KasparovCompactAnticommutatorRotation", "BC4lean.KasparovCompactPerturbation", "BC4lean.KasparovComparisonPositivity", "BC4lean.KasparovConnection", "BC4lean.KasparovConvexProductPath", "BC4lean.KasparovCountableClosureControls", "BC4lean.KasparovCountableSelection", "BC4lean.KasparovCountableTests", "BC4lean.KasparovCutoffProductPath", "BC4lean.KasparovCycle", "BC4lean.KasparovCycleIso", "BC4lean.KasparovCycleTransport", "BC4lean.KasparovDirectSum", "BC4lean.KasparovDirectSumIso", "BC4lean.KasparovDiscreteTechnicalTheorem", "BC4lean.KasparovEvenSquarePartition", "BC4lean.KasparovFibreDirectSumIso", "BC4lean.KasparovFibreOpposite", "BC4lean.KasparovGeneralComparisonProduct", "BC4lean.KasparovHomotopyDirectSum", "BC4lean.KasparovHomotopyGroup", "BC4lean.KasparovHomotopyRelation", "BC4lean.KasparovHomotopyTransport", "BC4lean.KasparovInverseRotation", "BC4lean.KasparovLocalCompactPerturbation", "BC4lean.KasparovOperatorAlgebraActions", "BC4lean.KasparovOperatorHomotopy", "BC4lean.KasparovProductAlgebras", "BC4lean.KasparovProductCriterion", "BC4lean.KasparovProductDefectAlgebra", "BC4lean.KasparovProductExistence", "BC4lean.KasparovProductNormalization", "BC4lean.KasparovProductOperatorUniqueness", "BC4lean.KasparovProductUniquenessPreparation", "BC4lean.KasparovPullback", "BC4lean.KasparovSelectedBandBounds", "BC4lean.KasparovSelectedTechnicalPartition", "BC4lean.KasparovSquareRootCompactControls", "BC4lean.KasparovTechnicalPartition", "BC4lean.KasparovTechnicalProductApplication", "BC4lean.KasparovTripleBaselineDefects", "BC4lean.KasparovTripleCycleData", "BC4lean.KasparovTripleFirstAlgebra", "BC4lean.KasparovTripleLocalAlgebra", "BC4lean.KasparovTripleNormalizerDerivation", "BC4lean.KasparovTripleResidualLocality", "BC4lean.KasparovTripleRightFirstAlgebra", "BC4lean.KasparovTripleSandwichAlgebra", "BC4lean.KasparovTripleSecondAlgebra", "BC4lean.KasparovTripleTechnicalConstruction", "BC4lean.KasparovTripleWeightedComparison", "BC4lean.KasparovTripleWeightedProduct", "BC4lean.KasparovWeightedBandEstimates", "BC4lean.L2Group", "BC4lean.LeftUnitIntervalConnectionCycle", "BC4lean.LeftUnitIntervalEndpointConnections", "BC4lean.LeftUnitIntervalIdeal", "BC4lean.LeftUnitIntervalIdealGrading", "BC4lean.LeftUnitIntervalRankLocalization", "BC4lean.LeftUnitIntervalRepresentation", "BC4lean.LeftUnitIntervalTensor", "BC4lean.LeftUnitIntervalTensorCompatibility", "BC4lean.LeftUnitUnitizationData", "BC4lean.LocalizedModuleFunctionalCalculus", "BC4lean.MatrixHilbertModuleCoordinateEmbedding", "BC4lean.MatrixProjectionMap", "BC4lean.MatrixRowCoordinateAction", "BC4lean.MatrixStabilization", "BC4lean.ModuleCompactCFCIntertwining", "BC4lean.ModuleCompactEssentialPositivity", "BC4lean.ModuleCompactLocalizedNegativePart", "BC4lean.ModuleCompactOrderHereditary", "BC4lean.ModuleCompactPositivePart", "BC4lean.ModuleCoordinateAnalysis", "BC4lean.ModuleCreationLocalCompact", "BC4lean.ModuleCreationLocalCompactCFC", "BC4lean.ModuleCreationMap", "BC4lean.ModuleCreationPositivePartIntertwining", "BC4lean.ModuleGramMatrix", "BC4lean.ModuleGramPositivity", "BC4lean.ModuleIsometricEmbeddingComplement", "BC4lean.ModuleOperatorPositivity", "BC4lean.ModuleParsevalFrame", "BC4lean.ModuleSquareCutoffNormalization", "BC4lean.ModuleTensorAction", "BC4lean.ModuleTensorCompact", "BC4lean.ModuleTensorInner", "BC4lean.ModuleTensorOperator", "BC4lean.ModuleTensorPositivity", "BC4lean.ModuleTensorPureInner", "BC4lean.ModuleTensorRadical", "BC4lean.NearProjectionCommonRounding", "BC4lean.NearProjectionSpectralRounding", "BC4lean.NonunitalOperatorK", "BC4lean.NonunitalRelativeProjectionKKMap", "BC4lean.NormalizedQuasicentralApproximateUnit", "BC4lean.OddConeKasparovHomotopy", "BC4lean.OddEvenKasparovProduct", "BC4lean.OddFredholmAbsorptionIndependence", "BC4lean.OddFredholmCommutingPhase", "BC4lean.OddFredholmCompactUnitary", "BC4lean.OddFredholmCompactUnitaryPullback", "BC4lean.OddFredholmConjugationIndex", "BC4lean.OddFredholmCutoffComparison", "BC4lean.OddFredholmCutoffIndependence", "BC4lean.OddFredholmExponential", "BC4lean.OddFredholmFiniteCompression", "BC4lean.OddFredholmFiniteCompressionStabilization", "BC4lean.OddFredholmFiniteIndexUnitary", "BC4lean.OddFredholmFullIntervalIndex", "BC4lean.OddFredholmFullNormalization", "BC4lean.OddFredholmIdentityAugmentation", "BC4lean.OddFredholmIntervalFunctionalCalculus", "BC4lean.OddFredholmIntervalRowFormula", "BC4lean.OddFredholmLocalCompactPerturbation", "BC4lean.OddFredholmModuleFibreEquiv", "BC4lean.OddFredholmNormalization", "BC4lean.OddFredholmNormalizationNaturality", "BC4lean.OddFredholmOperatorK1Index", "BC4lean.OddFredholmPolarCompact", "BC4lean.OddFredholmPolarTail", "BC4lean.OddFredholmPolarUnitary", "BC4lean.OddFredholmProjectionFibreEquiv", "BC4lean.OddFredholmPullbackNaturality", "BC4lean.OddFredholmRowDecomposition", "BC4lean.OddFredholmRowEndpoint", "BC4lean.OddFredholmRowFibrePullback", "BC4lean.OddFredholmRowNormalForm", "BC4lean.OddFredholmRowNormalFormHomotopy", "BC4lean.OddFredholmRowTensorPullback", "BC4lean.OddFredholmScalarCycleRawIndex", "BC4lean.OddFredholmStabilizedIndexIso", "BC4lean.OddFredholmStandardCoordinates", "BC4lean.OddFredholmStandardFibreIndex", "BC4lean.OddFredholmStandardIntervalIndex", "BC4lean.OddFredholmStandardStabilization", "BC4lean.OddFredholmStandardUnitaryPathIndex", "BC4lean.OddFredholmSumOperatorHom", "BC4lean.OddFredholmWeightedFunctionalCalculus", "BC4lean.OddIntervalKasparovConstant", "BC4lean.OddIntervalKasparovCycleGluing", "BC4lean.OddIntervalKasparovFibre", "BC4lean.OddIntervalKasparovReversal", "BC4lean.OddIntervalOperatorHomotopy", "BC4lean.OddKTheoryArbitraryCycleInverse", "BC4lean.OddKTheoryCoefficientImageHomotopy", "BC4lean.OddKTheoryCoefficientTensorFiniteIndex", "BC4lean.OddKTheoryCompactUnitaryClass", "BC4lean.OddKTheoryCompactUnitaryCoefficientTensor", "BC4lean.OddKTheoryComparisonAddEquiv", "BC4lean.OddKTheoryContinuousUnitaryEvaluation", "BC4lean.OddKTheoryCountableCoordinates", "BC4lean.OddKTheoryCountableDiagonal", "BC4lean.OddKTheoryCountableGeneration", "BC4lean.OddKTheoryCountableRowEquiv", "BC4lean.OddKTheoryCountableSumEquiv", "BC4lean.OddKTheoryFiniteCircleRecovery", "BC4lean.OddKTheoryFiniteCoefficientTensorIso", "BC4lean.OddKTheoryFiniteCoordinateEquiv", "BC4lean.OddKTheoryFiniteCornerAbsorption", "BC4lean.OddKTheoryFiniteEntryTransfer", "BC4lean.OddKTheoryFiniteMatrixFlatten", "BC4lean.OddKTheoryFiniteMatrixRecovery", "BC4lean.OddKTheoryIndependentCoefficientNaturality", "BC4lean.OddKTheoryIndexQuotient", "BC4lean.OddKTheoryLoopCoordinateFormula", "BC4lean.OddKTheoryLoopDefectPowerTransfer", "BC4lean.OddKTheoryLoopDefectPowers", "BC4lean.OddKTheoryLoopSquareTransfer", "BC4lean.OddKTheoryMatrixLoopExponential", "BC4lean.OddKTheoryMatrixLoopFredholm", "BC4lean.OddKTheoryMatrixLoopFunctionalCalculus", "BC4lean.OddKTheoryMatrixLoopPullback", "BC4lean.OddKTheoryMatrixLoopSelfAdjoint", "BC4lean.OddKTheoryMatrixUnitaryClass", "BC4lean.OddKTheoryMatrixUnitaryCycle", "BC4lean.OddKTheoryMatrixWeightedDefect", "BC4lean.OddKTheoryModuleUniverseIndex", "BC4lean.OddKTheoryOperatorK1Recovery", "BC4lean.OddKTheoryPeriodicExpansion", "BC4lean.OddKTheoryRowPeriodicExpansion", "BC4lean.OddKTheoryRowSignedCoordinates", "BC4lean.OddKTheoryRowSumFormula", "BC4lean.OddKTheoryRowUniversalLoop", "BC4lean.OddKTheoryScalarUnitaryNormalization", "BC4lean.OddKTheorySignedCoordinates", "BC4lean.OddKTheoryStandardFiniteSplit", "BC4lean.OddKTheoryStandardPrefixEquiv", "BC4lean.OddKTheoryStandardPrefixIndex", "BC4lean.OddKTheoryStandardUnitaryInverse", "BC4lean.OddKTheoryTwoRowExponentialCorner", "BC4lean.OddKTheoryUnitaryFunctionalCalculus", "BC4lean.OddKTheoryUniversalFiniteSupport", "BC4lean.OddKTheoryUniversalLoop", "BC4lean.OddKTheoryWeightedCircleEntries", "BC4lean.OddKTheoryWeightedDefectTransfer", "BC4lean.OddKasparovCycleIso", "BC4lean.OddKasparovCycleTransport", "BC4lean.OddKasparovDirectSumIso", "BC4lean.OddKasparovFibreDirectSumIso", "BC4lean.OddKasparovFibreOpposite", "BC4lean.OddKasparovHomotopyGroup", "BC4lean.OddKasparovHomotopyRelation", "BC4lean.OddKasparovInverseRotation", "BC4lean.OddKasparovOperatorHomotopy", "BC4lean.OddScalarKasparovIndexFibre", "BC4lean.OddScalarKasparovIndexIso", "BC4lean.OddScalarKasparovOperatorK1Index", "BC4lean.OddScalarKasparovSupport", "BC4lean.OddScalarKasparovSupportClass", "BC4lean.OperatorK0", "BC4lean.OperatorK0Functoriality", "BC4lean.OperatorK1Functoriality", "BC4lean.OperatorK1Product", "BC4lean.OperatorProjections", "BC4lean.OppositeStarAlgEquivBetween", "BC4lean.OrdinaryOddCoefficientTensor", "BC4lean.OrdinaryScalarCoefficientTensor", "BC4lean.OrdinaryScalarCoefficientTensorIso", "BC4lean.PositiveGradedULiftFullWitness", "BC4lean.PositiveModuleForm", "BC4lean.PositiveModuleQuotient", "BC4lean.PreHilbertModuleTensor", "BC4lean.ProjectionHalmosUnitary", "BC4lean.ProjectionHilbertModule", "BC4lean.ProjectionHilbertModuleFibre", "BC4lean.ProjectionHilbertModuleSplit", "BC4lean.ProjectionHomotopy", "BC4lean.ProjectionInteriorModuleTensorEquiv", "BC4lean.ProjectionIntertwiningHilbertModuleEquiv", "BC4lean.ProjectionModuleAlignedStabilization", "BC4lean.ProjectionModuleEquiv", "BC4lean.QuasicentralApproximateUnit", "BC4lean.RankOneOperator", "BC4lean.RectangularEquivalence", "BC4lean.RectangularFredholmContraction", "BC4lean.RectangularFredholmFullIntervalIndex", "BC4lean.RectangularFredholmNormalizationNaturality", "BC4lean.RectangularFredholmProjectionIndex", "BC4lean.RectangularFredholmStandardFibreIndex", "BC4lean.RectangularFredholmStandardStabilization", "BC4lean.RectangularInteriorModuleTensorOperator", "BC4lean.RectangularModuleFibreOperator", "BC4lean.RelativeProjectionCocycle", "BC4lean.RelativeProjectionCocycleOperators", "BC4lean.RelativeProjectionCoefficientTensor", "BC4lean.RelativeProjectionCutoffSplit", "BC4lean.RelativeProjectionCycleFibre", "BC4lean.RelativeProjectionHomotopy", "BC4lean.RelativeProjectionIntertwiningCycleIso", "BC4lean.RelativeProjectionKasparovCycle", "BC4lean.RelativeProjectionPartialIsometry", "BC4lean.RelativeProjectionSum", "BC4lean.RelativeProjectionTransport", "BC4lean.RightStandardModuleTensor", "BC4lean.RightStandardModuleTensorCompatibility", "BC4lean.ScalarCreationCycleCounterexample", "BC4lean.ScalarCreationModule", "BC4lean.ScalarHilbertModule", "BC4lean.ScalarKasparovK0ComparisonAddEquiv", "BC4lean.ScalarKasparovK0ComparisonNaturality", "BC4lean.ScalarKasparovK0IndexQuotient", "BC4lean.ScalarKasparovK0IndexRightInverse", "BC4lean.ScalarKasparovK0IndexUniverse", "BC4lean.ScalarKasparovOperatorK0Index", "BC4lean.ScalarKasparovOperatorK0IndexFibre", "BC4lean.ScalarKasparovRectangularFredholm", "BC4lean.ScalarKasparovSupport", "BC4lean.ScalarKasparovSupportClass", "BC4lean.ScalarRelativeProjectionCoefficientNaturality", "BC4lean.SignedConnectionMultiplierAlgebra", "BC4lean.SignedConnectionWeightedPartition", "BC4lean.StableProjectionMonoid", "BC4lean.StableUnitary", "BC4lean.StandardCoefficientImageTensor", "BC4lean.StandardCountableCutoff", "BC4lean.StandardCountableCutoffComparison", "BC4lean.StandardCountableFiniteClass", "BC4lean.StandardCountableFiniteCoordinates", "BC4lean.StandardCountableFiniteCornerHomotopy", "BC4lean.StandardCountableFiniteProjection", "BC4lean.StandardCountableFiniteProjectionHomotopy", "BC4lean.StandardCountableFlatten", "BC4lean.StandardCountableGeneration", "BC4lean.StandardCountableHilbertModule", "BC4lean.StandardCountableHilbertModuleFibre", "BC4lean.StandardCountableModuleFibre", "BC4lean.StandardCountablePairedCutoff", "BC4lean.StandardCountablePairedModuleFibre", "BC4lean.StandardCountablePrefixProjectionIndex", "BC4lean.StandardCountableProjectionCutoffIndex", "BC4lean.StandardCountableProjectionRounding", "BC4lean.StandardCountableReindex", "BC4lean.StandardCountableRelativeProjectionAugmentation", "BC4lean.StandardCountableRelativeProjectionConjugation", "BC4lean.StandardCountableRelativeProjectionFibreIndex", "BC4lean.StandardCountableRelativeProjectionPathIndex", "BC4lean.StandardCountableSupportedProjectionPadding", "BC4lean.StandardHilbertModuleActions", "BC4lean.StandardKasparovCycle", "BC4lean.StandardModuleCompactFrame", "BC4lean.StandardModuleFrame", "BC4lean.StandardModuleFrameCutoff", "BC4lean.StandardModuleFrameResolution", "BC4lean.StandardModuleOperator", "BC4lean.StandardModuleParsevalAnalysis", "BC4lean.StandardModuleParsevalFrame", "BC4lean.StandardModuleStabilization", "BC4lean.StandardModuleTensor", "BC4lean.UnitaryHomotopy", "BC4lean.UnitaryRotation", "BC4lean.UnitizationContinuousProjectionEvaluation", "BC4lean.UnitizationFiniteJuliaRecovery", "BC4lean.UnitizationFiniteMatrixNorm", "BC4lean.UnitizationK0KernelRepresentative", "BC4lean.UnitizationRelativeProjectionK0", "BC4lean.UnitizationRelativeStableKKMap", "BC4lean.UnitizationScalarProjectionCorrection", "BC4lean.UnitizationScalarRelativeBlockSum", "BC4lean.UnitizationScalarRelativeClass", "BC4lean.UnitizedFiniteMatrixBlocks", "BC4lean.UnitizedFiniteModuleOperator", "BC4lean.UnitizedRelativeProjectionCoefficientTensor"]
+  let links := #[``BC4lean.KKTheory.AdjointableMap, ``BC4lean.KKTheory.AdjointableMap.adjoint_add, ``BC4lean.KKTheory.AdjointableMap.adjoint_adjoint, ``BC4lean.KKTheory.AdjointableMap.adjoint_comp, ``BC4lean.KKTheory.AdjointableMap.adjoint_smul, ``BC4lean.KKTheory.AdjointableMap.adjoint_unique, ``BC4lean.KKTheory.AdjointableMap.comp_assoc, ``BC4lean.KKTheory.AdjointableMap.comp_id, ``BC4lean.KKTheory.AdjointableMap.completion, ``BC4lean.KKTheory.AdjointableMap.completionHom, ``BC4lean.KKTheory.AdjointableMap.id_comp, ``BC4lean.KKTheory.AdjointableMap.instCStarAlgebra, ``BC4lean.KKTheory.AdjointableMap.instCompleteSpace, ``BC4lean.KKTheory.AdjointableMap.instNormedAddCommGroup, ``BC4lean.KKTheory.AdjointableMap.instNormedAlgebra, ``BC4lean.KKTheory.AdjointableMap.instStarRing, ``BC4lean.KKTheory.AdjointableMap.isClosed_range_toCLMPair, ``BC4lean.KKTheory.AdjointableMap.map_op_smul, ``BC4lean.KKTheory.AdjointableMap.norm_adjoint_toCLM, ``BC4lean.KKTheory.AdjointableMap.norm_completion, ``BC4lean.KKTheory.AdjointableMap.norm_sub_comp_sq_le, ``BC4lean.KKTheory.AdjointableMap.norm_toCLM_adjoint_comp_self, ``BC4lean.KKTheory.AdjointableMap.toCLMPair_isometry, ``BC4lean.KKTheory.BalancedModuleTensor, ``BC4lean.KKTheory.BundledGradedKasparovCycle.fullHomotopySetoid, ``BC4lean.KKTheory.BundledKasparovCycle, ``BC4lean.KKTheory.BundledKasparovCycle.homotopic_directSum, ``BC4lean.KKTheory.BundledKasparovCycle.homotopic_iff_full, ``BC4lean.KKTheory.BundledKasparovCycle.isomorphismSetoid, ``BC4lean.KKTheory.BundledOddKasparovCycle.fullHomotopySetoid, ``BC4lean.KKTheory.BundledOddKasparovCycle.homotopic_iff_full, ``BC4lean.KKTheory.CStarAlgebraAction, ``BC4lean.KKTheory.CStarAlgebraAction.continuousSections, ``BC4lean.KKTheory.CStarGrading, ``BC4lean.KKTheory.CliffordCommutingRepresentation.maximalNorm_eq, ``BC4lean.KKTheory.CliffordExternalOddCoefficient.grading_tmul, ``BC4lean.KKTheory.CliffordExternalOddCoefficient.mul_tmul, ``BC4lean.KKTheory.CliffordExternalOddCoefficient.starTensor_tmul, ``BC4lean.KKTheory.CliffordOne.epsilon_odd, ``BC4lean.KKTheory.CliffordOne.epsilon_square, ``BC4lean.KKTheory.CliffordOne.existsUnique_lift, ``BC4lean.KKTheory.CliffordOne.grading, ``BC4lean.KKTheory.CliffordTwoGradedTensor.grading_tensor, ``BC4lean.KKTheory.CliffordTwoGradedTensor.star_tensor, ``BC4lean.KKTheory.CliffordTwoGradedTensor.tensor_mul, ``BC4lean.KKTheory.CompactModuleOperator, ``BC4lean.KKTheory.ConeHilbertModule, ``BC4lean.KKTheory.ConeHilbertModule.instCStarModule, ``BC4lean.KKTheory.CountableHilbertModuleSum, ``BC4lean.KKTheory.EquivariantHilbertModule, ``BC4lean.KKTheory.EquivariantHilbertModule.PreservesGrading, ``BC4lean.KKTheory.EquivariantHilbertModule.conjugateMap_mem_moduleCompact, ``BC4lean.KKTheory.EquivariantHilbertModule.conjugateOperator, ``BC4lean.KKTheory.EquivariantHilbertModule.conjugateOperator_mem_moduleCompact, ``BC4lean.KKTheory.EquivariantHilbertModule.continuous_action, ``BC4lean.KKTheory.EquivariantHilbertModule.fibre, ``BC4lean.KKTheory.EquivariantHilbertModule.map_op_smul, ``BC4lean.KKTheory.FiniteStandardModule, ``BC4lean.KKTheory.FullGradedKasparovHomotopy, ``BC4lean.KKTheory.FullKasparovHomotopy, ``BC4lean.KKTheory.FullKasparovHomotopy.degenerateCone, ``BC4lean.KKTheory.FullKasparovHomotopy.directSum, ``BC4lean.KKTheory.FullKasparovHomotopy.inverseRotation, ``BC4lean.KKTheory.FullKasparovHomotopy.refl, ``BC4lean.KKTheory.FullKasparovHomotopy.symm, ``BC4lean.KKTheory.FullKasparovHomotopy.trans, ``BC4lean.KKTheory.GradedHilbertModule, ``BC4lean.KKTheory.GradedHilbertModule.IsEven, ``BC4lean.KKTheory.GradedHilbertModule.IsOdd, ``BC4lean.KKTheory.GradedHilbertModule.fibre, ``BC4lean.KKTheory.GradedKasparovConnection, ``BC4lean.KKTheory.GradedKasparovCycle, ``BC4lean.KKTheory.GradedKasparovCycle.trivialEquiv, ``BC4lean.KKTheory.GradedKasparovCycleIso, ``BC4lean.KKTheory.GradedKasparovCycleIso.symm, ``BC4lean.KKTheory.GradedKasparovCycleIso.trans, ``BC4lean.KKTheory.GradedKasparovHomotopyClass, ``BC4lean.KKTheory.GroupUniverseCommonParityProduct.product, ``BC4lean.KKTheory.GroupUniverseCommonParityProduct.productAddHom, ``BC4lean.KKTheory.GroupUniverseCommonParityProduct.product_add_first, ``BC4lean.KKTheory.GroupUniverseCommonParityProduct.product_add_second, ``BC4lean.KKTheory.GroupUniverseCommonParityProduct.product_assoc, ``BC4lean.KKTheory.GroupUniverseCommonParityProduct.universeEquivalence, ``BC4lean.KKTheory.GroupUniverseExternalOddSemantics.action_tmul, ``BC4lean.KKTheory.GroupUniverseExternalOddSemantics.grading_tmul, ``BC4lean.KKTheory.GroupUniverseExternalOddSemantics.inner_tmul, ``BC4lean.KKTheory.GroupUniverseExternalOddSemantics.moduleEquiv, ``BC4lean.KKTheory.GroupUniverseExternalOddSemantics.op_smul_tmul, ``BC4lean.KKTheory.GroupUniverseExternalOddSemantics.operator_tmul, ``BC4lean.KKTheory.GroupUniverseExternalOddSemantics.representation_tmul, ``BC4lean.KKTheory.GroupUniverseMatrixMoritaBridge.addEquivalence, ``BC4lean.KKTheory.GroupUniverseMatrixMoritaBridge.coefficient_roundtrip, ``BC4lean.KKTheory.GroupUniverseMatrixMoritaBridge.matrix_roundtrip, ``BC4lean.KKTheory.GroupUniverseMatrixMoritaProduct.toCoefficientClass_eq_product, ``BC4lean.KKTheory.GroupUniverseMatrixMoritaProduct.toCoefficientClass_product, ``BC4lean.KKTheory.GroupUniverseMatrixMoritaProduct.toMatrixClass_eq_product, ``BC4lean.KKTheory.GroupUniverseOddFirstParityProduct.evenOddEvenProduct_assoc, ``BC4lean.KKTheory.GroupUniverseOddFirstParityProduct.evenOddOddProduct_assoc, ``BC4lean.KKTheory.GroupUniverseOddFirstParityProduct.oddEvenEvenProduct_assoc, ``BC4lean.KKTheory.GroupUniverseOddFirstParityProduct.oddEvenOddProduct_assoc, ``BC4lean.KKTheory.GroupUniverseOddFirstParityProduct.oddEvenProduct, ``BC4lean.KKTheory.GroupUniverseOddFirstParityProduct.oddOddEvenProduct_assoc, ``BC4lean.KKTheory.GroupUniverseOddFirstParityProduct.oddOddOddProduct_assoc, ``BC4lean.KKTheory.GroupUniverseOddFirstParityProduct.oddOddProduct, ``BC4lean.KKTheory.GroupUniverseOrdinaryEven.coefficientPushforward_shrink, ``BC4lean.KKTheory.GroupUniverseOrdinaryOdd.coefficientPushforward_mk_coefficientTensor, ``BC4lean.KKTheory.GroupUniverseParityFunctoriality.coefficientPushforwardHom, ``BC4lean.KKTheory.GroupUniverseParityFunctoriality.coefficientPushforward_comp, ``BC4lean.KKTheory.GroupUniverseParityFunctoriality.coefficientPushforward_graded_even, ``BC4lean.KKTheory.GroupUniverseParityFunctoriality.coefficientPushforward_graded_odd, ``BC4lean.KKTheory.GroupUniverseParityFunctoriality.coefficientPushforward_id, ``BC4lean.KKTheory.GroupUniverseParityFunctoriality.coefficientPushforward_product, ``BC4lean.KKTheory.GroupUniverseParityFunctoriality.coefficientPushforward_product_eq_sourcePullback, ``BC4lean.KKTheory.GroupUniverseParityFunctoriality.homClass_leftProduct_eq_sourcePullback, ``BC4lean.KKTheory.GroupUniverseParityFunctoriality.sourcePullbackHom, ``BC4lean.KKTheory.GroupUniverseParityFunctoriality.sourcePullback_coefficientPushforward, ``BC4lean.KKTheory.GroupUniverseParityFunctoriality.sourcePullback_comp, ``BC4lean.KKTheory.GroupUniverseParityFunctoriality.sourcePullback_graded_even, ``BC4lean.KKTheory.GroupUniverseParityFunctoriality.sourcePullback_graded_odd, ``BC4lean.KKTheory.GroupUniverseParityFunctoriality.sourcePullback_id, ``BC4lean.KKTheory.GroupUniverseParityFunctoriality.sourcePullback_product, ``BC4lean.KKTheory.GroupUniverseParityGroup.KKParityGroup, ``BC4lean.KKTheory.GroupUniverseParityGroup.evenParityIdentification, ``BC4lean.KKTheory.GroupUniverseParityGroup.kkParityGroupAddCommGroup, ``BC4lean.KKTheory.GroupUniverseParityGroup.oddParityIdentification, ``BC4lean.KKTheory.GroupUniverseParityProduct.evenEvenOddProduct_assoc, ``BC4lean.KKTheory.GroupUniverseParityProduct.evenOddProduct, ``BC4lean.KKTheory.GroupUniverseParityProduct.evenProduct, ``BC4lean.KKTheory.GroupUniverseParityProduct.evenProduct_assoc, ``BC4lean.KKTheory.GroupUniverseParityUnits.identity, ``BC4lean.KKTheory.GroupUniverseParityUnits.left_identity, ``BC4lean.KKTheory.GroupUniverseParityUnits.right_identity, ``BC4lean.KKTheory.GroupUniverseProduct.bundledProduct_fullHomotopic_first, ``BC4lean.KKTheory.GroupUniverseProduct.bundledProduct_fullHomotopic_second, ``BC4lean.KKTheory.GroupUniverseProduct.identity, ``BC4lean.KKTheory.GroupUniverseProduct.product, ``BC4lean.KKTheory.GroupUniverseProduct.productOperator, ``BC4lean.KKTheory.GroupUniverseProduct.productOperator_isProduct, ``BC4lean.KKTheory.GroupUniverseProduct.product_assoc, ``BC4lean.KKTheory.GroupUniverseProduct.product_left_identity, ``BC4lean.KKTheory.GroupUniverseProduct.product_mk_eq_of_isProduct, ``BC4lean.KKTheory.GroupUniverseProduct.product_right_identity, ``BC4lean.KKTheory.HilbertModuleEquiv, ``BC4lean.KKTheory.HilbertModuleEquiv.toAdjointable, ``BC4lean.KKTheory.HilbertModuleEquiv.transportMap_isModuleCompact_iff, ``BC4lean.KKTheory.HilbertModuleEquiv.transportMap_norm, ``BC4lean.KKTheory.HilbertModuleEquiv.transportStarAlgEquiv, ``BC4lean.KKTheory.HilbertModuleFibre, ``BC4lean.KKTheory.HilbertModuleSum, ``BC4lean.KKTheory.InteriorCreationCycleCounterexample.creationAtOne_adjoint_comp, ``BC4lean.KKTheory.InteriorCreationCycleCounterexample.creationAtOne_not_moduleCompact, ``BC4lean.KKTheory.InteriorCreationCycleCounterexample.fullCycleCounterexample, ``BC4lean.KKTheory.InteriorModuleTensor, ``BC4lean.KKTheory.InteriorModuleTensorFirstFactorEquiv.hilbertEquiv, ``BC4lean.KKTheory.InteriorModuleTensorFirstFactorEquiv.hilbertEquiv_operator, ``BC4lean.KKTheory.InteriorModuleTensorSecondDirectSum.hilbertEquiv, ``BC4lean.KKTheory.InteriorModuleTensorSecondDirectSum.hilbertEquiv_action, ``BC4lean.KKTheory.InteriorModuleTensorSecondDirectSum.hilbertEquiv_creation, ``BC4lean.KKTheory.InteriorModuleTensorSecondDirectSum.hilbertEquiv_creation_adjoint, ``BC4lean.KKTheory.InteriorModuleTensorSecondDirectSum.hilbertEquiv_grading, ``BC4lean.KKTheory.IsCountablyGeneratedModule, ``BC4lean.KKTheory.IsCountablyGeneratedModule.completion, ``BC4lean.KKTheory.IsCountablyGeneratedModule.fibre, ``BC4lean.KKTheory.IsCountablyGeneratedModule.interiorTensor, ``BC4lean.KKTheory.IsCountablyGeneratedModule.map_linearIsometryEquiv, ``BC4lean.KKTheory.IsCountablyGeneratedModule.separableSpace, ``BC4lean.KKTheory.IsCountablyGeneratedModule.sum, ``BC4lean.KKTheory.IsGradedKasparovProductOperator, ``BC4lean.KKTheory.IsModuleCompact, ``BC4lean.KKTheory.IsModuleCompact.cfcAbs, ``BC4lean.KKTheory.IsModuleCompact.fibre, ``BC4lean.KKTheory.IsModuleCompact.of_adjoint_comp_self, ``BC4lean.KKTheory.IsModuleCompact.posPart, ``BC4lean.KKTheory.IsModuleCompact.sumMap, ``BC4lean.KKTheory.IsPositiveModuloModuleCompact, ``BC4lean.KKTheory.IsPositiveModuloModuleCompact.add, ``BC4lean.KKTheory.IsPositiveModuloModuleCompact.star_left_conjugate, ``BC4lean.KKTheory.KasparovConnection, ``BC4lean.KKTheory.KasparovConnection.add_compact, ``BC4lean.KKTheory.KasparovCycle, ``BC4lean.KKTheory.KasparovCycle.IsDegenerate, ``BC4lean.KKTheory.KasparovCycle.OperatorConditions, ``BC4lean.KKTheory.KasparovCycle.directSum, ``BC4lean.KKTheory.KasparovCycle.directSum_isDegenerate, ``BC4lean.KKTheory.KasparovCycle.fibre, ``BC4lean.KKTheory.KasparovCycle.isDegenerate_fibre, ``BC4lean.KKTheory.KasparovCycle.operatorConditions_affine_compactPerturbation, ``BC4lean.KKTheory.KasparovCycle.opposite, ``BC4lean.KKTheory.KasparovCycle.transport, ``BC4lean.KKTheory.KasparovCycle.transportIso, ``BC4lean.KKTheory.KasparovCycle.transport_isDegenerate, ``BC4lean.KKTheory.KasparovCycle.withOperator, ``BC4lean.KKTheory.KasparovCycle.zeroRepresentation, ``BC4lean.KKTheory.KasparovCycle.zeroRepresentation_isDegenerate, ``BC4lean.KKTheory.KasparovCycleIso, ``BC4lean.KKTheory.KasparovCycleIso.directSum, ``BC4lean.KKTheory.KasparovCycleIso.fibreDirectSum, ``BC4lean.KKTheory.KasparovCycleIso.refl, ``BC4lean.KKTheory.KasparovCycleIso.sumAssoc, ``BC4lean.KKTheory.KasparovCycleIso.sumComm, ``BC4lean.KKTheory.KasparovCycleIso.symm, ``BC4lean.KKTheory.KasparovCycleIso.trans, ``BC4lean.KKTheory.KasparovHomotopyClass, ``BC4lean.KKTheory.KasparovHomotopyClass.instAddCommGroup, ``BC4lean.KKTheory.KasparovHomotopyClass.mk_directSum, ``BC4lean.KKTheory.KasparovHomotopyClass.mk_eq_mk_iff_full, ``BC4lean.KKTheory.KasparovHomotopyClass.mk_eq_zero_of_degenerate, ``BC4lean.KKTheory.KasparovHomotopyClass.mk_opposite, ``BC4lean.KKTheory.KasparovOperatorHomotopy, ``BC4lean.KKTheory.KasparovOperatorHomotopy.compactPerturbation, ``BC4lean.KKTheory.KasparovOperatorHomotopy.continuous_operator, ``BC4lean.KKTheory.KasparovOperatorHomotopy.cycleAt, ``BC4lean.KKTheory.KasparovOperatorHomotopy.directSum, ``BC4lean.KKTheory.KasparovOperatorHomotopy.fibreCycleIso, ``BC4lean.KKTheory.KasparovOperatorHomotopy.fibreCycleOneIso, ``BC4lean.KKTheory.KasparovOperatorHomotopy.fibreCycleZeroIso, ``BC4lean.KKTheory.KasparovOperatorHomotopy.intervalCycle, ``BC4lean.KKTheory.KasparovOperatorHomotopy.intervalFibreIso, ``BC4lean.KKTheory.KasparovOperatorHomotopy.inverseRotation, ``BC4lean.KKTheory.KasparovOperatorHomotopy.inverseRotation_target_isDegenerate, ``BC4lean.KKTheory.KasparovOperatorHomotopy.refl, ``BC4lean.KKTheory.KasparovOperatorHomotopy.source_cycleAt, ``BC4lean.KKTheory.KasparovOperatorHomotopy.symm, ``BC4lean.KKTheory.KasparovOperatorHomotopy.target_cycleAt, ``BC4lean.KKTheory.KasparovOperatorHomotopy.trans, ``BC4lean.KKTheory.OddKK, ``BC4lean.KKTheory.OddKK.instAddCommGroup, ``BC4lean.KKTheory.OddKasparovCycle, ``BC4lean.KKTheory.OddKasparovCycle.IsDegenerate, ``BC4lean.KKTheory.OddKasparovCycle.directSum, ``BC4lean.KKTheory.OddKasparovCycle.directSum_isDegenerate, ``BC4lean.KKTheory.OddKasparovCycle.zeroRepresentation, ``BC4lean.KKTheory.OddKasparovCycle.zeroRepresentation_isDegenerate, ``BC4lean.KKTheory.PositiveModuleForm, ``BC4lean.KKTheory.PositiveModuleForm.formNorm_triangle, ``BC4lean.KKTheory.PositiveModuleForm.inner_mul_inner_swap_le, ``BC4lean.KKTheory.PositiveModuleForm.nullRadical, ``BC4lean.KKTheory.PositiveModuleQuotient, ``BC4lean.KKTheory.PositiveModuleQuotient.instCStarModule, ``BC4lean.KKTheory.PreHilbertModuleTensor, ``BC4lean.KKTheory.ScalarCreationCycleCounterexample.firstCycle, ``BC4lean.KKTheory.ScalarCreationCycleCounterexample.fullCycleCounterexample, ``BC4lean.KKTheory.ScalarCreationCycleCounterexample.secondCycle, ``BC4lean.KKTheory.ScalarCreationCycleCounterexample.secondCycle_isDegenerate, ``BC4lean.KKTheory.ScalarHilbertModule.isCompactOperator_of_isModuleCompact, ``BC4lean.KKTheory.affineKasparovOperator_square_defect, ``BC4lean.KKTheory.cfc_sub_value_mul_isModuleCompact, ``BC4lean.KKTheory.cliffordTensorCoordinateStarAlgEquiv, ``BC4lean.KKTheory.cliffordTensorCoordinates_tmul, ``BC4lean.KKTheory.cliffordTensorNorm_cstar, ``BC4lean.KKTheory.cliffordTensorParityAddEquiv, ``BC4lean.KKTheory.comp_mem_moduleCompact, ``BC4lean.KKTheory.comp_moduleRankOne, ``BC4lean.KKTheory.compactModuleOperatorIdeal_isTwoSided, ``BC4lean.KKTheory.compactModuleOperator_nonUnitalCStarAlgebra, ``BC4lean.KKTheory.compact_approximateUnit_vector_error_sq_le, ``BC4lean.KKTheory.compact_fibreKernel_eq_fibreNullCompact, ``BC4lean.KKTheory.completionCStarModule, ``BC4lean.KKTheory.completionInner_coe, ``BC4lean.KKTheory.completionModuleSMul, ``BC4lean.KKTheory.completion_norm_eq_sqrt_inner, ``BC4lean.KKTheory.coneOperatorHom, ``BC4lean.KKTheory.coneRampMap_denseRange, ``BC4lean.KKTheory.cone_isCountablyGenerated, ``BC4lean.KKTheory.continuousSectionCStarModule, ``BC4lean.KKTheory.continuousSectionFibreIsometryEquiv, ``BC4lean.KKTheory.continuousSectionFibreModuleEquiv, ``BC4lean.KKTheory.continuousSectionOperator, ``BC4lean.KKTheory.continuousSectionOperator_isModuleCompact, ``BC4lean.KKTheory.continuousSection_isCountablyGenerated, ``BC4lean.KKTheory.continuous_eventually_uniform_moduleSandwich, ``BC4lean.KKTheory.contractiveJuliaEquiv, ``BC4lean.KKTheory.contractiveJuliaEquiv_apply, ``BC4lean.KKTheory.countableModuleEvaluation_sequenceSum, ``BC4lean.KKTheory.countableModuleFinitePositiveForm, ``BC4lean.KKTheory.countableModuleFinite_nullRadical_eq_bot, ``BC4lean.KKTheory.countableModuleSequenceSum, ``BC4lean.KKTheory.countableModuleSequenceSum_inner, ``BC4lean.KKTheory.evaluatedModuleQuotient_completeSpace, ``BC4lean.KKTheory.exists_actualGradedKasparovProductOperator, ``BC4lean.KKTheory.exists_compactFibre_lift_norm_eq, ``BC4lean.KKTheory.exists_finite_partition_approximation, ``BC4lean.KKTheory.exists_fullGradedKasparovProductOperatorHomotopy, ``BC4lean.KKTheory.exists_internally_quasicentral_approximate_unit_sequence, ``BC4lean.KKTheory.exists_kasparovDiscreteTechnicalPartition, ``BC4lean.KKTheory.exists_odd_gradedKasparovConnection, ``BC4lean.KKTheory.exists_positive_contractive_approximate_unit_sequence, ``BC4lean.KKTheory.exists_positive_selfadjoint_contraction_smul_approx_on, ``BC4lean.KKTheory.exists_standardModuleCompactSynthesis_denseRange, ``BC4lean.KKTheory.exists_standardModuleStabilization, ``BC4lean.KKTheory.globalFredholmNormalization, ``BC4lean.KKTheory.hilbertModuleBanachFibreEquiv, ``BC4lean.KKTheory.hilbertModuleBanachFibre_norm_mk, ``BC4lean.KKTheory.hilbertModuleCompactFibreHom, ``BC4lean.KKTheory.hilbertModuleCompactFibreHom_surjective, ``BC4lean.KKTheory.hilbertModuleFibreMk_denseRange, ``BC4lean.KKTheory.hilbertModuleFibreMk_surjective, ``BC4lean.KKTheory.hilbertModuleFibreOperatorHom, ``BC4lean.KKTheory.hilbertModuleFibre_inner_mk, ``BC4lean.KKTheory.hilbertModuleSum_complete, ``BC4lean.KKTheory.hilbertModuleToCompletion, ``BC4lean.KKTheory.hilbertModuleToCompletion_denseRange, ``BC4lean.KKTheory.injectiveStarHom_isSelfAdjoint_iff, ``BC4lean.KKTheory.injectiveStarHom_le_iff, ``BC4lean.KKTheory.injectiveStarHom_nonneg_iff, ``BC4lean.KKTheory.inner_sum, ``BC4lean.KKTheory.interiorModuleTensorInner_mk_mk, ``BC4lean.KKTheory.interiorModuleTensorMk_balance, ``BC4lean.KKTheory.interiorModuleTensorOperator, ``BC4lean.KKTheory.interiorModuleTensorOperatorHom, ``BC4lean.KKTheory.interiorModuleTensorOperator_adjoint, ``BC4lean.KKTheory.interiorModuleTensorOperator_mk, ``BC4lean.KKTheory.interiorModuleTensorOperator_norm_le, ``BC4lean.KKTheory.interiorModuleTensor_span_dense, ``BC4lean.KKTheory.intervalMatchedCompactPairEquiv, ``BC4lean.KKTheory.intervalMatchedOperator_isModuleCompact, ``BC4lean.KKTheory.intervalMatchedRankPairAlgebra_eq_compactPairAlgebra, ``BC4lean.KKTheory.isCompact_eventually_uniform_moduleSandwich, ``BC4lean.KKTheory.isCountablyGeneratedModule_of_separableSpace, ``BC4lean.KKTheory.isModuleCompact_iff_adjoint_comp_self, ``BC4lean.KKTheory.isModuleCompact_tendsto_comp_left_of_strong_contractions, ``BC4lean.KKTheory.isModuleCompact_tendsto_comp_right_of_strong_selfadjoint_contractions, ``BC4lean.KKTheory.isPositiveModuloModuleCompact_iff_of_sub_compact, ``BC4lean.KKTheory.isPositiveModuloModuleCompact_iff_star_square, ``BC4lean.KKTheory.juliaDefect_intertwine, ``BC4lean.KKTheory.juliaSourceDefect, ``BC4lean.KKTheory.juliaTargetDefect, ``BC4lean.KKTheory.mem_moduleCompact_comp, ``BC4lean.KKTheory.mem_moduleCompact_iff_approx, ``BC4lean.KKTheory.moduleCompact, ``BC4lean.KKTheory.moduleCompact_adjoint, ``BC4lean.KKTheory.moduleCompact_isClosed, ``BC4lean.KKTheory.moduleCompact_standard_eq_range, ``BC4lean.KKTheory.moduleCreationMap, ``BC4lean.KKTheory.moduleCreationMap_adjoint_comp, ``BC4lean.KKTheory.moduleCreationMap_adjoint_mk, ``BC4lean.KKTheory.moduleCreationMap_isModuleCompact_iff, ``BC4lean.KKTheory.moduleCreationMap_isModuleCompact_of_compact_left_action, ``BC4lean.KKTheory.moduleCreationMap_norm_le, ``BC4lean.KKTheory.moduleFiniteRank, ``BC4lean.KKTheory.moduleGeneratingSpan, ``BC4lean.KKTheory.moduleGeneratingSpan_closure_eq_top_iff, ``BC4lean.KKTheory.moduleGramMatrix_nonneg, ``BC4lean.KKTheory.moduleGramSynthesis, ``BC4lean.KKTheory.moduleGram_quadratic_eq_inner, ``BC4lean.KKTheory.moduleGram_quadratic_nonneg, ``BC4lean.KKTheory.moduleMatrixPairing_eq_zero_of_quadratic, ``BC4lean.KKTheory.moduleMatrixQuadratic_nonneg, ``BC4lean.KKTheory.moduleMatrixRepresentation, ``BC4lean.KKTheory.moduleMatrixRepresentation_injective, ``BC4lean.KKTheory.moduleRankOne, ``BC4lean.KKTheory.moduleRankOneCLM, ``BC4lean.KKTheory.moduleRankOne_adjoint, ``BC4lean.KKTheory.moduleRankOne_comp, ``BC4lean.KKTheory.moduleRankOne_comp_moduleRankOne, ``BC4lean.KKTheory.moduleRankOne_norm_le, ``BC4lean.KKTheory.moduleRankOne_self_norm, ``BC4lean.KKTheory.moduleTensorInner, ``BC4lean.KKTheory.moduleTensorInner_eq_zero_of_self, ``BC4lean.KKTheory.moduleTensorInner_self_nonneg, ``BC4lean.KKTheory.moduleTensorInner_standard_eq, ``BC4lean.KKTheory.moduleTensorInner_star, ``BC4lean.KKTheory.moduleTensorInner_sum_mk_self_nonneg, ``BC4lean.KKTheory.moduleTensorLift, ``BC4lean.KKTheory.moduleTensorLift_unique, ``BC4lean.KKTheory.moduleTensorMk_balance, ``BC4lean.KKTheory.moduleTensorNull, ``BC4lean.KKTheory.moduleTensorPureInner, ``BC4lean.KKTheory.moduleTensorPureInner_norm_le, ``BC4lean.KKTheory.moduleTensorPureInner_self_nonneg, ``BC4lean.KKTheory.moduleVectorCreation_compact, ``BC4lean.KKTheory.module_add_smul, ``BC4lean.KKTheory.module_complex_smul, ``BC4lean.KKTheory.module_inner_ext_left, ``BC4lean.KKTheory.module_inner_ext_right, ``BC4lean.KKTheory.module_mul_smul, ``BC4lean.KKTheory.module_norm_smul_le, ``BC4lean.KKTheory.module_smul_add, ``BC4lean.KKTheory.nonUnitalCStarHomQuotientIsometry, ``BC4lean.KKTheory.nonUnitalCStarHom_exists_norm_eq_lift, ``BC4lean.KKTheory.nonUnitalCStarHom_isClosed_range, ``BC4lean.KKTheory.nonUnitalCStarHom_quotient_norm_mk, ``BC4lean.KKTheory.nonunitalRelativeK0KasparovMapAtUniverse_leftInverse, ``BC4lean.KKTheory.nonunitalRelativeK0KasparovMapAtUniverse_rightInverse, ``BC4lean.KKTheory.nonunitalRelativeK0KasparovMapAtZero_natural, ``BC4lean.KKTheory.norm_globalFredholmNormalization_le, ``BC4lean.KKTheory.norm_standardCompactEquiv, ``BC4lean.KKTheory.norm_standardLeftMul, ``BC4lean.KKTheory.norm_sum, ``BC4lean.KKTheory.oddKKIndependentCoefficientPushforward_comparison_square, ``BC4lean.KKTheory.oddKKOperatorK1AllModuleUniversesAddEquiv, ``BC4lean.KKTheory.oddKKOperatorK1AllModuleUniversesAddEquiv_independentCoefficient_natural, ``BC4lean.KKTheory.oddKKOperatorK1Index_independentCoefficientPushforward_anyModuleUniverse, ``BC4lean.KKTheory.oddOperatorK1KKInverseAllModuleUniverses_independentCoefficient_natural, ``BC4lean.KKTheory.oddOperatorK1KKInverseAllModuleUniverses_leftInverse_index, ``BC4lean.KKTheory.oddOperatorK1KKInverseAllModuleUniverses_rightInverse_index, ``BC4lean.KKTheory.preModuleTensorCStarModule, ``BC4lean.KKTheory.scalarCliffordOperatorK1AllModuleUniversesAddEquiv, ``BC4lean.KKTheory.scalarCreationMap_adjoint_identity, ``BC4lean.KKTheory.scalarCreationMap_one_not_compact, ``BC4lean.KKTheory.scalarCreationModuleMap_one_not_moduleCompact, ``BC4lean.KKTheory.scalarKKOperatorK0AddEquiv, ``BC4lean.KKTheory.scalarKKOperatorK0AddEquiv_natural, ``BC4lean.KKTheory.scalarKKOperatorK0IndexHom, ``BC4lean.KKTheory.scalarKKOperatorK0IndexHom_natural, ``BC4lean.KKTheory.scalarKKOperatorK0Index_universe, ``BC4lean.KKTheory.standardCompactEquiv, ``BC4lean.KKTheory.standardCountableCutoff_mul_mul_tendsto, ``BC4lean.KKTheory.standardCountableInfiniteSumEquiv, ``BC4lean.KKTheory.standardCountablePairedCutoff_commutes_reference, ``BC4lean.KKTheory.standardCountableReferenceCompression_tendsto, ``BC4lean.KKTheory.standardIdentityCycle, ``BC4lean.KKTheory.standardIdentityCycle_operator, ``BC4lean.KKTheory.standardIdentityCycle_representation, ``BC4lean.KKTheory.standardInteriorModuleTensorEquivEssential, ``BC4lean.KKTheory.standardInteriorModuleTensorEvaluationCLM_norm, ``BC4lean.KKTheory.standardInteriorModuleTensorEvaluation_range, ``BC4lean.KKTheory.standardInteriorModuleTensorHilbertEquiv, ``BC4lean.KKTheory.standardLeftMul, ``BC4lean.KKTheory.standardModuleAbsorptionOfDenseSynthesis, ``BC4lean.KKTheory.standardModuleAnalysis_square_hasSum, ``BC4lean.KKTheory.standardModuleStabilization, ``BC4lean.KKTheory.standardModuleSynthesis_adjoint_apply, ``BC4lean.KKTheory.standardModuleSynthesis_compact, ``BC4lean.KKTheory.standard_moduleRankOne, ``BC4lean.KKTheory.standard_module_complete, ``BC4lean.KKTheory.standard_module_inner, ``BC4lean.KKTheory.standard_module_isCountablyGenerated, ``BC4lean.KKTheory.sumAssoc, ``BC4lean.KKTheory.sumMap, ``BC4lean.KKTheory.sumSwap, ``BC4lean.KKTheory.tendsto_canonical_compact_approximateUnit_apply, ``BC4lean.KKTheory.tendsto_coefficient_approximateUnit_smul, ``BC4lean.KKTheory.tendsto_compact_sequence_apply, ``BC4lean.KKTheory.zero_mem_closure_convexHull_of_weak_tendsto]
+  for n in links do
+    let axioms ← collectAxioms n
+    for a in axioms do
+      unless #[``propext, ``Classical.choice, ``Quot.sound].contains a do
+        throwError "Unexpected axiom {a} in blueprint link {n}"
+    let axiomText := String.intercalate "," (axioms.toList.map Name.toString)
+    logInfo m!"LINK_AXIOMS|{n.toString}|{axiomText}"
+  let moduleNames := env.header.moduleNames
+  let mut count : Nat := 0
+  for (n, _) in env.constants.toList do
+    if let some idx := env.getModuleIdxFor? n then
+      let modName := moduleNames[idx]!
+      if modules.contains modName.toString then
+        let axioms ← collectAxioms n
+        for a in axioms do
+          unless #[``propext, ``Classical.choice, ``Quot.sound].contains a do
+            throwError "Unexpected axiom {a} in {n}"
+        let axiomText := String.intercalate "," (axioms.toList.map Name.toString)
+        logInfo m!"AUDIT|{modName.toString}|{n.toString}|{axiomText}"
+        count := count + 1
+  logInfo m!"AUDIT_COUNT|{count}"

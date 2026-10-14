@@ -74,4 +74,3 @@ def oddFredholmStandardIndex (F : selfAdjoint (OddFredholmStandardOperator B))
     (oddFredholmExponential_sub_one_isModuleCompact F hF)
 
 end BC4lean.KKTheory
-
