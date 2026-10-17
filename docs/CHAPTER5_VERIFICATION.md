@@ -4,18 +4,6 @@
 
 The project has 809 Lean modules. The [Chapter 5 blueprint](../blueprint/src/parts/05-equivariant-kk.tex) has 75 blocks (17 definitions, 58 propositions), 435 distinct Lean links, and 18/72/16 required endpoints for its three main targets. The complete-ready core audit checked every required endpoint; all three main targets are ready.
 
-## Publication status — 2026-10-14 12:42 UTC
-
-This publication records the completed Chapter 5 core results and the current supplemental progress. It does not certify completion of the supplemental final verification or exact-revision publication CI.
-
-The completed core checks cover all 809 modules: the strict full build (4201 jobs), warnings-as-errors cached build, 21 audit safeguards, all 809 imports, all 435 blueprint links, 75 blueprint blocks (17 definitions and 58 propositions), and the complete 18/72/16 required endpoints. The kernel census covers 18,199 declarations in 686 modules and reports exactly `Classical.choice`, `Quot.sound`, and `propext`. The ready-blueprint render exited 0. All 206 original Lean sources and the Chapter 4 record remain unchanged.
-
-The supplemental full native replay remains **incomplete**: 78 of 149 actual native executions exited 0, and all 78 checkpoints are authenticated; 71 executions remain. The independent metadata comparison is complete within its stated scope. The compiler IR structural inventory is complete as an inventory; its global semantic-verification claim remains false. Final runtime checks, full R6 checks, the final supplemental certificate, and this publication's exact-revision CI have not passed yet.
-
-The earlier replay worker (42996, supervisor 42995) was interrupted at 11:12 UTC after an owned wait returned 1 because the 60-second frozen-input check raised `TimeoutError`; all 69 continuation checkpoints plus the original nine were retained. The reviewed continuation (worker 30818, supervisor 30817), launched at 11:46 UTC, was healthy while requalifying the 78 checkpoints and all 149 setups in preflight; no Lean compiler had started at that observed boundary. Required Source E files (264) and original Out files (56) were restored from offload with their original hashes, without source changes. These process statements describe those observed boundaries rather than a later execution result.
-
-This dated note was created only in a separate publication checkout. Its document hash differs from the verifier's frozen record, so the earlier frozen 819-input supplemental binding does not cover this published document. The five retained core audit artifacts are copied with their exact original bytes. The active verification Stage and user checkout were left untouched; subsequent outcomes must be recorded with their actual input and revision bindings.
-
 ## Mathematical scope
 
 | Result | Main anchors |

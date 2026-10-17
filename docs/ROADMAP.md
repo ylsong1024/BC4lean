@@ -13,7 +13,7 @@ Completion requires a reviewed implementation and the checks in
 | Reduced group C*-algebra | Group algebra, regular representation, reduced completion and comparisons | Examples, API refinement, independent review |
 | Operator K-theory | K₀/K₁ constructions, functoriality, nonunital comparisons and homotopy modules | Review exact hypotheses and extend structural results in bounded steps |
 | Proper actions | Equivariant CW attachment, Hausdorffness, properness, cellular mapping, finite-group models, proper weak labeled join with genuine CW structure and fixed-point criterion, universal mapping and uniqueness, locally compact second-countable telescope model, cocompact indexing | API refinement, examples and independent review |
-| Equivariant KK-theory | Complete adjointable C*-algebra, compact ideal, general module gradings, compatible discrete actions, raw even/odd cycles, standard identity cycle and fixed-module operator homotopies | Full homotopy quotient and KK groups, interior tensor products, Kasparov products, parity equivalences and operator K-theory comparison |
+| Equivariant KK-theory | Hilbert-module prerequisites, full homotopy KK groups, completed interior tensor products, Kasparov products and natural operator K₀/K₁ comparisons | API refinement, examples and independent review |
 | Topological side and assembly | Blueprint specifications | Transition maps, colimit, descent, cut-off classes and compatibility |
 
 This table describes source organization, not a new verification certificate.
@@ -125,43 +125,42 @@ compactness conditions and permit degenerate representations. For separable B,
 the standard module is countably generated and supplies the standard identity
 cycle with F = 0. Fixed-module norm-continuous operator paths produce actual
 cycles at every parameter; constant, reversed and concatenated paths are
-constructed. These prerequisites do not yet construct KK groups or product laws.
+constructed. Full KK groups and product laws are verified in the milestones below.
 Genuine unitary cycle isomorphisms, transport, direct-sum cycles and affine
 compact-perturbation homotopies also pass strict compilation and axiom audits.
 
-### KK-03 — Full homotopy quotient and parity
+### KK-03 — Full homotopy quotient and parity (verified)
 
 Varying-carrier cycle bundles and C([0,1],E) section modules are verified,
 including uniform compact operator fields and their evaluation-kernel quotient
-fibres. Construct arbitrary C([0,1],B)-module fibres and transport of compact
-defects, or prove equivalence with a fully justified operator-homotopy
-presentation. Bundle modules of varying types and quotient by genuine cycle
-isomorphisms and homotopy. Prove direct-sum congruence, degenerate classes vanish,
-and all abelian group laws. Identify odd cycles with the Clifford-graded picture
-and prove the parity equivalences needed for products.
+fibres. Arbitrary completed C([0,1],B)-module fibres and compact-defect transport
+are now constructed. Varying-carrier cycles are quotiented by genuine cycle
+isomorphisms and full homotopy. Direct-sum congruence, vanishing of degenerate
+classes and all abelian group laws are proved. The odd/Clifford pictures and
+parity equivalences needed for products are verified.
 
 **Done when:** the actual KK groups, both parities and the full homotopy relation
 are constructed, with all laws strictly compiled and axiom-audited.
 
-### KK-04 — Interior tensor product and Kasparov product
+### KK-04 — Interior tensor product and Kasparov product (verified)
 
 The algebraic balancing quotient, descended Hermitian coefficient form and
-positivity on every algebraic tensor are verified. Construct its separated
-norm and completed interior Hilbert module. Prove creation-map adjointability; creation
-maps are not automatically compact, as the verified scalar counterexample shows.
-Develop connections, positivity modulo the compact ideal, and the Kasparov
-technical theorem. Prove product existence, uniqueness up to homotopy,
-well-definedness, associativity, unit laws and functoriality in both variables.
+positivity on every algebraic tensor are verified. Its separated norm and
+completed interior Hilbert module are constructed. Creation maps are adjointable;
+they are not automatically compact, as the verified scalar counterexample shows.
+Connections, positivity modulo the compact ideal and the Kasparov technical
+theorem give product existence and uniqueness up to homotopy. Well-definedness,
+associativity, unit laws and functoriality in both variables are proved.
 
 **Done when:** the full `prop:kasparov-product` statement holds without assuming
 existence of a product operator or replacing actual KK groups by another object.
 
-### KK-05 — Comparison with operator K-theory
+### KK-05 — Comparison with operator K-theory (verified)
 
-Construct the projection/unitary cycle maps and inverse Hilbert-module index
-maps, prove invariance and naturality, and establish both comparison
-isomorphisms with the existing `OperatorK0 B` and `OperatorK1 B`. Treat the
-nonunital scalar-quotient kernels and both parities explicitly.
+Projection/unitary cycle maps and inverse Hilbert-module index maps are
+constructed, with invariance and naturality. Both comparison isomorphisms with
+the existing `OperatorK0 B` and `OperatorK1 B` are proved, including the
+nonunital scalar-quotient kernels and both parities.
 
 **Done when:** the full `prop:kk-k-theory` statement is proved for separable
 possibly nonunital B and the trivial group, with genuine inverse maps.

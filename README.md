@@ -50,8 +50,8 @@ Raw even/odd Kasparov cycle data, standard identity-cycle data and fixed-module
 operator homotopies are checked prerequisites. Module completions, unitary cycle
 transport, direct sums, continuous section modules and positivity of the
 balanced algebraic tensor form now pass the full strict build and axiom audit.
-The KK homotopy groups, Kasparov
-product and comparison with operator K-theory remain unverified; see the
+The full homotopy KK groups, Kasparov product laws and natural comparisons
+with ordinary operator K₀/K₁ are verified under the hypotheses in the
 [Chapter 5 verification record](docs/CHAPTER5_VERIFICATION.md).
 The assembly construction remains a later milestone.
 Consult the [roadmap](docs/ROADMAP.md) and individual blueprint nodes

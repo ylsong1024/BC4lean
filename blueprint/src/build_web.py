@@ -1,6 +1,7 @@
 """Build chapter pages and graphs, plus the overall dependency graph."""
 
 from pathlib import Path
+import runpy
 import shutil
 import subprocess
 import sys
@@ -9,6 +10,10 @@ import tempfile
 
 def main():
     source = Path(__file__).resolve().parent
+    checks = runpy.run_path(str(source.parents[1] / "scripts/check_project_imports.py"))
+    errors = checks["check_chapter5_core_evidence"](source.parents[1])
+    if errors:
+        raise RuntimeError("\n".join(errors))
     output = source.parent / "web"
     plastex = Path(sys.executable).with_name("plastex")
     command = [str(plastex), "-c", "plastex.cfg"]
