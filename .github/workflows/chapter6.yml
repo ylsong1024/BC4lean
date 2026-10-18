@@ -1,0 +1,50 @@
+name: Verify Chapter 6
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  chapter6:
+    name: Chapter 6 proofs and exact targets
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+      - name: Check imports and audit safeguards
+        run: |
+          python3 -B scripts/check_project_imports.py
+          python3 -B scripts/test_audit_chapter6.py
+      - name: Install the pinned Lean toolchain and Mathlib cache
+        uses: leanprover/lean-action@50fcf42d2e460296f1a34b402e990d1b24f8b596 # v1.6.0
+        with:
+          auto-config: 'false'
+          build: 'false'
+          test: 'false'
+          lint: 'false'
+          use-github-cache: 'false'
+          use-mathlib-cache: 'true'
+      - name: Build the full aggregate with warnings as errors
+        run: lake --wfail build BC4lean
+      - name: Check independent mathematical endpoint signatures
+        run: lake env lean -DwarningAsError=true docs/audits/chapter6/ExpectedTypes.lean
+      - name: Audit every Chapter 6 declaration and require all targets
+        run: python3 -B scripts/audit_chapter6.py --require-complete --output "$RUNNER_TEMP/chapter6-audit/audit.json"
+      - name: Retain actual kernel audit evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chapter6-audit
+          path: ${{ runner.temp }}/chapter6-audit/
+          if-no-files-found: warn

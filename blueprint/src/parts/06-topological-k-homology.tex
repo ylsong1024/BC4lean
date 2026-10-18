@@ -2,30 +2,76 @@
 \label{ch:topological-k-homology}
 
 \section{K-homology of a cocompact piece}
+Let $\Gamma$ be countable and discrete. Use locally compact,
+second-countable Hausdorff proper $\Gamma$-spaces with continuous actions.
+The concrete universal model is the geometric telescope from Chapter 4.
+Choose a common universe containing the space and module carriers.
+
 \begin{definition}\label{def:piece-k-homology}
 \uses{def:cocompact-pieces,def:equivariant-kk}
-\notready
-For each indexing space $X$, use $KK_i^\Gamma(C_0(X),\mathbb C)$,
-with the trivial action on $\mathbb C$.
+\lean{BC4lean.TopologicalKHomology.spaceGroup,BC4lean.TopologicalKHomology.pieceGroup,BC4lean.KKTheory.CZero.action,BC4lean.KKTheory.CZero.action_apply,BC4lean.TopologicalKHomology.cZero_separableSpace}
+\leanok
+For each closed invariant cocompact piece $S$, define its K-homology
+to be the genuine full Chapter 5 group
+$KK_i^\Gamma(C_0(S,\mathbb C),\mathbb C)$ for $i=0,1$.
+The source action is $(g\cdot a)(x)=a(g^{-1}x)$ and the scalar
+coefficient action is trivial. Separability of the actual supremum-norm
+$C_0$ algebra follows by isometric extension by zero to the one-point
+compactification.
 \end{definition}
 
 \section{Transition maps}
 \begin{proposition}\label{prop:topological-transition}
 \uses{def:piece-k-homology,prop:kasparov-product}
-\notready
-For a closed inclusion $X\subseteq Y$, restriction $C_0(Y)\to C_0(X)$
-induces the forward map on K-homology, by contravariance in the first
-KK-variable. Establish composition and identities.
+\lean{BC4lean.TopologicalKHomology.transition,BC4lean.TopologicalKHomology.transition_refl,BC4lean.TopologicalKHomology.transition_trans,BC4lean.KKTheory.CZero.pieceRestriction,BC4lean.KKTheory.CZero.pieceRestriction_comp,BC4lean.KKTheory.CZero.pieceRestriction_equivariant}
+\leanok
+For $S\subseteq T$, actual restriction $C_0(T)\to C_0(S)$ is an
+equivariant nonunital complex star homomorphism. It induces the forward
+additive map on K-homology by contravariance in the first KK-variable.
+Identity inclusions act as identities and successive inclusions compose.
 \end{proposition}
+\begin{proof}
+\leanok
+Closed inclusions are proper and therefore preserve vanishing at infinity
+under pullback. Apply the proved Chapter 5 source-pullback laws to these
+restriction homomorphisms; the two successive restrictions are their actual
+composite on every function.
+\end{proof}
 
 \section{The filtered colimit}
 \begin{definition}\label{def:topological-side}
 \uses{prop:topological-transition}
-\notready
+\lean{BC4lean.TopologicalKHomology.diagram,BC4lean.TopologicalKHomology.group,BC4lean.TopologicalKHomology.ofPiece_eq_iff,BC4lean.TopologicalKHomology.existsUnique_desc,BC4lean.TopologicalKHomology.cofinalIndexEquiv,BC4lean.TopologicalKHomology.pushforward_homotopy,BC4lean.TopologicalKHomology.homotopyEquiv,BC4lean.TopologicalKHomology.universalModelEquiv,BC4lean.TopologicalKHomology.universalComparison_unique,BC4lean.TopologicalKHomology.topologicalGroup,BC4lean.TopologicalKHomology.toCanonicalModelEquiv}
+\leanok
 Construct
 \[
  K_i^{\mathrm{top}}(\Gamma)=K_i^\Gamma(\underline E\Gamma)
- :=\varinjlim_X KK_i^\Gamma(C_0(X),\mathbb C).
+ :=\varinjlim_S KK_i^\Gamma(C_0(S),\mathbb C).
 \]
-Prove independence from the universal proper model and indexing choices.
+Here $S$ ranges over all closed invariant cocompact pieces of the chosen
+model. The constructed additive group satisfies the colimit universal
+property; two representatives agree exactly when they agree in a larger
+piece. Replacing this system by any monotone cofinal directed family
+induces a canonical additive equivalence. The cofinality condition is
+$\forall S\,\exists j\colon S\subseteq S_j$.
+
+The group is independent of the locally compact second-countable genuine
+universal proper CW model satisfying the Chapter 4 fixed-point criterion.
+Every equivariant comparison map induces the same additive equivalence.
+The canonical implementation uses the actual geometric telescope.
 \end{definition}
+
+The colimit is the quotient of the disjoint union of the actual piece groups
+by eventual equality. Its group operations and universal property are proved.
+Model comparison is genuinely piecewise: an equivariant map restricted to
+a cocompact source piece is proper and has a closed cocompact image.
+Compact orbit representatives and finite transporters prove this fact.
+The same argument bounds the entire interval of a homotopy inside one
+target piece. Proper homotopies then give point-norm $C_0$ homotopies and
+equal maps on the full even and odd KK groups. Chapter 4's proved CW
+uniqueness supplies inverse comparisons up to equivariant homotopy.
+
+Cofinality is necessary: directed families that merely cover every point
+can have different colimits. No global properness of a universal comparison
+map is assumed. This chapter constructs the topological side and does not
+assert that the assembly map is an isomorphism.

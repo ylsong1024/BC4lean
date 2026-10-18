@@ -807,3 +807,21 @@ import BC4lean.UnitizationSplitting
 import BC4lean.UnitizedFiniteMatrixBlocks
 import BC4lean.UnitizedFiniteModuleOperator
 import BC4lean.UnitizedRelativeProjectionCoefficientTensor
+
+-- Chapter 6: the topological side.
+import BC4lean.CZeroAlgebra
+import BC4lean.CZeroPullback
+import BC4lean.CZeroSeparability
+import BC4lean.CZeroHomotopy
+import BC4lean.CocompactPieceRepresentatives
+import BC4lean.CocompactPieceMap
+import BC4lean.CocompactPieceMapHomotopy
+import BC4lean.DirectedAddGroupColimit
+import BC4lean.DirectedAddGroupColimitCofinal
+import BC4lean.DirectedAddGroupColimitMap
+import BC4lean.KasparovSourceHomotopy
+import BC4lean.KasparovSourceHomotopyParity
+import BC4lean.TopologicalKHomologyDiagram
+import BC4lean.TopologicalKHomologyColimit
+import BC4lean.TopologicalKHomologyMaps
+import BC4lean.TopologicalKHomologyHomotopy

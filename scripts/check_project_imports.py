@@ -97,7 +97,30 @@ def check_chapter5_core_evidence(root: Path) -> list[str]:
                 and len(audit["source_sha256"]) == 817,
                 "Retained 817-entry core Source maps disagree.")
         for relative, expected in audit["source_sha256"].items():
-            require(digest(read(relative)) == expected, f"Stale core Source hash: {relative}")
+            current = read(relative)
+            if relative == "BC4lean.lean" and digest(current) != expected:
+                # Later chapters append imports. Preserve the exact historical
+                # aggregate as a hash-bound prefix, while checking all present
+                # modules separately with check(). No Chapter 5 Lean source or
+                # historical proof certificate is changed by this extension.
+                original = read("docs/audits/chapter6/Chapter5Imports.lean")
+                require(digest(original) == expected,
+                        "Historical Chapter 5 aggregate prefix has the wrong hash.")
+                require(current.startswith(original),
+                        "The historical Chapter 5 aggregate is not an unchanged prefix.")
+                extra = current[len(original):].decode("utf-8")
+                for line in extra.splitlines():
+                    line = line.split("--", 1)[0].strip()
+                    if not line:
+                        continue
+                    match = re.fullmatch(r"import (BC4lean(?:\.[A-Za-z_][A-Za-z0-9_]*)+)", line)
+                    require(match is not None, "Later aggregate extension is not a plain import.")
+                    source = match[1].replace(".", "/") + ".lean"
+                    require(source not in audit["source_sha256"],
+                            f"Later aggregate extension repeats an audited module: {source}")
+                require(not check(root), "Extended aggregate fails complete module coverage.")
+            else:
+                require(digest(current) == expected, f"Stale core Source hash: {relative}")
 
         # This already byte-bound audit module is loaded only for its pure parser.
         parser = runpy.run_path(str(root / "scripts/audit_chapter5.py"))
