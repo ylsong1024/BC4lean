@@ -825,3 +825,20 @@ import BC4lean.TopologicalKHomologyDiagram
 import BC4lean.TopologicalKHomologyColimit
 import BC4lean.TopologicalKHomologyMaps
 import BC4lean.TopologicalKHomologyHomotopy
+
+import BC4lean.AlgebraicCrossedProduct
+import BC4lean.AlgebraicCrossedRepresentation
+import BC4lean.CocompactPieceCutoff
+import BC4lean.CutoffAlgebraicProjection
+import BC4lean.CutoffCoefficientProjection
+import BC4lean.KasparovDescentCompactAction
+import BC4lean.KasparovDescentModule
+import BC4lean.NonunitalProjectionK0
+import BC4lean.ProperCutoffFunction
+import BC4lean.ReducedCrossedHilbertModule
+import BC4lean.ReducedCrossedNorm
+import BC4lean.ReducedCrossedProduct
+import BC4lean.ReducedCrossedRegularOperators
+import BC4lean.ReducedCrossedScalarHilbert
+import BC4lean.ReducedCrossedScalarProduct
+import BC4lean.ReducedCutoffProjection

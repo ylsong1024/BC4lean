@@ -1,0 +1,178 @@
+{
+  "schema_version": 1,
+  "modules": [
+    "BC4lean.AlgebraicCrossedProduct",
+    "BC4lean.AlgebraicCrossedRepresentation",
+    "BC4lean.CocompactPieceCutoff",
+    "BC4lean.CutoffAlgebraicProjection",
+    "BC4lean.CutoffCoefficientProjection",
+    "BC4lean.KasparovDescentCompactAction",
+    "BC4lean.KasparovDescentModule",
+    "BC4lean.NonunitalProjectionK0",
+    "BC4lean.ProperCutoffFunction",
+    "BC4lean.ReducedCrossedHilbertModule",
+    "BC4lean.ReducedCrossedNorm",
+    "BC4lean.ReducedCrossedProduct",
+    "BC4lean.ReducedCrossedRegularOperators",
+    "BC4lean.ReducedCrossedScalarHilbert",
+    "BC4lean.ReducedCrossedScalarProduct",
+    "BC4lean.ReducedCutoffProjection"
+  ],
+  "additional_source_modules": [],
+  "targets": {
+    "def:reduced-descent": {
+      "description": "Construct the full reduced Kasparov descent map in both degrees, prove product compatibility, and identify the scalar reduced crossed product.",
+      "status": "pending",
+      "required_declarations": [],
+      "blocked_reason": "Concrete reduced crossed products and the scalar identification are implemented, but the integrated source crossed-product action on descended cycles, descent through KK equivalence and homotopy, and Kasparov product comparisons are not constructed."
+    },
+    "def:cutoff-projection": {
+      "description": "Prove normalized compactly supported cutoff existence on proper cocompact LCH discrete actions and actual cocompact pieces, construct the projection in the concrete reduced crossed product, and prove independence of its genuine nonunital operator K0 class.",
+      "status": "implemented",
+      "required_declarations": [
+        "BC4lean.ProperActions.CocompactPiece.exists_cutoffFunction",
+        "BC4lean.ProperActions.Cutoff.cutoffK0",
+        "BC4lean.ProperActions.Cutoff.cutoffK0_independent",
+        "BC4lean.ProperActions.Cutoff.exists_cutoffFunction",
+        "BC4lean.ProperActions.Cutoff.reducedCutoffProjection",
+        "BC4lean.ProperActions.Cutoff.reducedCutoffProjection_isStarProjection",
+        "BC4lean.ProperActions.Cutoff.reducedCutoffProjection_partialIsometry"
+      ]
+    },
+    "def:assembly-piece": {
+      "description": "Construct the cutoff-class/Kasparov-descent product giving the actual piece assembly homomorphism in degrees zero and one.",
+      "status": "pending",
+      "required_declarations": [],
+      "blocked_reason": "The full reduced Kasparov descent map is not constructed; the actual operator K0 cutoff class has not been combined with descent through the scalar KK/K-theory comparison and Kasparov product to define a piece assembly homomorphism."
+    },
+    "prop:assembly-compatibility": {
+      "description": "Prove compatibility of the actual piece assembly homomorphisms with transitions, auxiliary choices, and universal proper model comparisons.",
+      "status": "pending",
+      "required_declarations": [],
+      "blocked_reason": "Actual piece assembly homomorphisms are not constructed; crossed-product cutoff naturality, descent naturality, and the resulting transition/model compatibility are not proved."
+    },
+    "def:assembly-map": {
+      "description": "Construct the actual reduced assembly homomorphism from the Chapter 6 topological K-homology colimit to the analytic K-groups in degrees zero and one.",
+      "status": "pending",
+      "required_declarations": [],
+      "blocked_reason": "The piece assembly homomorphisms and their compatibility are not constructed, so the Chapter 6 colimit universal property cannot yet produce the assembly homomorphism."
+    }
+  },
+  "milestones": {
+    "def:algebraic-crossed-product": {
+      "description": "The genuine finite-support twisted convolution and involution star algebra for arbitrary group actions on possibly nonunital coefficient C*-algebras.",
+      "required_declarations": [
+        "BC4lean.KKTheory.AlgebraicCrossedProduct",
+        "BC4lean.KKTheory.AlgebraicCrossedProduct.coeff_mul",
+        "BC4lean.KKTheory.AlgebraicCrossedProduct.coeff_star"
+      ]
+    },
+    "def:regular-crossed-hilbert-module": {
+      "description": "The actual arbitrary-index coefficient Hilbert module, using the positive definite coefficient-valued finite sum, its form norm, and dense completed finite-vector image.",
+      "required_declarations": [
+        "BC4lean.KKTheory.ReducedCrossedHilbertModule",
+        "BC4lean.KKTheory.reducedCrossedFiniteInner_self_eq_zero_iff",
+        "BC4lean.KKTheory.reducedCrossedMk_denseRange",
+        "BC4lean.KKTheory.reducedCrossedMk_norm_coefficients"
+      ]
+    },
+    "prop:regular-crossed-operators": {
+      "description": "The actual adjointable twisted coefficient and regular translation operators, their coordinate formulas and covariance, and the isometric coefficient representation.",
+      "required_declarations": [
+        "BC4lean.KKTheory.norm_reducedCrossedCoefficient",
+        "BC4lean.KKTheory.reducedCrossedCoefficient",
+        "BC4lean.KKTheory.reducedCrossedEvaluation_coefficient",
+        "BC4lean.KKTheory.reducedCrossedEvaluation_regular",
+        "BC4lean.KKTheory.reducedCrossedRegular",
+        "BC4lean.KKTheory.reducedCrossed_covariance"
+      ]
+    },
+    "def:reduced-crossed-product": {
+      "description": "The concrete regular operator-norm closed nonunital reduced crossed product, the isometric coefficient inclusion, and the dense integrated finite-support star homomorphism.",
+      "required_declarations": [
+        "BC4lean.KKTheory.ReducedCrossedProduct",
+        "BC4lean.KKTheory.algebraicCrossedOperatorHom_eq_sum",
+        "BC4lean.KKTheory.algebraicToReducedCrossed",
+        "BC4lean.KKTheory.algebraicToReducedCrossed_denseRange",
+        "BC4lean.KKTheory.coefficientToReducedCrossed",
+        "BC4lean.KKTheory.norm_coefficientToReducedCrossed",
+        "BC4lean.KKTheory.reducedCrossedProduct_nonUnitalCStarAlgebra"
+      ]
+    },
+    "prop:reduced-crossed-norm-separability": {
+      "description": "Faithfulness of regular integration, the genuine reduced norm and C*-identity, generator-span closure, and separability for countable groups and separable coefficients.",
+      "required_declarations": [
+        "BC4lean.KKTheory.algebraicCrossedReducedNorm",
+        "BC4lean.KKTheory.algebraicCrossedReducedNorm_cstar",
+        "BC4lean.KKTheory.algebraicCrossedReducedNorm_eq_zero",
+        "BC4lean.KKTheory.algebraicToReducedCrossed_injective",
+        "BC4lean.KKTheory.reducedCrossedAlgebra_coe_eq_closure_span",
+        "BC4lean.KKTheory.reducedCrossedProduct_separableSpace"
+      ]
+    },
+    "prop:scalar-reduced-crossed-product": {
+      "description": "The actual scalar regular-module unitary with the existing group Hilbert space and the resulting concrete reduced crossed-product/reduced-group-algebra equivalence.",
+      "required_declarations": [
+        "BC4lean.KKTheory.reducedCrossedScalarHilbertEquiv",
+        "BC4lean.KKTheory.reducedCrossedScalarOperatorEquiv_generator",
+        "BC4lean.KKTheory.reducedCrossedScalarProductEquiv",
+        "BC4lean.KKTheory.reducedCrossedScalarProductEquiv_oneCoefficient"
+      ]
+    },
+    "prop:descent-compact-conjugation": {
+      "description": "Actual conjugation actions on adjointable and compact module operators, equivariance of compact inclusion, and the rank-one transport formula.",
+      "required_declarations": [
+        "BC4lean.KKTheory.EquivariantHilbertModule.adjointableAction",
+        "BC4lean.KKTheory.EquivariantHilbertModule.compactOperatorAction",
+        "BC4lean.KKTheory.EquivariantHilbertModule.compactOperatorAction_equivariant",
+        "BC4lean.KKTheory.EquivariantHilbertModule.compactOperatorAction_rankOne"
+      ]
+    },
+    "def:descent-coefficient-module": {
+      "description": "The genuine completed coefficient-extension interior module over the actual reduced crossed product, balancing and inner-product formulas, the actual T tensor 1 operator with adjoint, norm bound and compactness preservation, and countable generation for countable groups, separable coefficients and countably generated input modules; no full descent map is claimed.",
+      "required_declarations": [
+        "BC4lean.KKTheory.KasparovDescent.Module",
+        "BC4lean.KKTheory.KasparovDescent.coefficientRepresentation",
+        "BC4lean.KKTheory.KasparovDescent.countablyGenerated",
+        "BC4lean.KKTheory.KasparovDescent.mk_balance",
+        "BC4lean.KKTheory.KasparovDescent.mk_inner",
+        "BC4lean.KKTheory.KasparovDescent.norm_operatorHom_le",
+        "BC4lean.KKTheory.KasparovDescent.operatorHom_adjoint",
+        "BC4lean.KKTheory.KasparovDescent.operatorHom_compact",
+        "BC4lean.KKTheory.KasparovDescent.operatorHom_mk"
+      ]
+    },
+    "prop:proper-cocompact-cutoff": {
+      "description": "Normalized nonnegative compactly supported cutoff existence, convergent normalization and global finite mixed-coefficient support for proper cocompact LCH discrete actions, including actual Chapter 6 pieces inheriting ambient properness.",
+      "required_declarations": [
+        "BC4lean.ProperActions.CocompactPiece.exists_cutoffFunction",
+        "BC4lean.ProperActions.CocompactPiece.proper",
+        "BC4lean.ProperActions.Cutoff.CutoffFunction",
+        "BC4lean.ProperActions.Cutoff.exists_cutoffFunction",
+        "BC4lean.ProperActions.Cutoff.finite_mixedCoefficient_support",
+        "BC4lean.ProperActions.Cutoff.normalized_tsum"
+      ]
+    },
+    "prop:algebraic-cutoff-projection": {
+      "description": "Actual finite-support mixed cutoff elements in the C0 twisted algebra, their coefficient formula, convolution and involution identities, projections and explicit partial isometries.",
+      "required_declarations": [
+        "BC4lean.ProperActions.Cutoff.algebraicProjection",
+        "BC4lean.ProperActions.Cutoff.algebraicProjection_mul_self",
+        "BC4lean.ProperActions.Cutoff.coeff_mixedAlgebraic",
+        "BC4lean.ProperActions.Cutoff.mixedAlgebraic",
+        "BC4lean.ProperActions.Cutoff.mixedAlgebraic_partialIsometry",
+        "BC4lean.ProperActions.Cutoff.star_algebraicProjection",
+        "BC4lean.ProperActions.CutoffCoefficients.convolution_mixed_of_normalized",
+        "BC4lean.ProperActions.CutoffCoefficients.involution_mixed"
+      ]
+    },
+    "def:nonunital-projection-k0": {
+      "description": "The actual singleton-matrix projection class in the existing unitization scalar-kernel operator K0 group and equality derived from concrete partial isometries.",
+      "required_declarations": [
+        "BC4lean.OperatorKTheory.nonunitalProjectionK0",
+        "BC4lean.OperatorKTheory.nonunitalProjectionK0_eq_of_partialIsometry",
+        "BC4lean.OperatorKTheory.operatorK0Inclusion_nonunitalProjectionK0"
+      ]
+    }
+  }
+}
