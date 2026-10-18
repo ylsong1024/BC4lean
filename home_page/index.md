@@ -14,15 +14,21 @@ links the exact verified revision, checks, scope, and source corrections.
 **Chapter 6 is verified.** It constructs the actual topological K-homology
 colimit, with cofinal indexing and universal proper-model independence under the
 [documented hypotheses](https://github.com/ylsong1024/BC4lean/blob/main/docs/CHAPTER6_COMPLETION.md).
-All 16 new modules and 347 audited declarations pass; the assembly construction
-remains the next milestone.
+All 16 new modules and 347 audited declarations pass.
+
+**Chapter 7 has verified foundations; the assembly map remains incomplete.**
+The regular reduced crossed product and normalized cutoff projection are
+constructed, including independence of its actual operator K₀ class. Full
+Kasparov descent and its product compatibility remain open. The
+[verification record](https://github.com/ylsong1024/BC4lean/blob/main/docs/CHAPTER7_VERIFICATION.md)
+records the precise checked endpoints and remaining obligations.
 
 | Chapter | Status | Details |
 | --- | --- | --- |
 | 4 — Proper actions and the universal proper space | Verified | [Chapter 4](blueprint/ch-proper-actions.html) · [verification record](https://github.com/ylsong1024/BC4lean/blob/main/docs/CHAPTER4_VERIFICATION.md) |
 | 5 — Equivariant KK-theory | Verified | [Chapter 5](blueprint/ch-equivariant-kk.html) · [proof dependency graph](blueprint/dep_graph_chapter_5.html) |
 | 6 — Topological side | Verified | [Chapter 6](blueprint/ch-topological-k-homology.html) · [proof dependency graph](blueprint/dep_graph_chapter_6.html) |
-| 7 — Assembly map | In progress | [Assembly map](blueprint/ch-assembly-map.html) |
+| 7 — Assembly map | Verified foundations; assembly incomplete | [Chapter 7](blueprint/ch-assembly-map.html) · [proof dependency graph](blueprint/dep_graph_chapter_7.html) |
 
 ## Join the project
 
@@ -42,7 +48,8 @@ K-theory, the universal proper-space construction for countable discrete
 groups, and equivariant KK-theory under the hypotheses in the
 [Chapter 5 verification record](https://github.com/ylsong1024/BC4lean/blob/main/docs/CHAPTER5_VERIFICATION.md).
 The verified topological side uses the actual KK colimit and the constructed
-universal proper telescope. The assembly construction remains a later milestone.
+universal proper telescope. Chapter 7 adds the regular reduced crossed product
+and cutoff K₀ class; full descent and assembly remain incomplete.
 The general conjecture is not proved here.
 
 The blueprint distinguishes checked declarations and proofs from unfinished

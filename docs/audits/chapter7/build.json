@@ -1,0 +1,269 @@
+{
+  "status": "passed",
+  "started_utc": "2026-10-18T22:14:07.504347+00:00",
+  "finished_utc": "2026-10-18T22:25:59.119805+00:00",
+  "source_sha256": {
+    "BC4lean.AlgebraicCrossedProduct": "b4372db1c60b7c1ad36bc1144ed81b5222d4602a8f7fbd4e90edb7ded4ad5464",
+    "BC4lean.CutoffCoefficientProjection": "00967fda430a77245f43493045be51300947c61fb75494b381c7b82019d26bce",
+    "BC4lean.KasparovDescentCompactAction": "bd084698b89f0b67d3855a1f18cedd75f365faa46fd858cc0c97982807ff1eeb",
+    "BC4lean.NonunitalProjectionK0": "9d9bb0b1a0162db7bdeee02e94d0fb76f23d09c60859b168fcf7b1c61b1c9cc3",
+    "BC4lean.ProperCutoffFunction": "2d57aee334e7fba813588e939fff6e5a887485aa3e0d921566009251ae1f53d4",
+    "BC4lean.ReducedCrossedHilbertModule": "4a787fc5b281095e43f0f04d05c9fb155821ce2a3f40c2498bf1fdd4c67466e2",
+    "BC4lean.CocompactPieceCutoff": "2c1f3903c0db469694c5d258fdbfd2dcde10f4e73a5fafec52293a38735597a0",
+    "BC4lean.CutoffAlgebraicProjection": "19aa3270229dc5940e2b52e776611dfbe42d04326af2aa62381cf63a97f5f0dd",
+    "BC4lean.ReducedCrossedRegularOperators": "574368d342923fd201c285b46e8a121d57b91fdd4bbdd178408ceffa4a634a13",
+    "BC4lean.ReducedCrossedScalarHilbert": "99768a1db25ab8694d0ecf80bfc82ea1bd5f0b425a539e1e15cf43724286bb47",
+    "BC4lean.ReducedCrossedProduct": "5f729df2faf5a65d003f967c7176fd17368bc9a6cf60ba122ac0f2d648e13346",
+    "BC4lean.AlgebraicCrossedRepresentation": "e3e0631c6a02a371ee87d778ed17be7c4738189c933dc4a31c69367a7b3795e5",
+    "BC4lean.ReducedCrossedScalarProduct": "28295b868123ff6ec67b2c44fecd0057f1ce101fb94bd775eb14ad4deba71b43",
+    "BC4lean.ReducedCrossedNorm": "85e9b1e2e93a65a7eecfd3e2be642bef3f5a109995baec69ee3d737f1ed35d96",
+    "BC4lean.ReducedCutoffProjection": "16b2ff01e983422ffcf12d207593402efce5352435c6cd5655461f69806541be",
+    "BC4lean.KasparovDescentModule": "f2970873ae7345e15c05ba50141d528007462e9285612d0a60da2b68b5cba5e3"
+  },
+  "sources_unchanged_during_build": true,
+  "sequential_leaf_builds": true,
+  "environment": {
+    "LEAN_NUM_THREADS": "1"
+  },
+  "runs": [
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.AlgebraicCrossedProduct"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-18T22:14:07.504595+00:00",
+      "finished_utc": "2026-10-18T22:14:19.106971+00:00",
+      "log": "/tmp/chapter7-evidence/lake-BC4lean-AlgebraicCrossedProduct.log",
+      "stdout_stderr_sha256": "0912a644b52142125a4f19682f149620aa5f3d6e98160922fe7762ce903139d8"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.CutoffCoefficientProjection"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-18T22:14:19.107755+00:00",
+      "finished_utc": "2026-10-18T22:14:21.089639+00:00",
+      "log": "/tmp/chapter7-evidence/lake-BC4lean-CutoffCoefficientProjection.log",
+      "stdout_stderr_sha256": "a9d864e1707d22e258cc40cf64027443f32ba4c8c29ee51afc30d23942fc4c54"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentCompactAction"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-18T22:14:21.089927+00:00",
+      "finished_utc": "2026-10-18T22:14:23.355422+00:00",
+      "log": "/tmp/chapter7-evidence/lake-BC4lean-KasparovDescentCompactAction.log",
+      "stdout_stderr_sha256": "fb436fee09059160cc0114bb8d79383e8cc12993fa9a870c0a8cef7ce2c0dcdd"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.NonunitalProjectionK0"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-18T22:14:23.355769+00:00",
+      "finished_utc": "2026-10-18T22:14:25.619102+00:00",
+      "log": "/tmp/chapter7-evidence/lake-BC4lean-NonunitalProjectionK0.log",
+      "stdout_stderr_sha256": "d37d5c021fcaae12ded57d9db052773a625c3efd50d6318580ab3b4306935a0b"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.ProperCutoffFunction"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-18T22:14:25.619412+00:00",
+      "finished_utc": "2026-10-18T22:14:58.810399+00:00",
+      "log": "/tmp/chapter7-evidence/lake-BC4lean-ProperCutoffFunction.log",
+      "stdout_stderr_sha256": "a2af91273a5c055bc4cf03d71f6f11f84e31d0f4d54d921636ff9e43f8463496"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.ReducedCrossedHilbertModule"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-18T22:14:58.813620+00:00",
+      "finished_utc": "2026-10-18T22:15:59.621089+00:00",
+      "log": "/tmp/chapter7-evidence/lake-BC4lean-ReducedCrossedHilbertModule.log",
+      "stdout_stderr_sha256": "79c3df48ca58bd77ce29a15f7dffaf91c79de0f992e5fafbb4fd84b16b9b0006"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.CocompactPieceCutoff"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-18T22:15:59.621929+00:00",
+      "finished_utc": "2026-10-18T22:16:34.200163+00:00",
+      "log": "/tmp/chapter7-evidence/lake-BC4lean-CocompactPieceCutoff.log",
+      "stdout_stderr_sha256": "c2619f3406cc8c449166201b4a73776879cf392794014c95b61acf5b2c2979b6"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.CutoffAlgebraicProjection"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-18T22:16:34.200784+00:00",
+      "finished_utc": "2026-10-18T22:17:30.617197+00:00",
+      "log": "/tmp/chapter7-evidence/lake-BC4lean-CutoffAlgebraicProjection.log",
+      "stdout_stderr_sha256": "3da55bbde15948ff71d424d88fe5a3d61577f74189a0c0bb7deb2ab29d866da0"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.ReducedCrossedRegularOperators"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-18T22:17:30.618774+00:00",
+      "finished_utc": "2026-10-18T22:18:24.117080+00:00",
+      "log": "/tmp/chapter7-evidence/lake-BC4lean-ReducedCrossedRegularOperators.log",
+      "stdout_stderr_sha256": "83e110b250c8c167a51c5ef083186e3cf08359a857fdb40e4ff9b8dcd88eccc9"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.ReducedCrossedScalarHilbert"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-18T22:18:24.117886+00:00",
+      "finished_utc": "2026-10-18T22:19:16.016583+00:00",
+      "log": "/tmp/chapter7-evidence/lake-BC4lean-ReducedCrossedScalarHilbert.log",
+      "stdout_stderr_sha256": "70a2321df8c91d9b26a39a7758a209bd49239c1f284bf6cc87c652b04181d923"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.ReducedCrossedProduct"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-18T22:19:16.018602+00:00",
+      "finished_utc": "2026-10-18T22:20:05.065657+00:00",
+      "log": "/tmp/chapter7-evidence/lake-BC4lean-ReducedCrossedProduct.log",
+      "stdout_stderr_sha256": "e44adaf8006cb91006077803aec5bf536e8056ea3f5479c6a3affe528c0bcd35"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.AlgebraicCrossedRepresentation"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-18T22:20:05.069560+00:00",
+      "finished_utc": "2026-10-18T22:20:56.476081+00:00",
+      "log": "/tmp/chapter7-evidence/lake-BC4lean-AlgebraicCrossedRepresentation.log",
+      "stdout_stderr_sha256": "94e1a79b256b8a40182b1fd1bdac56de69f85be6a3dbd2e9a0dafd9c26414bc5"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.ReducedCrossedScalarProduct"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-18T22:20:56.477103+00:00",
+      "finished_utc": "2026-10-18T22:21:51.964765+00:00",
+      "log": "/tmp/chapter7-evidence/lake-BC4lean-ReducedCrossedScalarProduct.log",
+      "stdout_stderr_sha256": "f456e95ddb7ac6faa033b8036ce3ac1d0dc27afab340b0a7328ddd4881f4ae57"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.ReducedCrossedNorm"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-18T22:21:51.966663+00:00",
+      "finished_utc": "2026-10-18T22:22:44.013070+00:00",
+      "log": "/tmp/chapter7-evidence/lake-BC4lean-ReducedCrossedNorm.log",
+      "stdout_stderr_sha256": "915a0ac1c9c39e8674ba06dcd55d4192e30ab55797b2c0560ff719c6267154d3"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.ReducedCutoffProjection"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-18T22:22:44.013881+00:00",
+      "finished_utc": "2026-10-18T22:23:41.296534+00:00",
+      "log": "/tmp/chapter7-evidence/lake-BC4lean-ReducedCutoffProjection.log",
+      "stdout_stderr_sha256": "f5bd667ace8cc9ab010bcc076c06dad0b05f8225d5b0fbef4e198ac51d4d6f31"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentModule"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-18T22:23:41.299417+00:00",
+      "finished_utc": "2026-10-18T22:24:43.886513+00:00",
+      "log": "/tmp/chapter7-evidence/lake-BC4lean-KasparovDescentModule.log",
+      "stdout_stderr_sha256": "865f392e259d2279a9114e48c08bf93cfddb69052754ebd25fec527792d0c3c0"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-18T22:24:43.887258+00:00",
+      "finished_utc": "2026-10-18T22:25:59.113047+00:00",
+      "log": "/tmp/chapter7-evidence/lake-BC4lean.log",
+      "stdout_stderr_sha256": "0b42f55e90c2db236c2c83cd00166019037a4a86ab6bbf6d52245803dce12e82"
+    }
+  ],
+  "combined_log_sha256": "e6f3ec670854bde30d7bb716f872cd548561e7e3b7e1b581810b65e71d31fcb9"
+}

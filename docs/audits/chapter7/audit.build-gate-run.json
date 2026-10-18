@@ -1,0 +1,12 @@
+{
+  "command": [
+    "lake",
+    "--wfail",
+    "--no-build",
+    "--no-cache",
+    "build",
+    "BC4lean"
+  ],
+  "exit_code": 0,
+  "stdout_stderr_sha256": "79dcbe75b90937b77f6ba21b690d92e01ae2b8022f4ab257d897dc374d2b3652"
+}

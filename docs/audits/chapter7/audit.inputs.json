@@ -1,0 +1,486 @@
+{
+  "schema_version": 1,
+  "status": "generated_only",
+  "chapter_complete": false,
+  "milestone_verified": false,
+  "scope": "Uncapped census of every declaration by listed module origin, including private/generated declarations; all exact Chapter 7 links and real milestone/implemented endpoints; independent ExpectedTypes.lean fixture",
+  "modules": [
+    "BC4lean.AlgebraicCrossedProduct",
+    "BC4lean.AlgebraicCrossedRepresentation",
+    "BC4lean.CocompactPieceCutoff",
+    "BC4lean.CutoffAlgebraicProjection",
+    "BC4lean.CutoffCoefficientProjection",
+    "BC4lean.KasparovDescentCompactAction",
+    "BC4lean.KasparovDescentModule",
+    "BC4lean.NonunitalProjectionK0",
+    "BC4lean.ProperCutoffFunction",
+    "BC4lean.ReducedCrossedHilbertModule",
+    "BC4lean.ReducedCrossedNorm",
+    "BC4lean.ReducedCrossedProduct",
+    "BC4lean.ReducedCrossedRegularOperators",
+    "BC4lean.ReducedCrossedScalarHilbert",
+    "BC4lean.ReducedCrossedScalarProduct",
+    "BC4lean.ReducedCutoffProjection"
+  ],
+  "source_modules": [
+    "BC4lean.AlgebraicCrossedProduct",
+    "BC4lean.AlgebraicCrossedRepresentation",
+    "BC4lean.CocompactPieceCutoff",
+    "BC4lean.CutoffAlgebraicProjection",
+    "BC4lean.CutoffCoefficientProjection",
+    "BC4lean.KasparovDescentCompactAction",
+    "BC4lean.KasparovDescentModule",
+    "BC4lean.NonunitalProjectionK0",
+    "BC4lean.ProperCutoffFunction",
+    "BC4lean.ReducedCrossedHilbertModule",
+    "BC4lean.ReducedCrossedNorm",
+    "BC4lean.ReducedCrossedProduct",
+    "BC4lean.ReducedCrossedRegularOperators",
+    "BC4lean.ReducedCrossedScalarHilbert",
+    "BC4lean.ReducedCrossedScalarProduct",
+    "BC4lean.ReducedCutoffProjection"
+  ],
+  "source_sha256": {
+    "docs/audits/chapter6/audit.json": "8472047b2978a1c749f05ea57d7785529acad0c7522fcf992202b6d6ac104969",
+    "BC4lean/CZeroAlgebra.lean": "5350f5be03101b6856aedc2c6d210574abfd3fbba4f5dc51e5fa0b502df76b2f",
+    "BC4lean/CZeroHomotopy.lean": "d3f57840d275a8f0e7486a4ac32c16fefa15f49ff3540b0114678d9581e83cd4",
+    "BC4lean/CZeroPullback.lean": "d0eb2f0be49da53483b066d46ba5a4313325e38c80a05899633cfeb826fe3688",
+    "BC4lean/CZeroSeparability.lean": "0118fafbc5d002e32709691e11a6f0891a563e675b2e4bbbc9bc5134753027ca",
+    "BC4lean/CocompactPieceMap.lean": "fe24a5c691f655ede7563816c9a92ac1d3bb699acc26b3e4d014250a634e046e",
+    "BC4lean/CocompactPieceMapHomotopy.lean": "e8611f65647dec5ec2c26e09c153f63c55d52f1e78d8211b9612f5fa4c75f5f9",
+    "BC4lean/CocompactPieceRepresentatives.lean": "e4c26aad83ebc618842af705a5727d5c29ef1a5a9594cb85e9fe92a097566b43",
+    "BC4lean/DirectedAddGroupColimit.lean": "3c8ef31bb03ff3d1425ecaec218293cbfe11db3fa553ac7719c24c193ef7111e",
+    "BC4lean/DirectedAddGroupColimitCofinal.lean": "3f9b75f95cd5dee4e120c892e60bbf903cef3e6e3dd92230a3c36a248011a1c7",
+    "BC4lean/DirectedAddGroupColimitMap.lean": "0ce2ddebf66a979ad24bfcf0da90c0157332efdf7f2ecfd33ffa94b4a28c17a6",
+    "BC4lean/KasparovSourceHomotopy.lean": "ecb1a60e2ca1e8c71c115d3d6834af2b332c61b08634832e4af6af83ab112648",
+    "BC4lean/KasparovSourceHomotopyParity.lean": "10e26399fb5d9f99abaecdc6dd36843ca66c5d2126bc82b1eddd9ef891acd2cf",
+    "BC4lean/TopologicalKHomologyColimit.lean": "5a7e00bc56f493086adf6a5ff85376c8b0e4562fb207b824a8c49fe73d7cd4a7",
+    "BC4lean/TopologicalKHomologyDiagram.lean": "924a497783a176f165f662505f4f436373ecbbb30664ab7372acb952dfe04d6d",
+    "BC4lean/TopologicalKHomologyHomotopy.lean": "07720073d2099c8fb9a21973ea349efc17d3762ca689e68f80a2ffad7e5d83c0",
+    "BC4lean/TopologicalKHomologyMaps.lean": "1a6a65d84e7c89a8b0251e653a693c467df429ffc660e0ae4d2c791a5ba1ac64",
+    "blueprint/src/parts/06-topological-k-homology.tex": "958d7e70629bb58af57fdec3c4ea9ef02e44d85b57fc15cc83f4b50b41552075",
+    "docs/audits/chapter6/inventory.json": "2df68bfa5f2f53fcada91ae96dbfe895092cd27f167e21f11398ea76c6f6e9dc",
+    "scripts/audit_chapter6.py": "e3cd890ac54dfe6dbf1e9a3f7370f337f43e89286a0a8d4d0a9e18d075659d5d",
+    "scripts/test_audit_chapter6.py": "ec1c2434608d256dc2578b551fb90fe5cf92e8bb305ade52630acdea01e14152",
+    "scripts/check_project_imports.py": "8f172dc13763334c1a757ad2ff1999c70328c491d5d1009f1abcf87229b3911b",
+    "docs/audits/chapter6/Chapter5Imports.lean": "b07ac2241fff3e9590412fa57efe285d207df4179f793d423c9d6c8c374a89c0",
+    "docs/audits/chapter6/ExpectedTypes.lean": "61cff5671d5ee5c8bbc093d57548cb95c4de37550c7b231570114f0dfcf5229f",
+    "lean-toolchain": "3aac669c7a910ec2389f4e4f921b605adf6ebf2d1e0c9b9cd0be4d33f3f5db71",
+    "lakefile.toml": "dcb517c34c605807aaa1a08c00179eccb219278161b005f364af8faf27509d7e",
+    "lake-manifest.json": "d85b2e1116be8fedd0fc8dac4fa8afc28d849f21b2920d2012b553ed886adb3c",
+    "BC4lean/AlgebraicCrossedProduct.lean": "b4372db1c60b7c1ad36bc1144ed81b5222d4602a8f7fbd4e90edb7ded4ad5464",
+    "BC4lean/AlgebraicCrossedRepresentation.lean": "e3e0631c6a02a371ee87d778ed17be7c4738189c933dc4a31c69367a7b3795e5",
+    "BC4lean/CocompactPieceCutoff.lean": "2c1f3903c0db469694c5d258fdbfd2dcde10f4e73a5fafec52293a38735597a0",
+    "BC4lean/CutoffAlgebraicProjection.lean": "19aa3270229dc5940e2b52e776611dfbe42d04326af2aa62381cf63a97f5f0dd",
+    "BC4lean/CutoffCoefficientProjection.lean": "00967fda430a77245f43493045be51300947c61fb75494b381c7b82019d26bce",
+    "BC4lean/KasparovDescentCompactAction.lean": "bd084698b89f0b67d3855a1f18cedd75f365faa46fd858cc0c97982807ff1eeb",
+    "BC4lean/KasparovDescentModule.lean": "f2970873ae7345e15c05ba50141d528007462e9285612d0a60da2b68b5cba5e3",
+    "BC4lean/NonunitalProjectionK0.lean": "9d9bb0b1a0162db7bdeee02e94d0fb76f23d09c60859b168fcf7b1c61b1c9cc3",
+    "BC4lean/ProperCutoffFunction.lean": "2d57aee334e7fba813588e939fff6e5a887485aa3e0d921566009251ae1f53d4",
+    "BC4lean/ReducedCrossedHilbertModule.lean": "4a787fc5b281095e43f0f04d05c9fb155821ce2a3f40c2498bf1fdd4c67466e2",
+    "BC4lean/ReducedCrossedNorm.lean": "85e9b1e2e93a65a7eecfd3e2be642bef3f5a109995baec69ee3d737f1ed35d96",
+    "BC4lean/ReducedCrossedProduct.lean": "5f729df2faf5a65d003f967c7176fd17368bc9a6cf60ba122ac0f2d648e13346",
+    "BC4lean/ReducedCrossedRegularOperators.lean": "574368d342923fd201c285b46e8a121d57b91fdd4bbdd178408ceffa4a634a13",
+    "BC4lean/ReducedCrossedScalarHilbert.lean": "99768a1db25ab8694d0ecf80bfc82ea1bd5f0b425a539e1e15cf43724286bb47",
+    "BC4lean/ReducedCrossedScalarProduct.lean": "28295b868123ff6ec67b2c44fecd0057f1ce101fb94bd775eb14ad4deba71b43",
+    "BC4lean/ReducedCutoffProjection.lean": "16b2ff01e983422ffcf12d207593402efce5352435c6cd5655461f69806541be",
+    "blueprint/src/parts/07-assembly-map.tex": "aeabd27e9e726e68d77376983c004f208fdef31f75928f00a5a270424dd3cdfc",
+    "docs/audits/chapter7/inventory.json": "c7b7cdd4ff1ce36107ecf9a99be2ef86c40b88864d88d8cd62bdbd0bd61fc2c4",
+    "docs/audits/chapter7/ExpectedTypes.lean": "4703ab409f3ba261d610bd05a00469720dda4d9339664ef4bd050c7ca602b37b",
+    "docs/audits/chapter7/Chapter6Imports.lean": "74885bdc52882341eafdcfb324a0748fad2cf47fe2002929e80b44743fb733a2",
+    "BC4lean.lean": "2fa014c0d7026c18f7b227bdde9a30e6d72276875e5a23df4b0755952b97292a",
+    "scripts/audit_chapter7.py": "919a24679dc6f47b0cc65b15620ec168638dbb4d5b42dc16914900d1b272fc81",
+    "scripts/test_audit_chapter7.py": "bdb54aadee1fbf548b874006b3fb2529b7abfcf044beee4b48bc368604fcb181",
+    "scripts/update_chapter7_finder.py": "455eabd2784128c9d21e38744c5b47b5dfef8a8c9b0552682438f2b9570214f0",
+    "scripts/test_chapter7_publication.py": "56a61907b7b6135395afb4bd2fab7d66b469809840ee010754bf425915e03a1c",
+    "scripts/check_chapter7_website.py": "3c49867a35e27ad74aca1b7edbc2799afb6c63effc028079465a7e727a978692",
+    "scripts/test_chapter7_website.py": "301a1ff4b060944615c764d3de24148927da35f056254278d4bcbf64115f2c6f",
+    ".github/workflows/chapter7.yml": "5ae398712ad2a6e4100f9969a64cb6059d897711d3e22d7dc2c1b2cfc152de23"
+  },
+  "query_sha256": "e674d12d7f2dc61c022cb1cedd80ea307c916310102fedcd9ef4e17d59a38d55",
+  "source_revision": "7af944529243b198d584891762959a954973bb4b",
+  "module_sources_match_revision": true,
+  "target_inventory": {
+    "def:reduced-descent": {
+      "statement_kind": "definition",
+      "notready": true,
+      "leanok": false,
+      "required_declarations": [],
+      "linked_declarations": [],
+      "missing_required_declarations": [],
+      "ready": false,
+      "blocked_reason": "Concrete reduced crossed products and the scalar identification are implemented, but the integrated source crossed-product action on descended cycles, descent through KK equivalence and homotopy, and Kasparov product comparisons are not constructed."
+    },
+    "def:cutoff-projection": {
+      "statement_kind": "definition",
+      "notready": false,
+      "leanok": true,
+      "required_declarations": [
+        "BC4lean.ProperActions.CocompactPiece.exists_cutoffFunction",
+        "BC4lean.ProperActions.Cutoff.cutoffK0",
+        "BC4lean.ProperActions.Cutoff.cutoffK0_independent",
+        "BC4lean.ProperActions.Cutoff.exists_cutoffFunction",
+        "BC4lean.ProperActions.Cutoff.reducedCutoffProjection",
+        "BC4lean.ProperActions.Cutoff.reducedCutoffProjection_isStarProjection",
+        "BC4lean.ProperActions.Cutoff.reducedCutoffProjection_partialIsometry"
+      ],
+      "linked_declarations": [
+        "BC4lean.ProperActions.CocompactPiece.exists_cutoffFunction",
+        "BC4lean.ProperActions.Cutoff.cutoffK0",
+        "BC4lean.ProperActions.Cutoff.cutoffK0_independent",
+        "BC4lean.ProperActions.Cutoff.exists_cutoffFunction",
+        "BC4lean.ProperActions.Cutoff.reducedCutoffProjection",
+        "BC4lean.ProperActions.Cutoff.reducedCutoffProjection_isStarProjection",
+        "BC4lean.ProperActions.Cutoff.reducedCutoffProjection_partialIsometry"
+      ],
+      "missing_required_declarations": [],
+      "ready": true
+    },
+    "def:assembly-piece": {
+      "statement_kind": "definition",
+      "notready": true,
+      "leanok": false,
+      "required_declarations": [],
+      "linked_declarations": [],
+      "missing_required_declarations": [],
+      "ready": false,
+      "blocked_reason": "The full reduced Kasparov descent map is not constructed; the actual operator K0 cutoff class has not been combined with descent through the scalar KK/K-theory comparison and Kasparov product to define a piece assembly homomorphism."
+    },
+    "prop:assembly-compatibility": {
+      "statement_kind": "proposition",
+      "notready": true,
+      "leanok": false,
+      "required_declarations": [],
+      "linked_declarations": [],
+      "missing_required_declarations": [],
+      "ready": false,
+      "blocked_reason": "Actual piece assembly homomorphisms are not constructed; crossed-product cutoff naturality, descent naturality, and the resulting transition/model compatibility are not proved."
+    },
+    "def:assembly-map": {
+      "statement_kind": "definition",
+      "notready": true,
+      "leanok": false,
+      "required_declarations": [],
+      "linked_declarations": [],
+      "missing_required_declarations": [],
+      "ready": false,
+      "blocked_reason": "The piece assembly homomorphisms and their compatibility are not constructed, so the Chapter 6 colimit universal property cannot yet produce the assembly homomorphism."
+    }
+  },
+  "milestone_inventory": {
+    "def:algebraic-crossed-product": {
+      "statement_kind": "definition",
+      "notready": false,
+      "leanok": true,
+      "required_declarations": [
+        "BC4lean.KKTheory.AlgebraicCrossedProduct",
+        "BC4lean.KKTheory.AlgebraicCrossedProduct.coeff_mul",
+        "BC4lean.KKTheory.AlgebraicCrossedProduct.coeff_star"
+      ],
+      "linked_declarations": [
+        "BC4lean.KKTheory.AlgebraicCrossedProduct",
+        "BC4lean.KKTheory.AlgebraicCrossedProduct.coeff_mul",
+        "BC4lean.KKTheory.AlgebraicCrossedProduct.coeff_star"
+      ],
+      "missing_required_declarations": [],
+      "ready": true
+    },
+    "def:regular-crossed-hilbert-module": {
+      "statement_kind": "definition",
+      "notready": false,
+      "leanok": true,
+      "required_declarations": [
+        "BC4lean.KKTheory.ReducedCrossedHilbertModule",
+        "BC4lean.KKTheory.reducedCrossedFiniteInner_self_eq_zero_iff",
+        "BC4lean.KKTheory.reducedCrossedMk_denseRange",
+        "BC4lean.KKTheory.reducedCrossedMk_norm_coefficients"
+      ],
+      "linked_declarations": [
+        "BC4lean.KKTheory.ReducedCrossedHilbertModule",
+        "BC4lean.KKTheory.reducedCrossedFiniteInner_self_eq_zero_iff",
+        "BC4lean.KKTheory.reducedCrossedMk_denseRange",
+        "BC4lean.KKTheory.reducedCrossedMk_norm_coefficients"
+      ],
+      "missing_required_declarations": [],
+      "ready": true
+    },
+    "prop:regular-crossed-operators": {
+      "statement_kind": "proposition",
+      "notready": false,
+      "leanok": true,
+      "required_declarations": [
+        "BC4lean.KKTheory.norm_reducedCrossedCoefficient",
+        "BC4lean.KKTheory.reducedCrossedCoefficient",
+        "BC4lean.KKTheory.reducedCrossedEvaluation_coefficient",
+        "BC4lean.KKTheory.reducedCrossedEvaluation_regular",
+        "BC4lean.KKTheory.reducedCrossedRegular",
+        "BC4lean.KKTheory.reducedCrossed_covariance"
+      ],
+      "linked_declarations": [
+        "BC4lean.KKTheory.norm_reducedCrossedCoefficient",
+        "BC4lean.KKTheory.reducedCrossedCoefficient",
+        "BC4lean.KKTheory.reducedCrossedEvaluation_coefficient",
+        "BC4lean.KKTheory.reducedCrossedEvaluation_regular",
+        "BC4lean.KKTheory.reducedCrossedRegular",
+        "BC4lean.KKTheory.reducedCrossed_covariance"
+      ],
+      "missing_required_declarations": [],
+      "ready": true
+    },
+    "def:reduced-crossed-product": {
+      "statement_kind": "definition",
+      "notready": false,
+      "leanok": true,
+      "required_declarations": [
+        "BC4lean.KKTheory.ReducedCrossedProduct",
+        "BC4lean.KKTheory.algebraicCrossedOperatorHom_eq_sum",
+        "BC4lean.KKTheory.algebraicToReducedCrossed",
+        "BC4lean.KKTheory.algebraicToReducedCrossed_denseRange",
+        "BC4lean.KKTheory.coefficientToReducedCrossed",
+        "BC4lean.KKTheory.norm_coefficientToReducedCrossed",
+        "BC4lean.KKTheory.reducedCrossedProduct_nonUnitalCStarAlgebra"
+      ],
+      "linked_declarations": [
+        "BC4lean.KKTheory.ReducedCrossedProduct",
+        "BC4lean.KKTheory.algebraicCrossedOperatorHom_eq_sum",
+        "BC4lean.KKTheory.algebraicToReducedCrossed",
+        "BC4lean.KKTheory.algebraicToReducedCrossed_denseRange",
+        "BC4lean.KKTheory.coefficientToReducedCrossed",
+        "BC4lean.KKTheory.norm_coefficientToReducedCrossed",
+        "BC4lean.KKTheory.reducedCrossedProduct_nonUnitalCStarAlgebra"
+      ],
+      "missing_required_declarations": [],
+      "ready": true
+    },
+    "prop:reduced-crossed-norm-separability": {
+      "statement_kind": "proposition",
+      "notready": false,
+      "leanok": true,
+      "required_declarations": [
+        "BC4lean.KKTheory.algebraicCrossedReducedNorm",
+        "BC4lean.KKTheory.algebraicCrossedReducedNorm_cstar",
+        "BC4lean.KKTheory.algebraicCrossedReducedNorm_eq_zero",
+        "BC4lean.KKTheory.algebraicToReducedCrossed_injective",
+        "BC4lean.KKTheory.reducedCrossedAlgebra_coe_eq_closure_span",
+        "BC4lean.KKTheory.reducedCrossedProduct_separableSpace"
+      ],
+      "linked_declarations": [
+        "BC4lean.KKTheory.algebraicCrossedReducedNorm",
+        "BC4lean.KKTheory.algebraicCrossedReducedNorm_cstar",
+        "BC4lean.KKTheory.algebraicCrossedReducedNorm_eq_zero",
+        "BC4lean.KKTheory.algebraicToReducedCrossed_injective",
+        "BC4lean.KKTheory.reducedCrossedAlgebra_coe_eq_closure_span",
+        "BC4lean.KKTheory.reducedCrossedProduct_separableSpace"
+      ],
+      "missing_required_declarations": [],
+      "ready": true
+    },
+    "prop:scalar-reduced-crossed-product": {
+      "statement_kind": "proposition",
+      "notready": false,
+      "leanok": true,
+      "required_declarations": [
+        "BC4lean.KKTheory.reducedCrossedScalarHilbertEquiv",
+        "BC4lean.KKTheory.reducedCrossedScalarOperatorEquiv_generator",
+        "BC4lean.KKTheory.reducedCrossedScalarProductEquiv",
+        "BC4lean.KKTheory.reducedCrossedScalarProductEquiv_oneCoefficient"
+      ],
+      "linked_declarations": [
+        "BC4lean.KKTheory.reducedCrossedScalarHilbertEquiv",
+        "BC4lean.KKTheory.reducedCrossedScalarOperatorEquiv_generator",
+        "BC4lean.KKTheory.reducedCrossedScalarProductEquiv",
+        "BC4lean.KKTheory.reducedCrossedScalarProductEquiv_oneCoefficient"
+      ],
+      "missing_required_declarations": [],
+      "ready": true
+    },
+    "prop:descent-compact-conjugation": {
+      "statement_kind": "proposition",
+      "notready": false,
+      "leanok": true,
+      "required_declarations": [
+        "BC4lean.KKTheory.EquivariantHilbertModule.adjointableAction",
+        "BC4lean.KKTheory.EquivariantHilbertModule.compactOperatorAction",
+        "BC4lean.KKTheory.EquivariantHilbertModule.compactOperatorAction_equivariant",
+        "BC4lean.KKTheory.EquivariantHilbertModule.compactOperatorAction_rankOne"
+      ],
+      "linked_declarations": [
+        "BC4lean.KKTheory.EquivariantHilbertModule.adjointableAction",
+        "BC4lean.KKTheory.EquivariantHilbertModule.compactOperatorAction",
+        "BC4lean.KKTheory.EquivariantHilbertModule.compactOperatorAction_equivariant",
+        "BC4lean.KKTheory.EquivariantHilbertModule.compactOperatorAction_rankOne"
+      ],
+      "missing_required_declarations": [],
+      "ready": true
+    },
+    "def:descent-coefficient-module": {
+      "statement_kind": "definition",
+      "notready": false,
+      "leanok": true,
+      "required_declarations": [
+        "BC4lean.KKTheory.KasparovDescent.Module",
+        "BC4lean.KKTheory.KasparovDescent.coefficientRepresentation",
+        "BC4lean.KKTheory.KasparovDescent.countablyGenerated",
+        "BC4lean.KKTheory.KasparovDescent.mk_balance",
+        "BC4lean.KKTheory.KasparovDescent.mk_inner",
+        "BC4lean.KKTheory.KasparovDescent.norm_operatorHom_le",
+        "BC4lean.KKTheory.KasparovDescent.operatorHom_adjoint",
+        "BC4lean.KKTheory.KasparovDescent.operatorHom_compact",
+        "BC4lean.KKTheory.KasparovDescent.operatorHom_mk"
+      ],
+      "linked_declarations": [
+        "BC4lean.KKTheory.KasparovDescent.Module",
+        "BC4lean.KKTheory.KasparovDescent.coefficientRepresentation",
+        "BC4lean.KKTheory.KasparovDescent.countablyGenerated",
+        "BC4lean.KKTheory.KasparovDescent.mk_balance",
+        "BC4lean.KKTheory.KasparovDescent.mk_inner",
+        "BC4lean.KKTheory.KasparovDescent.norm_operatorHom_le",
+        "BC4lean.KKTheory.KasparovDescent.operatorHom_adjoint",
+        "BC4lean.KKTheory.KasparovDescent.operatorHom_compact",
+        "BC4lean.KKTheory.KasparovDescent.operatorHom_mk"
+      ],
+      "missing_required_declarations": [],
+      "ready": true
+    },
+    "prop:proper-cocompact-cutoff": {
+      "statement_kind": "proposition",
+      "notready": false,
+      "leanok": true,
+      "required_declarations": [
+        "BC4lean.ProperActions.CocompactPiece.exists_cutoffFunction",
+        "BC4lean.ProperActions.CocompactPiece.proper",
+        "BC4lean.ProperActions.Cutoff.CutoffFunction",
+        "BC4lean.ProperActions.Cutoff.exists_cutoffFunction",
+        "BC4lean.ProperActions.Cutoff.finite_mixedCoefficient_support",
+        "BC4lean.ProperActions.Cutoff.normalized_tsum"
+      ],
+      "linked_declarations": [
+        "BC4lean.ProperActions.CocompactPiece.exists_cutoffFunction",
+        "BC4lean.ProperActions.CocompactPiece.proper",
+        "BC4lean.ProperActions.Cutoff.CutoffFunction",
+        "BC4lean.ProperActions.Cutoff.exists_cutoffFunction",
+        "BC4lean.ProperActions.Cutoff.finite_mixedCoefficient_support",
+        "BC4lean.ProperActions.Cutoff.normalized_tsum"
+      ],
+      "missing_required_declarations": [],
+      "ready": true
+    },
+    "prop:algebraic-cutoff-projection": {
+      "statement_kind": "proposition",
+      "notready": false,
+      "leanok": true,
+      "required_declarations": [
+        "BC4lean.ProperActions.Cutoff.algebraicProjection",
+        "BC4lean.ProperActions.Cutoff.algebraicProjection_mul_self",
+        "BC4lean.ProperActions.Cutoff.coeff_mixedAlgebraic",
+        "BC4lean.ProperActions.Cutoff.mixedAlgebraic",
+        "BC4lean.ProperActions.Cutoff.mixedAlgebraic_partialIsometry",
+        "BC4lean.ProperActions.Cutoff.star_algebraicProjection",
+        "BC4lean.ProperActions.CutoffCoefficients.convolution_mixed_of_normalized",
+        "BC4lean.ProperActions.CutoffCoefficients.involution_mixed"
+      ],
+      "linked_declarations": [
+        "BC4lean.ProperActions.Cutoff.algebraicProjection",
+        "BC4lean.ProperActions.Cutoff.algebraicProjection_mul_self",
+        "BC4lean.ProperActions.Cutoff.coeff_mixedAlgebraic",
+        "BC4lean.ProperActions.Cutoff.mixedAlgebraic",
+        "BC4lean.ProperActions.Cutoff.mixedAlgebraic_partialIsometry",
+        "BC4lean.ProperActions.Cutoff.star_algebraicProjection",
+        "BC4lean.ProperActions.CutoffCoefficients.convolution_mixed_of_normalized",
+        "BC4lean.ProperActions.CutoffCoefficients.involution_mixed"
+      ],
+      "missing_required_declarations": [],
+      "ready": true
+    },
+    "def:nonunital-projection-k0": {
+      "statement_kind": "definition",
+      "notready": false,
+      "leanok": true,
+      "required_declarations": [
+        "BC4lean.OperatorKTheory.nonunitalProjectionK0",
+        "BC4lean.OperatorKTheory.nonunitalProjectionK0_eq_of_partialIsometry",
+        "BC4lean.OperatorKTheory.operatorK0Inclusion_nonunitalProjectionK0"
+      ],
+      "linked_declarations": [
+        "BC4lean.OperatorKTheory.nonunitalProjectionK0",
+        "BC4lean.OperatorKTheory.nonunitalProjectionK0_eq_of_partialIsometry",
+        "BC4lean.OperatorKTheory.operatorK0Inclusion_nonunitalProjectionK0"
+      ],
+      "missing_required_declarations": [],
+      "ready": true
+    }
+  },
+  "blueprint_links": [
+    "BC4lean.KKTheory.AlgebraicCrossedProduct",
+    "BC4lean.KKTheory.AlgebraicCrossedProduct.coeff_mul",
+    "BC4lean.KKTheory.AlgebraicCrossedProduct.coeff_star",
+    "BC4lean.KKTheory.EquivariantHilbertModule.adjointableAction",
+    "BC4lean.KKTheory.EquivariantHilbertModule.compactOperatorAction",
+    "BC4lean.KKTheory.EquivariantHilbertModule.compactOperatorAction_equivariant",
+    "BC4lean.KKTheory.EquivariantHilbertModule.compactOperatorAction_rankOne",
+    "BC4lean.KKTheory.KasparovDescent.Module",
+    "BC4lean.KKTheory.KasparovDescent.coefficientRepresentation",
+    "BC4lean.KKTheory.KasparovDescent.countablyGenerated",
+    "BC4lean.KKTheory.KasparovDescent.mk_balance",
+    "BC4lean.KKTheory.KasparovDescent.mk_inner",
+    "BC4lean.KKTheory.KasparovDescent.norm_operatorHom_le",
+    "BC4lean.KKTheory.KasparovDescent.operatorHom_adjoint",
+    "BC4lean.KKTheory.KasparovDescent.operatorHom_compact",
+    "BC4lean.KKTheory.KasparovDescent.operatorHom_mk",
+    "BC4lean.KKTheory.ReducedCrossedHilbertModule",
+    "BC4lean.KKTheory.ReducedCrossedProduct",
+    "BC4lean.KKTheory.algebraicCrossedOperatorHom_eq_sum",
+    "BC4lean.KKTheory.algebraicCrossedReducedNorm",
+    "BC4lean.KKTheory.algebraicCrossedReducedNorm_cstar",
+    "BC4lean.KKTheory.algebraicCrossedReducedNorm_eq_zero",
+    "BC4lean.KKTheory.algebraicToReducedCrossed",
+    "BC4lean.KKTheory.algebraicToReducedCrossed_denseRange",
+    "BC4lean.KKTheory.algebraicToReducedCrossed_injective",
+    "BC4lean.KKTheory.coefficientToReducedCrossed",
+    "BC4lean.KKTheory.norm_coefficientToReducedCrossed",
+    "BC4lean.KKTheory.norm_reducedCrossedCoefficient",
+    "BC4lean.KKTheory.reducedCrossedAlgebra_coe_eq_closure_span",
+    "BC4lean.KKTheory.reducedCrossedCoefficient",
+    "BC4lean.KKTheory.reducedCrossedEvaluation_coefficient",
+    "BC4lean.KKTheory.reducedCrossedEvaluation_regular",
+    "BC4lean.KKTheory.reducedCrossedFiniteInner_self_eq_zero_iff",
+    "BC4lean.KKTheory.reducedCrossedMk_denseRange",
+    "BC4lean.KKTheory.reducedCrossedMk_norm_coefficients",
+    "BC4lean.KKTheory.reducedCrossedProduct_nonUnitalCStarAlgebra",
+    "BC4lean.KKTheory.reducedCrossedProduct_separableSpace",
+    "BC4lean.KKTheory.reducedCrossedRegular",
+    "BC4lean.KKTheory.reducedCrossedScalarHilbertEquiv",
+    "BC4lean.KKTheory.reducedCrossedScalarOperatorEquiv_generator",
+    "BC4lean.KKTheory.reducedCrossedScalarProductEquiv",
+    "BC4lean.KKTheory.reducedCrossedScalarProductEquiv_oneCoefficient",
+    "BC4lean.KKTheory.reducedCrossed_covariance",
+    "BC4lean.OperatorKTheory.nonunitalProjectionK0",
+    "BC4lean.OperatorKTheory.nonunitalProjectionK0_eq_of_partialIsometry",
+    "BC4lean.OperatorKTheory.operatorK0Inclusion_nonunitalProjectionK0",
+    "BC4lean.ProperActions.CocompactPiece.exists_cutoffFunction",
+    "BC4lean.ProperActions.CocompactPiece.proper",
+    "BC4lean.ProperActions.Cutoff.CutoffFunction",
+    "BC4lean.ProperActions.Cutoff.algebraicProjection",
+    "BC4lean.ProperActions.Cutoff.algebraicProjection_mul_self",
+    "BC4lean.ProperActions.Cutoff.coeff_mixedAlgebraic",
+    "BC4lean.ProperActions.Cutoff.cutoffK0",
+    "BC4lean.ProperActions.Cutoff.cutoffK0_independent",
+    "BC4lean.ProperActions.Cutoff.exists_cutoffFunction",
+    "BC4lean.ProperActions.Cutoff.finite_mixedCoefficient_support",
+    "BC4lean.ProperActions.Cutoff.mixedAlgebraic",
+    "BC4lean.ProperActions.Cutoff.mixedAlgebraic_partialIsometry",
+    "BC4lean.ProperActions.Cutoff.normalized_tsum",
+    "BC4lean.ProperActions.Cutoff.reducedCutoffProjection",
+    "BC4lean.ProperActions.Cutoff.reducedCutoffProjection_isStarProjection",
+    "BC4lean.ProperActions.Cutoff.reducedCutoffProjection_partialIsometry",
+    "BC4lean.ProperActions.Cutoff.star_algebraicProjection",
+    "BC4lean.ProperActions.CutoffCoefficients.convolution_mixed_of_normalized",
+    "BC4lean.ProperActions.CutoffCoefficients.involution_mixed"
+  ],
+  "notready_targets": [
+    "def:assembly-map",
+    "def:assembly-piece",
+    "def:reduced-descent",
+    "prop:assembly-compatibility"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "command": [
+    "/Library/Frameworks/Python.framework/Versions/3.14/bin/python3",
+    "-B",
+    "scripts/check_project_imports.py"
+  ],
+  "exit_code": 0,
+  "stdout_stderr_sha256": "486a52edb4108ceab6a6a5f98de228202bcd82627c469a508e246c4b7044190e"
+}

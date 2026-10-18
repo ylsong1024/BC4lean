@@ -1,0 +1,47 @@
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.AlgebraicCrossedProduct"]
+Build completed successfully (2975 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.CutoffCoefficientProjection"]
+Build completed successfully (2025 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentCompactAction"]
+Build completed successfully (2980 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.NonunitalProjectionK0"]
+Build completed successfully (2986 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.ProperCutoffFunction"]
+✔ [2042/2042] Built BC4lean.ProperCutoffFunction (31s)
+Build completed successfully (2042 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.ReducedCrossedHilbertModule"]
+✔ [2987/2987] Built BC4lean.ReducedCrossedHilbertModule (51s)
+Build completed successfully (2987 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.CocompactPieceCutoff"]
+✔ [2043/2043] Built BC4lean.CocompactPieceCutoff (25s)
+Build completed successfully (2043 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.CutoffAlgebraicProjection"]
+✔ [3103/3103] Built BC4lean.CutoffAlgebraicProjection (47s)
+Build completed successfully (3103 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.ReducedCrossedRegularOperators"]
+✔ [2990/2990] Built BC4lean.ReducedCrossedRegularOperators (44s)
+Build completed successfully (2990 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.ReducedCrossedScalarHilbert"]
+✔ [3001/3001] Built BC4lean.ReducedCrossedScalarHilbert (42s)
+Build completed successfully (3001 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.ReducedCrossedProduct"]
+✔ [2991/2991] Built BC4lean.ReducedCrossedProduct (39s)
+Build completed successfully (2991 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.AlgebraicCrossedRepresentation"]
+✔ [2994/2994] Built BC4lean.AlgebraicCrossedRepresentation (42s)
+Build completed successfully (2994 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.ReducedCrossedScalarProduct"]
+✔ [3011/3011] Built BC4lean.ReducedCrossedScalarProduct (45s)
+Build completed successfully (3011 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.ReducedCrossedNorm"]
+✔ [2995/2995] Built BC4lean.ReducedCrossedNorm (42s)
+Build completed successfully (2995 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.ReducedCutoffProjection"]
+✔ [3141/3141] Built BC4lean.ReducedCutoffProjection (47s)
+Build completed successfully (3141 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentModule"]
+✔ [3019/3019] Built BC4lean.KasparovDescentModule (52s)
+Build completed successfully (3019 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean"]
+✔ [4238/4239] Built BC4lean (63s)
+Build completed successfully (4239 jobs).

@@ -16,10 +16,13 @@ on:
       - 'scripts/audit_chapter6.py'
       - 'scripts/test_audit_chapter6.py'
       - 'scripts/check_project_imports.py'
+      - 'scripts/*chapter7*.py'
       - 'docs/audits/chapter5/**'
       - 'docs/audits/chapter6/**'
+      - 'docs/audits/chapter7/**'
       - 'docs/CHAPTER5_COMPLETION.md'
       - 'docs/CHAPTER6_*.md'
+      - 'docs/CHAPTER7_*.md'
       - '.github/workflows/blueprint-check.yml'
   workflow_dispatch:
 
@@ -38,10 +41,14 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
-      - name: Check Chapters 5 and 6 source links and proof-status safeguards
+      - name: Check Chapters 5 through 7 source links and proof-status safeguards
         run: |
           python3 -B scripts/update_chapter5_finder.py --check
           python3 -B scripts/update_chapter6_finder.py --check
+          python3 -B scripts/update_chapter7_finder.py --check
+          python3 -B scripts/test_audit_chapter7.py
+          python3 -B scripts/test_chapter7_publication.py
+          python3 -B scripts/test_chapter7_website.py
           python3 -B scripts/test_blueprint_status.py
       - name: Install blueprint tools
         run: |
@@ -52,3 +59,17 @@ jobs:
       - name: Build blueprint HTML
         working-directory: blueprint/src
         run: '${{ github.workspace }}/.venv/bin/python build_web.py'
+      - name: Verify actual Chapter 7 rendered status and declaration links
+        run: |
+          python3 -B - <<'PY'
+          import json
+          from pathlib import Path
+          import sys
+          sys.path.insert(0, "scripts")
+          from check_chapter7_website import validate_rendered_chapter7
+          from update_chapter7_finder import load_audit
+          record = json.loads(Path("docs/audits/chapter7/audit.json").read_text())
+          evidence, _ = load_audit(record["source_revision"])
+          source = Path("blueprint/src/parts/07-assembly-map.tex").read_text()
+          print(validate_rendered_chapter7(Path("blueprint/web"), source, evidence))
+          PY

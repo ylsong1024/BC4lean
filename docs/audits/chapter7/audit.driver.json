@@ -1,0 +1,12 @@
+{
+  "command": [
+    "python3",
+    "-B",
+    "scripts/audit_chapter7.py",
+    "--require-complete"
+  ],
+  "exit_code": 2,
+  "started_utc": "2026-10-18T22:29:06.575100+00:00",
+  "finished_utc": "2026-10-18T22:32:06.362225+00:00",
+  "log_sha256": "697eda172009ed2cf0613dbbb5a403dc68c0c4d5262d48788960365aa199d918"
+}

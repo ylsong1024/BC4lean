@@ -58,7 +58,11 @@ property, cofinal indexing and homotopy/model independence using the geometric
 telescope. All three blueprint targets and 347 declarations in 16 new modules
 pass the strict build and complete dependency-axiom audit, with the scope in the
 [Chapter 6 completion record](docs/CHAPTER6_COMPLETION.md).
-The assembly construction remains a later milestone.
+Chapter 7 constructs the regular reduced crossed product and the normalized
+cutoff projection, with independence of its actual operator K₀ class. Its
+verified analytic prerequisites are recorded in the
+[Chapter 7 verification record](docs/CHAPTER7_VERIFICATION.md).
+Full Kasparov descent, its product laws, and the assembly map remain incomplete.
 Consult the [roadmap](docs/ROADMAP.md) and individual blueprint nodes
 for precise boundaries; a green prerequisite does not verify its successors.
 
