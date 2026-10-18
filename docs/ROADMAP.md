@@ -1,6 +1,6 @@
 # Contributor tasks and roadmap
 
-This is a source-based planning snapshot dated 2026-10-05. Tasks below are
+This is a source-based planning snapshot dated 2026-10-18. Tasks below are
 proposals, not opened GitHub issues or assigned work. Check the current source
 and [issues](https://github.com/ylsong1024/BC4lean/issues) before claiming one.
 Completion requires a reviewed implementation and the checks in
@@ -14,7 +14,8 @@ Completion requires a reviewed implementation and the checks in
 | Operator K-theory | K₀/K₁ constructions, functoriality, nonunital comparisons and homotopy modules | Review exact hypotheses and extend structural results in bounded steps |
 | Proper actions | Equivariant CW attachment, Hausdorffness, properness, cellular mapping, finite-group models, proper weak labeled join with genuine CW structure and fixed-point criterion, universal mapping and uniqueness, locally compact second-countable telescope model, cocompact indexing | API refinement, examples and independent review |
 | Equivariant KK-theory | Hilbert-module prerequisites, full homotopy KK groups, completed interior tensor products, Kasparov products and natural operator K₀/K₁ comparisons | API refinement, examples and independent review |
-| Topological side and assembly | Blueprint specifications | Transition maps, colimit, descent, cut-off classes and compatibility |
+| Topological side | Actual parity KK piece groups, transitions, filtered colimit and universal property, cofinal indexing, homotopy and universal-model independence | API refinement, examples and independent review |
+| Assembly | Blueprint specifications | Descent, cut-off classes, assembly and compatibility |
 
 This table describes source organization, not a new verification certificate.
 The general conjecture is not proved by this project. In particular,
@@ -53,8 +54,8 @@ assume the existence of a universal proper space.
 
 **Done when:** the maps and laws compile under the pinned toolchain, their axioms
 are audited, the full build passes, and a small example demonstrates composition.
-This supplies maps between pieces; it does not yet define K-homology transition
-maps or a colimit.
+This supplies maps between pieces. Chapter 6 now constructs their K-homology
+transition maps and the actual colimit.
 
 ### C4-02 — Fixed points of orbit cells
 
@@ -169,9 +170,9 @@ possibly nonunital B and the trivial group, with genuine inverse maps.
 
 The verified equivariant CW and extension results now support the universal
 proper-space construction and its mapping property. The chosen telescope model
-supplies the hypotheses needed for the topological-side construction. Equivariant
-KK-theory and operator K-theory comparisons then support descent and the assembly
-map. Each arrow needs its own explicit mathematical and Lean interface.
+and the verified topological colimit now supply the source of assembly.
+Equivariant KK-theory and operator K-theory comparisons support descent and the
+assembly map. See [the Chapter 6 completion record](CHAPTER6_COMPLETION.md). Each arrow needs its own explicit mathematical and Lean interface.
 
 The roadmap intentionally separates these goals from small contributor tasks.
 If an attempt yields no new theorem or justified next mechanism, report that

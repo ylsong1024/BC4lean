@@ -1,0 +1,16 @@
+{
+  "command": [
+    "lake",
+    "env",
+    "lean",
+    "-j1",
+    "-DwarningAsError=true",
+    "-DautoImplicit=false",
+    "-DrelaxedAutoImplicit=false",
+    "/private/tmp/BC4lean-chapter6-native-20261018/docs/audits/chapter6/ExpectedTypes.lean"
+  ],
+  "exit_code": 0,
+  "fixture": "docs/audits/chapter6/ExpectedTypes.lean",
+  "source_sha256": "61cff5671d5ee5c8bbc093d57548cb95c4de37550c7b231570114f0dfcf5229f",
+  "stdout_stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

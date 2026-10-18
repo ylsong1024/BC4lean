@@ -81,12 +81,25 @@ for that revision, and checks of actual served chapter, graph and source-link
 content against the published hash manifest. Final results are recorded only
 after those checks have actually completed.
 
-## Current execution state
+## Runtime verification outcome
 
-All 16 new modules pass strict compilation with warnings as errors and implicit
-variables disabled. The independently written `ExpectedTypes.lean` checks also
-pass. A fresh blueprint render has three checked nodes, one explicit checked
-proof and 22 exact declaration links in both the chapter and document graphs.
-The sequential Lake builds, complete dependency-axiom audit and publication
-acceptance checks are in progress. This record makes no publication claim.
-The final completion record will identify the actual audit, CI and live results.
+The complete audit passed at `d29363fcdbe3b6e91041a4de5af3afdb531cdd1c`:
+347 declarations in all 16 new modules, all 22 exact blueprint links and
+16 required endpoints, with only `propext`, `Classical.choice` and `Quot.sound`.
+The actual private geometric helper is present in the retained census.
+The independent expected-type subprocess and strict cached-build gate exited 0;
+all captured source and compiled-object hashes stayed unchanged.
+
+All 16 strict module checks and genuine Lake leaf builds passed. The full
+warnings-as-errors aggregate build passed with 825 library modules plus the
+aggregate (4,220 Lake jobs). Its proof sources are unchanged at the audited
+revision. All 23 Chapter 6 safeguard tests, 21 existing Chapter 5 safeguards,
+and 12 blueprint-status tests passed. A fresh blueprint render has three
+checked nodes, one explicit checked proof and 22 declaration links in both
+the chapter and document graphs; Chapter 5's 75-node/435-link rendering also
+passes its retained-evidence checks.
+
+See [the completion record](CHAPTER6_COMPLETION.md) for retained raw evidence and
+the publication acceptance protocol. The interval indexing example above is an
+explanation of the necessary hypothesis; the formal indexing-independence theorem
+is the positive theorem for cofinal families.

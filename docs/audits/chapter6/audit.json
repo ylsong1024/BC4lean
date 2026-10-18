@@ -1,0 +1,3371 @@
+{
+  "scope": "Every declaration with a listed module origin, including private/generated declarations; all exact Chapter 6 blueprint links; independent ExpectedTypes.lean signature checks",
+  "modules": [
+    "BC4lean.CZeroAlgebra",
+    "BC4lean.CZeroHomotopy",
+    "BC4lean.CZeroPullback",
+    "BC4lean.CZeroSeparability",
+    "BC4lean.CocompactPieceMap",
+    "BC4lean.CocompactPieceMapHomotopy",
+    "BC4lean.CocompactPieceRepresentatives",
+    "BC4lean.DirectedAddGroupColimit",
+    "BC4lean.DirectedAddGroupColimitCofinal",
+    "BC4lean.DirectedAddGroupColimitMap",
+    "BC4lean.KasparovSourceHomotopy",
+    "BC4lean.KasparovSourceHomotopyParity",
+    "BC4lean.TopologicalKHomologyColimit",
+    "BC4lean.TopologicalKHomologyDiagram",
+    "BC4lean.TopologicalKHomologyHomotopy",
+    "BC4lean.TopologicalKHomologyMaps"
+  ],
+  "source_modules": [
+    "BC4lean.CZeroAlgebra",
+    "BC4lean.CZeroHomotopy",
+    "BC4lean.CZeroPullback",
+    "BC4lean.CZeroSeparability",
+    "BC4lean.CocompactPieceMap",
+    "BC4lean.CocompactPieceMapHomotopy",
+    "BC4lean.CocompactPieceRepresentatives",
+    "BC4lean.DirectedAddGroupColimit",
+    "BC4lean.DirectedAddGroupColimitCofinal",
+    "BC4lean.DirectedAddGroupColimitMap",
+    "BC4lean.KasparovSourceHomotopy",
+    "BC4lean.KasparovSourceHomotopyParity",
+    "BC4lean.TopologicalKHomologyColimit",
+    "BC4lean.TopologicalKHomologyDiagram",
+    "BC4lean.TopologicalKHomologyHomotopy",
+    "BC4lean.TopologicalKHomologyMaps"
+  ],
+  "source_sha256": {
+    "BC4lean/CZeroAlgebra.lean": "5350f5be03101b6856aedc2c6d210574abfd3fbba4f5dc51e5fa0b502df76b2f",
+    "BC4lean/CZeroHomotopy.lean": "d3f57840d275a8f0e7486a4ac32c16fefa15f49ff3540b0114678d9581e83cd4",
+    "BC4lean/CZeroPullback.lean": "d0eb2f0be49da53483b066d46ba5a4313325e38c80a05899633cfeb826fe3688",
+    "BC4lean/CZeroSeparability.lean": "0118fafbc5d002e32709691e11a6f0891a563e675b2e4bbbc9bc5134753027ca",
+    "BC4lean/CocompactPieceMap.lean": "fe24a5c691f655ede7563816c9a92ac1d3bb699acc26b3e4d014250a634e046e",
+    "BC4lean/CocompactPieceMapHomotopy.lean": "e8611f65647dec5ec2c26e09c153f63c55d52f1e78d8211b9612f5fa4c75f5f9",
+    "BC4lean/CocompactPieceRepresentatives.lean": "e4c26aad83ebc618842af705a5727d5c29ef1a5a9594cb85e9fe92a097566b43",
+    "BC4lean/DirectedAddGroupColimit.lean": "3c8ef31bb03ff3d1425ecaec218293cbfe11db3fa553ac7719c24c193ef7111e",
+    "BC4lean/DirectedAddGroupColimitCofinal.lean": "3f9b75f95cd5dee4e120c892e60bbf903cef3e6e3dd92230a3c36a248011a1c7",
+    "BC4lean/DirectedAddGroupColimitMap.lean": "0ce2ddebf66a979ad24bfcf0da90c0157332efdf7f2ecfd33ffa94b4a28c17a6",
+    "BC4lean/KasparovSourceHomotopy.lean": "ecb1a60e2ca1e8c71c115d3d6834af2b332c61b08634832e4af6af83ab112648",
+    "BC4lean/KasparovSourceHomotopyParity.lean": "10e26399fb5d9f99abaecdc6dd36843ca66c5d2126bc82b1eddd9ef891acd2cf",
+    "BC4lean/TopologicalKHomologyColimit.lean": "5a7e00bc56f493086adf6a5ff85376c8b0e4562fb207b824a8c49fe73d7cd4a7",
+    "BC4lean/TopologicalKHomologyDiagram.lean": "924a497783a176f165f662505f4f436373ecbbb30664ab7372acb952dfe04d6d",
+    "BC4lean/TopologicalKHomologyHomotopy.lean": "07720073d2099c8fb9a21973ea349efc17d3762ca689e68f80a2ffad7e5d83c0",
+    "BC4lean/TopologicalKHomologyMaps.lean": "1a6a65d84e7c89a8b0251e653a693c467df429ffc660e0ae4d2c791a5ba1ac64",
+    "blueprint/src/parts/06-topological-k-homology.tex": "958d7e70629bb58af57fdec3c4ea9ef02e44d85b57fc15cc83f4b50b41552075",
+    "docs/audits/chapter6/inventory.json": "2df68bfa5f2f53fcada91ae96dbfe895092cd27f167e21f11398ea76c6f6e9dc",
+    "scripts/audit_chapter6.py": "e3cd890ac54dfe6dbf1e9a3f7370f337f43e89286a0a8d4d0a9e18d075659d5d",
+    "scripts/test_audit_chapter6.py": "ec1c2434608d256dc2578b551fb90fe5cf92e8bb305ade52630acdea01e14152",
+    "scripts/check_project_imports.py": "8f172dc13763334c1a757ad2ff1999c70328c491d5d1009f1abcf87229b3911b",
+    "docs/audits/chapter6/Chapter5Imports.lean": "b07ac2241fff3e9590412fa57efe285d207df4179f793d423c9d6c8c374a89c0",
+    "docs/audits/chapter6/ExpectedTypes.lean": "61cff5671d5ee5c8bbc093d57548cb95c4de37550c7b231570114f0dfcf5229f",
+    "lean-toolchain": "3aac669c7a910ec2389f4e4f921b605adf6ebf2d1e0c9b9cd0be4d33f3f5db71",
+    "lakefile.toml": "dcb517c34c605807aaa1a08c00179eccb219278161b005f364af8faf27509d7e",
+    "lake-manifest.json": "d85b2e1116be8fedd0fc8dac4fa8afc28d849f21b2920d2012b553ed886adb3c"
+  },
+  "query_sha256": "4b07d1bdcf690afb95cce660453fce85aafe2e9dcef6b6350fb4ec4929db1d96",
+  "target_inventory": {
+    "def:piece-k-homology": {
+      "statement_kind": "definition",
+      "notready": false,
+      "leanok": true,
+      "required_declarations": [
+        "BC4lean.TopologicalKHomology.pieceGroup",
+        "BC4lean.TopologicalKHomology.spaceGroup"
+      ],
+      "linked_declarations": [
+        "BC4lean.KKTheory.CZero.action",
+        "BC4lean.KKTheory.CZero.action_apply",
+        "BC4lean.TopologicalKHomology.cZero_separableSpace",
+        "BC4lean.TopologicalKHomology.pieceGroup",
+        "BC4lean.TopologicalKHomology.spaceGroup"
+      ],
+      "missing_required_declarations": [],
+      "ready": true
+    },
+    "prop:topological-transition": {
+      "statement_kind": "proposition",
+      "notready": false,
+      "leanok": true,
+      "required_declarations": [
+        "BC4lean.TopologicalKHomology.transition",
+        "BC4lean.TopologicalKHomology.transition_refl",
+        "BC4lean.TopologicalKHomology.transition_trans"
+      ],
+      "linked_declarations": [
+        "BC4lean.KKTheory.CZero.pieceRestriction",
+        "BC4lean.KKTheory.CZero.pieceRestriction_comp",
+        "BC4lean.KKTheory.CZero.pieceRestriction_equivariant",
+        "BC4lean.TopologicalKHomology.transition",
+        "BC4lean.TopologicalKHomology.transition_refl",
+        "BC4lean.TopologicalKHomology.transition_trans"
+      ],
+      "missing_required_declarations": [],
+      "ready": true
+    },
+    "def:topological-side": {
+      "statement_kind": "definition",
+      "notready": false,
+      "leanok": true,
+      "required_declarations": [
+        "BC4lean.TopologicalKHomology.cofinalIndexEquiv",
+        "BC4lean.TopologicalKHomology.diagram",
+        "BC4lean.TopologicalKHomology.existsUnique_desc",
+        "BC4lean.TopologicalKHomology.group",
+        "BC4lean.TopologicalKHomology.homotopyEquiv",
+        "BC4lean.TopologicalKHomology.ofPiece_eq_iff",
+        "BC4lean.TopologicalKHomology.pushforward_homotopy",
+        "BC4lean.TopologicalKHomology.toCanonicalModelEquiv",
+        "BC4lean.TopologicalKHomology.topologicalGroup",
+        "BC4lean.TopologicalKHomology.universalComparison_unique",
+        "BC4lean.TopologicalKHomology.universalModelEquiv"
+      ],
+      "linked_declarations": [
+        "BC4lean.TopologicalKHomology.cofinalIndexEquiv",
+        "BC4lean.TopologicalKHomology.diagram",
+        "BC4lean.TopologicalKHomology.existsUnique_desc",
+        "BC4lean.TopologicalKHomology.group",
+        "BC4lean.TopologicalKHomology.homotopyEquiv",
+        "BC4lean.TopologicalKHomology.ofPiece_eq_iff",
+        "BC4lean.TopologicalKHomology.pushforward_homotopy",
+        "BC4lean.TopologicalKHomology.toCanonicalModelEquiv",
+        "BC4lean.TopologicalKHomology.topologicalGroup",
+        "BC4lean.TopologicalKHomology.universalComparison_unique",
+        "BC4lean.TopologicalKHomology.universalModelEquiv"
+      ],
+      "missing_required_declarations": [],
+      "ready": true
+    }
+  },
+  "blueprint_links": [
+    "BC4lean.KKTheory.CZero.action",
+    "BC4lean.KKTheory.CZero.action_apply",
+    "BC4lean.KKTheory.CZero.pieceRestriction",
+    "BC4lean.KKTheory.CZero.pieceRestriction_comp",
+    "BC4lean.KKTheory.CZero.pieceRestriction_equivariant",
+    "BC4lean.TopologicalKHomology.cZero_separableSpace",
+    "BC4lean.TopologicalKHomology.cofinalIndexEquiv",
+    "BC4lean.TopologicalKHomology.diagram",
+    "BC4lean.TopologicalKHomology.existsUnique_desc",
+    "BC4lean.TopologicalKHomology.group",
+    "BC4lean.TopologicalKHomology.homotopyEquiv",
+    "BC4lean.TopologicalKHomology.ofPiece_eq_iff",
+    "BC4lean.TopologicalKHomology.pieceGroup",
+    "BC4lean.TopologicalKHomology.pushforward_homotopy",
+    "BC4lean.TopologicalKHomology.spaceGroup",
+    "BC4lean.TopologicalKHomology.toCanonicalModelEquiv",
+    "BC4lean.TopologicalKHomology.topologicalGroup",
+    "BC4lean.TopologicalKHomology.transition",
+    "BC4lean.TopologicalKHomology.transition_refl",
+    "BC4lean.TopologicalKHomology.transition_trans",
+    "BC4lean.TopologicalKHomology.universalComparison_unique",
+    "BC4lean.TopologicalKHomology.universalModelEquiv"
+  ],
+  "notready_targets": [],
+  "chapter_complete": true,
+  "status": "verified",
+  "source_revision": "d29363fcdbe3b6e91041a4de5af3afdb531cdd1c",
+  "module_sources_match_revision": true,
+  "declarations": [
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.Cofinal",
+      "module": "BC4lean.DirectedAddGroupColimitCofinal",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.Colimit",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.Compatible",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.Hom",
+      "module": "BC4lean.DirectedAddGroupColimitMap",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.Hom._sizeOf_1",
+      "module": "BC4lean.DirectedAddGroupColimitMap",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.Hom._sizeOf_inst",
+      "module": "BC4lean.DirectedAddGroupColimitMap",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.Hom.app",
+      "module": "BC4lean.DirectedAddGroupColimitMap",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.Hom.casesOn",
+      "module": "BC4lean.DirectedAddGroupColimitMap",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.Hom.colimitMap",
+      "module": "BC4lean.DirectedAddGroupColimitMap",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.Hom.colimitMap._proof_1",
+      "module": "BC4lean.DirectedAddGroupColimitMap",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.Hom.colimitMap._proof_2",
+      "module": "BC4lean.DirectedAddGroupColimitMap",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.Hom.colimitMap_congr",
+      "module": "BC4lean.DirectedAddGroupColimitMap",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.Hom.colimitMap_eq_of_eventualEq",
+      "module": "BC4lean.DirectedAddGroupColimitMap",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.Hom.colimitMap_of",
+      "module": "BC4lean.DirectedAddGroupColimitMap",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.Hom.comp",
+      "module": "BC4lean.DirectedAddGroupColimitMap",
+      "axioms": [
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.Hom.comp._proof_1",
+      "module": "BC4lean.DirectedAddGroupColimitMap",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.Hom.comp._proof_2",
+      "module": "BC4lean.DirectedAddGroupColimitMap",
+      "axioms": [
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.Hom.comp_colimitMap",
+      "module": "BC4lean.DirectedAddGroupColimitMap",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.Hom.ctorIdx",
+      "module": "BC4lean.DirectedAddGroupColimitMap",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.Hom.id",
+      "module": "BC4lean.DirectedAddGroupColimitMap",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.Hom.id._proof_1",
+      "module": "BC4lean.DirectedAddGroupColimitMap",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.Hom.id._proof_2",
+      "module": "BC4lean.DirectedAddGroupColimitMap",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.Hom.id_colimitMap",
+      "module": "BC4lean.DirectedAddGroupColimitMap",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.Hom.mk",
+      "module": "BC4lean.DirectedAddGroupColimitMap",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.Hom.mk._flat_ctor",
+      "module": "BC4lean.DirectedAddGroupColimitMap",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.Hom.mk.inj",
+      "module": "BC4lean.DirectedAddGroupColimitMap",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.Hom.mk.injEq",
+      "module": "BC4lean.DirectedAddGroupColimitMap",
+      "axioms": [
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.Hom.mk.noConfusion",
+      "module": "BC4lean.DirectedAddGroupColimitMap",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.Hom.mk.sizeOf_spec",
+      "module": "BC4lean.DirectedAddGroupColimitMap",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.Hom.naturality",
+      "module": "BC4lean.DirectedAddGroupColimitMap",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.Hom.noConfusion",
+      "module": "BC4lean.DirectedAddGroupColimitMap",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.Hom.noConfusionType",
+      "module": "BC4lean.DirectedAddGroupColimitMap",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.Hom.rec",
+      "module": "BC4lean.DirectedAddGroupColimitMap",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.Hom.recOn",
+      "module": "BC4lean.DirectedAddGroupColimitMap",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram._sizeOf_1",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram._sizeOf_inst",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.casesOn",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.cofinalComparisonEquiv",
+      "module": "BC4lean.DirectedAddGroupColimitCofinal",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.cofinalEquiv",
+      "module": "BC4lean.DirectedAddGroupColimitCofinal",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.cofinalEquiv._proof_1",
+      "module": "BC4lean.DirectedAddGroupColimitCofinal",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.cofinalEquiv._proof_2",
+      "module": "BC4lean.DirectedAddGroupColimitCofinal",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.cofinalEquiv._proof_3",
+      "module": "BC4lean.DirectedAddGroupColimitCofinal",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.cofinalEquiv._proof_4",
+      "module": "BC4lean.DirectedAddGroupColimitCofinal",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.cofinalEquiv._proof_5",
+      "module": "BC4lean.DirectedAddGroupColimitCofinal",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.cofinalEquiv._proof_6",
+      "module": "BC4lean.DirectedAddGroupColimitCofinal",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.cofinalEquiv.congr_simp",
+      "module": "BC4lean.DirectedAddGroupColimitCofinal",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.cofinalEquiv_of",
+      "module": "BC4lean.DirectedAddGroupColimitCofinal",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.cofinalEquiv_symm_of",
+      "module": "BC4lean.DirectedAddGroupColimitCofinal",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.ctorIdx",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.desc",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.desc._proof_1",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.desc._proof_2",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.desc._proof_3",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.descEquiv",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.descEquiv._proof_1",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.descEquiv._proof_2",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.descEquiv._proof_3",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.descEquiv._proof_4",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.descEquiv._proof_5",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.descEquiv._proof_6",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.descEquiv._proof_7",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.desc_of",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.desc_unique",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.directedSystem",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.existsUnique_desc",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.exists_of",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.group",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.hom_ext",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.hom_ext_iff",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.map",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.map.congr_simp",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.map_comp",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.map_id",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.mk",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.mk._flat_ctor",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.mk.inj",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.mk.injEq",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": [
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.mk.noConfusion",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.mk.sizeOf_spec",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.noConfusion",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.noConfusionType",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.obj",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.of",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.of._proof_1",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.of._proof_2",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.of._proof_3",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.of._proof_4",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.of_eq_iff",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.of_eq_zero_iff",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.of_map",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.rec",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.recOn",
+      "module": "BC4lean.DirectedAddGroupColimit",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.reindex",
+      "module": "BC4lean.DirectedAddGroupColimitCofinal",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.reindex._proof_1",
+      "module": "BC4lean.DirectedAddGroupColimitCofinal",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.reindex._proof_2",
+      "module": "BC4lean.DirectedAddGroupColimitCofinal",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.reindex_injective",
+      "module": "BC4lean.DirectedAddGroupColimitCofinal",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.reindex_of",
+      "module": "BC4lean.DirectedAddGroupColimitCofinal",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.reindex_surjective",
+      "module": "BC4lean.DirectedAddGroupColimitCofinal",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.restrict",
+      "module": "BC4lean.DirectedAddGroupColimitCofinal",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.restrict._proof_1",
+      "module": "BC4lean.DirectedAddGroupColimitCofinal",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.restrict._proof_2",
+      "module": "BC4lean.DirectedAddGroupColimitCofinal",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.restrict._proof_3",
+      "module": "BC4lean.DirectedAddGroupColimitCofinal",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.DirectedAddGroupDiagram.restrict._proof_4",
+      "module": "BC4lean.DirectedAddGroupColimitCofinal",
+      "axioms": []
+    },
+    {
+      "name": "BC4lean.KKTheory.BundledGradedKasparovCycle.sourcePullbackHomotopy",
+      "module": "BC4lean.KasparovSourceHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.BundledGradedKasparovCycle.sourcePullbackHomotopy._proof_1",
+      "module": "BC4lean.KasparovSourceHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.BundledGradedKasparovCycle.sourcePullbackHomotopy._proof_10",
+      "module": "BC4lean.KasparovSourceHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.BundledGradedKasparovCycle.sourcePullbackHomotopy._proof_11",
+      "module": "BC4lean.KasparovSourceHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.BundledGradedKasparovCycle.sourcePullbackHomotopy._proof_12",
+      "module": "BC4lean.KasparovSourceHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.BundledGradedKasparovCycle.sourcePullbackHomotopy._proof_13",
+      "module": "BC4lean.KasparovSourceHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.BundledGradedKasparovCycle.sourcePullbackHomotopy._proof_14",
+      "module": "BC4lean.KasparovSourceHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.BundledGradedKasparovCycle.sourcePullbackHomotopy._proof_15",
+      "module": "BC4lean.KasparovSourceHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.BundledGradedKasparovCycle.sourcePullbackHomotopy._proof_16",
+      "module": "BC4lean.KasparovSourceHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.BundledGradedKasparovCycle.sourcePullbackHomotopy._proof_2",
+      "module": "BC4lean.KasparovSourceHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.BundledGradedKasparovCycle.sourcePullbackHomotopy._proof_3",
+      "module": "BC4lean.KasparovSourceHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.BundledGradedKasparovCycle.sourcePullbackHomotopy._proof_4",
+      "module": "BC4lean.KasparovSourceHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.BundledGradedKasparovCycle.sourcePullbackHomotopy._proof_5",
+      "module": "BC4lean.KasparovSourceHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.BundledGradedKasparovCycle.sourcePullbackHomotopy._proof_6",
+      "module": "BC4lean.KasparovSourceHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.BundledGradedKasparovCycle.sourcePullbackHomotopy._proof_7",
+      "module": "BC4lean.KasparovSourceHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.BundledGradedKasparovCycle.sourcePullbackHomotopy._proof_8",
+      "module": "BC4lean.KasparovSourceHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.BundledGradedKasparovCycle.sourcePullbackHomotopy._proof_9",
+      "module": "BC4lean.KasparovSourceHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.action",
+      "module": "BC4lean.CZeroAlgebra",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.action._proof_1",
+      "module": "BC4lean.CZeroAlgebra",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.action._proof_2",
+      "module": "BC4lean.CZeroAlgebra",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.action_apply",
+      "module": "BC4lean.CZeroAlgebra",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.cocompactMapOfProper",
+      "module": "BC4lean.CZeroPullback",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.cocompactMapOfProper._proof_1",
+      "module": "BC4lean.CZeroPullback",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.continuous_curry",
+      "module": "BC4lean.CZeroHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.curry",
+      "module": "BC4lean.CZeroHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.curry._proof_1",
+      "module": "BC4lean.CZeroHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.curry._proof_2",
+      "module": "BC4lean.CZeroHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.curry._proof_3",
+      "module": "BC4lean.CZeroHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.curry_apply",
+      "module": "BC4lean.CZeroHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.homeomorphPullback",
+      "module": "BC4lean.CZeroAlgebra",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.homeomorphPullback._proof_1",
+      "module": "BC4lean.CZeroAlgebra",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.homeomorphPullback._proof_2",
+      "module": "BC4lean.CZeroAlgebra",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.homeomorphPullback._proof_3",
+      "module": "BC4lean.CZeroAlgebra",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.homeomorphPullback._proof_4",
+      "module": "BC4lean.CZeroAlgebra",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.homeomorphPullback._proof_5",
+      "module": "BC4lean.CZeroAlgebra",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.homeomorphPullback._proof_6",
+      "module": "BC4lean.CZeroAlgebra",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.homeomorphPullback._proof_7",
+      "module": "BC4lean.CZeroAlgebra",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.homeomorphPullback_apply",
+      "module": "BC4lean.CZeroAlgebra",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.homotopySlice_isProperMap",
+      "module": "BC4lean.CZeroHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.homotopySource_isProperMap",
+      "module": "BC4lean.CZeroHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.homotopyTarget_isProperMap",
+      "module": "BC4lean.CZeroHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.instPartialOrder",
+      "module": "BC4lean.CZeroAlgebra",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.instStarOrderedRing",
+      "module": "BC4lean.CZeroAlgebra",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.intervalSlice_isProperMap",
+      "module": "BC4lean.CZeroHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.pieceRestriction",
+      "module": "BC4lean.CZeroPullback",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.pieceRestriction.congr_simp",
+      "module": "BC4lean.TopologicalKHomologyDiagram",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.pieceRestriction_apply",
+      "module": "BC4lean.CZeroPullback",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.pieceRestriction_comp",
+      "module": "BC4lean.CZeroPullback",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.pieceRestriction_equivariant",
+      "module": "BC4lean.CZeroPullback",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.pieceRestriction_refl",
+      "module": "BC4lean.CZeroPullback",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.properHomotopyPullback",
+      "module": "BC4lean.CZeroHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.properHomotopyPullback._proof_1",
+      "module": "BC4lean.CZeroHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.properHomotopyPullback._proof_2",
+      "module": "BC4lean.CZeroHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.properHomotopyPullback._proof_3",
+      "module": "BC4lean.CZeroHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.properHomotopyPullback._proof_4",
+      "module": "BC4lean.CZeroHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.properHomotopyPullback._proof_5",
+      "module": "BC4lean.CZeroHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.properHomotopyPullback_apply",
+      "module": "BC4lean.CZeroHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.properHomotopyPullback_equivariant",
+      "module": "BC4lean.CZeroHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.properPullback",
+      "module": "BC4lean.CZeroPullback",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.properPullback.congr_simp",
+      "module": "BC4lean.TopologicalKHomologyMaps",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.properPullback_apply",
+      "module": "BC4lean.CZeroPullback",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.properPullback_comp",
+      "module": "BC4lean.CZeroPullback",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.properPullback_equivariant",
+      "module": "BC4lean.CZeroPullback",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.properPullback_id",
+      "module": "BC4lean.CZeroPullback",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.pullback",
+      "module": "BC4lean.CZeroAlgebra",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.pullback._proof_1",
+      "module": "BC4lean.CZeroAlgebra",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.pullback._proof_2",
+      "module": "BC4lean.CZeroAlgebra",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.pullback._proof_3",
+      "module": "BC4lean.CZeroAlgebra",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.pullback._proof_4",
+      "module": "BC4lean.CZeroAlgebra",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.pullback_apply",
+      "module": "BC4lean.CZeroAlgebra",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.pullback_comp",
+      "module": "BC4lean.CZeroAlgebra",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.CZero.pullback_id",
+      "module": "BC4lean.CZeroAlgebra",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.GradedKasparovCycle.sourceHomotopyFibreIso",
+      "module": "BC4lean.KasparovSourceHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.GradedKasparovCycle.sourceHomotopyFibreIso._proof_1",
+      "module": "BC4lean.KasparovSourceHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.GradedKasparovCycle.sourceHomotopyFibreIso._proof_2",
+      "module": "BC4lean.KasparovSourceHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.GradedKasparovCycle.sourceHomotopyFibreIso._proof_3",
+      "module": "BC4lean.KasparovSourceHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.GradedKasparovCycle.sourceHomotopyFibreIso._proof_4",
+      "module": "BC4lean.KasparovSourceHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.GradedKasparovCycle.sourceHomotopyFibreIso._proof_5",
+      "module": "BC4lean.KasparovSourceHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.GradedKasparovCycle.sourceHomotopyFibreIso._proof_6",
+      "module": "BC4lean.KasparovSourceHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.GradedKasparovCycle.sourceHomotopyFibreIso._proof_7",
+      "module": "BC4lean.KasparovSourceHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.GradedKasparovCycle.sourceHomotopyFibreIso._proof_8",
+      "module": "BC4lean.KasparovSourceHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.GradedKasparovCycle.sourceHomotopyFibreIso._proof_9",
+      "module": "BC4lean.KasparovSourceHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.GradedKasparovHomotopyClass.sourcePullback_homotopy",
+      "module": "BC4lean.KasparovSourceHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.GroupUniverseParityFunctoriality.sourcePullback.congr_simp",
+      "module": "BC4lean.TopologicalKHomologyDiagram",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.GroupUniverseParityFunctoriality.sourcePullbackHom_homotopy",
+      "module": "BC4lean.KasparovSourceHomotopyParity",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.GroupUniverseParityFunctoriality.sourcePullback_homotopy",
+      "module": "BC4lean.KasparovSourceHomotopyParity",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.sourceHomotopy_sections_action",
+      "module": "BC4lean.KasparovSourceHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.KKTheory.sourceHomotopy_sections_grading",
+      "module": "BC4lean.KasparovSourceHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.OperatorKTheory.StarHomotopy.continuousSectionsHom",
+      "module": "BC4lean.KasparovSourceHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.OperatorKTheory.StarHomotopy.continuousSectionsHom._proof_1",
+      "module": "BC4lean.KasparovSourceHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.OperatorKTheory.StarHomotopy.continuousSectionsHom._proof_10",
+      "module": "BC4lean.KasparovSourceHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.OperatorKTheory.StarHomotopy.continuousSectionsHom._proof_11",
+      "module": "BC4lean.KasparovSourceHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.OperatorKTheory.StarHomotopy.continuousSectionsHom._proof_12",
+      "module": "BC4lean.KasparovSourceHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.OperatorKTheory.StarHomotopy.continuousSectionsHom._proof_13",
+      "module": "BC4lean.KasparovSourceHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.OperatorKTheory.StarHomotopy.continuousSectionsHom._proof_14",
+      "module": "BC4lean.KasparovSourceHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.OperatorKTheory.StarHomotopy.continuousSectionsHom._proof_2",
+      "module": "BC4lean.KasparovSourceHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.OperatorKTheory.StarHomotopy.continuousSectionsHom._proof_3",
+      "module": "BC4lean.KasparovSourceHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.OperatorKTheory.StarHomotopy.continuousSectionsHom._proof_4",
+      "module": "BC4lean.KasparovSourceHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.OperatorKTheory.StarHomotopy.continuousSectionsHom._proof_5",
+      "module": "BC4lean.KasparovSourceHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.OperatorKTheory.StarHomotopy.continuousSectionsHom._proof_6",
+      "module": "BC4lean.KasparovSourceHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.OperatorKTheory.StarHomotopy.continuousSectionsHom._proof_7",
+      "module": "BC4lean.KasparovSourceHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.OperatorKTheory.StarHomotopy.continuousSectionsHom._proof_8",
+      "module": "BC4lean.KasparovSourceHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.OperatorKTheory.StarHomotopy.continuousSectionsHom._proof_9",
+      "module": "BC4lean.KasparovSourceHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.OperatorKTheory.StarHomotopy.continuousSectionsHom_apply",
+      "module": "BC4lean.KasparovSourceHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.CocompactPiece.ambientRestriction",
+      "module": "BC4lean.CocompactPieceMap",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.CocompactPiece.ambientRestriction_apply",
+      "module": "BC4lean.CocompactPieceMap",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.CocompactPiece.ambientRestriction_isProperMap",
+      "module": "BC4lean.CocompactPieceMap",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.CocompactPiece.familyMap",
+      "module": "BC4lean.CocompactPieceMapHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.CocompactPiece.familyMap._proof_1",
+      "module": "BC4lean.CocompactPieceMapHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.CocompactPiece.familyMap._proof_2",
+      "module": "BC4lean.CocompactPieceMapHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.CocompactPiece.familyMap._proof_3",
+      "module": "BC4lean.CocompactPieceMapHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.CocompactPiece.inclusionMap_isClosedEmbedding",
+      "module": "BC4lean.CZeroPullback",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.CocompactPiece.inclusionMap_isProperMap",
+      "module": "BC4lean.CZeroPullback",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.CocompactPiece.map",
+      "module": "BC4lean.CocompactPieceMap",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.CocompactPiece.map._proof_1",
+      "module": "BC4lean.CocompactPieceMap",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.CocompactPiece.map._proof_2",
+      "module": "BC4lean.CocompactPieceMap",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.CocompactPiece.map._proof_3",
+      "module": "BC4lean.CocompactPieceMap",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.CocompactPiece.map.congr_simp",
+      "module": "BC4lean.CocompactPieceMapHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.CocompactPiece.mapRestriction",
+      "module": "BC4lean.CocompactPieceMap",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.CocompactPiece.mapRestriction._proof_1",
+      "module": "BC4lean.CocompactPieceMap",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.CocompactPiece.mapRestriction._proof_2",
+      "module": "BC4lean.CocompactPieceMap",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.CocompactPiece.mapRestriction._proof_3",
+      "module": "BC4lean.CocompactPieceMap",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.CocompactPiece.mapRestriction._proof_4",
+      "module": "BC4lean.CocompactPieceMap",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.CocompactPiece.mapRestrictionTo",
+      "module": "BC4lean.CocompactPieceMap",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.CocompactPiece.mapRestrictionTo.congr_simp",
+      "module": "BC4lean.TopologicalKHomologyMaps",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.CocompactPiece.mapRestrictionTo_coe",
+      "module": "BC4lean.CocompactPieceMap",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.CocompactPiece.mapRestrictionTo_comp",
+      "module": "BC4lean.CocompactPieceMap",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.CocompactPiece.mapRestrictionTo_id",
+      "module": "BC4lean.CocompactPieceMap",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.CocompactPiece.mapRestrictionTo_isProperMap",
+      "module": "BC4lean.CocompactPieceMap",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.CocompactPiece.mapRestrictionTo_naturality",
+      "module": "BC4lean.CocompactPieceMap",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.CocompactPiece.mapRestriction_coe",
+      "module": "BC4lean.CocompactPieceMap",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.CocompactPiece.mapRestriction_isProperMap",
+      "module": "BC4lean.CocompactPieceMap",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.CocompactPiece.mapRestriction_naturality",
+      "module": "BC4lean.CocompactPieceMap",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.CocompactPiece.map_comp",
+      "module": "BC4lean.CocompactPieceMap",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.CocompactPiece.map_comp_le",
+      "module": "BC4lean.CocompactPieceMap",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.CocompactPiece.map_id",
+      "module": "BC4lean.CocompactPieceMap",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.CocompactPiece.map_mono",
+      "module": "BC4lean.CocompactPieceMap",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.CocompactPiece.mem_map",
+      "module": "BC4lean.CocompactPieceMap",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.CocompactPiece.mem_map._simp_1",
+      "module": "BC4lean.CocompactPieceMap",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.EquivariantHomotopy.imagePiece",
+      "module": "BC4lean.CocompactPieceMapHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.EquivariantHomotopy.imagePiece._proof_1",
+      "module": "BC4lean.CocompactPieceMapHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.EquivariantHomotopy.imagePiece.congr_simp",
+      "module": "BC4lean.CocompactPieceMapHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.EquivariantHomotopy.map_atTime_le_imagePiece",
+      "module": "BC4lean.CocompactPieceMapHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.EquivariantHomotopy.map_one_le_imagePiece",
+      "module": "BC4lean.CocompactPieceMapHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.EquivariantHomotopy.map_zero_le_imagePiece",
+      "module": "BC4lean.CocompactPieceMapHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.EquivariantHomotopy.mem_imagePiece",
+      "module": "BC4lean.CocompactPieceMapHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.EquivariantHomotopy.pieceFamily",
+      "module": "BC4lean.CocompactPieceMapHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.EquivariantHomotopy.pieceFamily._proof_1",
+      "module": "BC4lean.CocompactPieceMapHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.EquivariantHomotopy.pieceFamilyToImage",
+      "module": "BC4lean.CocompactPieceMapHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.EquivariantHomotopy.pieceFamilyToImage._proof_1",
+      "module": "BC4lean.CocompactPieceMapHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.EquivariantHomotopy.pieceFamilyToImage._proof_2",
+      "module": "BC4lean.CocompactPieceMapHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.EquivariantHomotopy.pieceFamilyToImage_coe",
+      "module": "BC4lean.CocompactPieceMapHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.EquivariantHomotopy.pieceFamilyToImage_equivariant",
+      "module": "BC4lean.CocompactPieceMapHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.EquivariantHomotopy.pieceFamilyToImage_isProperMap",
+      "module": "BC4lean.CocompactPieceMapHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.EquivariantHomotopy.pieceFamily_equivariant",
+      "module": "BC4lean.CocompactPieceMapHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.EquivariantHomotopy.pieceFamily_isProperMap",
+      "module": "BC4lean.CocompactPieceMapHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.EquivariantHomotopy.restrictToImage",
+      "module": "BC4lean.CocompactPieceMapHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.EquivariantHomotopy.restrictToImage._proof_1",
+      "module": "BC4lean.CocompactPieceMapHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.EquivariantHomotopy.restrictToImage._proof_2",
+      "module": "BC4lean.CocompactPieceMapHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.EquivariantHomotopy.restrictToImage._proof_3",
+      "module": "BC4lean.CocompactPieceMapHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.EquivariantHomotopy.restrictToImage_isProperMap",
+      "module": "BC4lean.CocompactPieceMapHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.EquivariantMap.continuous_orbitMap",
+      "module": "BC4lean.CocompactPieceMap",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.EquivariantMap.isCompact_quotient_image",
+      "module": "BC4lean.CocompactPieceMap",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.EquivariantMap.isProperMap_of_compactOrbit",
+      "module": "BC4lean.CocompactPieceMap",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.EquivariantMap.orbitMap",
+      "module": "BC4lean.CocompactPieceMap",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.EquivariantMap.orbitMap._proof_1",
+      "module": "BC4lean.CocompactPieceMap",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.EquivariantMap.orbitMap_mk",
+      "module": "BC4lean.CocompactPieceMap",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.exists_compact_orbit_representatives",
+      "module": "BC4lean.CocompactPieceRepresentatives",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.isCompact_quotient_image_compactEquivariantFamily",
+      "module": "BC4lean.CocompactPieceMapHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.ProperActions.isProperMap_compactEquivariantFamily",
+      "module": "BC4lean.CocompactPieceMapHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.boundedMap",
+      "module": "BC4lean.TopologicalKHomologyMaps",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.boundedMap._proof_1",
+      "module": "BC4lean.TopologicalKHomologyMaps",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.boundedMap.congr_simp",
+      "module": "BC4lean.TopologicalKHomologyMaps",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.boundedMap_comp",
+      "module": "BC4lean.TopologicalKHomologyMaps",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.boundedMap_naturality",
+      "module": "BC4lean.TopologicalKHomologyMaps",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.boundedMap_target",
+      "module": "BC4lean.TopologicalKHomologyMaps",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.cZero_separable",
+      "module": "BC4lean.TopologicalKHomologyMaps",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.cZero_separableSpace",
+      "module": "BC4lean.CZeroSeparability",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.cocompactPiece_directedOrder",
+      "module": "BC4lean.TopologicalKHomologyColimit",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.cocompactPiece_nonempty",
+      "module": "BC4lean.TopologicalKHomologyColimit",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.cofinalIndexEquiv",
+      "module": "BC4lean.TopologicalKHomologyColimit",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.cofinalIndexEquiv_of",
+      "module": "BC4lean.TopologicalKHomologyColimit",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.diagram",
+      "module": "BC4lean.TopologicalKHomologyColimit",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.diagram._proof_1",
+      "module": "BC4lean.TopologicalKHomologyColimit",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.existsUnique_desc",
+      "module": "BC4lean.TopologicalKHomologyColimit",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.extendAtInfinity",
+      "module": "BC4lean.CZeroSeparability",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.extendAtInfinity._proof_1",
+      "module": "BC4lean.CZeroSeparability",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.extendAtInfinity.congr_simp",
+      "module": "BC4lean.CZeroSeparability",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.extendAtInfinity_coe",
+      "module": "BC4lean.CZeroSeparability",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.extendAtInfinity_infty",
+      "module": "BC4lean.CZeroSeparability",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.extendAtInfinity_isometry",
+      "module": "BC4lean.CZeroSeparability",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.group",
+      "module": "BC4lean.TopologicalKHomologyColimit",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.homotopyEquiv",
+      "module": "BC4lean.TopologicalKHomologyHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.homotopyEquiv._proof_1",
+      "module": "BC4lean.TopologicalKHomologyHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.homotopyEquiv._proof_2",
+      "module": "BC4lean.TopologicalKHomologyHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.homotopyEquiv._proof_3",
+      "module": "BC4lean.TopologicalKHomologyHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.homotopyEquiv._proof_4",
+      "module": "BC4lean.TopologicalKHomologyHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.homotopyEquiv._proof_5",
+      "module": "BC4lean.TopologicalKHomologyHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.homotopyEquiv._proof_6",
+      "module": "BC4lean.TopologicalKHomologyHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.homotopy_cZero_separable",
+      "module": "BC4lean.TopologicalKHomologyHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.homotopy_piece_locallyCompact",
+      "module": "BC4lean.TopologicalKHomologyHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.mapDiagram",
+      "module": "BC4lean.TopologicalKHomologyMaps",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.mapDiagram._proof_1",
+      "module": "BC4lean.TopologicalKHomologyMaps",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.mapDiagram._proof_2",
+      "module": "BC4lean.TopologicalKHomologyMaps",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.mapDiagram._proof_3",
+      "module": "BC4lean.TopologicalKHomologyMaps",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.maps_piece_locallyCompact",
+      "module": "BC4lean.TopologicalKHomologyMaps",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.ofPiece",
+      "module": "BC4lean.TopologicalKHomologyColimit",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.ofPiece_eq_iff",
+      "module": "BC4lean.TopologicalKHomologyColimit",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.ofPiece_transition",
+      "module": "BC4lean.TopologicalKHomologyColimit",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.onePoint_secondCountable",
+      "module": "BC4lean.CZeroSeparability",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.pieceGroup",
+      "module": "BC4lean.TopologicalKHomologyDiagram",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.pieceGroup._proof_1",
+      "module": "BC4lean.TopologicalKHomologyDiagram",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.piece_algebra_separable",
+      "module": "BC4lean.TopologicalKHomologyDiagram",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.piece_locallyCompact",
+      "module": "BC4lean.TopologicalKHomologyDiagram",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.piece_secondCountable",
+      "module": "BC4lean.TopologicalKHomologyDiagram",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.properPushforward",
+      "module": "BC4lean.TopologicalKHomologyMaps",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.properPushforward.congr_simp",
+      "module": "BC4lean.TopologicalKHomologyMaps",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.properPushforward_comp",
+      "module": "BC4lean.TopologicalKHomologyMaps",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.properPushforward_homotopy",
+      "module": "BC4lean.TopologicalKHomologyHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.properPushforward_id",
+      "module": "BC4lean.TopologicalKHomologyMaps",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.pushforward",
+      "module": "BC4lean.TopologicalKHomologyMaps",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.pushforward.congr_simp",
+      "module": "BC4lean.TopologicalKHomologyHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.pushforward_comp",
+      "module": "BC4lean.TopologicalKHomologyMaps",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.pushforward_homotopic",
+      "module": "BC4lean.TopologicalKHomologyHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.pushforward_homotopy",
+      "module": "BC4lean.TopologicalKHomologyHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.pushforward_id",
+      "module": "BC4lean.TopologicalKHomologyMaps",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.pushforward_ofPiece",
+      "module": "BC4lean.TopologicalKHomologyMaps",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.pushforward_ofPiece_bounded",
+      "module": "BC4lean.TopologicalKHomologyMaps",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.spaceGroup",
+      "module": "BC4lean.TopologicalKHomologyDiagram",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.spaceGroup._proof_1",
+      "module": "BC4lean.TopologicalKHomologyDiagram",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.toCanonicalModelEquiv",
+      "module": "BC4lean.TopologicalKHomologyHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.topologicalGroup",
+      "module": "BC4lean.TopologicalKHomologyHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.topologicalGroup._proof_1",
+      "module": "BC4lean.TopologicalKHomologyHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.transition",
+      "module": "BC4lean.TopologicalKHomologyDiagram",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.transition._proof_1",
+      "module": "BC4lean.TopologicalKHomologyDiagram",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.transition._proof_2",
+      "module": "BC4lean.TopologicalKHomologyDiagram",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.transition.congr_simp",
+      "module": "BC4lean.TopologicalKHomologyMaps",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.transition_eq_properPushforward",
+      "module": "BC4lean.TopologicalKHomologyMaps",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.transition_refl",
+      "module": "BC4lean.TopologicalKHomologyDiagram",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.transition_trans",
+      "module": "BC4lean.TopologicalKHomologyDiagram",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.universalComparison_unique",
+      "module": "BC4lean.TopologicalKHomologyHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "BC4lean.TopologicalKHomology.universalModelEquiv",
+      "module": "BC4lean.TopologicalKHomologyHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "_private.BC4lean.CocompactPieceMap.0.BC4lean.ProperActions.CocompactPiece.range_ambientRestriction",
+      "module": "BC4lean.CocompactPieceMap",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    }
+  ],
+  "declaration_count": 347,
+  "linked_declarations": {
+    "BC4lean.KKTheory.CZero.action": {
+      "name": "BC4lean.KKTheory.CZero.action",
+      "module": "BC4lean.CZeroAlgebra",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    "BC4lean.KKTheory.CZero.action_apply": {
+      "name": "BC4lean.KKTheory.CZero.action_apply",
+      "module": "BC4lean.CZeroAlgebra",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    "BC4lean.KKTheory.CZero.pieceRestriction": {
+      "name": "BC4lean.KKTheory.CZero.pieceRestriction",
+      "module": "BC4lean.CZeroPullback",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    "BC4lean.KKTheory.CZero.pieceRestriction_comp": {
+      "name": "BC4lean.KKTheory.CZero.pieceRestriction_comp",
+      "module": "BC4lean.CZeroPullback",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    "BC4lean.KKTheory.CZero.pieceRestriction_equivariant": {
+      "name": "BC4lean.KKTheory.CZero.pieceRestriction_equivariant",
+      "module": "BC4lean.CZeroPullback",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    "BC4lean.TopologicalKHomology.cZero_separableSpace": {
+      "name": "BC4lean.TopologicalKHomology.cZero_separableSpace",
+      "module": "BC4lean.CZeroSeparability",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    "BC4lean.TopologicalKHomology.cofinalIndexEquiv": {
+      "name": "BC4lean.TopologicalKHomology.cofinalIndexEquiv",
+      "module": "BC4lean.TopologicalKHomologyColimit",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    "BC4lean.TopologicalKHomology.diagram": {
+      "name": "BC4lean.TopologicalKHomology.diagram",
+      "module": "BC4lean.TopologicalKHomologyColimit",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    "BC4lean.TopologicalKHomology.existsUnique_desc": {
+      "name": "BC4lean.TopologicalKHomology.existsUnique_desc",
+      "module": "BC4lean.TopologicalKHomologyColimit",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    "BC4lean.TopologicalKHomology.group": {
+      "name": "BC4lean.TopologicalKHomology.group",
+      "module": "BC4lean.TopologicalKHomologyColimit",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    "BC4lean.TopologicalKHomology.homotopyEquiv": {
+      "name": "BC4lean.TopologicalKHomology.homotopyEquiv",
+      "module": "BC4lean.TopologicalKHomologyHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    "BC4lean.TopologicalKHomology.ofPiece_eq_iff": {
+      "name": "BC4lean.TopologicalKHomology.ofPiece_eq_iff",
+      "module": "BC4lean.TopologicalKHomologyColimit",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    "BC4lean.TopologicalKHomology.pieceGroup": {
+      "name": "BC4lean.TopologicalKHomology.pieceGroup",
+      "module": "BC4lean.TopologicalKHomologyDiagram",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    "BC4lean.TopologicalKHomology.pushforward_homotopy": {
+      "name": "BC4lean.TopologicalKHomology.pushforward_homotopy",
+      "module": "BC4lean.TopologicalKHomologyHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    "BC4lean.TopologicalKHomology.spaceGroup": {
+      "name": "BC4lean.TopologicalKHomology.spaceGroup",
+      "module": "BC4lean.TopologicalKHomologyDiagram",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    "BC4lean.TopologicalKHomology.toCanonicalModelEquiv": {
+      "name": "BC4lean.TopologicalKHomology.toCanonicalModelEquiv",
+      "module": "BC4lean.TopologicalKHomologyHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    "BC4lean.TopologicalKHomology.topologicalGroup": {
+      "name": "BC4lean.TopologicalKHomology.topologicalGroup",
+      "module": "BC4lean.TopologicalKHomologyHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    "BC4lean.TopologicalKHomology.transition": {
+      "name": "BC4lean.TopologicalKHomology.transition",
+      "module": "BC4lean.TopologicalKHomologyDiagram",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    "BC4lean.TopologicalKHomology.transition_refl": {
+      "name": "BC4lean.TopologicalKHomology.transition_refl",
+      "module": "BC4lean.TopologicalKHomologyDiagram",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    "BC4lean.TopologicalKHomology.transition_trans": {
+      "name": "BC4lean.TopologicalKHomology.transition_trans",
+      "module": "BC4lean.TopologicalKHomologyDiagram",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    "BC4lean.TopologicalKHomology.universalComparison_unique": {
+      "name": "BC4lean.TopologicalKHomology.universalComparison_unique",
+      "module": "BC4lean.TopologicalKHomologyHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    "BC4lean.TopologicalKHomology.universalModelEquiv": {
+      "name": "BC4lean.TopologicalKHomology.universalModelEquiv",
+      "module": "BC4lean.TopologicalKHomologyHomotopy",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    }
+  },
+  "module_declaration_counts": {
+    "BC4lean.CZeroAlgebra": 23,
+    "BC4lean.CZeroHomotopy": 18,
+    "BC4lean.CZeroPullback": 14,
+    "BC4lean.CZeroSeparability": 8,
+    "BC4lean.CocompactPieceMap": 34,
+    "BC4lean.CocompactPieceMapHomotopy": 29,
+    "BC4lean.CocompactPieceRepresentatives": 1,
+    "BC4lean.DirectedAddGroupColimit": 50,
+    "BC4lean.DirectedAddGroupColimitCofinal": 23,
+    "BC4lean.DirectedAddGroupColimitMap": 31,
+    "BC4lean.KasparovSourceHomotopy": 46,
+    "BC4lean.KasparovSourceHomotopyParity": 2,
+    "BC4lean.TopologicalKHomologyColimit": 11,
+    "BC4lean.TopologicalKHomologyDiagram": 14,
+    "BC4lean.TopologicalKHomologyHomotopy": 18,
+    "BC4lean.TopologicalKHomologyMaps": 25
+  },
+  "axioms": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+  ],
+  "private_declaration_counts": {
+    "BC4lean.CZeroAlgebra": 0,
+    "BC4lean.CZeroHomotopy": 0,
+    "BC4lean.CZeroPullback": 0,
+    "BC4lean.CZeroSeparability": 0,
+    "BC4lean.CocompactPieceMap": 1,
+    "BC4lean.CocompactPieceMapHomotopy": 0,
+    "BC4lean.CocompactPieceRepresentatives": 0,
+    "BC4lean.DirectedAddGroupColimit": 0,
+    "BC4lean.DirectedAddGroupColimitCofinal": 0,
+    "BC4lean.DirectedAddGroupColimitMap": 0,
+    "BC4lean.KasparovSourceHomotopy": 0,
+    "BC4lean.KasparovSourceHomotopyParity": 0,
+    "BC4lean.TopologicalKHomologyColimit": 0,
+    "BC4lean.TopologicalKHomologyDiagram": 0,
+    "BC4lean.TopologicalKHomologyHomotopy": 0,
+    "BC4lean.TopologicalKHomologyMaps": 0
+  },
+  "module_olean_sha256": {
+    ".lake/build/lib/lean/BC4lean/CZeroAlgebra.olean": "239089d4ae7b820c65bb0a9ade2daf76a96970206038de85aac2543bd7c1ebb7",
+    ".lake/build/lib/lean/BC4lean/CZeroHomotopy.olean": "5f170d4518f20e11149849e7f9eceff1cedec3de74378afa17602a742b21e89b",
+    ".lake/build/lib/lean/BC4lean/CZeroPullback.olean": "3be20f0d0d4531b138b84e8b40be7a333f85ef75051ad193b94bee31d963e831",
+    ".lake/build/lib/lean/BC4lean/CZeroSeparability.olean": "91ffb5966ce980ca4260fe24d55a2e33b9c8c176146e407dfdccea098352de11",
+    ".lake/build/lib/lean/BC4lean/CocompactPieceMap.olean": "5577cd51bafb7a273bec983f06e220cfa280d911251822dd1ca54a6d119fce9f",
+    ".lake/build/lib/lean/BC4lean/CocompactPieceMapHomotopy.olean": "fb6a281f1b0a1c639a90cef0d44e29bdc8906f7ed438362d877f6b652b9ba653",
+    ".lake/build/lib/lean/BC4lean/CocompactPieceRepresentatives.olean": "0d2ac0a53276e04120000c594cf8cd5daaee0c58215c7567530608810840cee0",
+    ".lake/build/lib/lean/BC4lean/DirectedAddGroupColimit.olean": "f10d573926b52f6e2ef6508d14b4792d151bb0d19129689c86249d9e99e2ce2d",
+    ".lake/build/lib/lean/BC4lean/DirectedAddGroupColimitCofinal.olean": "fda1838628ee3733f13258652be707bedae67a496e6586924da3ed26b7fe29df",
+    ".lake/build/lib/lean/BC4lean/DirectedAddGroupColimitMap.olean": "704797a19228d9d1d82c0d462d34d57d6479346480793f4afe1460e92f417d61",
+    ".lake/build/lib/lean/BC4lean/KasparovSourceHomotopy.olean": "2406b25a697034eadac9d866e70508e5b0016fdeaaa7df59966951f39e5ebf65",
+    ".lake/build/lib/lean/BC4lean/KasparovSourceHomotopyParity.olean": "5ea5d0605262da237345493480ea48a9fce6a17df8ed1f08eebe8fbedc1dfdda",
+    ".lake/build/lib/lean/BC4lean/TopologicalKHomologyColimit.olean": "f8bb1bd3d1e815099db32839e6aae0b414468cd3d4cffdc625eaa8549ee0429d",
+    ".lake/build/lib/lean/BC4lean/TopologicalKHomologyDiagram.olean": "105205a8431147f639ca140147fdd8507fa6753598c3f263444b2aea4b7bc71c",
+    ".lake/build/lib/lean/BC4lean/TopologicalKHomologyHomotopy.olean": "2b709ebb6bb5d641de36c50816eb7f38a1cb8a637ce661a474e1fc1cb45f129d",
+    ".lake/build/lib/lean/BC4lean/TopologicalKHomologyMaps.olean": "e69f2d786d9c5a9eea6a8d6827b76d512f9e578479b67178f28a164077218024"
+  },
+  "inputs_unchanged_during_audit": true,
+  "cached_strict_build_gate": {
+    "command": [
+      "lake",
+      "--wfail",
+      "--no-build",
+      "--no-cache",
+      "build",
+      "BC4lean.CZeroAlgebra",
+      "BC4lean.CZeroHomotopy",
+      "BC4lean.CZeroPullback",
+      "BC4lean.CZeroSeparability",
+      "BC4lean.CocompactPieceMap",
+      "BC4lean.CocompactPieceMapHomotopy",
+      "BC4lean.CocompactPieceRepresentatives",
+      "BC4lean.DirectedAddGroupColimit",
+      "BC4lean.DirectedAddGroupColimitCofinal",
+      "BC4lean.DirectedAddGroupColimitMap",
+      "BC4lean.KasparovSourceHomotopy",
+      "BC4lean.KasparovSourceHomotopyParity",
+      "BC4lean.TopologicalKHomologyColimit",
+      "BC4lean.TopologicalKHomologyDiagram",
+      "BC4lean.TopologicalKHomologyHomotopy",
+      "BC4lean.TopologicalKHomologyMaps"
+    ],
+    "exit_code": 0
+  },
+  "expected_types_run": {
+    "command": [
+      "lake",
+      "env",
+      "lean",
+      "-j1",
+      "-DwarningAsError=true",
+      "-DautoImplicit=false",
+      "-DrelaxedAutoImplicit=false",
+      "/private/tmp/BC4lean-chapter6-native-20261018/docs/audits/chapter6/ExpectedTypes.lean"
+    ],
+    "exit_code": 0,
+    "fixture": "docs/audits/chapter6/ExpectedTypes.lean",
+    "source_sha256": "61cff5671d5ee5c8bbc093d57548cb95c4de37550c7b231570114f0dfcf5229f",
+    "stdout_stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "kernel_run": {
+    "command": [
+      "lake",
+      "env",
+      "lean",
+      "-j1",
+      "-DwarningAsError=true",
+      "-DautoImplicit=false",
+      "-DrelaxedAutoImplicit=false",
+      "/private/tmp/BC4lean-chapter6-native-20261018/docs/audits/chapter6/audit.lean"
+    ],
+    "exit_code": 0,
+    "query_sha256": "4b07d1bdcf690afb95cce660453fce85aafe2e9dcef6b6350fb4ec4929db1d96",
+    "stdout_stderr_sha256": "bbd4ef6e04b05afb613acd44b91426626492ff9fa215bb1e4042a04737a69199"
+  }
+}

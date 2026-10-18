@@ -53,6 +53,11 @@ balanced algebraic tensor form now pass the full strict build and axiom audit.
 The full homotopy KK groups, Kasparov product laws and natural comparisons
 with ordinary operator K₀/K₁ are verified under the hypotheses in the
 [Chapter 5 completion and verification records](docs/CHAPTER5_COMPLETION.md).
+Chapter 6 constructs the actual topological K-homology colimit, its universal
+property, cofinal indexing and homotopy/model independence using the geometric
+telescope. All three blueprint targets and 347 declarations in 16 new modules
+pass the strict build and complete dependency-axiom audit, with the scope in the
+[Chapter 6 completion record](docs/CHAPTER6_COMPLETION.md).
 The assembly construction remains a later milestone.
 Consult the [roadmap](docs/ROADMAP.md) and individual blueprint nodes
 for precise boundaries; a green prerequisite does not verify its successors.

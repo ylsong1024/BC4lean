@@ -1,0 +1,196 @@
+{
+  "command": [
+    "lake",
+    "--wfail",
+    "--no-cache",
+    "build",
+    "BC4lean"
+  ],
+  "exit_code": 0,
+  "finished_utc": "2026-10-18T16:46:21.976455+00:00",
+  "source_revision_at_build": "f8061491261c241eefa2479e8e6d48129cff5c73",
+  "audited_source_revision": "d29363fcdbe3b6e91041a4de5af3afdb531cdd1c",
+  "lean_sources_unchanged_between_revisions": true,
+  "library_modules": 825,
+  "aggregate_source_sha256": "74885bdc52882341eafdcfb324a0748fad2cf47fe2002929e80b44743fb733a2",
+  "stdout_stderr_sha256": "1fe67420f44f340a959e6e3ccde45218ea7158d5a4701f972398a3e1d6d4eaa4",
+  "toolchain": "Lake version 5.0.0-src+819816b (Lean version 4.33.1)",
+  "leaf_builds": [
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.CZeroAlgebra"
+      ],
+      "exit_code": 0,
+      "finished_utc": "2026-10-18T16:28:39.848295+00:00"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.CZeroHomotopy"
+      ],
+      "exit_code": 0,
+      "finished_utc": "2026-10-18T16:30:42.868843+00:00"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.CZeroPullback"
+      ],
+      "exit_code": 0,
+      "finished_utc": "2026-10-18T16:29:22.469302+00:00"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.CZeroSeparability"
+      ],
+      "exit_code": 0,
+      "finished_utc": "2026-10-18T16:29:50.786544+00:00"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.CocompactPieceMap"
+      ],
+      "exit_code": 0,
+      "finished_utc": "2026-10-18T16:39:57.486769+00:00"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.CocompactPieceMapHomotopy"
+      ],
+      "exit_code": 0,
+      "finished_utc": "2026-10-18T16:41:30.947820+00:00"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.CocompactPieceRepresentatives"
+      ],
+      "exit_code": 0,
+      "finished_utc": "2026-10-18T16:38:40.434355+00:00"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.DirectedAddGroupColimit"
+      ],
+      "exit_code": 0,
+      "finished_utc": "2026-10-18T16:38:49.369906+00:00"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.DirectedAddGroupColimitCofinal"
+      ],
+      "exit_code": 0,
+      "finished_utc": "2026-10-18T16:40:08.992659+00:00"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.DirectedAddGroupColimitMap"
+      ],
+      "exit_code": 0,
+      "finished_utc": "2026-10-18T16:40:15.931699+00:00"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovSourceHomotopy"
+      ],
+      "exit_code": 0,
+      "finished_utc": "2026-10-18T16:39:37.787937+00:00"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovSourceHomotopyParity"
+      ],
+      "exit_code": 0,
+      "finished_utc": "2026-10-18T16:41:06.374194+00:00"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.TopologicalKHomologyColimit"
+      ],
+      "exit_code": 0,
+      "finished_utc": "2026-10-18T16:43:22.652306+00:00"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.TopologicalKHomologyDiagram"
+      ],
+      "exit_code": 0,
+      "finished_utc": "2026-10-18T16:42:27.545946+00:00"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.TopologicalKHomologyHomotopy"
+      ],
+      "exit_code": 0,
+      "finished_utc": "2026-10-18T16:45:19.027769+00:00"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.TopologicalKHomologyMaps"
+      ],
+      "exit_code": 0,
+      "finished_utc": "2026-10-18T16:44:17.911572+00:00"
+    }
+  ]
+}
