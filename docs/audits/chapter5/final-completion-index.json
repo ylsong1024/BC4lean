@@ -1,0 +1,337 @@
+{
+  "schema": "chapter5.final-verification.index.v1",
+  "status": "complete",
+  "completed_at_UTC": "2026-10-17T19:02:17.272731+00:00",
+  "Chapter5_complete": true,
+  "publication": {
+    "repository": "https://github.com/ylsong1024/BC4lean",
+    "branch": "main",
+    "commit": "d6e6e3efe5ee5b47b30d01177840849e39a3e171",
+    "parent": "d5252f44f616606fc618eb40a037ebd0e26f6b7e",
+    "commit_URL": "https://github.com/ylsong1024/BC4lean/commit/d6e6e3efe5ee5b47b30d01177840849e39a3e171",
+    "ordinary_commit_and_push_passed": true,
+    "force_push_used": false,
+    "remote_main_exact_after_push_and_after_CI": true,
+    "tracked_worktree_and_index_clean": true,
+    "other_user_checkout_untouched": true,
+    "actual_publication_evidence": {
+      "path": "/private/tmp/BC4lean-chapter5-final-publication-selected48-Root-20261017-v1/ROOT_FINAL_PUBLICATION_ACTUAL_COMPLETE_D6E6_REMOTE_EXACT_ALL_REQUIRED_CI_GREEN.json",
+      "sha256": "565919ea91dc3edaa9d2071b4594ee23586e032fbd94b433afc3ac6089b2b4f9",
+      "bytes": 2834
+    },
+    "post_CI_remote_receipt": {
+      "path": "/private/tmp/BC4lean-chapter5-final-publication-selected48-Root-20261017-v1/32-final-remote-main-after-exact-CI-green/result.json",
+      "sha256": "14dd154a80a4491ab9d7670422259262a1e8a7f268bd7d39729755012f69f86f",
+      "bytes": 1627
+    }
+  },
+  "records": {
+    "public_repository_verification_record": {
+      "path": "/private/var/folders/_4/cjl9v4654tb9m6kztgmr8pzr0000gn/T/BC4lean-oct12-exact-selected-dependency-build-_yovm53r/docs/CHAPTER5_VERIFICATION.md",
+      "sha256": "52c2065d4bd4a94a54f22d4bd999f7c7e8147235baacc47ae8a93e3e0b283ac0",
+      "bytes": 10991,
+      "URL": "https://github.com/ylsong1024/BC4lean/blob/d6e6e3efe5ee5b47b30d01177840849e39a3e171/docs/CHAPTER5_VERIFICATION.md",
+      "scope": "Committed mathematical scope, theorem links, core checks, trust assumptions and source errata; frozen before the final supplemental/publication outcome"
+    },
+    "external_completion_record": {
+      "path": "/Users/yanlisong/Documents/Codex/2026-10-05/task-2/chapter5-recovery-20261008T1503/CHAPTER5_FINAL_VERIFICATION_EVIDENCE_20261013/FINAL_VERIFICATION_RECORD.md",
+      "sha256": "8999444328eaf7697b47714de2920157220691b67a482701bce401262f57797b",
+      "bytes": 5653
+    },
+    "this_index_written_last": true,
+    "later_INDEX_only_backup_is_recorded_outside_this_index_to_avoid_a_self_reference": true
+  },
+  "final_supplemental_math": {
+    "result": {
+      "path": "/private/tmp/BC4lean-chapter5-actual-completed45-residual8-20261017-v1/result.json",
+      "sha256": "edacdb21009142d6da442df1b1e36c58bb0679f6f311d2b830766b17e99da29b",
+      "bytes": 35064
+    },
+    "Root_genuine_terminal0": {
+      "path": "/private/tmp/BC4lean-chapter5-Root-owned-completed45-residual8-20261017-v1/ROOT_GENUINE_COMPLETED_RESIDUAL8_SESSION59673_TERMINAL0_ALL506_FULL_BOUNDARY_20261017.json",
+      "sha256": "bd560e5cff11d8a32473f6a48e7ce13601c9d152f8283b152f29f8bb106233d2",
+      "bytes": 2548
+    },
+    "all506_mathematical_checks_passed": true,
+    "retained_successes_freshly_strictly_reconciled": 498,
+    "new_residual_queries_executed": 8,
+    "exact_residual_indices": [
+      126,
+      255,
+      257,
+      260,
+      304,
+      327,
+      331,
+      378
+    ],
+    "all_new_own_Native_exits0_and_semantic_pass": true,
+    "failed_queries": [],
+    "whole_before_after_entry_count": 113378,
+    "compact_before": {
+      "path": "/private/tmp/BC4lean-chapter5-actual-completed45-residual8-20261017-v1/compact_fullpins_before.json",
+      "sha256": "137d1a2b6e5683a9f36a62278af7182194a533843e37ffe8ef41d745a18d3a9b",
+      "bytes": 34691736
+    },
+    "compact_after": {
+      "path": "/private/tmp/BC4lean-chapter5-actual-completed45-residual8-20261017-v1/compact_fullpins_after.json",
+      "sha256": "137d1a2b6e5683a9f36a62278af7182194a533843e37ffe8ef41d745a18d3a9b",
+      "bytes": 34691736
+    },
+    "whole_boundary_equal": true,
+    "boundary_failure": null,
+    "adapter_closed": true,
+    "earned_policy_count": 140,
+    "uncapped_census": {
+      "physical_queries": 506,
+      "physical_rows": 2558,
+      "distinct_material_declarations": 2447,
+      "whole_TYPE_rows": 2558,
+      "whole_VALUE_rows": 923,
+      "actual_kind_and_origin_rows": 2558,
+      "private_rows": 156,
+      "capture_rows": 923,
+      "capture_forms": {
+        "escaped_backslash_n": 923
+      },
+      "historical_mandatory_occurrences_represented": 611,
+      "historical_whole_TYPE_roles": 370,
+      "historical_printed_roles_upgraded": 241
+    },
+    "guards_retained": [
+      "whole TYPE and DATA/value comparison",
+      "full binders, dictionaries and universes",
+      "declaration origin and kind",
+      "no metavariables",
+      "independent non-circular prerequisite proof checks",
+      "axiom and declaration-family checks",
+      "uncapped captures"
+    ],
+    "original_guard_or_budget_weakening": false,
+    "original_run_result_scoped_Chapter5_complete_claimed_false_preserved": true
+  },
+  "core_verification": {
+    "scope": [
+      "Equivariant even and odd KK groups",
+      "Kasparov product existence and uniqueness, bilinearity, associativity and units",
+      "Functoriality",
+      "Natural KK_i(complex,B) equivalences to ordinary K_i(B), i=0,1, with explicit inverses"
+    ],
+    "blueprint_blocks": 75,
+    "blueprint_definitions": 17,
+    "blueprint_propositions": 58,
+    "distinct_Lean_links": 435,
+    "required_endpoint_counts": [
+      18,
+      72,
+      16
+    ],
+    "all_required_endpoints_ready": true,
+    "Lean_modules": 809,
+    "built_Lean_objects": 810,
+    "strict_and_cached_warnings_as_errors_builds_passed": true,
+    "source_safeguard_checks_passed": 21,
+    "exact_once_import_check_passed": true,
+    "blueprint_coverage_audit_and_web_build_passed": true,
+    "uncapped_kernel_declaration_count": 18199,
+    "kernel_census_module_count": 686,
+    "exact_axiom_set": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "proof_holes_new_unproved_axioms_circular_assumptions_or_weakened_targets_accepted": false,
+    "core_audit": {
+      "path": "/private/var/folders/_4/cjl9v4654tb9m6kztgmr8pzr0000gn/T/BC4lean-oct12-exact-selected-dependency-build-_yovm53r/docs/audits/chapter5/core-audit.json",
+      "sha256": "91ac3a554e069b28fdf9697f893ee00046bd967139e9a0d0913f01767cada4f1",
+      "bytes": 3978830
+    },
+    "core_evidence": {
+      "path": "/private/var/folders/_4/cjl9v4654tb9m6kztgmr8pzr0000gn/T/BC4lean-oct12-exact-selected-dependency-build-_yovm53r/docs/audits/chapter5/core-evidence.json",
+      "sha256": "c50c13c2df9747c6e6eb9ed08c2a5856aa9c467e1ecb658880bded5c51d46b09",
+      "bytes": 213563
+    },
+    "final_committed_source_binding": {
+      "path": "/Users/yanlisong/Documents/Codex/2026-10-05/task-2/chapter5-recovery-20261008T1503/CHAPTER5_FINAL_VERIFICATION_EVIDENCE_20261013/ROOT_ACTUAL_FINAL_D6E6E3E_COMMITTED817_FROZEN809_ALL10_CH4_207_SOURCE_BINDING_20261017.json",
+      "sha256": "62fc4482bd33c67702a089ec6b9b6a50b8bc88419b170049269eff36b04dca5a",
+      "bytes": 164968
+    },
+    "committed_binding_unique_paths": 819,
+    "core_source_entries": 817,
+    "frozen_module_sources": 809,
+    "controls": 10,
+    "preserved_Chapter4_sources_and_record": 207,
+    "preserved_verified_Chapter4_commit": "ac1a7a58dd2928e00b23a46a246ebc956e105c9f"
+  },
+  "exact_revision_CI": {
+    "result": {
+      "path": "/private/tmp/BC4lean-chapter5-actual-exact-head-CI-d6e6e3e-20261017-read20/ACTUAL_EXACT_HEAD_GITHUB_CI_READ_ONLY_RESULT.json",
+      "sha256": "956eef56409d852cd5caba4a343d8bbb7c770925410a2e35021f7686d4059b71",
+      "bytes": 104748
+    },
+    "Root_genuine_terminal0": {
+      "path": "/private/tmp/BC4lean-chapter5-final-publication-selected48-Root-20261017-v1/ROOT_GENUINE_EXACT_D6E6_CI_SESSION92806_TERMINAL0_ALL_REQUIRED_JOBS_STEPS_GREEN.json",
+      "sha256": "85f4a861fee8f3d27a4ab667f54a3ad5236a739f4df31d1b2d3066ed5218b641",
+      "bytes": 1763
+    },
+    "snapshot_only": false,
+    "selected_committed_and_worktree_Source_bindings_checked": 48,
+    "all_required_workflows_jobs_and_critical_steps_success": true,
+    "required_runs": [
+      {
+        "workflow": ".github/workflows/build-project.yml",
+        "name": "Build BC4lean",
+        "run_id": 39055782136,
+        "URL": "https://github.com/ylsong1024/BC4lean/actions/runs/39055782136",
+        "head_sha": "d6e6e3efe5ee5b47b30d01177840849e39a3e171",
+        "status": "completed",
+        "conclusion": "success",
+        "all_jobs_and_critical_named_steps_success": true
+      },
+      {
+        "workflow": ".github/workflows/blueprint-check.yml",
+        "name": "Check blueprint",
+        "run_id": 39055782144,
+        "URL": "https://github.com/ylsong1024/BC4lean/actions/runs/39055782144",
+        "head_sha": "d6e6e3efe5ee5b47b30d01177840849e39a3e171",
+        "status": "completed",
+        "conclusion": "success",
+        "all_jobs_and_critical_named_steps_success": true
+      },
+      {
+        "workflow": ".github/workflows/blueprint.yml",
+        "name": "Publish blueprint",
+        "run_id": 39055782119,
+        "URL": "https://github.com/ylsong1024/BC4lean/actions/runs/39055782119",
+        "head_sha": "d6e6e3efe5ee5b47b30d01177840849e39a3e171",
+        "status": "completed",
+        "conclusion": "success",
+        "all_jobs_and_critical_named_steps_success": true
+      }
+    ],
+    "legacy_separate_deploy_pages_state": "disabled_manually",
+    "active_blueprint_publication_and_deployment_passed": true,
+    "credential_values_disclosed": false
+  },
+  "preserved_history": {
+    "original_completed_M": {
+      "path": "/private/tmp/BC4lean-chapter5-actual-necessary-math-continuation-prefix5-run501-root-20261016-v1/result.json",
+      "sha256": "5ffa64afccc75ea0157bcdf5380801edb96d8392f226905b223ab300bb5cb74d",
+      "bytes": 681686370,
+      "genuine_exit": 1,
+      "accepted": 362,
+      "failed": 144
+    },
+    "interrupted_V8": {
+      "closed_successes": 99,
+      "closed_failures": 11,
+      "whole_terminal_exit": null,
+      "whole_result": null,
+      "whole_terminal_or_result_not_fabricated": true
+    },
+    "completed45": {
+      "path": "/private/tmp/BC4lean-chapter5-actual-finite45-recovery-20261017-v1/result.json",
+      "sha256": "caad652a077060db21245d9c08779bc698ee9f1e79116ddc69c797ffaf36fea5",
+      "bytes": 74172224,
+      "genuine_exit": 1,
+      "new_passed": 37,
+      "retained_passed": 461,
+      "total_passed": 498,
+      "failed_indices": [
+        126,
+        255,
+        257,
+        260,
+        304,
+        327,
+        331,
+        378
+      ]
+    },
+    "original_failed_runs_and_unknown_values_preserved": true
+  },
+  "scope_and_source_errata": {
+    "domain": "Separable possibly nonunital complex algebras and countable groups; independent group, algebra and module universes, tensor maxima, arbitrary completed interval modules/fibres, and ordinary comparisons in every module universe. Full correspondence quotient retains target separability.",
+    "extra_unitality_faithfulness_essentiality_nontriviality_or_Small_B_assumption_added": false,
+    "positive_partition": "Correct inconsistent printed M,N >= 1 to positive contractions 0 <= M,N <= 1 with M+N=1; positive roots satisfy m^2+n^2=1.",
+    "creation_operators": "Bounded and adjointable in general; compactness uses appropriate compact-left-action condition. A completed infinite-dimensional counterexample excludes unconditional compactness.",
+    "general_Baum_Connes_conjecture_claimed": false
+  },
+  "trust": {
+    "Lean": "4.33.1 arm64",
+    "Lean_commit": "819816b2e0a3bf405af45ae5c7af2491d8f5bee6",
+    "Mathlib_commit": "0df444a360eaa60ab8c11dca51a86af692955474",
+    "kernel_and_pinned_compiler_runtime_dependencies_trusted": true,
+    "compiler_correctness_or_mapped_memory_file_byte_identity_proved": false
+  },
+  "verified_durable_archive_manifests": [
+    {
+      "path": "/Users/yanlisong/Library/Application Support/BC4lean/chapter5-final-20261016/runs/backup-20261016T093201Z-5a4c8284eb504ec6bbce18bbceb76549/complete_original_path_to_content_object_manifest.json",
+      "sha256": "926f7cea1d9089eb35f5e436dedc1d3af576201cf7bc6153cbf49fd073eb1db1",
+      "bytes": 82470962,
+      "purpose": "Original retained-input archive",
+      "prior_genuine_completed_backup_verified": true
+    },
+    {
+      "path": "/Users/yanlisong/Library/Application Support/BC4lean/chapter5-final-20261016/runs/backup-20261017-finite-new45-Source-only-20261017T171959Z-75aa89f03137466283971fed70d67c5b.json",
+      "sha256": "dcfbd08339fa840a1e4ec3ff2d16656fbd656da9f924c66f61d5342ba4af2d52",
+      "bytes": 401437,
+      "purpose": "Completed45 results and repair Source",
+      "prior_genuine_completed_backup_verified": true
+    },
+    {
+      "path": "/Users/yanlisong/Library/Application Support/BC4lean/chapter5-final-20261016/runs/backup-20261017-finite-residual8-inputs-Source-only-20261017T173747Z-84ff529ee1174d9f9458e21e4b0d07dc.json",
+      "sha256": "ae7c879cd422f856b5f57319192f2a9fb5dd92af1e3d642f3f885582d878f285",
+      "bytes": 25792,
+      "purpose": "Final8 inputs and q378 Source",
+      "prior_genuine_completed_backup_verified": true
+    },
+    {
+      "path": "/Users/yanlisong/Library/Application Support/BC4lean/chapter5-final-20261016/runs/backup-20261017-finite-residual8-outputs-20261017T175045Z-6c99208648454205b78935c774b92c3a.json",
+      "sha256": "ee7ee950341bf38138458cc8dc8f8b5ed5590a1a7bc6c0217f364177bb7617e0",
+      "bytes": 76487,
+      "purpose": "Actual final8 results and Root terminal",
+      "prior_genuine_completed_backup_verified": true
+    },
+    {
+      "path": "/Users/yanlisong/Library/Application Support/BC4lean/chapter5-final-20261016/runs/backup-20261017-finite-retained498-missing-only-20261017T180006Z-3171dbc743644cc3a7bbe6fe64340430.json",
+      "sha256": "dcd382434face426ce95d1dee4ec1825aa84391c37ac21299d5e7168c56b7a6b",
+      "bytes": 3676628,
+      "purpose": "Missing-only raw evidence for retained498; supplements original archive",
+      "prior_genuine_completed_backup_verified": true
+    },
+    {
+      "path": "/Users/yanlisong/Library/Application Support/BC4lean/chapter5-final-20261016/runs/backup-20261017-finite-final-publication-CI-Source-20261017T185756Z-f93eff391c674bd194f7fda16f6b7635.json",
+      "sha256": "4197e5879c6341458af3eb78b07d126604fa00013d0d1aeac499cb49c02103c5",
+      "bytes": 283544,
+      "purpose": "Final publication, actual exact-head CI, completion record, closed controls and finite validator/protocol Source",
+      "errors": 0
+    }
+  ],
+  "archive_notes": {
+    "content_object_base": "/Users/yanlisong/Library/Application Support/BC4lean/chapter5-final-20261016",
+    "new_objects_no_overwrite_digest_and_byte_checked_fsynced_0444_and_read_back": true,
+    "prior_completed_cached_objects_reused_by_exact_existence_type_size_mode_checks": true,
+    "retained498_missing_raw_evidence_filled_before_completion": true,
+    "final_finite_publication_source_backup_counts": {
+      "absent_selected_CI_directory_count": 2,
+      "cached_unique_object_count_existence_only": 62,
+      "errors": 0,
+      "metadata_selected_validator_protocol_bytes": 3119533,
+      "metadata_selected_validator_protocol_path_count": 71,
+      "new_object_bytes": 3025558,
+      "new_object_count": 136,
+      "present_selected_directory_count": 19,
+      "source_bytes": 5642615,
+      "source_path_count": 266,
+      "unique_object_bytes": 5642353,
+      "unique_object_count": 198
+    },
+    "interrupted_backup_four_preserved_new_objects_independently_rehashed": {
+      "path": "/tmp/BC4lean-finite-final-publication-CI-Source-preserved-first-attempt-readback-20261017.json",
+      "sha256": "d8fa92ff67ab63f3861cd91dfbc5e65c10f20e88736cb9ec0cc3e5e35db8ed26",
+      "bytes": 1878
+    }
+  },
+  "remaining_blockers": []
+}

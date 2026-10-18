@@ -21,17 +21,17 @@ $C^*$-algebras (including nonunital algebras), functions vanishing at infinity,
 gradings, and filtered colimits of abelian groups.
 
 \section{Status conventions}
-This is a structural draft, not a completed mathematical blueprint.
+The blueprint records verified foundations alongside later targets.
 Nodes marked as not ready are specifications to expand. Lean verification
-currently covers the concrete reduced group $C^*$-algebra construction,
-starting from the group algebra and the $\ell^2$ regular representation,
-together with its generating property, countable-group separability, and
-the trivial-group identification, and the canonical isometric star-algebra
-isomorphism from the abstract reduced-norm completion. Operator K-theory verification now covers projections, Murray--von Neumann
-equivalence, matrix block sums and stabilization, and fixed-size norm homotopy
-of unitaries. Rectangular equivalence, the stable projection monoid $V(A)$, and unital
-$K_0(A)$ with its universal property are also verified. The stable $K_1$
-construction, nonunital extensions, further structural properties, and the
-assembly construction remain unverified. The degree-zero analytic group
-$K_0(C_r^*(\Gamma))$ is now constructed using the canonical spectral order. Separate construction of the objects,
-formalization of the conjecture's statement, and proof of the conjecture.
+covers the reduced group $C^*$-algebra foundations and the operator
+$K$-theory constructions used in the comparisons below, including nonunital
+algebras and both degrees. Chapter~4 verifies the universal proper-space
+construction for countable discrete groups. Chapter~5 verifies the full
+even/odd equivariant KK groups, Kasparov product existence and laws, and
+natural comparisons with ordinary operator $K_0$ and $K_1$, under the
+stated separability and universe hypotheses. Its verification record
+documents the source corrections and exact Lean declarations.
+The topological-side and assembly constructions remain later milestones;
+the general Baum--Connes conjecture is not proved here. Separate construction
+of the objects, formalization of the conjecture's statement, and proof of
+the conjecture.

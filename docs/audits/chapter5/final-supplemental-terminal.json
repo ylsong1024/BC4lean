@@ -1,0 +1,55 @@
+{
+  "schema": "chapter5.Root.original-tool-terminal.v1",
+  "session_id": 59673,
+  "completion": {
+    "chunk_id": "eec5ba",
+    "wall_time_seconds": 3.0388e-05,
+    "exit_code": 0,
+    "original_token_count": 73,
+    "output": "{\"actual_PID\": 67104, \"actual_returncode\": 0, \"actual_original_own_Popen_reaped\": true, \"result\": {\"path\": \"/private/tmp/BC4lean-chapter5-Root-owned-completed45-residual8-20261017-v1/result.json\", \"sha256\": \"f586a30eb96b6de0a11c84ad0198ebdae52ee8f28892ab765a09208f569fa92e\", \"bytes\": 2072}}\n"
+  },
+  "unmodified_completion_record": {
+    "path": "/private/tmp/BC4lean-chapter5-Root-owned-completed45-residual8-20261017-v1/ROOT_UNMODIFIED_TOOL_COMPLETION_SESSION59673.json",
+    "sha256": "2f73aaacfb4e4d50202c27e503b3e9bcb1ae44d5e81a50f31b53b293046dd398",
+    "bytes": 436
+  },
+  "Root_archived_at_UTC": "2026-10-17T17:50:14.245223+00:00",
+  "Root_authenticated_actual_own_command": true,
+  "actual_runner_PID": 67104,
+  "recorder_result": {
+    "path": "/private/tmp/BC4lean-chapter5-Root-owned-completed45-residual8-20261017-v1/result.json",
+    "sha256": "f586a30eb96b6de0a11c84ad0198ebdae52ee8f28892ab765a09208f569fa92e",
+    "bytes": 2072
+  },
+  "continuation_result": {
+    "path": "/private/tmp/BC4lean-chapter5-actual-completed45-residual8-20261017-v1/result.json",
+    "sha256": "edacdb21009142d6da442df1b1e36c58bb0679f6f311d2b830766b17e99da29b",
+    "bytes": 35064
+  },
+  "actual_own_original_returncode": 0,
+  "registered_query_count": 506,
+  "passed_query_count": 506,
+  "fresh_retained_genuine_success_count": 498,
+  "new_own_Native_success_count": 8,
+  "failed_query_count": 0,
+  "boundary_failure": null,
+  "compact_before_after_equal": true,
+  "whole_boundary_entry_count": 113378,
+  "compact_before": {
+    "path": "/private/tmp/BC4lean-chapter5-actual-completed45-residual8-20261017-v1/compact_fullpins_before.json",
+    "sha256": "137d1a2b6e5683a9f36a62278af7182194a533843e37ffe8ef41d745a18d3a9b",
+    "bytes": 34691736
+  },
+  "compact_after": {
+    "path": "/private/tmp/BC4lean-chapter5-actual-completed45-residual8-20261017-v1/compact_fullpins_after.json",
+    "sha256": "137d1a2b6e5683a9f36a62278af7182194a533843e37ffe8ef41d745a18d3a9b",
+    "bytes": 34691736
+  },
+  "final_Source_proof_policy_count": 140,
+  "all506_mathematical_checks_passed": true,
+  "Git_commit_push_and_exact_CI_pass_claimed": false,
+  "Chapter5_complete_claimed": false,
+  "original_M_preserved_exit": 1,
+  "original_completed45_preserved_exit": 1,
+  "original_interrupted_V8_whole_terminal_exit": null
+}

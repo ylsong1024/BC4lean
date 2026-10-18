@@ -7,6 +7,14 @@ on:
     branches: [main]
     paths:
       - 'blueprint/src/**'
+      - 'home_page/**'
+      - 'scripts/update_chapter5_finder.py'
+      - 'scripts/test_blueprint_status.py'
+      - 'scripts/check_website.py'
+      - 'scripts/audit_chapter5.py'
+      - 'scripts/check_project_imports.py'
+      - 'docs/audits/chapter5/**'
+      - 'docs/CHAPTER5_COMPLETION.md'
       - '.github/workflows/blueprint-check.yml'
   workflow_dispatch:
 
@@ -23,6 +31,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+      - name: Check Chapter 5 source links and proof-status safeguards
+        run: |
+          python3 -B scripts/update_chapter5_finder.py --check
+          python3 -B scripts/test_blueprint_status.py
       - name: Install blueprint tools
         run: |
           sudo apt-get update

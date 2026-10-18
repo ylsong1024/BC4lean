@@ -52,7 +52,7 @@ transport, direct sums, continuous section modules and positivity of the
 balanced algebraic tensor form now pass the full strict build and axiom audit.
 The full homotopy KK groups, Kasparov product laws and natural comparisons
 with ordinary operator K₀/K₁ are verified under the hypotheses in the
-[Chapter 5 verification record](docs/CHAPTER5_VERIFICATION.md).
+[Chapter 5 completion and verification records](docs/CHAPTER5_COMPLETION.md).
 The assembly construction remains a later milestone.
 Consult the [roadmap](docs/ROADMAP.md) and individual blueprint nodes
 for precise boundaries; a green prerequisite does not verify its successors.
