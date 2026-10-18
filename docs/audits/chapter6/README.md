@@ -21,8 +21,12 @@ python3 -B scripts/audit_chapter6.py --generate-only \
   --output ../chapter6-evidence/chapter6-audit/audit.json
 ```
 
-The generated Lean file imports every scoped module with `import all` so private
-declarations remain visible, then enumerates constants by `getModuleIdxFor?`.
+The scoped files use Lean’s legacy module format. The generated query imports
+each one normally, which retains its private constants, sets the environment
+to non-exporting, and enumerates constants by `getModuleIdxFor?`. A format
+migration is rejected until the import strategy is adapted. The audit also
+requires private-name census evidence for every source declaring private data;
+a real compiler probe confirms the private geometric helper is visible.
 It calls `Lean.collectAxioms` on every constant whose origin is a scoped module,
 including generated declarations and declarations in other namespaces. Imported
 dependencies are checked transitively by `collectAxioms`; they are not redundantly

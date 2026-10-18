@@ -160,7 +160,7 @@ def pending_blueprint_targets(text: str) -> list[str]:
 
 def generate_query(modules: list[str], links: list[str], endpoints: list[str]) -> str:
     """No namespace/name prefix filter may replace the module-provenance filter."""
-    imports = "\n".join(f"import all {module}" for module in modules)
+    imports = "\n".join(f"import {module}" for module in modules)
     array = lambda values: "#[" + ", ".join(json.dumps(n) for n in values) + "]"
     return f'''{imports}
 import Lean
@@ -267,6 +267,23 @@ def parse_kernel_evidence(output: str, modules: list[str], links: list[str]) -> 
                               for a in d["axioms"]})}
 
 
+def check_legacy_module(text: str, module: str) -> None:
+    """Legacy imports expose private constants; a format migration needs review."""
+    if re.match(r"\s*module\b", code_only(text)):
+        raise RuntimeError(f"Scoped source uses the new module system; adapt private imports: {module}")
+
+
+def check_private_coverage(sources: dict[str, str], declarations: list[dict]) -> dict[str, int]:
+    """Require visible private evidence wherever the captured source declares it."""
+    counts = {module: sum(row["module"] == module and row["name"].startswith("_private.")
+                          for row in declarations) for module in sources}
+    missing = [module for module, text in sources.items()
+               if re.search(r"\bprivate\b", code_only(text)) and not counts[module]]
+    if missing:
+        raise RuntimeError("Private declarations missing from kernel census: " + ", ".join(missing))
+    return counts
+
+
 def digest(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
@@ -331,6 +348,7 @@ def main() -> int:
         raise RuntimeError("Blueprint or endpoint inventory changed during input capture")
     for module, source in sources.items():
         check_proof_tokens(captured[source].decode(), module)
+        check_legacy_module(captured[source].decode(), module)
     check_proof_tokens(captured[expected_types].decode(), "Expected-type fixture")
     hashes = {str(p.relative_to(ROOT)) if p.is_relative_to(ROOT) else str(p):
               hashlib.sha256(data).hexdigest() for p, data in captured.items()}
@@ -382,6 +400,9 @@ def main() -> int:
     if result.returncode:
         raise RuntimeError(f"Lean audit failed with exit code {result.returncode}; see {log}")
     evidence.update(parse_kernel_evidence(result.stdout.decode(), modules, links))
+    evidence["private_declaration_counts"] = check_private_coverage(
+        {module: captured[source].decode() for module, source in sources.items()},
+        evidence["declarations"])
     missing_origins = sorted({row["module"] for row in evidence["linked_declarations"].values()
                               if row["module"].replace(".", "/") + ".lean" not in hashes})
     if missing_origins:

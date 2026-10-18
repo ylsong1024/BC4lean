@@ -12,6 +12,7 @@ from unittest.mock import patch
 
 import audit_chapter6
 from audit_chapter6 import (ROOT, TARGETS, audit_blueprint, check_proof_tokens, code_only,
+                           check_legacy_module, check_private_coverage,
                            generate_query, load_inventory, parse_kernel_evidence,
                            pending_blueprint_targets, run_expected_types)
 from check_project_imports import check_chapter5_core_evidence
@@ -19,6 +20,22 @@ from check_project_imports import check_chapter5_core_evidence
 
 def statement(label: str, body: str = r"\notready") -> str:
     return rf"\begin{{proposition}}\label{{{label}}}{body}\end{{proposition}}"
+
+
+class PrivateCoverageTests(unittest.TestCase):
+    def test_legacy_module_format_is_required(self) -> None:
+        check_legacy_module("import A\nprivate theorem h : True := trivial", "BC4lean.A")
+        check_legacy_module("/- module -/\nimport A", "BC4lean.A")
+        with self.assertRaisesRegex(RuntimeError, "adapt private imports"):
+            check_legacy_module("module\nimport A", "BC4lean.A")
+
+    def test_source_private_declarations_need_kernel_private_evidence(self) -> None:
+        sources = {"BC4lean.A": "private theorem h : True := trivial",
+                   "BC4lean.B": "/- private in a comment -/\ntheorem h : True := trivial"}
+        rows = [{"module": "BC4lean.A", "name": "_private.BC4lean.A.0.h"}]
+        self.assertEqual(check_private_coverage(sources, rows), {"BC4lean.A": 1, "BC4lean.B": 0})
+        with self.assertRaisesRegex(RuntimeError, "Private declarations missing"):
+            check_private_coverage(sources, [])
 
 
 class InventoryTests(unittest.TestCase):
@@ -118,7 +135,9 @@ class CoverageTests(unittest.TestCase):
 
     def test_query_uses_all_imports_and_module_origins(self) -> None:
         query = generate_query(self.modules, self.links, ["BC4lean.A.public"])
-        self.assertIn("import all BC4lean.B", query)
+        self.assertTrue(query.startswith("import BC4lean.A\n"))
+        self.assertNotIn("import all ", query)
+        self.assertIn("import BC4lean.B", query)
         self.assertIn("env.getModuleIdxFor? name", query)
         self.assertIn("collectAxioms name", query)
         self.assertNotIn("import BC4lean\n", query)
