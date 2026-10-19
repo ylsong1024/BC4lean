@@ -1,4 +1,39 @@
-# Chapter 7 verification record
+# Chapter 7 verification record — historical foundation checkpoint
+
+## Dated preservation note — 2026-10-18
+
+This is the historical foundation verification record, frozen in scope at
+proof-source revision **`7af944529243b198d584891762959a954973bb4b`** and
+publication revision **P = `d3a357136bbcf5eb88926deb9fa069666d217c51`**.
+The historical checkpoint comprises sixteen new modules, 535 audited
+declarations, 65 exact blueprint links and 65 endpoints. Exactly one of the
+five original targets, the cutoff target, was ready; four original descent
+and assembly targets remained pending, and `chapter_complete=false`.
+
+Every statement below about a passed build, audit, safeguard, or ready/pending
+target belongs to that foundation checkpoint, not to later source drafts or a
+later completion audit. The source and publication identities above must not
+be replaced with the final completion revision. Historical audit, generated
+query, build, fixture and subprocess-record links are pinned to P so that
+later replacements at the same repository paths cannot silently alter the
+scope or evidence of this record. The
+[historical record as published at P](https://github.com/ylsong1024/BC4lean/blob/d3a357136bbcf5eb88926deb9fa069666d217c51/docs/CHAPTER7_VERIFICATION.md)
+and [frozen proof source](https://github.com/ylsong1024/BC4lean/tree/7af944529243b198d584891762959a954973bb4b)
+remain the reference points for its original claims.
+
+The [Chapter 7 completion record](CHAPTER7_COMPLETION.md) is a separate
+record for the later verified descent and assembly construction. Its scope
+includes arbitrary interval homotopy transport, all four native products and
+the complete original target inventory, with its own immutable source, actual
+complete audit and full build. Native mathematical verification and CI/live
+acceptance for the exact later publication revision are distinct records.
+Constructing assembly does not prove the general Baum–Connes conjecture.
+
+## Historical foundation record
+
+The text below is retained as the foundation checkpoint narrative. References
+to the present construction, remaining obligations and follow-on drafts are
+read as statements about that frozen checkpoint.
 
 Work begins at `a70dee4c556da36e065a1d64cc0429ba2831ddd4` (the verified
 Chapter 6 publication revision). The intended scope is the coefficient-free,
@@ -121,10 +156,10 @@ generated declarations, **65 exact blueprint links**, and **65 mathematical
 endpoints**. Their combined axiom closure is exactly `propext`,
 `Classical.choice`, and `Quot.sound`. The independent expected-type fixture,
 cached strict aggregate gate, frozen historical-import fixture, and all
-source/object hash checks pass. See [the actual audit](audits/chapter7/audit.json),
-[its generated kernel query](audits/chapter7/audit.lean),
-[the actual full-build record](audits/chapter7/build.json), and their retained
-raw logs and subprocess records. No simulated subprocess record is used.
+source/object hash checks pass. See [the historical actual audit at P](https://github.com/ylsong1024/BC4lean/blob/d3a357136bbcf5eb88926deb9fa069666d217c51/docs/audits/chapter7/audit.json),
+[its historical generated kernel query at P](https://github.com/ylsong1024/BC4lean/blob/d3a357136bbcf5eb88926deb9fa069666d217c51/docs/audits/chapter7/audit.lean),
+[the historical actual full-build record at P](https://github.com/ylsong1024/BC4lean/blob/d3a357136bbcf5eb88926deb9fa069666d217c51/docs/audits/chapter7/build.json), and their retained
+[historical fixtures, raw logs and subprocess records at P](https://github.com/ylsong1024/BC4lean/tree/d3a357136bbcf5eb88926deb9fa069666d217c51/docs/audits/chapter7). No simulated subprocess record is used.
 
 The audit reports `status=verified_milestone`, `milestone_verified=true`, and
 **`chapter_complete=false`**. Running the actual command with

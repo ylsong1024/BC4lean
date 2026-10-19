@@ -15,7 +15,7 @@ Completion requires a reviewed implementation and the checks in
 | Proper actions | Equivariant CW attachment, Hausdorffness, properness, cellular mapping, finite-group models, proper weak labeled join with genuine CW structure and fixed-point criterion, universal mapping and uniqueness, locally compact second-countable telescope model, cocompact indexing | API refinement, examples and independent review |
 | Equivariant KK-theory | Hilbert-module prerequisites, full homotopy KK groups, completed interior tensor products, Kasparov products and natural operator K₀/K₁ comparisons | API refinement, examples and independent review |
 | Topological side | Actual parity KK piece groups, transitions, filtered colimit and universal property, cofinal indexing, homotopy and universal-model independence | API refinement, examples and independent review |
-| Assembly | Blueprint specifications | Descent, cut-off classes, assembly and compatibility |
+| Assembly | Reduced Hilbert-module descent in both parities, cut-off K₀ classes, piece maps and the compatible colimit assembly homomorphism | API refinement, examples and independent review |
 
 This table describes source organization, not a new verification certificate.
 The general conjecture is not proved by this project. In particular,

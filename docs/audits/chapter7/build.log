@@ -1,47 +1,506 @@
 COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.AlgebraicCrossedProduct"]
 Build completed successfully (2975 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.AlgebraicCrossedProductMap"]
+Build completed successfully (2976 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.ArbitraryHilbertModuleSum"]
+Build completed successfully (2980 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.CliffordPairStandardTensorCompatibility"]
+Build completed successfully (3032 jobs).
 COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.CutoffCoefficientProjection"]
 Build completed successfully (2025 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.EssentialModulePositivityClosed"]
+Build completed successfully (2992 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.GradedKasparovRegrade"]
+Build completed successfully (3266 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.IndexedHilbertModuleIsometry"]
+Build completed successfully (2981 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.IndexedHilbertModuleTensor"]
+Build completed successfully (3013 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.InteriorModuleTensorFaithful"]
+Build completed successfully (2998 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.InteriorModuleTensorSecondFactorIsometry"]
+Build completed successfully (3000 jobs).
 COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentCompactAction"]
 Build completed successfully (2980 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.NativeEvenSourcePullback"]
+Build completed successfully (3430 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.NativeOddSourcePullback"]
+Build completed successfully (3430 jobs).
 COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.NonunitalProjectionK0"]
 Build completed successfully (2986 jobs).
 COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.ProperCutoffFunction"]
-✔ [2042/2042] Built BC4lean.ProperCutoffFunction (31s)
 Build completed successfully (2042 jobs).
-COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.ReducedCrossedHilbertModule"]
-✔ [2987/2987] Built BC4lean.ReducedCrossedHilbertModule (51s)
-Build completed successfully (2987 jobs).
 COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.CocompactPieceCutoff"]
-✔ [2043/2043] Built BC4lean.CocompactPieceCutoff (25s)
 Build completed successfully (2043 jobs).
 COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.CutoffAlgebraicProjection"]
-✔ [3103/3103] Built BC4lean.CutoffAlgebraicProjection (47s)
 Build completed successfully (3103 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.RectangularInteriorModuleTensorCompact"]
+Build completed successfully (3008 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.ReducedCrossedHilbertModule"]
+Build completed successfully (2987 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.IndexedStandardReducedCrossedEquiv"]
+Build completed successfully (2991 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.ReducedCrossedHilbertGrading"]
+Build completed successfully (2991 jobs).
 COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.ReducedCrossedRegularOperators"]
-✔ [2990/2990] Built BC4lean.ReducedCrossedRegularOperators (44s)
 Build completed successfully (2990 jobs).
-COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.ReducedCrossedScalarHilbert"]
-✔ [3001/3001] Built BC4lean.ReducedCrossedScalarHilbert (42s)
-Build completed successfully (3001 jobs).
 COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.ReducedCrossedProduct"]
-✔ [2991/2991] Built BC4lean.ReducedCrossedProduct (39s)
 Build completed successfully (2991 jobs).
 COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.AlgebraicCrossedRepresentation"]
-✔ [2994/2994] Built BC4lean.AlgebraicCrossedRepresentation (42s)
 Build completed successfully (2994 jobs).
-COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.ReducedCrossedScalarProduct"]
-✔ [3011/3011] Built BC4lean.ReducedCrossedScalarProduct (45s)
-Build completed successfully (3011 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.ReducedCrossedGradingOperators"]
+Build completed successfully (2996 jobs).
 COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.ReducedCrossedNorm"]
-✔ [2995/2995] Built BC4lean.ReducedCrossedNorm (42s)
 Build completed successfully (2995 jobs).
-COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.ReducedCutoffProjection"]
-✔ [3141/3141] Built BC4lean.ReducedCutoffProjection (47s)
-Build completed successfully (3141 jobs).
 COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentModule"]
-✔ [3019/3019] Built BC4lean.KasparovDescentModule (52s)
 Build completed successfully (3019 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.ReducedCrossedCoefficientApproximateUnit"]
+Build completed successfully (2996 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.ReducedCrossedCompactDefects"]
+Build completed successfully (2996 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.ReducedCrossedLeftRegular"]
+Build completed successfully (3021 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.ReducedCrossedProductGrading"]
+Build completed successfully (3048 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentGrading"]
+Build completed successfully (3069 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.ReducedCrossedRepresentationExtension"]
+Build completed successfully (2996 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.ReducedCrossedScalarHilbert"]
+Build completed successfully (3001 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.ReducedCrossedScalarProduct"]
+Build completed successfully (3011 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.ReducedCutoffProjection"]
+Build completed successfully (3141 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.ReducedRegularTensorEmbedding"]
+Build completed successfully (3028 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.ReducedScalarKKComparison"]
+Build completed successfully (3416 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.ScalarKKNativeNaturality"]
+Build completed successfully (3639 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.StandardCoefficientExtensionEquiv"]
+Build completed successfully (3019 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.StandardModuleTensorEmbedding"]
+Build completed successfully (3009 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.InteriorModuleTensorScalarExtension"]
+Build completed successfully (3019 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.InteriorModuleTensorScalarExtensionGrading"]
+Build completed successfully (3021 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.ReducedSourceTensorEmbedding"]
+Build completed successfully (3019 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.ReducedSourceRegularBound"]
+Build completed successfully (3027 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.ReducedCrossedProductMap"]
+Build completed successfully (3032 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.CutoffRestrictionNaturality"]
+Build completed successfully (3180 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.CutoffProperPullbackNaturality"]
+Build completed successfully (3181 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.ReducedCrossedProductPair"]
+Build completed successfully (3085 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentPairCoefficientEquiv"]
+Build completed successfully (3306 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.ReducedSourceRegularOperator"]
+Build completed successfully (3028 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.TrivialActionUnitary"]
+Build completed successfully (2979 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.CovariantAlgebraicRepresentation"]
+Build completed successfully (2982 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentAction"]
+Build completed successfully (3024 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentAlgebraicRepresentation"]
+Build completed successfully (3026 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentIntervalModule"]
+Build completed successfully (3081 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentOperatorDefects"]
+✔ [3026/3026] Built BC4lean.KasparovDescentOperatorDefects (162s)
+Build completed successfully (3026 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentGeneratorDefects"]
+✔ [3027/3027] Built BC4lean.KasparovDescentGeneratorDefects (97s)
+Build completed successfully (3027 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentRegularEmbedding"]
+✔ [3039/3039] Built BC4lean.KasparovDescentRegularEmbedding (204s)
+Build completed successfully (3039 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentReducedRepresentation"]
+✔ [3050/3050] Built BC4lean.KasparovDescentReducedRepresentation (151s)
+Build completed successfully (3050 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentCliffordPair"]
+✔ [3125/3125] Built BC4lean.KasparovDescentCliffordPair (136s)
+Build completed successfully (3125 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentIntervalNorm"]
+✔ [3104/3104] Built BC4lean.KasparovDescentIntervalNorm (89s)
+Build completed successfully (3104 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentIntervalRepresentation"]
+✔ [3105/3105] Built BC4lean.KasparovDescentIntervalRepresentation (100s)
+Build completed successfully (3105 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentIntervalDefects"]
+✔ [3107/3107] Built BC4lean.KasparovDescentIntervalDefects (135s)
+Build completed successfully (3107 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentProductPositivity"]
+✔ [3064/3064] Built BC4lean.KasparovDescentProductPositivity (94s)
+Build completed successfully (3064 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentRawCycle"]
+✔ [3108/3108] Built BC4lean.KasparovDescentRawCycle (76s)
+Build completed successfully (3108 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentCycleIso"]
+✔ [3116/3116] Built BC4lean.KasparovDescentCycleIso (82s)
+Build completed successfully (3116 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentDirectSum"]
+✔ [3142/3142] Built BC4lean.KasparovDescentDirectSum (174s)
+Build completed successfully (3142 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentCliffordSignedSource"]
+✔ [3149/3149] Built BC4lean.KasparovDescentCliffordSignedSource (145s)
+Build completed successfully (3149 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentGradedCycle"]
+✔ [3110/3110] Built BC4lean.KasparovDescentGradedCycle (176s)
+Build completed successfully (3110 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentEvenGradedCoherence"]
+✔ [3308/3308] Built BC4lean.KasparovDescentEvenGradedCoherence (145s)
+Build completed successfully (3308 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentCliffordExpansionIso"]
+✔ [3349/3349] Built BC4lean.KasparovDescentCliffordExpansionIso (89s)
+Build completed successfully (3349 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentCliffordExternalEvenIso"]
+✔ [3359/3359] Built BC4lean.KasparovDescentCliffordExternalEvenIso (101s)
+Build completed successfully (3359 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentCliffordSignedSourceIso"]
+✔ [3321/3321] Built BC4lean.KasparovDescentCliffordSignedSourceIso (92s)
+Build completed successfully (3321 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentGradedCycleIso"]
+✔ [3120/3120] Built BC4lean.KasparovDescentGradedCycleIso (174s)
+Build completed successfully (3120 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentGradedDirectSum"]
+✔ [3145/3145] Built BC4lean.KasparovDescentGradedDirectSum (75s)
+Build completed successfully (3145 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentIntervalCycle"]
+✔ [3168/3168] Built BC4lean.KasparovDescentIntervalCycle (187s)
+Build completed successfully (3168 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentGradedIntervalGrading"]
+✔ [3170/3170] Built BC4lean.KasparovDescentGradedIntervalGrading (414s)
+Build completed successfully (3170 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentGradedIntervalCycle"]
+✔ [3171/3171] Built BC4lean.KasparovDescentGradedIntervalCycle (118s)
+Build completed successfully (3171 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentIntervalFibreIso"]
+✔ [3175/3175] Built BC4lean.KasparovDescentIntervalFibreIso (1273s)
+Build completed successfully (3175 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentFullHomotopy"]
+✔ [3184/3184] Built BC4lean.KasparovDescentFullHomotopy (177s)
+Build completed successfully (3184 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentClass"]
+✔ [3237/3237] Built BC4lean.KasparovDescentClass (115s)
+Build completed successfully (3237 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.AssemblyPieceHom"]
+✔ [3847/3847] Built BC4lean.AssemblyPieceHom (188s)
+Build completed successfully (3847 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.AssemblyCutoffNaturality"]
+✔ [3878/3878] Built BC4lean.AssemblyCutoffNaturality (196s)
+Build completed successfully (3878 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentGradedFullHomotopy"]
+✔ [3180/3180] Built BC4lean.KasparovDescentGradedFullHomotopy (105s)
+Build completed successfully (3180 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentGradedClass"]
+✔ [3207/3207] Built BC4lean.KasparovDescentGradedClass (107s)
+Build completed successfully (3207 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentSourcePullback"]
+✔ [3133/3133] Built BC4lean.KasparovDescentSourcePullback (117s)
+Build completed successfully (3133 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentSourcePullbackClass"]
+✔ [3481/3481] Built BC4lean.KasparovDescentSourcePullbackClass (107s)
+Build completed successfully (3481 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.AssemblyProperNaturality"]
+✔ [3892/3892] Built BC4lean.AssemblyProperNaturality (116s)
+Build completed successfully (3892 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.AssemblyTransition"]
+✔ [3884/3884] Built BC4lean.AssemblyTransition (120s)
+Build completed successfully (3884 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.AssemblyColimit"]
+✔ [3890/3890] Built BC4lean.AssemblyColimit (200s)
+Build completed successfully (3890 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.AssemblyCofinalIndex"]
+✔ [3891/3891] Built BC4lean.AssemblyCofinalIndex (125s)
+Build completed successfully (3891 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.AssemblyModelNaturality"]
+✔ [3895/3906] Built Mathlib.Topology.Homotopy.Basic (5.7s)
+✔ [3905/3908] Built Mathlib.CategoryTheory.Functor.OfSequence (1.4s)
+✔ [3906/3908] Built Mathlib.Topology.Category.TopCat.EpiMono (1.0s)
+✔ [3907/3910] Built Mathlib.Topology.Category.TopCat.Sphere (5.8s)
+✔ [3908/3911] Built Mathlib.CategoryTheory.Category.Cat.AsSmall (898ms)
+✔ [3909/3911] Built Mathlib.CategoryTheory.IsConnected (1.2s)
+✔ [3910/3913] Built Mathlib.CategoryTheory.Limits.Types.Products (1.8s)
+✔ [3911/3918] Built Mathlib.CategoryTheory.ObjectProperty.CompleteLattice (947ms)
+✔ [3912/3918] Built Mathlib.CategoryTheory.ObjectProperty.Equivalence (975ms)
+✔ [3913/3918] Built Mathlib.CategoryTheory.ObjectProperty.Opposite (1.0s)
+✔ [3914/3918] Built Mathlib.CategoryTheory.ObjectProperty.Small (1.3s)
+✔ [3915/3922] Built Mathlib.CategoryTheory.Elements (3.3s)
+✔ [3916/3922] Built Mathlib.CategoryTheory.Grothendieck (3.7s)
+✔ [3917/3922] Built Mathlib.CategoryTheory.FinCategory.Basic (961ms)
+✔ [3918/3922] Built Mathlib.CategoryTheory.Limits.Shapes.Grothendieck (2.0s)
+✔ [3919/3923] Built Mathlib.CategoryTheory.FinCategory.AsType (1.1s)
+✔ [3920/3925] Built Mathlib.CategoryTheory.Limits.Shapes.FiniteLimits (1.2s)
+✔ [3921/3925] Built Mathlib.CategoryTheory.Functor.Currying (2.2s)
+✔ [3922/3926] Built Mathlib.CategoryTheory.Filtered.Basic (1.7s)
+✔ [3923/3927] Built Mathlib.CategoryTheory.Limits.Preserves.Limits (1.2s)
+✔ [3924/3927] Built Mathlib.CategoryTheory.Limits.Types.Yoneda (2.6s)
+✔ [3925/3930] Built Mathlib.CategoryTheory.Limits.FunctorCategory.Basic (2.8s)
+✔ [3926/3931] Built Mathlib.CategoryTheory.Limits.Preserves.Ulift (1.1s)
+✔ [3927/3932] Built Mathlib.CategoryTheory.ShrinkYoneda (2.6s)
+✔ [3928/3932] Built Mathlib.CategoryTheory.Limits.Connected (1.3s)
+✔ [3929/3932] Built Mathlib.CategoryTheory.Limits.Yoneda (1.4s)
+✔ [3930/3932] Built Mathlib.CategoryTheory.Filtered.Connected (1.0s)
+✔ [3931/3935] Built Mathlib.CategoryTheory.Limits.Final (3.8s)
+✔ [3932/3937] Built Mathlib.CategoryTheory.Functor.TwoSquare (1.4s)
+✔ [3933/3937] Built Mathlib.CategoryTheory.Monad.Products (1.9s)
+✔ [3934/3937] Built Mathlib.CategoryTheory.Adjunction.Mates (2.6s)
+✔ [3935/3937] Built Mathlib.CategoryTheory.Limits.Shapes.Pullback.Pasting (2.3s)
+✔ [3936/3938] Built Mathlib.CategoryTheory.Comma.Over.Pullback (2.8s)
+✔ [3937/3941] Built Mathlib.CategoryTheory.EffectiveEpi.Basic (1.2s)
+✔ [3938/3942] Built Mathlib.CategoryTheory.Limits.Opposites (1.9s)
+✔ [3939/3944] Built Mathlib.CategoryTheory.Limits.Shapes.Opposites.Pullbacks (2.2s)
+✔ [3940/3944] Built Mathlib.CategoryTheory.MorphismProperty.Composition (1.3s)
+✔ [3941/3944] Built Mathlib.CategoryTheory.Limits.Shapes.Opposites.Equalizers (1.9s)
+✔ [3942/3944] Built Mathlib.CategoryTheory.Limits.Shapes.Pullback.IsPullback.Defs (1.4s)
+✔ [3943/3952] Built Mathlib.CategoryTheory.Limits.Shapes.RegularMono (1.8s)
+✔ [3944/3952] Built Mathlib.CategoryTheory.Limits.Preserves.Shapes.Pullbacks (1.9s)
+✔ [3945/3952] Built Mathlib.CategoryTheory.Limits.Shapes.Pullback.Assoc (2.7s)
+✔ [3946/3952] Built Mathlib.CategoryTheory.Limits.Constructions.BinaryProducts (1.4s)
+✔ [3947/3953] Built Mathlib.CategoryTheory.Limits.Shapes.Pullback.IsPullback.Basic (1.9s)
+✔ [3948/3953] Built Mathlib.CategoryTheory.Limits.Shapes.KernelPair (1.2s)
+✔ [3949/3953] Built Mathlib.CategoryTheory.ComposableArrows.Basic (6.8s)
+✔ [3950/3954] Built Mathlib.CategoryTheory.Limits.Shapes.Diagonal (3.5s)
+✔ [3951/3954] Built Mathlib.CategoryTheory.MorphismProperty.Limits (2.5s)
+✔ [3952/3954] Built Mathlib.CategoryTheory.Limits.Shapes.Preorder.PrincipalSeg (928ms)
+✔ [3953/3957] Built Mathlib.AlgebraicTopology.RelativeCellComplex.AttachCells (1.5s)
+✔ [3954/3957] Built Mathlib.CategoryTheory.Discrete.StructuredArrow (1.2s)
+✔ [3955/3957] Built Mathlib.CategoryTheory.Limits.Types.Filtered (1.4s)
+✔ [3956/3962] Built Mathlib.CategoryTheory.Limits.Final.Connected (972ms)
+✔ [3957/3962] Built Mathlib.CategoryTheory.Functor.Trifunctor (1.9s)
+✔ [3958/3962] Built Mathlib.CategoryTheory.Monoidal.Category (3.8s)
+✔ [3959/3963] Built Mathlib.CategoryTheory.Monoidal.Functor (5.8s)
+✔ [3960/3965] Built Mathlib.CategoryTheory.Monoidal.NaturalTransformation (1.6s)
+✔ [3961/3965] Built Mathlib.Tactic.CategoryTheory.Coherence.Datatypes (705ms)
+✔ [3962/3967] Built Mathlib.CategoryTheory.Monoidal.Discrete (2.2s)
+✔ [3963/3969] Built Mathlib.Tactic.CategoryTheory.MonoidalComp (1.1s)
+✔ [3964/3969] Built Mathlib.Tactic.CategoryTheory.Coherence.PureCoherence (1.6s)
+✔ [3965/3969] Built Mathlib.Tactic.CategoryTheory.Monoidal.Datatypes (2.0s)
+✔ [3966/3969] Built Mathlib.Tactic.CategoryTheory.CancelIso (977ms)
+✔ [3967/3969] Built Mathlib.Tactic.CategoryTheory.Monoidal.PureCoherence (2.2s)
+✔ [3968/3975] Built Mathlib.CategoryTheory.Monoidal.Opposite (2.7s)
+✔ [3969/3976] Built Mathlib.Tactic.CategoryTheory.Coherence.Normalize (2.0s)
+✔ [3970/3976] Built Mathlib.Tactic.CategoryTheory.Monoidal.Normalize (2.4s)
+✔ [3971/3976] Built Mathlib.Tactic.CategoryTheory.Coherence.Basic (1.0s)
+✔ [3972/3978] Built Mathlib.Tactic.CategoryTheory.Monoidal.Basic (2.4s)
+✔ [3973/3978] Built Mathlib.CategoryTheory.Monoidal.CoherenceLemmas (1.0s)
+✔ [3974/3980] Built Mathlib.CategoryTheory.Monoidal.Braided.Basic (4.4s)
+✔ [3975/3980] Built Mathlib.CategoryTheory.Adjunction.Parametrized (1.7s)
+✔ [3976/3980] Built Mathlib.CategoryTheory.Monoidal.FunctorCategory (2.9s)
+✔ [3977/3980] Built Mathlib.Tactic.BDSimp (521ms)
+✔ [3978/3980] Built Mathlib.CategoryTheory.Monoidal.ExternalProduct.Basic (2.1s)
+✔ [3979/3983] Built Mathlib.CategoryTheory.Monoidal.Closed.Basic (1.0s)
+✔ [3980/3985] Built Mathlib.CategoryTheory.Limits.Shapes.FiniteProducts (1.4s)
+✔ [3981/3985] Built Mathlib.CategoryTheory.Limits.Preserves.Shapes.BinaryProducts (1.2s)
+✔ [3982/3985] Built Mathlib.CategoryTheory.Limits.Preserves.Finite (1.2s)
+✔ [3983/3985] Built Mathlib.CategoryTheory.Limits.Preserves.Shapes.Products (1.1s)
+✔ [3984/3987] Built Mathlib.CategoryTheory.Limits.Constructions.FiniteProductsOfBinaryProducts (1.7s)
+✔ [3985/3989] Built Mathlib.CategoryTheory.Limits.Presentation (4.5s)
+✔ [3986/3995] Built Mathlib.CategoryTheory.ObjectProperty.LimitsOfShape (4.6s)
+✔ [3987/3995] Built Mathlib.CategoryTheory.Limits.Shapes.Biproducts (20s)
+✔ [3988/3995] Built Mathlib.CategoryTheory.ObjectProperty.ContainsZero (1.5s)
+✔ [3989/3996] Built Mathlib.CategoryTheory.Limits.Shapes.BinaryBiproducts (4.3s)
+✔ [3990/3996] Built Mathlib.CategoryTheory.ObjectProperty.Retract (1.1s)
+✔ [3991/3996] Built Mathlib.CategoryTheory.Comma.Presheaf.Basic (2.9s)
+✔ [3992/3996] Built Mathlib.CategoryTheory.ObjectProperty.ColimitsOfShape (1.6s)
+✔ [3993/3996] Built Mathlib.CategoryTheory.Limits.FullSubcategory (1.0s)
+✔ [3994/3999] Built Mathlib.CategoryTheory.Monoidal.Cartesian.Basic (4.3s)
+✔ [3995/4001] Built Mathlib.CategoryTheory.Monoidal.Closed.Cartesian (1.3s)
+✔ [3996/4001] Built Mathlib.CategoryTheory.Limits.Shapes.Equivalence (950ms)
+✔ [3997/4001] Built Mathlib.CategoryTheory.Comma.StructuredArrow.Functor (1.9s)
+✔ [3998/4001] Built Mathlib.CategoryTheory.Functor.KanExtension.Basic (3.8s)
+✔ [3999/4002] Built Mathlib.CategoryTheory.Functor.KanExtension.Pointwise (3.0s)
+✔ [4000/4003] Built Mathlib.CategoryTheory.Functor.KanExtension.Adjunction (2.3s)
+✔ [4001/4005] Built Mathlib.CategoryTheory.Limits.Constructions.EpiMono (1.4s)
+✔ [4002/4005] Built Mathlib.CategoryTheory.Limits.Unit (1.0s)
+✔ [4003/4009] Built Mathlib.CategoryTheory.Limits.Preserves.Creates.Finite (1.2s)
+✔ [4004/4009] Built Mathlib.CategoryTheory.Limits.Comma (4.1s)
+✔ [4005/4012] Built Mathlib.CategoryTheory.Adjunction.Comma (1.6s)
+✔ [4006/4013] Built Mathlib.CategoryTheory.Limits.ConeCategory (2.3s)
+✔ [4007/4013] Built Mathlib.CategoryTheory.Monoidal.Types.Basic (2.0s)
+✔ [4008/4013] Built Mathlib.CategoryTheory.Limits.Over (1.4s)
+✔ [4009/4013] Built Mathlib.CategoryTheory.Monoidal.Limits.Preserves (946ms)
+✔ [4010/4013] Built Mathlib.CategoryTheory.Monoidal.Cartesian.FunctorCategory (1.4s)
+✔ [4011/4017] Built Mathlib.CategoryTheory.Limits.Presheaf (4.7s)
+✔ [4012/4017] Built Mathlib.CategoryTheory.Products.Bifunctor (868ms)
+✔ [4013/4018] Built Mathlib.CategoryTheory.Monoidal.Closed.Types (1.3s)
+✔ [4014/4018] Built Mathlib.CategoryTheory.Limits.Preserves.FunctorCategory (1.6s)
+✔ [4015/4021] Built Mathlib.CategoryTheory.Limits.Fubini (3.2s)
+✔ [4016/4022] Built Mathlib.CategoryTheory.Limits.IsConnected (1.0s)
+✔ [4017/4022] Built Mathlib.CategoryTheory.Limits.Preserves.Bifunctor (2.4s)
+✔ [4018/4023] Built Mathlib.CategoryTheory.Products.Associator (2.6s)
+✔ [4019/4023] Built Mathlib.Data.Fin.SuccPredOrder (924ms)
+✔ [4020/4023] Built Mathlib.CategoryTheory.Limits.Sifted (1.0s)
+✔ [4021/4023] Built Mathlib.Order.Interval.Set.InitialSeg (1.2s)
+✔ [4022/4027] Built Mathlib.CategoryTheory.Filtered.Final (1.4s)
+✔ [4023/4027] Built Mathlib.Order.SetIsMax (580ms)
+✔ [4024/4027] Built Mathlib.CategoryTheory.Limits.Shapes.Preorder.Fin (871ms)
+✔ [4025/4027] Built Mathlib.Order.Interval.Set.Limit (982ms)
+✔ [4026/4033] Built Mathlib.CategoryTheory.Limits.Shapes.Preorder.WellOrderContinuous (1.4s)
+✔ [4027/4034] Built Mathlib.CategoryTheory.Limits.Preorder (1.1s)
+✔ [4028/4034] Built Mathlib.Order.Interval.Set.Final (1.1s)
+✔ [4029/4038] Built Mathlib.CategoryTheory.Limits.Shapes.Preorder.Basic (1.1s)
+✔ [4030/4038] Built Mathlib.Order.Interval.Set.SuccOrder (1.0s)
+✔ [4031/4038] Built Mathlib.CategoryTheory.Limits.Shapes.Preorder.HasIterationOfShape (1.1s)
+✔ [4032/4038] Built Mathlib.Order.Shrink (1.1s)
+✔ [4033/4038] Built Mathlib.CategoryTheory.Limits.Preserves.Shapes.Preorder (1.2s)
+✔ [4034/4039] Built Mathlib.CategoryTheory.Limits.Shapes.Preorder.TransfiniteCompositionOfShape (1.7s)
+✔ [4035/4039] Built Mathlib.CategoryTheory.MorphismProperty.TransfiniteComposition (2.0s)
+✔ [4036/4039] Built Mathlib.CategoryTheory.Limits.Constructions.Pullbacks (1.1s)
+✔ [4037/4040] Built Mathlib.AlgebraicTopology.RelativeCellComplex.Basic (1.3s)
+✔ [4038/4041] Built Mathlib.Topology.CWComplex.Abstract.Basic (20s)
+✔ [4039/4041] Built Mathlib.Algebra.Group.Ext (1.3s)
+✔ [4040/4045] Built Mathlib.CategoryTheory.Limits.Preserves.Shapes.Biproducts (1.7s)
+✔ [4041/4045] Built Mathlib.CategoryTheory.Endomorphism (1.2s)
+✔ [4042/4045] Built Mathlib.CategoryTheory.Limits.Preserves.Shapes.Kernels (1.6s)
+✔ [4043/4046] Built Mathlib.CategoryTheory.Preadditive.Basic (1.8s)
+✔ [4044/4046] Built Mathlib.CategoryTheory.Preadditive.Biproducts (3.2s)
+✔ [4045/4050] Built Mathlib.CategoryTheory.Limits.Constructions.Equalizers (1.5s)
+✔ [4046/4050] Built Mathlib.CategoryTheory.Limits.Shapes.SplitCoequalizer (1.3s)
+✔ [4047/4050] Built Mathlib.CategoryTheory.Limits.Shapes.SplitEqualizer (1.3s)
+✔ [4048/4052] Built Mathlib.CategoryTheory.Limits.Preserves.Shapes.Equalizers (1.4s)
+✔ [4049/4055] Built Mathlib.CategoryTheory.Limits.Constructions.LimitsOfProductsAndEqualizers (2.1s)
+✔ [4050/4056] Built Mathlib.CategoryTheory.Limits.Shapes.NormalMono.Basic (1.8s)
+✔ [4051/4056] Built Mathlib.CategoryTheory.Abelian.Images (1.5s)
+✔ [4052/4058] Built Mathlib.CategoryTheory.Limits.Shapes.NormalMono.Equalizers (2.0s)
+✔ [4053/4058] Built Mathlib.CategoryTheory.Preadditive.FunctorCategory (1.8s)
+✔ [4054/4058] Built Mathlib.CategoryTheory.Abelian.NonPreadditive (2.2s)
+✔ [4055/4058] Built Mathlib.CategoryTheory.Limits.FunctorCategory.Finite (6.1s)
+✔ [4056/4059] Built Mathlib.CategoryTheory.Abelian.Basic (18s)
+✔ [4057/4059] Built Mathlib.CategoryTheory.Limits.Preserves.Shapes.AbelianImages (4.3s)
+✔ [4058/4063] Built Mathlib.CategoryTheory.Abelian.FunctorCategory (1.8s)
+✔ [4059/4064] Built Mathlib.CategoryTheory.Limits.ExactFunctor (2.1s)
+✔ [4060/4066] Built Mathlib.CategoryTheory.Preadditive.AdditiveFunctor (1.7s)
+✔ [4061/4066] Built Mathlib.CategoryTheory.Linear.Basic (1.3s)
+✔ [4062/4067] Built Mathlib.CategoryTheory.Preadditive.Transfer (977ms)
+✔ [4063/4067] Built Mathlib.Algebra.Module.LinearMap.Rat (934ms)
+✔ [4064/4067] Built Mathlib.CategoryTheory.Abelian.Transfer (1.2s)
+✔ [4065/4067] Built Mathlib.CategoryTheory.Linear.FunctorCategory (1.1s)
+✔ [4066/4070] Built Mathlib.CategoryTheory.Linear.LinearFunctor (1.3s)
+✔ [4067/4070] Built Mathlib.Algebra.Category.MonCat.Basic (2.4s)
+✔ [4068/4070] Built Mathlib.CategoryTheory.Conj (1.0s)
+✔ [4069/4075] Built Mathlib.Algebra.Category.Grp.Basic (2.6s)
+✔ [4070/4075] Built Mathlib.Combinatorics.Quiver.Cast (641ms)
+✔ [4071/4077] Built Mathlib.Combinatorics.Quiver.SingleObj (660ms)
+✔ [4072/4079] Built Mathlib.CategoryTheory.SingleObj (1.2s)
+✔ [4073/4079] Built Mathlib.CategoryTheory.Limits.Types.Pullbacks (1.7s)
+✔ [4074/4079] Built Mathlib.CategoryTheory.Action.Basic (2.6s)
+✔ [4075/4079] Built Mathlib.CategoryTheory.Limits.Types.Coproducts (1.5s)
+✔ [4076/4079] Built Mathlib.CategoryTheory.Limits.Types.Pushouts (1.6s)
+✔ [4077/4079] Built Mathlib.CategoryTheory.Action.Limits (2.1s)
+✔ [4078/4084] Built Mathlib.CategoryTheory.Types.Monomorphisms (1.3s)
+✔ [4079/4084] Built Mathlib.Order.Monotone.Union (846ms)
+✔ [4080/4084] Built Mathlib.Topology.UrysohnsBounded (3.6s)
+✔ [4081/4084] Built Mathlib.Order.Monotone.Odd (728ms)
+✔ [4082/4087] Built Mathlib.Order.Interval.Set.IsoIoo (1.2s)
+✔ [4083/4087] Built Mathlib.Topology.TietzeExtension (2.0s)
+✔ [4084/4088] Built Mathlib.CategoryTheory.Limits.Types.Images (1.0s)
+✔ [4085/4088] Built Mathlib.CategoryTheory.Limits.ConcreteCategory.Basic (1.3s)
+✔ [4086/4088] Built Mathlib.CategoryTheory.SmallObject.WellOrderInductionData (1.9s)
+✔ [4087/4094] Built Mathlib.Topology.Category.TopCat.Limits.Products (2.1s)
+✔ [4088/4094] Built Mathlib.CategoryTheory.MorphismProperty.Retract (1.0s)
+✔ [4089/4094] Built Mathlib.CategoryTheory.LiftingProperties.Limits (1.2s)
+✔ [4090/4094] Built Mathlib.CategoryTheory.MorphismProperty.LiftingProperty (1.4s)
+✔ [4091/4094] Built Mathlib.CategoryTheory.SmallObject.TransfiniteCompositionLifting (2.0s)
+✔ [4103/4117] Built Mathlib.Analysis.Convex.GaugeRescale (4.1s)
+✔ [4147/4153] Built Mathlib.Topology.Homotopy.Path (2.4s)
+✔ [4148/4153] Built Mathlib.Topology.Homotopy.Equiv (1.3s)
+✔ [4150/4153] Built Mathlib.Topology.Homotopy.Contractible (1.3s)
+✔ [4179/4185] Built Mathlib.Analysis.Convex.Contractible (1.3s)
+✔ [4185/4185] Built BC4lean.AssemblyModelNaturality (178s)
+Build completed successfully (4185 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentTensorComparison"]
+✔ [3053/3053] Built BC4lean.KasparovDescentTensorComparison (639s)
+Build completed successfully (3053 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentConnection"]
+✔ [3140/3140] Built BC4lean.KasparovDescentConnection (293s)
+Build completed successfully (3140 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentTensorComparisonGrading"]
+✔ [3115/3115] Built BC4lean.KasparovDescentTensorComparisonGrading (147s)
+Build completed successfully (3115 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentTensorComparisonSource"]
+✔ [3054/3054] Built BC4lean.KasparovDescentTensorComparisonSource (266s)
+Build completed successfully (3054 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentGradedProduct"]
+✔ [3171/3171] Built BC4lean.KasparovDescentGradedProduct (861s)
+Build completed successfully (3171 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentGradedProductClass"]
+✔ [3313/3313] Built BC4lean.KasparovDescentGradedProductClass (156s)
+Build completed successfully (3313 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentGradedClassProduct"]
+✔ [3344/3344] Built BC4lean.KasparovDescentGradedClassProduct (87s)
+Build completed successfully (3344 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentNativeClassMaps"]
+✔ [3364/3364] Built BC4lean.KasparovDescentNativeClassMaps (125s)
+Build completed successfully (3364 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentNativeClassCoherence"]
+✔ [3428/3428] Built BC4lean.KasparovDescentNativeClassCoherence (125s)
+Build completed successfully (3428 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentEvenProduct"]
+✔ [3430/3430] Built BC4lean.KasparovDescentEvenProduct (94s)
+Build completed successfully (3430 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.KasparovDescentNativeParityProduct"]
+✔ [3509/3509] Built BC4lean.KasparovDescentNativeParityProduct (148s)
+Build completed successfully (3509 jobs).
 COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean"]
-✔ [4238/4239] Built BC4lean (63s)
-Build completed successfully (4239 jobs).
+✔ [3461/3753] Built Mathlib.LinearAlgebra.TensorProduct.Pi (4.9s)
+✔ [3869/4026] Built Mathlib.Algebra.Order.Ring.Star (1.2s)
+✔ [3883/4030] Built Mathlib.LinearAlgebra.BilinearForm.Basic (1.6s)
+✔ [3885/4030] Built Mathlib.LinearAlgebra.BilinearForm.Hom (2.1s)
+✔ [3887/4030] Built Mathlib.LinearAlgebra.Basis.Bilinear (1.2s)
+✔ [3897/4031] Built Mathlib.LinearAlgebra.Matrix.DotProduct (1.5s)
+✔ [3900/4031] Built Mathlib.LinearAlgebra.BilinearForm.Properties (4.2s)
+✔ [3903/4033] Built Mathlib.LinearAlgebra.Matrix.SesquilinearForm (5.8s)
+✔ [3908/4034] Built Mathlib.LinearAlgebra.Matrix.Hadamard (1.4s)
+✔ [3909/4034] Built Mathlib.LinearAlgebra.Matrix.BilinearForm (3.2s)
+✔ [3913/4036] Built Mathlib.LinearAlgebra.Matrix.ZPow (1.8s)
+✔ [3917/4036] Built Mathlib.LinearAlgebra.Matrix.Vec (1.5s)
+✔ [3918/4036] Built Mathlib.LinearAlgebra.Matrix.Hermitian (1.9s)
+✔ [3926/4036] Built Mathlib.LinearAlgebra.QuadraticForm.Basic (6.2s)
+✔ [3941/4038] Built Mathlib.LinearAlgebra.Matrix.PosDef (2.7s)
+✔ [3942/4039] Built Mathlib.Analysis.SpecialFunctions.Sqrt (3.1s)
+✔ [3947/4041] Built Mathlib.Analysis.Normed.Module.Ball.Homeomorph (1.9s)
+✔ [3949/4041] Built Mathlib.Analysis.Calculus.ContDiff.WithLp (2.2s)
+✔ [3960/4044] Built Mathlib.Analysis.Calculus.FDeriv.WithLp (7.6s)
+✔ [3961/4044] Built Mathlib.Analysis.InnerProductSpace.Calculus (5.4s)
+✔ [3972/4046] Built Mathlib.Analysis.Calculus.InverseFunctionTheorem.ApproximatesLinearOn (3.2s)
+✔ [3979/4048] Built Mathlib.LinearAlgebra.Eigenspace.Basic (3.4s)
+✔ [3990/4049] Built Mathlib.Analysis.Calculus.InverseFunctionTheorem.FDeriv (1.8s)
+✔ [3996/4049] Built Mathlib.Analysis.Calculus.LagrangeMultipliers (1.7s)
+✔ [4001/4049] Built Mathlib.Analysis.Normed.Operator.Compact.FredholmAlternative (3.3s)
+✔ [4010/4053] Built Mathlib.Analysis.InnerProductSpace.Rayleigh (5.9s)
+✔ [4015/4053] Built Mathlib.LinearAlgebra.Charpoly.Basic (1.6s)
+✔ [4021/4056] Built Mathlib.RingTheory.Finiteness.Prod (1.1s)
+✔ [4022/4056] Built Mathlib.LinearAlgebra.Charpoly.ToMatrix (1.5s)
+✔ [4026/4058] Built Mathlib.LinearAlgebra.Contraction (2.8s)
+✔ [4028/4059] Built Mathlib.RingTheory.TensorProduct.Free (1.7s)
+✔ [4029/4059] Built Mathlib.LinearAlgebra.Charpoly.BaseChange (1.5s)
+✔ [4031/4060] Built Mathlib.LinearAlgebra.Matrix.Charpoly.Eigs (1.6s)
+✔ [4035/4060] Built Mathlib.LinearAlgebra.Trace (2.9s)
+✔ [4037/4062] Built Mathlib.LinearAlgebra.Eigenspace.ContinuousLinearMap (1.6s)
+✔ [4038/4062] Built Mathlib.LinearAlgebra.Eigenspace.Minpoly (1.5s)
+✔ [4040/4063] Built Mathlib.LinearAlgebra.Eigenspace.Charpoly (1.6s)
+✔ [4043/4064] Built Mathlib.Data.Fin.Tuple.Sort (1.1s)
+✔ [4046/4064] Built Mathlib.Analysis.Matrix.Hermitian (3.5s)
+✔ [4047/4064] Built Mathlib.Analysis.InnerProductSpace.Spectrum (5.9s)
+✔ [4050/4069] Built Mathlib.LinearAlgebra.Eigenspace.Matrix (2.4s)
+✔ [4053/4073] Built Mathlib.LinearAlgebra.Dimension.OrzechProperty (2.6s)
+✔ [4054/4073] Built Mathlib.LinearAlgebra.Matrix.Rank (5.6s)
+✔ [4056/4096] Built Mathlib.Analysis.RCLike.Sqrt (3.3s)
+✔ [4060/4160] Built Mathlib.Analysis.CStarAlgebra.Matrix (8.3s)
+✔ [4063/4202] Built Mathlib.Analysis.Matrix.Spectrum (6.7s)
+✔ [4092/4202] Built Mathlib.Analysis.Matrix.PosDef (4.9s)
+✔ [4095/4207] Built Mathlib.Analysis.Matrix.HermitianFunctionalCalculus (2.6s)
+✔ [4123/4218] Built Mathlib.Analysis.Matrix.Order (3.2s)
+✔ [4142/4218] Built Mathlib.Analysis.InnerProductSpace.Positive (5.7s)
+✔ [4144/4266] Built Mathlib.Analysis.InnerProductSpace.GramMatrix (6.2s)
+✔ [4168/4328] Built Mathlib.Analysis.InnerProductSpace.TensorProduct (14s)
+✔ [4327/4328] Built BC4lean (207s)
+Build completed successfully (4328 jobs).

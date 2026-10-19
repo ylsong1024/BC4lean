@@ -16,19 +16,29 @@ colimit, with cofinal indexing and universal proper-model independence under the
 [documented hypotheses](https://github.com/ylsong1024/BC4lean/blob/main/docs/CHAPTER6_COMPLETION.md).
 All 16 new modules and 347 audited declarations pass.
 
-**Chapter 7 has verified foundations; the assembly map remains incomplete.**
-The regular reduced crossed product and normalized cutoff projection are
-constructed, including independence of its actual operator K₀ class. Full
-Kasparov descent and its product compatibility remain open. The
-[verification record](https://github.com/ylsong1024/BC4lean/blob/main/docs/CHAPTER7_VERIFICATION.md)
-records the precise checked endpoints and remaining obligations.
+**Chapter 7 is verified.** It constructs reduced descent and assembly in
+degrees zero and one. The checked scope includes
+actual descended cycles and additive KK maps, full arbitrary interval homotopy
+transport, and compatibility with all four native Kasparov products
+(even–even, even–odd, odd–even, and odd–odd). The actual cutoff-class/descent
+product defines each piece map; compatibility with transitions induces the
+homomorphism on Chapter 6's actual topological K-homology colimit, with values
+in the existing reduced operator K₀ and K₁ groups.
+
+The [completion record](https://github.com/ylsong1024/BC4lean/blob/main/docs/CHAPTER7_COMPLETION.md)
+states the exact checked proof revision, audit/build evidence, hypotheses,
+cofinal indexing comparisons, and compatibility with actual model comparison
+maps. It distinguishes native completion from the separate CI and live-content
+acceptance receipt for the exact publication revision. The
+[historical foundation record](https://github.com/ylsong1024/BC4lean/blob/main/docs/CHAPTER7_VERIFICATION.md)
+retains its original, narrower checkpoint.
 
 | Chapter | Status | Details |
 | --- | --- | --- |
 | 4 — Proper actions and the universal proper space | Verified | [Chapter 4](blueprint/ch-proper-actions.html) · [verification record](https://github.com/ylsong1024/BC4lean/blob/main/docs/CHAPTER4_VERIFICATION.md) |
 | 5 — Equivariant KK-theory | Verified | [Chapter 5](blueprint/ch-equivariant-kk.html) · [proof dependency graph](blueprint/dep_graph_chapter_5.html) |
 | 6 — Topological side | Verified | [Chapter 6](blueprint/ch-topological-k-homology.html) · [proof dependency graph](blueprint/dep_graph_chapter_6.html) |
-| 7 — Assembly map | Verified foundations; assembly incomplete | [Chapter 7](blueprint/ch-assembly-map.html) · [proof dependency graph](blueprint/dep_graph_chapter_7.html) |
+| 7 — Assembly map | Verified: actual descent and assembly in both degrees | [Chapter 7](blueprint/ch-assembly-map.html) · [proof dependency graph](blueprint/dep_graph_chapter_7.html) · [completion record](https://github.com/ylsong1024/BC4lean/blob/main/docs/CHAPTER7_COMPLETION.md) |
 
 ## Join the project
 
@@ -48,8 +58,24 @@ K-theory, the universal proper-space construction for countable discrete
 groups, and equivariant KK-theory under the hypotheses in the
 [Chapter 5 verification record](https://github.com/ylsong1024/BC4lean/blob/main/docs/CHAPTER5_VERIFICATION.md).
 The verified topological side uses the actual KK colimit and the constructed
-universal proper telescope. Chapter 7 adds the regular reduced crossed product
-and cutoff K₀ class; full descent and assembly remain incomplete.
+universal proper telescope. Chapter 7 constructs the actual
+regular reduced crossed products and scalar identification, normalized cutoff
+operator K₀ classes, reduced KK descent, and assembly homomorphisms in both
+degrees. Reduced descent retains the countable-group, separable-coefficient
+and module-universe hypotheses of the KK APIs, allows nonunital complex
+C*-algebras, and requires no amenability or exactness assumption. Full homotopy
+transport uses arbitrary complete interval modules, with whole-cycle endpoint
+comparisons.
+
+For assembly, the proper models are locally compact, Hausdorff and second
+countable, with a continuous action of the countable discrete group. Cutoffs
+on cocompact pieces use the supplied proper-action hypothesis. Indexing
+independence uses monotone directed systems with the genuine cofinal
+upper-bound condition for every cocompact piece. Naturality for ambient
+equivariant model maps uses their actual proper restrictions to cocompact
+pieces; universal proper CW model independence uses the established
+fixed-point criterion and actual comparison maps. The full formal scope is in the
+[completion record](https://github.com/ylsong1024/BC4lean/blob/main/docs/CHAPTER7_COMPLETION.md).
 The general conjecture is not proved here.
 
 The blueprint distinguishes checked declarations and proofs from unfinished

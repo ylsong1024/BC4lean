@@ -5,8 +5,8 @@
     "scripts/audit_chapter7.py",
     "--require-complete"
   ],
-  "exit_code": 2,
-  "started_utc": "2026-10-18T22:29:06.575100+00:00",
-  "finished_utc": "2026-10-18T22:32:06.362225+00:00",
-  "log_sha256": "697eda172009ed2cf0613dbbb5a403dc68c0c4d5262d48788960365aa199d918"
+  "exit_code": 0,
+  "started_utc": "2026-10-19T20:35:44.989298+00:00",
+  "finished_utc": "2026-10-19T20:45:52.933722+00:00",
+  "log_sha256": "c86d14e1569e2e24132768126d3da42e7939e16c414b21505dd5c04bcdd29bd5"
 }

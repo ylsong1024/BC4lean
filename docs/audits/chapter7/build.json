@@ -1,24 +1,113 @@
 {
   "status": "passed",
-  "started_utc": "2026-10-18T22:14:07.504347+00:00",
-  "finished_utc": "2026-10-18T22:25:59.119805+00:00",
+  "started_utc": "2026-10-19T17:30:40.054373+00:00",
+  "finished_utc": "2026-10-19T20:34:36.529529+00:00",
   "source_sha256": {
     "BC4lean.AlgebraicCrossedProduct": "b4372db1c60b7c1ad36bc1144ed81b5222d4602a8f7fbd4e90edb7ded4ad5464",
+    "BC4lean.AlgebraicCrossedProductMap": "3b3955a45acf544074f13e56b9fe6389f2a81de35247b9b23428f53e8de36e19",
+    "BC4lean.AlgebraicCrossedRepresentation": "e3e0631c6a02a371ee87d778ed17be7c4738189c933dc4a31c69367a7b3795e5",
+    "BC4lean.ArbitraryHilbertModuleSum": "98d46a679c2ceeff7e403d9e56d7c5c8b83618a55f6c196238ba156ec35720eb",
+    "BC4lean.AssemblyCofinalIndex": "17680fd4994c9ff75bb59fb79619b4549d2529cfc171ca0cdca660f416ef0fc6",
+    "BC4lean.AssemblyColimit": "115cd0419fc559e2594606e230d9a611e8e27ca6e9110aad3f055aba4cf763ba",
+    "BC4lean.AssemblyCutoffNaturality": "6a915eed4d83a462c968fdd36e274dc8d71646ae78e3342e57a7fb428f078b94",
+    "BC4lean.AssemblyModelNaturality": "0b3ba9aac316004f8a93176737f7e865b6ced6b9b62724837a62b3b1a3d32367",
+    "BC4lean.AssemblyPieceHom": "b20f1cfeb3ff907c8e2aed5912db2b9c5343d153006dea9a6876ea4d7799be19",
+    "BC4lean.AssemblyProperNaturality": "215e214f76418384210a064afd749e9efec8a6862656a2dbfea77983a2a9a9d8",
+    "BC4lean.AssemblyTransition": "28a1b7d36ceb7e4c7560df7f7b16551482617f934916f690e43a709c950379b5",
+    "BC4lean.CliffordPairStandardTensorCompatibility": "05f9f5758289153007130054b37608377259b12d48172fa46e06e9b5dfc24759",
+    "BC4lean.CocompactPieceCutoff": "2c1f3903c0db469694c5d258fdbfd2dcde10f4e73a5fafec52293a38735597a0",
+    "BC4lean.CovariantAlgebraicRepresentation": "08213c5af92323fd7db5632860159b6f25b7c616cb9d95f89e0c4da06f02bcb6",
+    "BC4lean.CutoffAlgebraicProjection": "19aa3270229dc5940e2b52e776611dfbe42d04326af2aa62381cf63a97f5f0dd",
     "BC4lean.CutoffCoefficientProjection": "00967fda430a77245f43493045be51300947c61fb75494b381c7b82019d26bce",
+    "BC4lean.CutoffProperPullbackNaturality": "e76f79fd98e42e8108127e27569aaecef0a69eaf8ba7e00afb5970241a583ee3",
+    "BC4lean.CutoffRestrictionNaturality": "c05bc9dfc12b916ba3025ca0ef2f734ee071fe96a15f9a11b28219ec08233e02",
+    "BC4lean.EssentialModulePositivityClosed": "be8de8036468fd98ea55e4acdc9aa7b46444480f899ca95776ff3d7afe506ba8",
+    "BC4lean.GradedKasparovRegrade": "7fce2ecd433069f98a465153e0db347aacb7f831668130a636c747d29b8b4a37",
+    "BC4lean.IndexedHilbertModuleIsometry": "62eea4ed3e524cb7cbe24d2ba547df6b2c4ace9ca4ce91fe1292e3a3ed11d17f",
+    "BC4lean.IndexedHilbertModuleTensor": "44b806e5d85e82483e06993f6cc98db4d387fbe4b2d54b3debbf6fc275569809",
+    "BC4lean.IndexedStandardReducedCrossedEquiv": "fcfd2de91248ad92c167d6384f2c74b5543db03f6e45c8c223437adcc1504885",
+    "BC4lean.InteriorModuleTensorFaithful": "a7daa87499ee839464dc51572b33e957d49b71c1e3b94be3ea7fd2b54f549900",
+    "BC4lean.InteriorModuleTensorScalarExtension": "211c32c0d8bc299370995243cab7a40cc65ee78eb7109763c8d58df4654c030d",
+    "BC4lean.InteriorModuleTensorScalarExtensionGrading": "09295d63a3b2fb29ee9309da02cfb6a9f646b57ec016cb40599a87dd6cb8a959",
+    "BC4lean.InteriorModuleTensorSecondFactorIsometry": "9474fc5af348e33dccfaffb8fc248e3f9b37387fc8e3eac4b10a235bd29d64c8",
+    "BC4lean.KasparovDescentAction": "0624eaf076dcaaff82a41b5f7a324e81928af77ba6f62145720bad16691395f7",
+    "BC4lean.KasparovDescentAlgebraicRepresentation": "6c0e8ba7b57017ac6cae2505f25a9d7cf180f59e9dae3f19af5804c5ca40b9a3",
+    "BC4lean.KasparovDescentClass": "575dea48378e90de620c747dee8afe2ef6d744935b656593f2f5685b3db6a383",
+    "BC4lean.KasparovDescentCliffordExpansionIso": "08c6d860ef382438368cd4681810089a804709fe6ad3a42a961ed0e55e10ade4",
+    "BC4lean.KasparovDescentCliffordExternalEvenIso": "d97595688573e079dee2045e294acf051d8ac2622fad43736c19dfc8b9b7a255",
+    "BC4lean.KasparovDescentCliffordPair": "c04218f74c9816183f82cdf6c37c281cf26b38c077acf1c4ba016fdb7d253ca6",
+    "BC4lean.KasparovDescentCliffordSignedSource": "aca0400b35c7d382fdea7eff00d1a85bb76970fa5220a9a98ded0c6de0913726",
+    "BC4lean.KasparovDescentCliffordSignedSourceIso": "63c8f90e1261d0eb2c2fdd809485b54550c39fcadcc735887426ddc012ab2808",
     "BC4lean.KasparovDescentCompactAction": "bd084698b89f0b67d3855a1f18cedd75f365faa46fd858cc0c97982807ff1eeb",
+    "BC4lean.KasparovDescentConnection": "ec03b1fed95213f65e48f55d28b176a58d184e8143f8cc55b5fc84e7e878c177",
+    "BC4lean.KasparovDescentCycleIso": "0474040e80ece6e8c572b9a8eb680e60e925bd222baab450647fd2dbd7206ad1",
+    "BC4lean.KasparovDescentDirectSum": "d32ee96ee71b34c581ebed14079a2d87478c782d5e0ebef7e1e1f50112c313e6",
+    "BC4lean.KasparovDescentEvenGradedCoherence": "30586874323a38e51845cd1dea5a6f25bf3ef546bace4b048df0f076c6437496",
+    "BC4lean.KasparovDescentEvenProduct": "77da10df21bfd7441e2313f1507770806f02b354d25c9c4d206793641028a035",
+    "BC4lean.KasparovDescentFullHomotopy": "64c1e7a5c17aa2526edcf874656f5f9ff3b151e76a7723efd5351fff93941809",
+    "BC4lean.KasparovDescentGeneratorDefects": "2ea3684e945ab8d96fecaba55d34cd4c8e12374a605b99554af08e052879a805",
+    "BC4lean.KasparovDescentGradedClass": "60feb8cf9cb0d3879562392c19ef0de71d1ff1eb153ce53515924ccedf323c2a",
+    "BC4lean.KasparovDescentGradedClassProduct": "6dabac576056bfc21308d74b8795b21cea55848cc9640b40cfe1560209e25dfc",
+    "BC4lean.KasparovDescentGradedCycle": "3e3e72f530be5d1ecb449fe55f69d4e6280ac5ced0cc3614d7765dc738cca206",
+    "BC4lean.KasparovDescentGradedCycleIso": "74a067bcfd7ec996fc1a44c46f0c96bd055173a47dfbdbfa04d2b36b43972f47",
+    "BC4lean.KasparovDescentGradedDirectSum": "a1d90c6aaa37fb3be455b64e3cf1459dad8863647f208f43cb60a84ed3e60062",
+    "BC4lean.KasparovDescentGradedFullHomotopy": "898ef93fadae238c62180e1a5706caf7b2461f4eba36902ee2ba68d810568501",
+    "BC4lean.KasparovDescentGradedIntervalCycle": "0205a44b1861dd254a4b7279d5e0c754eabade8f1d3f5ab80ba7abc191fab1ce",
+    "BC4lean.KasparovDescentGradedIntervalGrading": "406fce0dc5ea3fbd15e6b36d8b6aa357cb65802165b690a46c14ec50ed9a8d3d",
+    "BC4lean.KasparovDescentGradedProduct": "d82336c11ff2d6cc7d299ef3a975d04e43bbe2c0a7296d7f35a25f3b10d5be09",
+    "BC4lean.KasparovDescentGradedProductClass": "0d3b6d5cabdbdc67fbde862aa38761aa488556ca32b8a1cb3910b5f601e441fe",
+    "BC4lean.KasparovDescentGrading": "127e358d2cf0a827b22b8f0a4abac46cc9b1d0a12a49677d72189f64cc8c2ce2",
+    "BC4lean.KasparovDescentIntervalCycle": "6b6d8574e28587617a97000d7532da7c176d6ff139d417a449318f5fb5f63c6b",
+    "BC4lean.KasparovDescentIntervalDefects": "5471a484ea80675969417411fada7c39ef58ff53c4c2acb12622229c5399f888",
+    "BC4lean.KasparovDescentIntervalFibreIso": "8ebee04b68c96ed7b1a34c017ec94ccf71b03b5def14708a735ecc7a4c70c44a",
+    "BC4lean.KasparovDescentIntervalModule": "bfc1e9a40c94778dd3e32a045a01b48739e2889adc68c65f4176a8626d881f82",
+    "BC4lean.KasparovDescentIntervalNorm": "0f0281a5f1c3b896acb20e4f257628242359646af149a8fbb8c68c036ce3d99d",
+    "BC4lean.KasparovDescentIntervalRepresentation": "727356ff38ea8a17d2187bf6676d5ca89523890faa46d2051299ca27419b1eea",
+    "BC4lean.KasparovDescentModule": "f2970873ae7345e15c05ba50141d528007462e9285612d0a60da2b68b5cba5e3",
+    "BC4lean.KasparovDescentNativeClassCoherence": "9bc08206cb021639e0ce82d5cd9af387a4d8199633ccfd820dab8014776919a9",
+    "BC4lean.KasparovDescentNativeClassMaps": "62df7703c177cf69e6d2ff9dfcfbcaea98257be32a9639a22b1de164a9bddc6e",
+    "BC4lean.KasparovDescentNativeParityProduct": "e948f9ebc2a2b8a0b57dc295b638eb77c5b5ec22b80a7c07b6752c419603d347",
+    "BC4lean.KasparovDescentOperatorDefects": "fa8603302bd632feaf96276e095b9ba421f8dc1773d6b2551a2da57dd38de6e9",
+    "BC4lean.KasparovDescentPairCoefficientEquiv": "2eae9282e00123c1419632d93e1a111073baa0b534eb6a7f7377a601d3fa482f",
+    "BC4lean.KasparovDescentProductPositivity": "a30dd00de1298189a29542a60978c967b8923d67aa1fafdcd69de7cb9fd2dddb",
+    "BC4lean.KasparovDescentRawCycle": "63a670a7d0321d660b7ebeb61f5018601f82be0e44a7fb80f51020c6e1b38f6c",
+    "BC4lean.KasparovDescentReducedRepresentation": "9eb2860aa8c1107625764551ffb574abfd93fb48b4727caac241edd07e6c2d82",
+    "BC4lean.KasparovDescentRegularEmbedding": "14c467c86ab0275724536b5e5df3b4b9ff33050520f114dbadf4fae44920bc0a",
+    "BC4lean.KasparovDescentSourcePullback": "05c141f79e33f8211518df5a97fff1f5f6e7dbcf663206d3af752e45ffb9dfb1",
+    "BC4lean.KasparovDescentSourcePullbackClass": "96755863a0ad65fb4709ced56b8899811a62a367b57c0524c34fb3b7e0491208",
+    "BC4lean.KasparovDescentTensorComparison": "4bf871e437240fe9f40d8e8cc6575c4ffa6ec99dba3ad8682d501ebc7b096e3b",
+    "BC4lean.KasparovDescentTensorComparisonGrading": "35403d610ba19e9ef31140cff140274501734442df4c9e503a3dc50edc574465",
+    "BC4lean.KasparovDescentTensorComparisonSource": "d80e8e6018b136b2295587ff3bb52f248e892b95966c8b49b395d80fba792ac6",
+    "BC4lean.NativeEvenSourcePullback": "df121ef29db8e4fe4a20094f6780a7a49bbc70a7441f1a871d946ced354b26de",
+    "BC4lean.NativeOddSourcePullback": "66926cfc54b33955a17728efa668f8808f4aa2effa5f1d2042052a0048082732",
     "BC4lean.NonunitalProjectionK0": "9d9bb0b1a0162db7bdeee02e94d0fb76f23d09c60859b168fcf7b1c61b1c9cc3",
     "BC4lean.ProperCutoffFunction": "2d57aee334e7fba813588e939fff6e5a887485aa3e0d921566009251ae1f53d4",
+    "BC4lean.RectangularInteriorModuleTensorCompact": "7aaa0c1c8aa22386053b97ae7402d62d215c86aedfd71e67669e4e828688258d",
+    "BC4lean.ReducedCrossedCoefficientApproximateUnit": "0611d8d2f5ffec7a6b800e05a9bd22a9211b07ebfab545724455f26109c42465",
+    "BC4lean.ReducedCrossedCompactDefects": "0114cbe7668dfe41c885282f8ca9919c4a2483a57997874a17529147daf71583",
+    "BC4lean.ReducedCrossedGradingOperators": "3d16b4c4767c6b5e861cd09184228572c171d2e55a4a45f5f83614b86d1cf95a",
+    "BC4lean.ReducedCrossedHilbertGrading": "5495235d1c70ff7b22893529292563d2ecc73b9cf4a34e0df217b0b4373e42cc",
     "BC4lean.ReducedCrossedHilbertModule": "4a787fc5b281095e43f0f04d05c9fb155821ce2a3f40c2498bf1fdd4c67466e2",
-    "BC4lean.CocompactPieceCutoff": "2c1f3903c0db469694c5d258fdbfd2dcde10f4e73a5fafec52293a38735597a0",
-    "BC4lean.CutoffAlgebraicProjection": "19aa3270229dc5940e2b52e776611dfbe42d04326af2aa62381cf63a97f5f0dd",
-    "BC4lean.ReducedCrossedRegularOperators": "574368d342923fd201c285b46e8a121d57b91fdd4bbdd178408ceffa4a634a13",
-    "BC4lean.ReducedCrossedScalarHilbert": "99768a1db25ab8694d0ecf80bfc82ea1bd5f0b425a539e1e15cf43724286bb47",
-    "BC4lean.ReducedCrossedProduct": "5f729df2faf5a65d003f967c7176fd17368bc9a6cf60ba122ac0f2d648e13346",
-    "BC4lean.AlgebraicCrossedRepresentation": "e3e0631c6a02a371ee87d778ed17be7c4738189c933dc4a31c69367a7b3795e5",
-    "BC4lean.ReducedCrossedScalarProduct": "28295b868123ff6ec67b2c44fecd0057f1ce101fb94bd775eb14ad4deba71b43",
+    "BC4lean.ReducedCrossedLeftRegular": "6fb5e58165c3cf3dc28a70dc7bcb69bc3b56eb8dcadc4d4129243ead0921e6b7",
     "BC4lean.ReducedCrossedNorm": "85e9b1e2e93a65a7eecfd3e2be642bef3f5a109995baec69ee3d737f1ed35d96",
+    "BC4lean.ReducedCrossedProduct": "5f729df2faf5a65d003f967c7176fd17368bc9a6cf60ba122ac0f2d648e13346",
+    "BC4lean.ReducedCrossedProductGrading": "84ef554d52431e9764a7c232d266026c5b4ae00bd67046f19bb95a37768df1f5",
+    "BC4lean.ReducedCrossedProductMap": "0abc85be7685172dc851dc6735f64f27875ef181deb3e58c8c42837b764bdf88",
+    "BC4lean.ReducedCrossedProductPair": "2ba6f76892132bb6b7f36c56a13a33adcf5cf3429dc02fa75bbdcbec34c9fa1b",
+    "BC4lean.ReducedCrossedRegularOperators": "574368d342923fd201c285b46e8a121d57b91fdd4bbdd178408ceffa4a634a13",
+    "BC4lean.ReducedCrossedRepresentationExtension": "b9e0fbf76ef0ab8761c8f6dc86eb92ce9f734e3b74918f7da3496f003b8f667d",
+    "BC4lean.ReducedCrossedScalarHilbert": "99768a1db25ab8694d0ecf80bfc82ea1bd5f0b425a539e1e15cf43724286bb47",
+    "BC4lean.ReducedCrossedScalarProduct": "28295b868123ff6ec67b2c44fecd0057f1ce101fb94bd775eb14ad4deba71b43",
     "BC4lean.ReducedCutoffProjection": "16b2ff01e983422ffcf12d207593402efce5352435c6cd5655461f69806541be",
-    "BC4lean.KasparovDescentModule": "f2970873ae7345e15c05ba50141d528007462e9285612d0a60da2b68b5cba5e3"
+    "BC4lean.ReducedRegularTensorEmbedding": "4d36bb1b7d6700313e1873192b44130e86d98a5e406c63f7f89008452a2e3226",
+    "BC4lean.ReducedScalarKKComparison": "b8a924c211d32d5f444210468e9818060660e92a82e3644e8dcdf1ad6a408bf6",
+    "BC4lean.ReducedSourceRegularBound": "afb1af4b26e9388a135b7c9de9b7abe9a4dff7ed3c7ce5a8df3cc255bb7a8341",
+    "BC4lean.ReducedSourceRegularOperator": "6116989169015197ed3bea0e852f1c4a2d4839afdb70e286990cb24f697ec77c",
+    "BC4lean.ReducedSourceTensorEmbedding": "bbac9da9ae1d08523b46f418f6bc8c7751c6e2ae9b57254c5155f0556c29b239",
+    "BC4lean.ScalarKKNativeNaturality": "67c8ef70dd61fd846d5c1ccc0654164881c0984050945ad5ae85e98c9a234580",
+    "BC4lean.StandardCoefficientExtensionEquiv": "4c3f2f2617fadf5a709a6a17d5e4885ff77ad5c3341267adc341339707636d0a",
+    "BC4lean.StandardModuleTensorEmbedding": "83cbb84d2138dce06491ce81a86e541c982f6685c97442bcf5da22a97b9e9978",
+    "BC4lean.TrivialActionUnitary": "864d13f4983173d213946f5db01396ab8e174a8d538b66fec3831b368a8d53b9"
   },
   "sources_unchanged_during_build": true,
   "sequential_leaf_builds": true,
@@ -35,10 +124,52 @@
         "BC4lean.AlgebraicCrossedProduct"
       ],
       "exit_code": 0,
-      "started_utc": "2026-10-18T22:14:07.504595+00:00",
-      "finished_utc": "2026-10-18T22:14:19.106971+00:00",
-      "log": "/tmp/chapter7-evidence/lake-BC4lean-AlgebraicCrossedProduct.log",
+      "started_utc": "2026-10-19T17:30:40.054520+00:00",
+      "finished_utc": "2026-10-19T17:30:51.469213+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/000-BC4lean-AlgebraicCrossedProduct.log",
       "stdout_stderr_sha256": "0912a644b52142125a4f19682f149620aa5f3d6e98160922fe7762ce903139d8"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.AlgebraicCrossedProductMap"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:30:51.469856+00:00",
+      "finished_utc": "2026-10-19T17:30:54.003152+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/001-BC4lean-AlgebraicCrossedProductMap.log",
+      "stdout_stderr_sha256": "9c213f98a219915cf0628bcd40c08f83267d57b635529d10f7808113b89f6830"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.ArbitraryHilbertModuleSum"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:30:54.003535+00:00",
+      "finished_utc": "2026-10-19T17:31:00.957358+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/002-BC4lean-ArbitraryHilbertModuleSum.log",
+      "stdout_stderr_sha256": "fb436fee09059160cc0114bb8d79383e8cc12993fa9a870c0a8cef7ce2c0dcdd"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.CliffordPairStandardTensorCompatibility"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:31:00.958471+00:00",
+      "finished_utc": "2026-10-19T17:31:07.843529+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/003-BC4lean-CliffordPairStandardTensorCompatibility.log",
+      "stdout_stderr_sha256": "3e487fde22efa40ef0e33f0707d245649c7848a228637041cbf9be919190c1fc"
     },
     {
       "command": [
@@ -49,10 +180,94 @@
         "BC4lean.CutoffCoefficientProjection"
       ],
       "exit_code": 0,
-      "started_utc": "2026-10-18T22:14:19.107755+00:00",
-      "finished_utc": "2026-10-18T22:14:21.089639+00:00",
-      "log": "/tmp/chapter7-evidence/lake-BC4lean-CutoffCoefficientProjection.log",
+      "started_utc": "2026-10-19T17:31:07.844239+00:00",
+      "finished_utc": "2026-10-19T17:31:09.857334+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/004-BC4lean-CutoffCoefficientProjection.log",
       "stdout_stderr_sha256": "a9d864e1707d22e258cc40cf64027443f32ba4c8c29ee51afc30d23942fc4c54"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.EssentialModulePositivityClosed"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:31:09.857851+00:00",
+      "finished_utc": "2026-10-19T17:31:13.544790+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/005-BC4lean-EssentialModulePositivityClosed.log",
+      "stdout_stderr_sha256": "6fa8067779617f4267585314391cab593cdfdf35c98cff25c4a6143b51c38859"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.GradedKasparovRegrade"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:31:13.545413+00:00",
+      "finished_utc": "2026-10-19T17:31:21.279505+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/006-BC4lean-GradedKasparovRegrade.log",
+      "stdout_stderr_sha256": "c99aa89a034d2b9135672cb70148b1ab90e9a24c968df958680c5512812da4e7"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.IndexedHilbertModuleIsometry"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:31:21.280745+00:00",
+      "finished_utc": "2026-10-19T17:31:28.809099+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/007-BC4lean-IndexedHilbertModuleIsometry.log",
+      "stdout_stderr_sha256": "f0a3ea5233273e75d158ebf16cdb8c932d7ee6a61ba33d8ee667964f1b62682d"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.IndexedHilbertModuleTensor"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:31:28.809969+00:00",
+      "finished_utc": "2026-10-19T17:31:37.932321+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/008-BC4lean-IndexedHilbertModuleTensor.log",
+      "stdout_stderr_sha256": "550d0695d9f363f83e2627f713559f6407331fb1414b3814f36f0f2f05e3f16c"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.InteriorModuleTensorFaithful"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:31:37.933265+00:00",
+      "finished_utc": "2026-10-19T17:31:49.356556+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/009-BC4lean-InteriorModuleTensorFaithful.log",
+      "stdout_stderr_sha256": "2a72140f236de93a926db49bad422db164ba1ac3e0effec39d19887a3d4bb30c"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.InteriorModuleTensorSecondFactorIsometry"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:31:49.357501+00:00",
+      "finished_utc": "2026-10-19T17:31:56.155406+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/010-BC4lean-InteriorModuleTensorSecondFactorIsometry.log",
+      "stdout_stderr_sha256": "522a466831087869f005de511683cded13d49db3cd68c803120a87d742fadfa4"
     },
     {
       "command": [
@@ -63,10 +278,38 @@
         "BC4lean.KasparovDescentCompactAction"
       ],
       "exit_code": 0,
-      "started_utc": "2026-10-18T22:14:21.089927+00:00",
-      "finished_utc": "2026-10-18T22:14:23.355422+00:00",
-      "log": "/tmp/chapter7-evidence/lake-BC4lean-KasparovDescentCompactAction.log",
+      "started_utc": "2026-10-19T17:31:56.156054+00:00",
+      "finished_utc": "2026-10-19T17:31:58.505094+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/011-BC4lean-KasparovDescentCompactAction.log",
       "stdout_stderr_sha256": "fb436fee09059160cc0114bb8d79383e8cc12993fa9a870c0a8cef7ce2c0dcdd"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.NativeEvenSourcePullback"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:31:58.505978+00:00",
+      "finished_utc": "2026-10-19T17:32:03.002233+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/012-BC4lean-NativeEvenSourcePullback.log",
+      "stdout_stderr_sha256": "6b508fd985fc99d2eb2d27e91a735c30383a9df9b9ada430f79edfd31ac6df59"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.NativeOddSourcePullback"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:32:03.002882+00:00",
+      "finished_utc": "2026-10-19T17:32:10.376647+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/013-BC4lean-NativeOddSourcePullback.log",
+      "stdout_stderr_sha256": "6b508fd985fc99d2eb2d27e91a735c30383a9df9b9ada430f79edfd31ac6df59"
     },
     {
       "command": [
@@ -77,9 +320,9 @@
         "BC4lean.NonunitalProjectionK0"
       ],
       "exit_code": 0,
-      "started_utc": "2026-10-18T22:14:23.355769+00:00",
-      "finished_utc": "2026-10-18T22:14:25.619102+00:00",
-      "log": "/tmp/chapter7-evidence/lake-BC4lean-NonunitalProjectionK0.log",
+      "started_utc": "2026-10-19T17:32:10.377441+00:00",
+      "finished_utc": "2026-10-19T17:32:17.351309+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/014-BC4lean-NonunitalProjectionK0.log",
       "stdout_stderr_sha256": "d37d5c021fcaae12ded57d9db052773a625c3efd50d6318580ab3b4306935a0b"
     },
     {
@@ -91,24 +334,10 @@
         "BC4lean.ProperCutoffFunction"
       ],
       "exit_code": 0,
-      "started_utc": "2026-10-18T22:14:25.619412+00:00",
-      "finished_utc": "2026-10-18T22:14:58.810399+00:00",
-      "log": "/tmp/chapter7-evidence/lake-BC4lean-ProperCutoffFunction.log",
-      "stdout_stderr_sha256": "a2af91273a5c055bc4cf03d71f6f11f84e31d0f4d54d921636ff9e43f8463496"
-    },
-    {
-      "command": [
-        "lake",
-        "--wfail",
-        "--no-cache",
-        "build",
-        "BC4lean.ReducedCrossedHilbertModule"
-      ],
-      "exit_code": 0,
-      "started_utc": "2026-10-18T22:14:58.813620+00:00",
-      "finished_utc": "2026-10-18T22:15:59.621089+00:00",
-      "log": "/tmp/chapter7-evidence/lake-BC4lean-ReducedCrossedHilbertModule.log",
-      "stdout_stderr_sha256": "79c3df48ca58bd77ce29a15f7dffaf91c79de0f992e5fafbb4fd84b16b9b0006"
+      "started_utc": "2026-10-19T17:32:17.352218+00:00",
+      "finished_utc": "2026-10-19T17:32:23.386098+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/015-BC4lean-ProperCutoffFunction.log",
+      "stdout_stderr_sha256": "6f14574ab6bc49494fea26b3a2fab16e07dcf6ce543029729f755a799786ddf6"
     },
     {
       "command": [
@@ -119,10 +348,10 @@
         "BC4lean.CocompactPieceCutoff"
       ],
       "exit_code": 0,
-      "started_utc": "2026-10-18T22:15:59.621929+00:00",
-      "finished_utc": "2026-10-18T22:16:34.200163+00:00",
-      "log": "/tmp/chapter7-evidence/lake-BC4lean-CocompactPieceCutoff.log",
-      "stdout_stderr_sha256": "c2619f3406cc8c449166201b4a73776879cf392794014c95b61acf5b2c2979b6"
+      "started_utc": "2026-10-19T17:32:23.386751+00:00",
+      "finished_utc": "2026-10-19T17:32:25.290063+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/016-BC4lean-CocompactPieceCutoff.log",
+      "stdout_stderr_sha256": "262f9cf623dd15a2f378a45f9b80e26c5d7698c38edefb439eaf4a4011962f42"
     },
     {
       "command": [
@@ -133,10 +362,66 @@
         "BC4lean.CutoffAlgebraicProjection"
       ],
       "exit_code": 0,
-      "started_utc": "2026-10-18T22:16:34.200784+00:00",
-      "finished_utc": "2026-10-18T22:17:30.617197+00:00",
-      "log": "/tmp/chapter7-evidence/lake-BC4lean-CutoffAlgebraicProjection.log",
-      "stdout_stderr_sha256": "3da55bbde15948ff71d424d88fe5a3d61577f74189a0c0bb7deb2ab29d866da0"
+      "started_utc": "2026-10-19T17:32:25.290738+00:00",
+      "finished_utc": "2026-10-19T17:32:29.420015+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/017-BC4lean-CutoffAlgebraicProjection.log",
+      "stdout_stderr_sha256": "90bae369aa2f52550461d872e28facd1aefb8d855e5d8a1344321e7d6cf5ec00"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.RectangularInteriorModuleTensorCompact"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:32:29.421256+00:00",
+      "finished_utc": "2026-10-19T17:32:35.956111+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/018-BC4lean-RectangularInteriorModuleTensorCompact.log",
+      "stdout_stderr_sha256": "71dd094bb9d5f7bcc2e443f2257b9b3303c0c82dbe4154542460259f2a1f8243"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.ReducedCrossedHilbertModule"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:32:35.956877+00:00",
+      "finished_utc": "2026-10-19T17:32:43.160685+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/019-BC4lean-ReducedCrossedHilbertModule.log",
+      "stdout_stderr_sha256": "99a4bcad98bd56cc61c9b4422c2a15574776451f47ccbf9b67f3bc2aa0a32434"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.IndexedStandardReducedCrossedEquiv"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:32:43.161578+00:00",
+      "finished_utc": "2026-10-19T17:32:50.840634+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/020-BC4lean-IndexedStandardReducedCrossedEquiv.log",
+      "stdout_stderr_sha256": "a3519b02b193872f52b3350e681885c38641f56039366b3c5d7e69370accb29d"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.ReducedCrossedHilbertGrading"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:32:50.841207+00:00",
+      "finished_utc": "2026-10-19T17:32:53.074941+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/021-BC4lean-ReducedCrossedHilbertGrading.log",
+      "stdout_stderr_sha256": "a3519b02b193872f52b3350e681885c38641f56039366b3c5d7e69370accb29d"
     },
     {
       "command": [
@@ -147,24 +432,10 @@
         "BC4lean.ReducedCrossedRegularOperators"
       ],
       "exit_code": 0,
-      "started_utc": "2026-10-18T22:17:30.618774+00:00",
-      "finished_utc": "2026-10-18T22:18:24.117080+00:00",
-      "log": "/tmp/chapter7-evidence/lake-BC4lean-ReducedCrossedRegularOperators.log",
-      "stdout_stderr_sha256": "83e110b250c8c167a51c5ef083186e3cf08359a857fdb40e4ff9b8dcd88eccc9"
-    },
-    {
-      "command": [
-        "lake",
-        "--wfail",
-        "--no-cache",
-        "build",
-        "BC4lean.ReducedCrossedScalarHilbert"
-      ],
-      "exit_code": 0,
-      "started_utc": "2026-10-18T22:18:24.117886+00:00",
-      "finished_utc": "2026-10-18T22:19:16.016583+00:00",
-      "log": "/tmp/chapter7-evidence/lake-BC4lean-ReducedCrossedScalarHilbert.log",
-      "stdout_stderr_sha256": "70a2321df8c91d9b26a39a7758a209bd49239c1f284bf6cc87c652b04181d923"
+      "started_utc": "2026-10-19T17:32:53.075517+00:00",
+      "finished_utc": "2026-10-19T17:32:55.285329+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/022-BC4lean-ReducedCrossedRegularOperators.log",
+      "stdout_stderr_sha256": "b748915dad6322074d2fb4559d6ea25f70011b52e1022c22670bbdc6da482529"
     },
     {
       "command": [
@@ -175,10 +446,10 @@
         "BC4lean.ReducedCrossedProduct"
       ],
       "exit_code": 0,
-      "started_utc": "2026-10-18T22:19:16.018602+00:00",
-      "finished_utc": "2026-10-18T22:20:05.065657+00:00",
-      "log": "/tmp/chapter7-evidence/lake-BC4lean-ReducedCrossedProduct.log",
-      "stdout_stderr_sha256": "e44adaf8006cb91006077803aec5bf536e8056ea3f5479c6a3affe528c0bcd35"
+      "started_utc": "2026-10-19T17:32:55.285891+00:00",
+      "finished_utc": "2026-10-19T17:33:00.682151+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/023-BC4lean-ReducedCrossedProduct.log",
+      "stdout_stderr_sha256": "a3519b02b193872f52b3350e681885c38641f56039366b3c5d7e69370accb29d"
     },
     {
       "command": [
@@ -189,10 +460,10 @@
         "BC4lean.AlgebraicCrossedRepresentation"
       ],
       "exit_code": 0,
-      "started_utc": "2026-10-18T22:20:05.069560+00:00",
-      "finished_utc": "2026-10-18T22:20:56.476081+00:00",
-      "log": "/tmp/chapter7-evidence/lake-BC4lean-AlgebraicCrossedRepresentation.log",
-      "stdout_stderr_sha256": "94e1a79b256b8a40182b1fd1bdac56de69f85be6a3dbd2e9a0dafd9c26414bc5"
+      "started_utc": "2026-10-19T17:33:00.688308+00:00",
+      "finished_utc": "2026-10-19T17:33:10.981152+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/024-BC4lean-AlgebraicCrossedRepresentation.log",
+      "stdout_stderr_sha256": "31e3d7f6e7d151e604f4275eb2479b4730909c1b5652258287993c08150cc701"
     },
     {
       "command": [
@@ -200,13 +471,13 @@
         "--wfail",
         "--no-cache",
         "build",
-        "BC4lean.ReducedCrossedScalarProduct"
+        "BC4lean.ReducedCrossedGradingOperators"
       ],
       "exit_code": 0,
-      "started_utc": "2026-10-18T22:20:56.477103+00:00",
-      "finished_utc": "2026-10-18T22:21:51.964765+00:00",
-      "log": "/tmp/chapter7-evidence/lake-BC4lean-ReducedCrossedScalarProduct.log",
-      "stdout_stderr_sha256": "f456e95ddb7ac6faa033b8036ce3ac1d0dc27afab340b0a7328ddd4881f4ae57"
+      "started_utc": "2026-10-19T17:33:10.987155+00:00",
+      "finished_utc": "2026-10-19T17:33:20.753016+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/025-BC4lean-ReducedCrossedGradingOperators.log",
+      "stdout_stderr_sha256": "2d8ac010ffe3817e7f904b61e6a727cf6357a64033f6268a7c3986a4c1e0d937"
     },
     {
       "command": [
@@ -217,24 +488,10 @@
         "BC4lean.ReducedCrossedNorm"
       ],
       "exit_code": 0,
-      "started_utc": "2026-10-18T22:21:51.966663+00:00",
-      "finished_utc": "2026-10-18T22:22:44.013070+00:00",
-      "log": "/tmp/chapter7-evidence/lake-BC4lean-ReducedCrossedNorm.log",
-      "stdout_stderr_sha256": "915a0ac1c9c39e8674ba06dcd55d4192e30ab55797b2c0560ff719c6267154d3"
-    },
-    {
-      "command": [
-        "lake",
-        "--wfail",
-        "--no-cache",
-        "build",
-        "BC4lean.ReducedCutoffProjection"
-      ],
-      "exit_code": 0,
-      "started_utc": "2026-10-18T22:22:44.013881+00:00",
-      "finished_utc": "2026-10-18T22:23:41.296534+00:00",
-      "log": "/tmp/chapter7-evidence/lake-BC4lean-ReducedCutoffProjection.log",
-      "stdout_stderr_sha256": "f5bd667ace8cc9ab010bcc076c06dad0b05f8225d5b0fbef4e198ac51d4d6f31"
+      "started_utc": "2026-10-19T17:33:20.754175+00:00",
+      "finished_utc": "2026-10-19T17:33:29.464639+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/026-BC4lean-ReducedCrossedNorm.log",
+      "stdout_stderr_sha256": "a073173e33b9c945d63e027504d621b171e3ae6b29eb48074e42d0dad9ebe994"
     },
     {
       "command": [
@@ -245,10 +502,1088 @@
         "BC4lean.KasparovDescentModule"
       ],
       "exit_code": 0,
-      "started_utc": "2026-10-18T22:23:41.299417+00:00",
-      "finished_utc": "2026-10-18T22:24:43.886513+00:00",
-      "log": "/tmp/chapter7-evidence/lake-BC4lean-KasparovDescentModule.log",
-      "stdout_stderr_sha256": "865f392e259d2279a9114e48c08bf93cfddb69052754ebd25fec527792d0c3c0"
+      "started_utc": "2026-10-19T17:33:29.465732+00:00",
+      "finished_utc": "2026-10-19T17:33:38.438930+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/027-BC4lean-KasparovDescentModule.log",
+      "stdout_stderr_sha256": "e90bb0dc8601b80db06b5009d7e6fe9ca350f519a84427d5fabb910680841be0"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.ReducedCrossedCoefficientApproximateUnit"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:33:38.440563+00:00",
+      "finished_utc": "2026-10-19T17:33:48.287787+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/028-BC4lean-ReducedCrossedCoefficientApproximateUnit.log",
+      "stdout_stderr_sha256": "2d8ac010ffe3817e7f904b61e6a727cf6357a64033f6268a7c3986a4c1e0d937"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.ReducedCrossedCompactDefects"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:33:48.288764+00:00",
+      "finished_utc": "2026-10-19T17:33:57.695020+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/029-BC4lean-ReducedCrossedCompactDefects.log",
+      "stdout_stderr_sha256": "2d8ac010ffe3817e7f904b61e6a727cf6357a64033f6268a7c3986a4c1e0d937"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.ReducedCrossedLeftRegular"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:33:57.699973+00:00",
+      "finished_utc": "2026-10-19T17:34:08.503699+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/030-BC4lean-ReducedCrossedLeftRegular.log",
+      "stdout_stderr_sha256": "7eb4e4ba2e13938454c3ce9dcd6e413991831eacb25ca656b975ef80e890602a"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.ReducedCrossedProductGrading"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:34:08.504852+00:00",
+      "finished_utc": "2026-10-19T17:34:19.763871+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/031-BC4lean-ReducedCrossedProductGrading.log",
+      "stdout_stderr_sha256": "e23fb62c6277b1455f18c4676eb39ea63a00d365680ee0fc99ed96f2073670b0"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentGrading"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:34:19.764749+00:00",
+      "finished_utc": "2026-10-19T17:34:29.385983+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/032-BC4lean-KasparovDescentGrading.log",
+      "stdout_stderr_sha256": "187f6cb74dbf3bc7b283259cfa7242828351dc10e2c3a67ce779657eb8f69931"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.ReducedCrossedRepresentationExtension"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:34:29.386993+00:00",
+      "finished_utc": "2026-10-19T17:34:39.246882+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/033-BC4lean-ReducedCrossedRepresentationExtension.log",
+      "stdout_stderr_sha256": "2d8ac010ffe3817e7f904b61e6a727cf6357a64033f6268a7c3986a4c1e0d937"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.ReducedCrossedScalarHilbert"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:34:39.252476+00:00",
+      "finished_utc": "2026-10-19T17:34:48.709182+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/034-BC4lean-ReducedCrossedScalarHilbert.log",
+      "stdout_stderr_sha256": "ba7bbaddb4ef474f118cdedd6496b70a807d9216d8b72acb7e44d9ae5ca42305"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.ReducedCrossedScalarProduct"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:34:48.715625+00:00",
+      "finished_utc": "2026-10-19T17:34:57.750529+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/035-BC4lean-ReducedCrossedScalarProduct.log",
+      "stdout_stderr_sha256": "57948282b16e9b1b859ba75a126b03673eeef0536057a2e7b37579a65de03390"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.ReducedCutoffProjection"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:34:57.752001+00:00",
+      "finished_utc": "2026-10-19T17:35:06.335716+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/036-BC4lean-ReducedCutoffProjection.log",
+      "stdout_stderr_sha256": "6c22d5a05840b45c0d07df035be5dab6627f2f08445eb8757d531eecb1d17a3f"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.ReducedRegularTensorEmbedding"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:35:06.336620+00:00",
+      "finished_utc": "2026-10-19T17:35:15.731261+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/037-BC4lean-ReducedRegularTensorEmbedding.log",
+      "stdout_stderr_sha256": "1e3907067db95409b4968654b5cf9c6610fe4654421ab4ee3ec180fcd4466c6e"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.ReducedScalarKKComparison"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:35:15.732281+00:00",
+      "finished_utc": "2026-10-19T17:35:26.063289+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/038-BC4lean-ReducedScalarKKComparison.log",
+      "stdout_stderr_sha256": "1ac8f69b58b7bd94155df1358b8907a2f5c36ab9c675a5a714dad8227005a585"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.ScalarKKNativeNaturality"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:35:26.064347+00:00",
+      "finished_utc": "2026-10-19T17:35:35.276830+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/039-BC4lean-ScalarKKNativeNaturality.log",
+      "stdout_stderr_sha256": "5c641948708a5f287e485bb891d26fd5aa836083d4194017e165cea5e1e4dc68"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.StandardCoefficientExtensionEquiv"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:35:35.278211+00:00",
+      "finished_utc": "2026-10-19T17:35:44.230248+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/040-BC4lean-StandardCoefficientExtensionEquiv.log",
+      "stdout_stderr_sha256": "e90bb0dc8601b80db06b5009d7e6fe9ca350f519a84427d5fabb910680841be0"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.StandardModuleTensorEmbedding"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:35:44.232062+00:00",
+      "finished_utc": "2026-10-19T17:35:53.093088+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/041-BC4lean-StandardModuleTensorEmbedding.log",
+      "stdout_stderr_sha256": "d05f6fc41832c05c530b52f699a31a25ef17730e46246ba8a4d8d51cc2d81f11"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.InteriorModuleTensorScalarExtension"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:35:53.094443+00:00",
+      "finished_utc": "2026-10-19T17:35:55.451606+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/042-BC4lean-InteriorModuleTensorScalarExtension.log",
+      "stdout_stderr_sha256": "e90bb0dc8601b80db06b5009d7e6fe9ca350f519a84427d5fabb910680841be0"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.InteriorModuleTensorScalarExtensionGrading"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:35:55.452102+00:00",
+      "finished_utc": "2026-10-19T17:36:01.850718+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/043-BC4lean-InteriorModuleTensorScalarExtensionGrading.log",
+      "stdout_stderr_sha256": "7eb4e4ba2e13938454c3ce9dcd6e413991831eacb25ca656b975ef80e890602a"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.ReducedSourceTensorEmbedding"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:36:01.851839+00:00",
+      "finished_utc": "2026-10-19T17:36:08.653779+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/044-BC4lean-ReducedSourceTensorEmbedding.log",
+      "stdout_stderr_sha256": "e90bb0dc8601b80db06b5009d7e6fe9ca350f519a84427d5fabb910680841be0"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.ReducedSourceRegularBound"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:36:08.654735+00:00",
+      "finished_utc": "2026-10-19T17:36:17.112466+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/045-BC4lean-ReducedSourceRegularBound.log",
+      "stdout_stderr_sha256": "4d10745606221b1ea67f6ed82d6d0bda33e022bccc89c67a05039fb8ef64797c"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.ReducedCrossedProductMap"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:36:17.113532+00:00",
+      "finished_utc": "2026-10-19T17:36:19.476101+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/046-BC4lean-ReducedCrossedProductMap.log",
+      "stdout_stderr_sha256": "3e487fde22efa40ef0e33f0707d245649c7848a228637041cbf9be919190c1fc"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.CutoffRestrictionNaturality"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:36:19.476648+00:00",
+      "finished_utc": "2026-10-19T17:36:22.164913+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/047-BC4lean-CutoffRestrictionNaturality.log",
+      "stdout_stderr_sha256": "ba9e87f6f8b789ccff636799be2f822791dc2178145c8c0db77fdd23c042c64b"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.CutoffProperPullbackNaturality"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:36:22.165531+00:00",
+      "finished_utc": "2026-10-19T17:36:24.495691+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/048-BC4lean-CutoffProperPullbackNaturality.log",
+      "stdout_stderr_sha256": "43e3f5986b199ce020e6a8c9e5fd5b4f212d87d1e45d02f1c8e80c1862febbe4"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.ReducedCrossedProductPair"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:36:24.496210+00:00",
+      "finished_utc": "2026-10-19T17:36:26.806103+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/049-BC4lean-ReducedCrossedProductPair.log",
+      "stdout_stderr_sha256": "8142fbbac056412f9d3b60b2558145809bd5564a83899894b030c57675d19fc9"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentPairCoefficientEquiv"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:36:26.806678+00:00",
+      "finished_utc": "2026-10-19T17:36:29.493159+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/050-BC4lean-KasparovDescentPairCoefficientEquiv.log",
+      "stdout_stderr_sha256": "8f7f3708f676acefc31802672a171643f69f2671f50a03c93a85d0a839fe2d60"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.ReducedSourceRegularOperator"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:36:29.493632+00:00",
+      "finished_utc": "2026-10-19T17:36:31.816901+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/051-BC4lean-ReducedSourceRegularOperator.log",
+      "stdout_stderr_sha256": "1e3907067db95409b4968654b5cf9c6610fe4654421ab4ee3ec180fcd4466c6e"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.TrivialActionUnitary"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:36:31.817693+00:00",
+      "finished_utc": "2026-10-19T17:36:35.213025+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/052-BC4lean-TrivialActionUnitary.log",
+      "stdout_stderr_sha256": "ea928e12cbab12508f0257d1b3f43e899a714135fdb1a5ef18e11ae0c4372551"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.CovariantAlgebraicRepresentation"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:36:35.213778+00:00",
+      "finished_utc": "2026-10-19T17:36:40.999585+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/053-BC4lean-CovariantAlgebraicRepresentation.log",
+      "stdout_stderr_sha256": "491d2bd9744cdb5fb3cc205afa518ba5bbf746024efa52f718f01c3545b67d16"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentAction"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:36:41.000608+00:00",
+      "finished_utc": "2026-10-19T17:36:43.955791+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/054-BC4lean-KasparovDescentAction.log",
+      "stdout_stderr_sha256": "a0f831367df021253a24cd8543f62ddc5637bf6b802f180b568ac2db7d29778e"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentAlgebraicRepresentation"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:36:43.956501+00:00",
+      "finished_utc": "2026-10-19T17:36:46.282226+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/055-BC4lean-KasparovDescentAlgebraicRepresentation.log",
+      "stdout_stderr_sha256": "f2f95e2e718191b579761435e449f7521009c204d8e6044c6019f905875330ab"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentIntervalModule"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:36:46.282958+00:00",
+      "finished_utc": "2026-10-19T17:36:48.618579+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/056-BC4lean-KasparovDescentIntervalModule.log",
+      "stdout_stderr_sha256": "b6e1627d6448e23ab56fc4edbf05f85c7ed4934060fa71ca37600b13ce449313"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentOperatorDefects"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:36:48.619715+00:00",
+      "finished_utc": "2026-10-19T17:39:32.936680+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/057-BC4lean-KasparovDescentOperatorDefects.log",
+      "stdout_stderr_sha256": "4b6704e5fa5b2bb4e63176a17814b7edce65c5e82da520e44ff3ede444726b1f"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentGeneratorDefects"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:39:32.938119+00:00",
+      "finished_utc": "2026-10-19T17:41:20.583027+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/058-BC4lean-KasparovDescentGeneratorDefects.log",
+      "stdout_stderr_sha256": "eb5d6d0560d1a04b7470e0c9599046db4a53055bbc9bda045d5de5224cb9bc15"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentRegularEmbedding"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:41:20.584368+00:00",
+      "finished_utc": "2026-10-19T17:44:54.825173+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/059-BC4lean-KasparovDescentRegularEmbedding.log",
+      "stdout_stderr_sha256": "7a7bc71deaea7add44e8d279de8c475b4b42e3ca1458bed34095abf092eb6c18"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentReducedRepresentation"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:44:54.831714+00:00",
+      "finished_utc": "2026-10-19T17:47:37.017911+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/060-BC4lean-KasparovDescentReducedRepresentation.log",
+      "stdout_stderr_sha256": "5862bd62407d0d5c4362ca6739504c41a7b6fc8cd0db74e9e9142918e546c588"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentCliffordPair"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:47:37.019095+00:00",
+      "finished_utc": "2026-10-19T17:50:05.307021+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/061-BC4lean-KasparovDescentCliffordPair.log",
+      "stdout_stderr_sha256": "b8c1ffecbad2e09606a6b1e5acbf23771127ec7a4f4e7c238d2c3fe8e9461c78"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentIntervalNorm"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:50:05.308568+00:00",
+      "finished_utc": "2026-10-19T17:51:45.201385+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/062-BC4lean-KasparovDescentIntervalNorm.log",
+      "stdout_stderr_sha256": "70d361ba1c4cd4b95dd0361b4531f4e18cec25f94914b113ca67ee2e5d5877ab"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentIntervalRepresentation"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:51:45.202392+00:00",
+      "finished_utc": "2026-10-19T17:53:36.219554+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/063-BC4lean-KasparovDescentIntervalRepresentation.log",
+      "stdout_stderr_sha256": "79380b8f6a0353c084892c1e47343c28b9f98787e03cc5382669ec7d281067b1"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentIntervalDefects"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:53:36.222608+00:00",
+      "finished_utc": "2026-10-19T17:56:02.201141+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/064-BC4lean-KasparovDescentIntervalDefects.log",
+      "stdout_stderr_sha256": "b9d7e0799897fbdbfdb6e9b31e4806880e6db1f425aadd8fdae3ecf07b486470"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentProductPositivity"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:56:02.202454+00:00",
+      "finished_utc": "2026-10-19T17:57:46.433501+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/065-BC4lean-KasparovDescentProductPositivity.log",
+      "stdout_stderr_sha256": "c6ab7d557f68b460cb7162be437555d691e3c07f0a839d34b88b7fdafc0e4b57"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentRawCycle"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:57:46.436412+00:00",
+      "finished_utc": "2026-10-19T17:59:13.439226+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/066-BC4lean-KasparovDescentRawCycle.log",
+      "stdout_stderr_sha256": "e4782f49fd0b0f19148ab3974af624dbfcb5d3645b775690dfc76c8dbaa12da7"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentCycleIso"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T17:59:13.440581+00:00",
+      "finished_utc": "2026-10-19T18:00:45.067810+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/067-BC4lean-KasparovDescentCycleIso.log",
+      "stdout_stderr_sha256": "8be1434212447627e8dcb13759292a2311779479e66b0328efe8195860c46b9b"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentDirectSum"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T18:00:45.069298+00:00",
+      "finished_utc": "2026-10-19T18:03:48.353437+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/068-BC4lean-KasparovDescentDirectSum.log",
+      "stdout_stderr_sha256": "3d32b81d2aff3c06383e2c0835a2899f7e2aac4b594b2f411ef6a3975425914f"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentCliffordSignedSource"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T18:03:48.354640+00:00",
+      "finished_utc": "2026-10-19T18:06:25.345013+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/069-BC4lean-KasparovDescentCliffordSignedSource.log",
+      "stdout_stderr_sha256": "e9a2865ba72ea934386af1737f60f2bcd6468b7f49e7dec0d486dc11b9f749fd"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentGradedCycle"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T18:06:25.346526+00:00",
+      "finished_utc": "2026-10-19T18:09:32.234602+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/070-BC4lean-KasparovDescentGradedCycle.log",
+      "stdout_stderr_sha256": "f9c9507305b5d22cbed0d1b465d089a4a57c62df1af006a031ac49d3ecd2e27b"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentEvenGradedCoherence"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T18:09:32.239763+00:00",
+      "finished_utc": "2026-10-19T18:12:11.950025+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/071-BC4lean-KasparovDescentEvenGradedCoherence.log",
+      "stdout_stderr_sha256": "1cb60099c58edab8714be4a11de9ae274d7bf3dc9e94b48cc1e6d58291a42322"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentCliffordExpansionIso"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T18:12:11.952031+00:00",
+      "finished_utc": "2026-10-19T18:13:52.569679+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/072-BC4lean-KasparovDescentCliffordExpansionIso.log",
+      "stdout_stderr_sha256": "c2b2fd4a64bf538067c6eff4b7faa7d49cde7aaf536e83d6124598bbef01b36d"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentCliffordExternalEvenIso"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T18:13:52.575199+00:00",
+      "finished_utc": "2026-10-19T18:15:43.005068+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/073-BC4lean-KasparovDescentCliffordExternalEvenIso.log",
+      "stdout_stderr_sha256": "e3c2a7e79fb67575f97f5092bd6b367beac9594cf714e94879afc5947ba14d0f"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentCliffordSignedSourceIso"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T18:15:43.006535+00:00",
+      "finished_utc": "2026-10-19T18:17:26.226450+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/074-BC4lean-KasparovDescentCliffordSignedSourceIso.log",
+      "stdout_stderr_sha256": "0d9f94ea8d45b57cc10ace9529f2fca0dae1f6d1a48f2bcdd7888b1bfe32fd5a"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentGradedCycleIso"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T18:17:26.227366+00:00",
+      "finished_utc": "2026-10-19T18:20:32.121176+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/075-BC4lean-KasparovDescentGradedCycleIso.log",
+      "stdout_stderr_sha256": "1551ede8594ad87196cc51f1a8378dc94dbd8d8a732a2a7413b49f7fbfe745fd"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentGradedDirectSum"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T18:20:32.127483+00:00",
+      "finished_utc": "2026-10-19T18:21:57.865938+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/076-BC4lean-KasparovDescentGradedDirectSum.log",
+      "stdout_stderr_sha256": "7205ec6707e952d279587347e02e597cb38b80c5e06617521b777f92e5fdfb3a"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentIntervalCycle"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T18:21:57.868644+00:00",
+      "finished_utc": "2026-10-19T18:25:15.820506+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/077-BC4lean-KasparovDescentIntervalCycle.log",
+      "stdout_stderr_sha256": "bf388510d54a94390e0d44b613d1a4f863021f2cdd15d967b88978a15a3e0483"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentGradedIntervalGrading"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T18:25:15.822304+00:00",
+      "finished_utc": "2026-10-19T18:32:20.562869+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/078-BC4lean-KasparovDescentGradedIntervalGrading.log",
+      "stdout_stderr_sha256": "dc0b1672f4252dfd5a1dc0b63ecba6e4d62ff6913f5c0be53ad3c399053f79e7"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentGradedIntervalCycle"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T18:32:20.564335+00:00",
+      "finished_utc": "2026-10-19T18:34:30.408673+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/079-BC4lean-KasparovDescentGradedIntervalCycle.log",
+      "stdout_stderr_sha256": "d5ea8ec9a525f299824be263d4047d04ff971361575dc26f10cf84d59b7eb6b9"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentIntervalFibreIso"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T18:34:30.410186+00:00",
+      "finished_utc": "2026-10-19T18:55:55.546770+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/080-BC4lean-KasparovDescentIntervalFibreIso.log",
+      "stdout_stderr_sha256": "ae77b7124f3f674b6e6f9662f17cd9dfde0973032b5c9b4fedcf04a09e5d3a10"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentFullHomotopy"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T18:55:55.552522+00:00",
+      "finished_utc": "2026-10-19T18:59:12.127591+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/081-BC4lean-KasparovDescentFullHomotopy.log",
+      "stdout_stderr_sha256": "1c2c834efccaaa650a0bfcc11adedf920a11103dc859586836fa2c6ee5454b8c"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentClass"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T18:59:12.135078+00:00",
+      "finished_utc": "2026-10-19T19:01:18.949281+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/082-BC4lean-KasparovDescentClass.log",
+      "stdout_stderr_sha256": "2d0ad67cf79cd20038448c4289b6561dc5a66f63f31b065cf1aa391cf0318de4"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.AssemblyPieceHom"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T19:01:18.950753+00:00",
+      "finished_utc": "2026-10-19T19:04:37.829574+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/083-BC4lean-AssemblyPieceHom.log",
+      "stdout_stderr_sha256": "1cf4efe591c415f9847e4417b588c12c60ddd4611ce2e546a3f6ea1d486ef710"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.AssemblyCutoffNaturality"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T19:04:37.835594+00:00",
+      "finished_utc": "2026-10-19T19:08:06.883809+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/084-BC4lean-AssemblyCutoffNaturality.log",
+      "stdout_stderr_sha256": "ff8c58e3a18963a32e4011bbf2f6cc0ddd1256f8546e590da52b1b88c312d43f"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentGradedFullHomotopy"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T19:08:06.889890+00:00",
+      "finished_utc": "2026-10-19T19:10:02.686345+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/085-BC4lean-KasparovDescentGradedFullHomotopy.log",
+      "stdout_stderr_sha256": "5d55e4401f37c1b538ca7045537709a70b06b4e58976cafe613673f7d7d30c5f"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentGradedClass"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T19:10:02.693724+00:00",
+      "finished_utc": "2026-10-19T19:12:00.929624+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/086-BC4lean-KasparovDescentGradedClass.log",
+      "stdout_stderr_sha256": "8be21b6229a1890f363bc26aa50ac016f59a3aeff7ad436fde58824b147675fd"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentSourcePullback"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T19:12:00.931972+00:00",
+      "finished_utc": "2026-10-19T19:14:10.637375+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/087-BC4lean-KasparovDescentSourcePullback.log",
+      "stdout_stderr_sha256": "60a368f32e6df15bf291d18a3cf530aecdf9f795c8f2a05eb1efa952a964aa06"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentSourcePullbackClass"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T19:14:10.638684+00:00",
+      "finished_utc": "2026-10-19T19:16:08.613540+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/088-BC4lean-KasparovDescentSourcePullbackClass.log",
+      "stdout_stderr_sha256": "e51a6b89f7f5d44b4b4e4e0446df207ee084f67a6348ee465b4774afa2fb6fb8"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.AssemblyProperNaturality"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T19:16:08.615780+00:00",
+      "finished_utc": "2026-10-19T19:18:15.939398+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/089-BC4lean-AssemblyProperNaturality.log",
+      "stdout_stderr_sha256": "edcb4ffe40cf63dc34f5ab5514062ca755ee9877758dfbe5cc874e185a43c6b3"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.AssemblyTransition"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T19:18:15.947821+00:00",
+      "finished_utc": "2026-10-19T19:20:30.961277+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/090-BC4lean-AssemblyTransition.log",
+      "stdout_stderr_sha256": "c7f788af8ecb59473174c9a27a7515600589571a8319a5f708cf001ca3b8dfa6"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.AssemblyColimit"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T19:20:30.962848+00:00",
+      "finished_utc": "2026-10-19T19:24:02.298318+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/091-BC4lean-AssemblyColimit.log",
+      "stdout_stderr_sha256": "bc666375ad112b804035e88441b4324a3e8bc1078e2522315b2d3b112c1abf58"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.AssemblyCofinalIndex"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T19:24:02.305691+00:00",
+      "finished_utc": "2026-10-19T19:26:32.894914+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/092-BC4lean-AssemblyCofinalIndex.log",
+      "stdout_stderr_sha256": "2f9bc4fbd8c99436b410dc2b933b6b360721272da3e5a5b5f21dbff5551db857"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.AssemblyModelNaturality"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T19:26:32.902325+00:00",
+      "finished_utc": "2026-10-19T19:36:44.724281+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/093-BC4lean-AssemblyModelNaturality.log",
+      "stdout_stderr_sha256": "43a8b7e6f54c6dd31346c5c341265d48edcfb0b07601e509226a8f7e9173d1b1"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentTensorComparison"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T19:36:44.729992+00:00",
+      "finished_utc": "2026-10-19T19:47:35.644563+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/094-BC4lean-KasparovDescentTensorComparison.log",
+      "stdout_stderr_sha256": "ecc6a95eaf7b577e0702fc175b26064f9d386fabbe4b8b08d6a113ca0d6bb385"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentConnection"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T19:47:35.646409+00:00",
+      "finished_utc": "2026-10-19T19:52:41.413541+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/095-BC4lean-KasparovDescentConnection.log",
+      "stdout_stderr_sha256": "3df3e02bc10eee821e047330f538d058517ae0fd92fff3dad407e7189ee8266e"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentTensorComparisonGrading"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T19:52:41.419828+00:00",
+      "finished_utc": "2026-10-19T19:55:21.449364+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/096-BC4lean-KasparovDescentTensorComparisonGrading.log",
+      "stdout_stderr_sha256": "5e1dc4396b0da16d60da047d2e3f9698ffc2dfb41e2cee77c9062a6494cb2a78"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentTensorComparisonSource"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T19:55:21.457170+00:00",
+      "finished_utc": "2026-10-19T20:00:01.489058+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/097-BC4lean-KasparovDescentTensorComparisonSource.log",
+      "stdout_stderr_sha256": "dbe78b2ab5b26d8bea337f7ac93f652a8e29867f552e40593afc17e8c3651d7d"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentGradedProduct"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T20:00:01.495541+00:00",
+      "finished_utc": "2026-10-19T20:14:33.464128+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/098-BC4lean-KasparovDescentGradedProduct.log",
+      "stdout_stderr_sha256": "0d0a333162384f5408bd7fcc920e0e4e9cc4bfb15374c668792dc43842bebe4d"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentGradedProductClass"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T20:14:33.473444+00:00",
+      "finished_utc": "2026-10-19T20:17:23.666244+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/099-BC4lean-KasparovDescentGradedProductClass.log",
+      "stdout_stderr_sha256": "564ffbd10df4cfb61898290f8c2e5da3e6ac42e8a2f35ac83b89818941b7e34d"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentGradedClassProduct"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T20:17:23.668735+00:00",
+      "finished_utc": "2026-10-19T20:19:01.521845+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/100-BC4lean-KasparovDescentGradedClassProduct.log",
+      "stdout_stderr_sha256": "5a1128cb820c4c19f5443e70e018d7b7ba2e6fd41052526a9056a2438fe2e3fa"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentNativeClassMaps"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T20:19:01.523959+00:00",
+      "finished_utc": "2026-10-19T20:21:16.459803+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/101-BC4lean-KasparovDescentNativeClassMaps.log",
+      "stdout_stderr_sha256": "b4bd073623a80be21031c5abb982df8bc11240ce86e499b0e7d9eaa62be208f5"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentNativeClassCoherence"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T20:21:16.461541+00:00",
+      "finished_utc": "2026-10-19T20:23:33.504016+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/102-BC4lean-KasparovDescentNativeClassCoherence.log",
+      "stdout_stderr_sha256": "461804f4770bf8773da5a6cb4341876a1d7663b63f9af4f154396dde7312ffc0"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentEvenProduct"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T20:23:33.507149+00:00",
+      "finished_utc": "2026-10-19T20:25:18.506989+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/103-BC4lean-KasparovDescentEvenProduct.log",
+      "stdout_stderr_sha256": "93bd0fa06f5fb8624a5820e656b9818fecf8a1597c221d68bf2475a1113c3ad8"
+    },
+    {
+      "command": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "BC4lean.KasparovDescentNativeParityProduct"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-10-19T20:25:18.508747+00:00",
+      "finished_utc": "2026-10-19T20:27:58.254721+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/104-BC4lean-KasparovDescentNativeParityProduct.log",
+      "stdout_stderr_sha256": "2a0f6c381b4cb01fa0c4d7e5e8597a47015de90c79c4293a16fe4cb1de81987e"
     },
     {
       "command": [
@@ -259,11 +1594,27 @@
         "BC4lean"
       ],
       "exit_code": 0,
-      "started_utc": "2026-10-18T22:24:43.887258+00:00",
-      "finished_utc": "2026-10-18T22:25:59.113047+00:00",
-      "log": "/tmp/chapter7-evidence/lake-BC4lean.log",
-      "stdout_stderr_sha256": "0b42f55e90c2db236c2c83cd00166019037a4a86ab6bbf6d52245803dce12e82"
+      "started_utc": "2026-10-19T20:27:58.257966+00:00",
+      "finished_utc": "2026-10-19T20:34:36.474443+00:00",
+      "log": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407/105-BC4lean.log",
+      "stdout_stderr_sha256": "200fd42bb86627b8a51d877011b1444b3253bfac1f88a30b077455c753248089"
     }
   ],
-  "combined_log_sha256": "e6f3ec670854bde30d7bb716f872cd548561e7e3b7e1b581810b65e71d31fcb9"
+  "combined_log_sha256": "f427d4591d0b596d2d014f4a90a049b70943e3b1be7598d3b2b9b5a55baf6b62",
+  "attempt_directory": "/tmp/chapter7-evidence/final-lake-build-attempts/20261019T173040.053233Z-12be9407",
+  "order_validation": {
+    "status": "verified_actual_source_order_only",
+    "checked_utc": "2026-10-19T17:30:40.048646+00:00",
+    "module_count": 105,
+    "internal_dependency_edges": 184,
+    "inventory_sha256": "95ef97bcb728d761081e608dd5ae4c3625b9aeb29d6c5f59c753b39329d7828f",
+    "aggregate_sha256": "309158d81f7d7994edab43ce59a9e7820f1fa5c5f364321cd3bf6f327c7f00bc",
+    "frozen_prefix_sha256": "74885bdc52882341eafdcfb324a0748fad2cf47fe2002929e80b44743fb733a2",
+    "parser_sha256": "e3cd890ac54dfe6dbf1e9a3f7370f337f43e89286a0a8d4d0a9e18d075659d5d",
+    "order_sha256": "da9a22c497c5eed3f54a834842dcb1d250e9e875ee44a80c9dbc847fcea2c73b",
+    "generated_order_sha256": "da9a22c497c5eed3f54a834842dcb1d250e9e875ee44a80c9dbc847fcea2c73b",
+    "provided_order_path": "/private/tmp/chapter7-evidence/final-order-recovered-20261019T1730Z.json",
+    "provided_order_file_sha256": "da9a22c497c5eed3f54a834842dcb1d250e9e875ee44a80c9dbc847fcea2c73b"
+  },
+  "driver_sha256": "92203d64b180711601c0ff5ce69f7af7f10ccc5a20e53242c082257113d2bbce"
 }

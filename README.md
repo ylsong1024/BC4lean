@@ -30,9 +30,12 @@ and independently checkable lemmas.
 ## Current scope
 
 The source contains the group algebra and regular representation, the reduced
-group C*-algebra construction, operator K-theory modules, and foundations for
-proper actions and equivariant homotopy. These are building blocks for the
-assembly map, not a completed assembly construction.
+group C*-algebra construction, operator K-theory, proper actions, equivariant
+homotopy, and the actual topological K-homology colimit. Chapter 7 extends
+these verified foundations through actual reduced Kasparov descent and the
+coefficient-free reduced assembly homomorphisms in degrees zero and one,
+under the hypotheses stated below and in the
+[Chapter 7 completion record](docs/CHAPTER7_COMPLETION.md).
 
 In Chapter 4, equivariant CW attachment, Hausdorffness, properness, and the
 cellular mapping property are verified. The weak labeled join realization,
@@ -58,11 +61,36 @@ property, cofinal indexing and homotopy/model independence using the geometric
 telescope. All three blueprint targets and 347 declarations in 16 new modules
 pass the strict build and complete dependency-axiom audit, with the scope in the
 [Chapter 6 completion record](docs/CHAPTER6_COMPLETION.md).
-Chapter 7 constructs the regular reduced crossed product and the normalized
-cutoff projection, with independence of its actual operator K₀ class. Its
-verified analytic prerequisites are recorded in the
-[Chapter 7 verification record](docs/CHAPTER7_VERIFICATION.md).
-Full Kasparov descent, its product laws, and the assembly map remain incomplete.
+Chapter 7 constructs actual reduced
+crossed products, the scalar crossed-product identification, normalized cutoff
+projections and their independent operator K₀ classes, descended cycles and
+additive KK maps in both degrees. Descent transports full homotopies on
+arbitrary complete interval modules and preserves all four existing native
+Kasparov products: even–even, even–odd, odd–even and odd–odd. It retains the
+KK APIs' countable discrete group, separable coefficient and module-universe
+hypotheses, permits nonunital complex C*-algebras, and adds no amenability or
+exactness hypothesis.
+
+The actual piece assembly formula is the cutoff class multiplied by reduced
+descent, using the inverse scalar KK/K₀ comparison before the product and the
+existing KK/K₀ and KK/K₁ comparisons afterwards. The compatible piece maps
+induce the homomorphisms from Chapter 6's actual colimit to the existing reduced
+operator K₀ and K₁ groups. Assembly retains the locally compact Hausdorff,
+second-countable proper-model hypotheses and continuous group action.
+Cofinal indexing comparisons require monotone directed systems whose image
+bounds every cocompact piece. Ambient equivariant map compatibility uses the
+actual proper restrictions to cocompact pieces, while universal proper CW model
+independence uses the established fixed-point criterion and its actual
+comparison maps.
+
+The [Chapter 7 completion record](docs/CHAPTER7_COMPLETION.md) binds this
+scope to the verified native audit, immutable proof source and full-build
+evidence. The [historical Chapter 7 foundation record](docs/CHAPTER7_VERIFICATION.md)
+retains its original checkpoint and immutable evidence. The native record
+distinguishes mathematical verification from CI and independent live-content
+acceptance for the exact publication revision.
+Constructing these homomorphisms does not prove the general Baum–Connes
+conjecture or assert that they are isomorphisms.
 Consult the [roadmap](docs/ROADMAP.md) and individual blueprint nodes
 for precise boundaries; a green prerequisite does not verify its successors.
 
