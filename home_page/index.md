@@ -33,12 +33,21 @@ acceptance receipt for the exact publication revision. The
 [historical foundation record](https://github.com/ylsong1024/BC4lean/blob/main/docs/CHAPTER7_VERIFICATION.md)
 retains its original, narrower checkpoint.
 
+**Chapter 8 has verified calibration results.** The trivial-group assembly map is verified in both degrees.
+For the literal group `Unit : Type`, an explicit additive equivalence equals
+the actual canonical assembly map. The checked comparisons also cover model
+and cofinal-index invariance, piecewise bijectivity criteria, scalar analytic
+targets, and the finite-group point-model formula. The
+[verification record](https://github.com/ylsong1024/BC4lean/blob/main/docs/CHAPTER8_VERIFICATION.md)
+gives the exact proof scope and native evidence. The general Baum-Connes conjecture remains unproved.
+
 | Chapter | Status | Details |
 | --- | --- | --- |
 | 4 — Proper actions and the universal proper space | Verified | [Chapter 4](blueprint/ch-proper-actions.html) · [verification record](https://github.com/ylsong1024/BC4lean/blob/main/docs/CHAPTER4_VERIFICATION.md) |
 | 5 — Equivariant KK-theory | Verified | [Chapter 5](blueprint/ch-equivariant-kk.html) · [proof dependency graph](blueprint/dep_graph_chapter_5.html) |
 | 6 — Topological side | Verified | [Chapter 6](blueprint/ch-topological-k-homology.html) · [proof dependency graph](blueprint/dep_graph_chapter_6.html) |
 | 7 — Assembly map | Verified: actual descent and assembly in both degrees | [Chapter 7](blueprint/ch-assembly-map.html) · [proof dependency graph](blueprint/dep_graph_chapter_7.html) · [completion record](https://github.com/ylsong1024/BC4lean/blob/main/docs/CHAPTER7_COMPLETION.md) |
+| 8 — The conjecture and examples | Verified Unit case and comparisons; general conjecture pending | [Chapter 8](blueprint/ch-conjecture-and-examples.html) · [proof dependency graph](blueprint/dep_graph_chapter_8.html) · [verification record](https://github.com/ylsong1024/BC4lean/blob/main/docs/CHAPTER8_VERIFICATION.md) |
 
 ## Join the project
 
@@ -76,7 +85,7 @@ equivariant model maps uses their actual proper restrictions to cocompact
 pieces; universal proper CW model independence uses the established
 fixed-point criterion and actual comparison maps. The full formal scope is in the
 [completion record](https://github.com/ylsong1024/BC4lean/blob/main/docs/CHAPTER7_COMPLETION.md).
-The general conjecture is not proved here.
+The general Baum-Connes conjecture remains unproved.
 
 The blueprint distinguishes checked declarations and proofs from unfinished
 targets. Contributions can be small, independently verified lemmas, examples,

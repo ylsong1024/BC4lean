@@ -1,0 +1,27 @@
+{
+  "schema": "chapter8.actual.process.v1",
+  "status": "completed",
+  "stage": "retained-preservation",
+  "run_id": "76982d95c29046c7a5be4a27447f1df9",
+  "parent_pid": 71714,
+  "source_root": "/private/tmp/BC4lean-chapter7-descent-native-20261018",
+  "command": [
+    "/Library/Frameworks/Python.framework/Versions/3.14/bin/python3",
+    "-B",
+    "/private/tmp/BC4lean-chapter7-descent-native-20261018/scripts/check_chapter7_retained.py",
+    "--root",
+    "/private/tmp/BC4lean-chapter7-descent-native-20261018",
+    "--new-inventory",
+    "docs/audits/chapter8/inventory.json",
+    "--output",
+    "/var/folders/_4/cjl9v4654tb9m6kztgmr8pzr0000gn/T/chapter8-retained-actual-opftn12x/receipt.json"
+  ],
+  "started_utc": "2026-10-19T23:19:06.930676+00:00",
+  "pid": 71734,
+  "process_group": 71734,
+  "exit_code": 0,
+  "finished_utc": "2026-10-19T23:19:08.039237+00:00",
+  "owned_process_group_quiescent": true,
+  "stdout_stderr_sha256": "524b7138005d2bd57a0873961358e1d7a0cbebfe285a448481c54eced76707ef",
+  "receipt_sha256": "42701ecd98bba70f18df345d7fad328979e626ba92e52c49fd6481767ef67765"
+}

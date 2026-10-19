@@ -1,0 +1,22 @@
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.AssemblyBijectivityCriteria"]
+Build completed successfully (3891 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.BaumConnesProperty"]
+Build completed successfully (4186 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.BaumConnesInvariance"]
+Build completed successfully (4188 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.CompactModelColimitCalibration"]
+Build completed successfully (4186 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.FiniteGroupPointCalibration"]
+Build completed successfully (4187 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.ScalarUnitProjection"]
+Build completed successfully (3614 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.TrivialAnalyticCalibration"]
+Build completed successfully (3004 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.UnitPointCutoff"]
+Build completed successfully (3879 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.UnitScalarDescent"]
+Build completed successfully (3485 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean.UnitAssemblyEquivalence"]
+Build completed successfully (4207 jobs).
+COMMAND ["lake", "--wfail", "--no-cache", "build", "BC4lean"]
+Build completed successfully (4338 jobs).
