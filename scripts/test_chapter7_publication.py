@@ -24,17 +24,19 @@ REVISION = "a" * 40
 
 class FinderTests(unittest.TestCase):
     @contextmanager
-    def project(self):
+    def project(self, complete=False):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory).resolve()
             fixture = audit_tests.ProcessAndPublicationTests()
-            fixture.make_project(root)
+            fixture.make_project(root, complete=complete)
             (root / "BC4lean/A.lean").write_text(
                 "namespace BC4lean.A\n"
                 "private theorem helper : True := True.intro\n"
                 "theorem endpoint : True := True.intro\n"
                 "end BC4lean.A\n")
-            fixture.run_main(root)
+            result, _ = fixture.run_main(root, ["--require-complete"] if complete else None)
+            if complete:
+                self.assertEqual(result, 0)
             output = root / "result/audit.json"
             report = json.loads(output.read_text())
             report["source_revision"] = REVISION
@@ -103,7 +105,8 @@ class FinderTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "Source no longer matches"):
                 finder.load_audit(REVISION)
         for control in ("scripts/audit_chapter7.py", "docs/audits/chapter7/ExpectedTypes.lean",
-                        "BC4lean.lean", "BC4lean/A.lean"):
+                        "BC4lean.lean", "BC4lean/A.lean",
+                        "blueprint/src/parts/08-conjecture-and-examples.tex"):
             with self.subTest(control=control), self.project() as (_, output, report):
                 del report["source_sha256"][control]
                 self.save(output, report)
@@ -200,6 +203,57 @@ class FinderTests(unittest.TestCase):
             with patch.object(finder, "git", side_effect=["BC4lean/A.lean", "BC4lean/A.lean"]):
                 with self.assertRaisesRegex(ValueError, "differs from pinned"):
                     finder.load_locations(REVISION)
+
+
+    def test_verified_complete_is_publishable_with_full_target_and_process_evidence(self) -> None:
+        with self.project(complete=True) as (_, output, report):
+            loaded, sha = finder.load_audit(REVISION)
+            self.assertEqual(loaded, report)
+            self.assertEqual(sha, hashlib.sha256(output.read_bytes()).hexdigest())
+            self.assertEqual(loaded["status"], "verified_complete")
+            self.assertIs(loaded["chapter_complete"], True)
+            self.assertEqual(loaded["notready_targets"], [])
+            self.assertEqual(set(loaded["target_inventory"]), set(audit.TARGETS))
+            self.assertTrue(all(item["ready"] for item in loaded["target_inventory"].values()))
+            # load_audit itself reparses the raw kernel stream and validates
+            # all strict command/run/log bindings; do not stub that verifier.
+            self.assertEqual(loaded["declaration_count"], 3)
+            self.assertEqual(set(loaded["endpoint_declarations"]), {"BC4lean.A.endpoint"})
+
+    def test_retained_complete_certificate_rejects_each_new_pending_original(self) -> None:
+        for label in audit.TARGETS:
+            with self.subTest(label=label), self.project(complete=True) as (root, output, report):
+                data, text = audit_tests.completed_source_fixture()
+                data["targets"][label].update(status="pending", required_declarations=[],
+                    blocked_reason="An original mathematical target is no longer verified")
+                text = text.replace(audit_tests.statement(label, r"\lean{BC4lean.A.endpoint}\leanok"),
+                                    audit_tests.statement(label))
+                finder.INVENTORY.write_text(json.dumps(data))
+                finder.BLUEPRINT.write_text(text)
+                # Even refreshing the two control hashes cannot make the
+                # retained all-ready certificate describe a pending source.
+                for relative in ("docs/audits/chapter7/inventory.json",
+                                 "blueprint/src/parts/07-assembly-map.tex"):
+                    report["source_sha256"][relative] = hashlib.sha256((root / relative).read_bytes()).hexdigest()
+                self.save(output, report)
+                with self.assertRaisesRegex(ValueError, "completeness/pending status"):
+                    finder.load_audit(REVISION)
+
+    def test_complete_certificate_requires_bound_current_general_conjecture_source(self) -> None:
+        relative = "blueprint/src/parts/08-conjecture-and-examples.tex"
+        for attack in ("omit-required-hash", "change-after-audit"):
+            with self.subTest(attack=attack), self.project(complete=True) as (root, output, report):
+                self.assertIn(relative, report["source_sha256"])
+                if attack == "omit-required-hash":
+                    del report["source_sha256"][relative]
+                    self.save(output, report)
+                    message = "bound blueprint/inventory source hashes"
+                else:
+                    path = root / relative
+                    path.write_text(path.read_text().replace(r"\notready", r"\leanok"))
+                    message = "Source no longer matches"
+                with self.assertRaisesRegex(ValueError, message):
+                    finder.load_audit(REVISION)
 
 
 class HtmlTests(unittest.TestCase):

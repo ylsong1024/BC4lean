@@ -42,7 +42,7 @@ jobs:
       - name: Build the full aggregate with warnings as errors
         run: lake --wfail build BC4lean
       - name: Audit all new declarations, types, and readiness markers
-        run: python3 -B scripts/audit_chapter7.py --output "$RUNNER_TEMP/chapter7-audit/audit.json"
+        run: python3 -B scripts/audit_chapter7.py --require-complete --output "$RUNNER_TEMP/chapter7-audit/audit.json"
       - name: Retain actual kernel audit evidence
         if: always()
         uses: actions/upload-artifact@v4

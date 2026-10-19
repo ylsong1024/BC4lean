@@ -45,6 +45,25 @@ def kernel_output() -> str:
             "CH7_END|3|1|1\n")
 
 
+def completed_source_fixture():
+    """Synthetic status fixture, not evidence of any mathematical theorem.
+
+    The unchanged fake kernel stream contains the real exact endpoint name
+    used by this tiny test project. Every original target is independently
+    inventoried and linked; the actual audit decides completion and still
+    runs all its strict subprocess gates against retained process records.
+    """
+    data = inventory()
+    text = blueprint()
+    for label in audit.TARGETS:
+        data["targets"][label].update(status="implemented",
+            required_declarations=["BC4lean.A.endpoint"])
+        data["targets"][label].pop("blocked_reason")
+        text = text.replace(statement(label),
+            statement(label, r"\lean{BC4lean.A.endpoint}\leanok"))
+    return data, text
+
+
 class InventoryTests(unittest.TestCase):
     def test_pending_targets_need_reasons_and_no_invented_endpoints(self) -> None:
         for change in ("missing_target", "fake_endpoint", "no_reason", "unknown_status",
@@ -242,10 +261,14 @@ class KernelEvidenceTests(unittest.TestCase):
 class ProcessAndPublicationTests(unittest.TestCase):
     """Execute orchestration with tiny files; never invoke Lean in these tests."""
 
-    def make_project(self, root: Path) -> None:
+    def make_project(self, root: Path, *, complete: bool = False) -> None:
         baseline = (audit.ROOT / "docs/audits/chapter7/Chapter6Imports.lean").read_bytes()
-        files = {"docs/audits/chapter7/inventory.json": json.dumps(inventory()),
-                 "blueprint/src/parts/07-assembly-map.tex": blueprint(),
+        data, text = completed_source_fixture() if complete else (inventory(), blueprint())
+        files = {"docs/audits/chapter7/inventory.json": json.dumps(data),
+                 "blueprint/src/parts/07-assembly-map.tex": text,
+                 "blueprint/src/parts/08-conjecture-and-examples.tex":
+                     r"\begin{conjecture}\label{conj:baum-connes}\notready"
+                     r"Every countable discrete group satisfies BC.\end{conjecture}",
                  "docs/audits/chapter7/ExpectedTypes.lean": "example : True := True.intro\n",
                  "BC4lean/A.lean": "private theorem helper : True := True.intro\n",
                  "BC4lean/B.lean": "theorem generated : True := True.intro\n",
@@ -366,7 +389,8 @@ class ProcessAndPublicationTests(unittest.TestCase):
 
     def test_source_object_fixture_and_query_mutation_prevent_publication(self) -> None:
         for relative in ("BC4lean/A.lean", ".lake/build/lib/lean/BC4lean/A.olean",
-                         "docs/audits/chapter7/ExpectedTypes.lean", "result/audit.lean"):
+                         "docs/audits/chapter7/ExpectedTypes.lean", "result/audit.lean",
+                         "blueprint/src/parts/08-conjecture-and-examples.tex"):
             with self.subTest(relative=relative), tempfile.TemporaryDirectory() as directory:
                 root = Path(directory).resolve()
                 self.make_project(root)
@@ -382,6 +406,65 @@ class ProcessAndPublicationTests(unittest.TestCase):
             fixture.write_text("example : True := True.intro\n")
             with self.assertRaisesRegex(RuntimeError, "fixture changed before"):
                 audit.run_expected_types(fixture, Path(directory) / "audit.json", "0" * 64)
+
+
+    def test_complete_originals_require_successful_strict_gates_and_bind_scope_source(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory).resolve()
+            self.make_project(root, complete=True)
+            result, calls = self.run_main(root, ["--require-complete"])
+            self.assertEqual(result, 0)
+            report = json.loads((root / "result/audit.json").read_text())
+            self.assertEqual(report["status"], "verified_complete")
+            self.assertIs(report["chapter_complete"], True)
+            self.assertIs(report["milestone_verified"], True)
+            self.assertEqual(report["notready_targets"], [])
+            self.assertEqual(set(report["target_inventory"]), set(audit.TARGETS))
+            self.assertTrue(all(item["ready"] for item in report["target_inventory"].values()))
+            scope_source = "blueprint/src/parts/08-conjecture-and-examples.tex"
+            self.assertEqual(report["source_sha256"][scope_source],
+                hashlib.sha256((root / scope_source).read_bytes()).hexdigest())
+            for key in ("historical_imports_run", "cached_strict_build_gate",
+                        "expected_types_run", "kernel_run"):
+                self.assertEqual(report[key]["exit_code"], 0)
+                self.assertIn(report[key]["command"], calls)
+            kernel = report["kernel_run"]["command"]
+            self.assertIn("-DwarningAsError=true", kernel)
+            self.assertIn("-DautoImplicit=false", kernel)
+
+    def test_require_complete_rejects_each_original_regression_after_a_complete_run(self) -> None:
+        for label in audit.TARGETS:
+            with self.subTest(label=label), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory).resolve()
+                self.make_project(root, complete=True)
+                self.assertEqual(self.run_main(root, ["--require-complete"])[0], 0)
+                data, text = completed_source_fixture()
+                data["targets"][label].update(status="pending", required_declarations=[],
+                    blocked_reason="The original target has regressed to an unverified state")
+                text = text.replace(statement(label, r"\lean{BC4lean.A.endpoint}\leanok"),
+                                    statement(label))
+                (root / "docs/audits/chapter7/inventory.json").write_text(json.dumps(data))
+                (root / "blueprint/src/parts/07-assembly-map.tex").write_text(text)
+                result, _ = self.run_main(root, ["--require-complete"])
+                self.assertEqual(result, 2)
+                report = json.loads((root / "result/audit.json").read_text())
+                self.assertEqual(report["status"], "verified_milestone")
+                self.assertIs(report["chapter_complete"], False)
+                self.assertEqual(report["notready_targets"], [label])
+                self.assertFalse(report["target_inventory"][label]["ready"])
+
+    def test_ready_blueprint_cannot_override_failed_independent_type_check(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory).resolve()
+            self.make_project(root, complete=True)
+            with self.assertRaisesRegex(RuntimeError, "expected-types failed"):
+                self.run_main(root, ["--require-complete"], fail="expected-types")
+            report = json.loads((root / "result/audit.json").read_text())
+            self.assertTrue(all(item["ready"] for item in report["target_inventory"].values()))
+            self.assertEqual(report["status"], "verification_failed")
+            self.assertIs(report["chapter_complete"], False)
+            self.assertIs(report["milestone_verified"], False)
+            self.assertFalse((root / "result/audit.kernel-run.json").exists())
 
 
 if __name__ == "__main__":

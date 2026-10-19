@@ -336,7 +336,8 @@ def main() -> int:
     sources = {m: ROOT / (m.replace(".", "/") + ".lean") for m in source_modules}
     fixture = ROOT / "docs/audits/chapter7/ExpectedTypes.lean"
     baseline = ROOT / "docs/audits/chapter7/Chapter6Imports.lean"
-    controls = [chapter, args.inventory, fixture, baseline, ROOT / "BC4lean.lean",
+    controls = [chapter, args.inventory, fixture, baseline,
+                ROOT / "blueprint/src/parts/08-conjecture-and-examples.tex", ROOT / "BC4lean.lean",
                 ROOT / "scripts/audit_chapter7.py", ROOT / "scripts/test_audit_chapter7.py",
                 ROOT / "scripts/update_chapter7_finder.py", ROOT / "scripts/test_chapter7_publication.py",
                 ROOT / "scripts/check_chapter7_website.py", ROOT / "scripts/test_chapter7_website.py",

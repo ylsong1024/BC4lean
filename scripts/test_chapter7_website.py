@@ -34,7 +34,7 @@ def statement(label, body):
     return rf"\begin{{{kind}}}\label{{{label}}}{body}\end{{{kind}}}"
 
 
-def source_fixture():
+def source_fixture(complete=False):
     inventory = {"schema_version": 1, "modules": ["BC4lean.A", "BC4lean.B"],
                  "additional_source_modules": [],
                  "targets": {label: {"description": "An original target", "status": "pending",
@@ -54,11 +54,22 @@ def source_fixture():
         "def:assembly-map": r"\notready\uses{prop:assembly-compatibility}",
         FOUNDATION: r"\lean{BC4lean.A.foundation}\leanok",
         LAW: r"\lean{BC4lean.B.law}\leanok\uses{prop:assembly-compatibility}"}
-    tex = "\n".join(statement(label, body) for label, body in bodies.items())
+    if complete:
+        for label in audit.TARGETS:
+            name = "BC4lean.B." + label.replace(":", "_").replace("-", "_")
+            inventory["targets"][label].update(status="implemented", required_declarations=[name])
+            bodies[label] = bodies[label].replace(r"\notready", r"\leanok")
+            bodies[label] = bodies[label].replace("BC4lean.A.partial", name)
+            if label != "def:reduced-descent":
+                bodies[label] += rf"\lean{{{name}}}"
+    tex = "\n".join(statement(label, body) +
+        (r"\begin{proof}\leanok The actual compatibility endpoints prove this law.\end{proof}"
+         if complete and label == "prop:assembly-compatibility" else "")
+        for label, body in bodies.items())
     tex += "\n" + r"\begin{proof}\leanok The linked theorem proves the law.\end{proof}"
     links, targets, milestones = audit.audit_blueprint(tex, inventory)
     evidence = {"blueprint_links": links, "target_inventory": targets, "milestone_inventory": milestones,
-                "notready_targets": audit.pending_blueprint_targets(tex), "chapter_complete": False}
+                "notready_targets": audit.pending_blueprint_targets(tex), "chapter_complete": complete}
     return inventory, tex, evidence
 
 
@@ -73,14 +84,16 @@ def proof_wrapper():
 
 class WebsiteTests(unittest.TestCase):
     @contextmanager
-    def fixture(self):
+    def fixture(self, complete=False):
         with tempfile.TemporaryDirectory(prefix="chapter7-site-test-") as directory:
             root = Path(directory).resolve()
-            inventory, tex, evidence = source_fixture()
+            inventory, tex, evidence = source_fixture(complete)
             source = root / "blueprint/src"
             (source / "parts").mkdir(parents=True)
             (source / "parts/07-assembly-map.tex").write_text(tex)
             shutil.copyfile(ROOT / "blueprint/src/build_web.py", source / "build_web.py")
+            shutil.copyfile(ROOT / "blueprint/src/parts/08-conjecture-and-examples.tex",
+                            source / "parts/08-conjecture-and-examples.tex")
             inventory_file = root / "docs/audits/chapter7/inventory.json"
             inventory_file.parent.mkdir(parents=True)
             inventory_file.write_text(json.dumps(inventory))
@@ -92,6 +105,8 @@ class WebsiteTests(unittest.TestCase):
             (site / "docs/find/index.html").write_text(
                 f'<section data-chapter7-source-revision="{REVISION}"></section>')
             (site / "index.html").write_text(
+                "<p>Chapter 7 is verified.</p><p>The general conjecture is not proved here.</p>"
+                if complete else
                 "<p>Chapter 7 has verified foundations; the assembly map remains incomplete.</p>")
             with patch.object(check, "ROOT", root):
                 yield root, output, tex, evidence
@@ -105,7 +120,7 @@ class WebsiteTests(unittest.TestCase):
             chapter.append(f'<div class="{kind}_thmwrapper theorem-style-definition" id="{label}">'
                            f'<div class="{kind}_thmheading">{links}</div>'
                            f'<div class="{kind}_thmcontent">Statement.</div></div>')
-            if label == LAW:
+            if label == LAW or (item["ready"] and label == "prop:assembly-compatibility"):
                 chapter.append(proof_wrapper())
             shape = "box" if kind == "definition" else "ellipse"
             if item["ready"]:
@@ -329,6 +344,83 @@ class WebsiteTests(unittest.TestCase):
                     homepage.write_text(homepage.read_text() + f"<p>{text}</p>")
                 with self.assertRaisesRegex(ValueError, "milestone/incomplete status"):
                     self.check_site(root, evidence)
+
+
+    def test_all_five_originals_complete_with_actual_proof_fill_and_manifest(self):
+        with self.fixture(complete=True) as (root, output, tex, evidence):
+            counts = self.validate(output, tex, evidence)
+            self.assertTrue(counts["chapter_complete"])
+            self.assertTrue(all(counts["original_targets"].values()))
+            self.assertEqual(counts["explicit_proofs"], 2)
+            manifest = self.check_site(root, evidence)
+            self.assertTrue(manifest["chapter7"]["chapter_complete"])
+            self.assertEqual(manifest["chapter7_scope"]["general_conjecture_status"], "pending")
+            self.assertIs(manifest["chapter7_scope"]["general_baum_connes_conjecture_verified"], False)
+            self.assertIs(manifest["chapter7_scope"]["general_assembly_isomorphism_proved"], False)
+
+    def test_complete_site_rejects_stale_incomplete_homepage_even_with_ready_headline(self):
+        with self.fixture(complete=True) as (root, _, _, evidence):
+            homepage = root / "site/index.html"
+            homepage.write_text(homepage.read_text() +
+                "<p>Chapter 7 has verified foundations; the assembly map remains incomplete.</p>")
+            with self.assertRaisesRegex(ValueError, "completion status"):
+                self.check_site(root, evidence)
+
+    def test_complete_original_compatibility_needs_its_own_checked_proof(self):
+        with self.fixture(complete=True) as (_, output, tex, evidence):
+            tex = tex.replace(
+                r"\begin{proof}\leanok The actual compatibility endpoints prove this law.\end{proof}", "")
+            with self.assertRaisesRegex(ValueError, "explicit checked proof"):
+                self.validate(output, tex, evidence)
+
+    def test_general_conjecture_marker_cannot_be_promoted_by_chapter7_completion(self):
+        for complete in (False, True):
+            for suffix in ("ready", "checked-proof", "definition"):
+                with self.subTest(complete=complete, mutation=suffix), self.fixture(complete) as (root, _, _, evidence):
+                    path = root / "blueprint/src/parts/08-conjecture-and-examples.tex"
+                    text = path.read_text()
+                    if suffix == "ready":
+                        text = text.replace(r"\begin{conjecture}\label{conj:baum-connes}",
+                            r"\begin{conjecture}\label{conj:baum-connes}\leanok")
+                    elif suffix == "checked-proof":
+                        text = text.replace(r"\end{conjecture}",
+                            r"\end{conjecture}\begin{proof}\leanok The general theorem is proved.\end{proof}")
+                    else:
+                        text = text.replace("{conjecture}", "{definition}")
+                    path.write_text(text)
+                    with self.assertRaisesRegex(ValueError, "general Baum-Connes conjecture"):
+                        self.check_site(root, evidence)
+
+    def test_structured_general_conjecture_or_isomorphism_flag_cannot_claim_true(self):
+        for complete in (False, True):
+            for name in ("data-general-baum-connes-proved", "data-general-assembly-isomorphism-proved"):
+                with self.subTest(complete=complete, flag=name), self.fixture(complete) as (root, _, _, evidence):
+                    path = root / "site/index.html"
+                    path.write_text(path.read_text() + f'<p {name}="true">Claimed general result.</p>')
+                    with self.assertRaisesRegex(ValueError, "falsely flags"):
+                        self.check_site(root, evidence)
+
+    def test_narrow_affirmative_general_claims_are_rejected_in_either_chapter_state(self):
+        for complete in (False, True):
+            for text in ("The general Baum-Connes conjecture is proved.",
+                         "Chapter 7 proves the general Baum–Connes conjecture.",
+                         "The assembly map is an isomorphism for every countable discrete group."):
+                with self.subTest(complete=complete, claim=text), self.fixture(complete) as (root, _, _, evidence):
+                    path = root / "site/index.html"
+                    path.write_text(path.read_text() + f"<p>{text}</p>")
+                    with self.assertRaisesRegex(ValueError, "explicitly claims"):
+                        self.check_site(root, evidence)
+
+    def test_honest_negative_scope_explanations_and_false_structured_flags_are_accepted(self):
+        for text in ("Chapter 7 does not prove that assembly is generally an isomorphism.",
+                     "This construction does not prove the general Baum-Connes conjecture.",
+                     "The assembly map is a homomorphism; the general conjecture remains open."):
+            with self.subTest(text=text), self.fixture(complete=True) as (root, _, _, evidence):
+                path = root / "site/index.html"
+                path.write_text(path.read_text() +
+                    f'<p data-general-baum-connes-proved="false" '
+                    f'data-general-assembly-isomorphism-proved="unproved">{text}</p>')
+                self.check_site(root, evidence)
 
 
 if __name__ == "__main__":

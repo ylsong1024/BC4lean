@@ -87,6 +87,7 @@ def load_audit(revision: str) -> tuple[dict, str]:
         raise ValueError("Chapter 7 expected-type check is not hash-bound to the audited fixture")
     controls = {str(path.relative_to(ROOT)) for path in (BLUEPRINT, INVENTORY)} | {
         fixture, "BC4lean.lean", "docs/audits/chapter7/Chapter6Imports.lean",
+        "blueprint/src/parts/08-conjecture-and-examples.tex",
         "scripts/audit_chapter7.py", "scripts/test_audit_chapter7.py",
         "scripts/update_chapter7_finder.py", "scripts/test_chapter7_publication.py",
         "scripts/check_chapter7_website.py", "scripts/test_chapter7_website.py",

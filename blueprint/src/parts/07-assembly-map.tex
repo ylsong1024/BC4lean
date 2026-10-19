@@ -2,10 +2,16 @@
 \label{ch:assembly-map}
 
 Let $\Gamma$ be a countable discrete group for the KK-theoretic targets.
-The crossed-product and cutoff prerequisites below are proved for arbitrary
-discrete groups unless countability is stated explicitly. Coefficient
-C$^*$-algebras may be nonunital. The four unfinished descent and assembly
-targets retain their full mathematical statements.
+The reduced crossed-product and cutoff prerequisites hold for arbitrary
+discrete groups unless countability is stated. Coefficient C$^*$-algebras
+may be nonunital; retain the separability hypotheses used by the existing KK
+quotients and products. Assembly spaces have continuous proper actions with
+the stated locally compact Hausdorff and second-countability hypotheses.
+
+The constructions below give reduced descent and the coefficient-free
+assembly homomorphisms in both degrees under these hypotheses. Construction
+of these homomorphisms does not assert that they are isomorphisms.
+
 
 \section{Reduced crossed products and descent}
 \begin{definition}\label{def:algebraic-crossed-product}
@@ -153,24 +159,151 @@ Every adjointable $T$ acts by $T\otimes1$, with its adjoint and norm
 bound proved; compact module operators remain compact under this
 coefficient extension. If $\Gamma$ is countable, $B$ is separable and
 $E$ is countably generated, the constructed module is countably generated.
-This prerequisite does not yet construct the integrated source action
-or a map on KK groups.
+The integrated source action and quotient homomorphisms are separate
+statements below.
 \end{definition}
 
+
+\section{Integrated source action and genuine quotient descent}
+
+\begin{proposition}\label{prop:descent-reduced-source-action}
+\uses{def:descent-coefficient-module,def:reduced-crossed-product}
+\lean{BC4lean.KKTheory.KasparovDescent.algebraicSourceOperator_norm_le,BC4lean.KKTheory.KasparovDescent.reducedSourceRepresentation,BC4lean.KKTheory.KasparovDescent.reducedSourceRepresentation_single}
+\leanok
+For an equivariant Hilbert $B$-module $E$ and a possibly degenerate
+equivariant star representation of $A$, finite source integration extends to
+the actual star homomorphism
+\[
+ A\rtimes_r\Gamma\longrightarrow
+ \mathcal L_{B\rtimes_r\Gamma}(E\otimes_B(B\rtimes_r\Gamma)).
+\]
+It agrees with finite integration on generators and is bounded by the concrete
+reduced regular norm.
+\end{proposition}
+\begin{proof}
+\leanok
+Embed the amplified descended module isometrically in the actual indexed
+regular module and intertwine finite integration with its regular coefficient
+action. For a degenerate source representation, localized approximate-unit
+vectors lie in the embedded range and suffice for the norm estimate; no
+surjectivity onto the whole regular module is assumed. Faithful tensor
+amplification detects the operator norm. Extend the bounded finite star
+homomorphism through its actual dense image.
+\end{proof}
+
+
+\begin{proposition}\label{prop:descent-full-homotopy}
+\uses{prop:descent-reduced-source-action}
+\lean{BC4lean.KKTheory.KasparovDescent.evenFullHomotopy,BC4lean.KKTheory.KasparovDescent.oddFullHomotopy,BC4lean.KKTheory.KasparovDescent.gradedFullHomotopy}
+\leanok
+Descent preserves genuine whole-cycle isomorphisms and full even, odd and
+graded homotopies. An interval witness may use any Hilbert module over
+$C([0,1],B)$, rather than only an operator path on a fixed module.
+\end{proposition}
+\begin{proof}
+\leanok
+Extend the actual interval module by the pointwise coefficient
+representation into $C([0,1],B\rtimes_r\Gamma)$. The balanced diagonal
+action integrates globally. Its reduced bound follows from actual fibre
+norms and the supremum norm of the coefficient-valued inner product.
+The fibre/interior-tensor unitary intertwines the whole source representation,
+grading and operator. Its endpoint isomorphisms give the full target witness.
+Transport the original localized compact defects through actual tensor
+compactness and norm closure.
+\end{proof}
+
+
+\begin{proposition}\label{prop:descent-quotient-homomorphism}
+\uses{prop:descent-full-homotopy}
+\lean{BC4lean.KKTheory.KasparovDescent.evenClassHom,BC4lean.KKTheory.KasparovDescent.oddClassHom,BC4lean.KKTheory.KasparovDescent.evenClass_mk,BC4lean.KKTheory.KasparovDescent.oddClass_mk}
+\leanok
+The actual descended cycles induce additive homomorphisms on the existing
+even and odd homotopy quotients. Their representative values are the
+constructed descended cycles. The ordinary target group action is
+$\mathrm{Unit}$, and the coefficient and module carriers retain their actual
+enlarged universes.
+\end{proposition}
+\begin{proof}
+\leanok
+The actual full-homotopy transport descends through the existing quotient
+relations. Completed tensor unitaries identify descent of direct sums with
+direct sums of descents, proving additivity. The actual opposite-cycle
+isomorphisms agree with negatives; zero follows by target-group cancellation.
+No new or weakened equivalence relation is introduced.
+\end{proof}
+
+
+\begin{proposition}\label{prop:descent-tensor-product}
+\uses{prop:descent-reduced-source-action,prop:descent-full-homotopy,prop:kasparov-product}
+\lean{BC4lean.KKTheory.KasparovDescent.tensorComparison,BC4lean.KKTheory.KasparovDescent.descended_gradedConnection,BC4lean.KKTheory.KasparovDescent.reducedSourceRepresentation_quadratic_positive,BC4lean.KKTheory.KasparovDescent.descended_isGradedProduct}
+\leanok
+There is an actual graded Hilbert-module unitary
+\[
+ (E\otimes_B(B\rtimes_r\Gamma))\otimes_{B\rtimes_r\Gamma}
+ (F\otimes_C(C\rtimes_r\Gamma))
+ \cong (E\otimes_B F)\otimes_C(C\rtimes_r\Gamma).
+\]
+Transport of an actual original product operator satisfies the genuine
+descended cycle, connection and localized positivity conditions.
+\end{proposition}
+\begin{proof}
+\leanok
+The comparison preserves balancing and the full coefficient-valued inner
+product, extends through completion, and has dense range by actual coefficient
+approximate units. Its pure-tensor formula intertwines the whole source action.
+The creation-map calculation proves all four connection compactness laws,
+including the adjoint companions, and extends by continuity. For positivity,
+transport the original positive-modulo-compacts condition and compress by
+arbitrary completed crossed source elements. A represented coefficient
+approximate unit converges on these products. Closedness of positivity modulo
+module compacts gives the full quadratic condition, including cross terms.
+Apply the existing product criterion and uniqueness theorem.
+\end{proof}
+
+
+\begin{proposition}\label{prop:descent-native-product}
+\uses{prop:descent-quotient-homomorphism,prop:descent-tensor-product,prop:kasparov-product}
+\lean{BC4lean.KKTheory.KasparovDescent.evenClassHom_evenProduct,BC4lean.KKTheory.KasparovDescent.oddClassHom_evenOddProduct,BC4lean.KKTheory.KasparovDescent.oddClassHom_oddEvenProduct,BC4lean.KKTheory.KasparovDescent.evenClassHom_oddOddProduct,BC4lean.KKTheory.KasparovDescent.classHom_product}
+\leanok
+For all four existing native parity branches,
+\[
+ j_r(x\otimes_B y)=j_r(x)\otimes_{B\rtimes_r\Gamma}j_r(y).
+\]
+The group and coefficient universes are independent. This native comparison
+uses the common original module universe
+$W=\max(u,u_\Gamma,u_A,u_B,u_C)$; the target acting group remains
+$\mathrm{Unit}$ at universe zero.
+\end{proposition}
+\begin{proof}
+\leanok
+Compare actual graded product representatives using the tensor product
+criterion. Completed whole-cycle unitaries identify descent with the native
+even/graded and odd coordinate, signed-source and external-even Clifford
+pictures. The actual crossed pair star equivalence transports coefficient and
+source gradings. Existing injective bridges give the even-even, even-odd and
+odd-even laws. The odd-odd law uses the already genuine Pauli row/column Morita
+reduction to the coordinate/signed-source graded product. Thus the comparison
+uses the existing native products and signs; its conclusion is not an input.
+\end{proof}
+
+
 \begin{definition}\label{def:reduced-descent}
-\uses{def:equivariant-kk,prop:scalar-reduced-crossed-product,prop:descent-compact-conjugation,def:descent-coefficient-module}
-\notready
-Construct reduced crossed products and Kasparov descent
+\uses{def:equivariant-kk,prop:scalar-reduced-crossed-product,prop:descent-quotient-homomorphism,prop:descent-native-product}
+\lean{BC4lean.KKTheory.KasparovDescent.evenClassHom,BC4lean.KKTheory.KasparovDescent.oddClassHom,BC4lean.KKTheory.KasparovDescent.classHom,BC4lean.KKTheory.KasparovDescent.evenClass_mk,BC4lean.KKTheory.KasparovDescent.oddClass_mk,BC4lean.KKTheory.KasparovDescent.evenClassHom_evenProduct,BC4lean.KKTheory.KasparovDescent.oddClassHom_evenOddProduct,BC4lean.KKTheory.KasparovDescent.oddClassHom_oddEvenProduct,BC4lean.KKTheory.KasparovDescent.evenClassHom_oddOddProduct,BC4lean.KKTheory.KasparovDescent.classHom_product,BC4lean.KKTheory.reducedCrossedScalarProductEquiv}
+\leanok
+Construct reduced descent on both actual quotient groups,
 \[
  j_r^\Gamma:KK_i^\Gamma(A,B)\longrightarrow
- KK_i(A\rtimes_r\Gamma,B\rtimes_r\Gamma).
+ KK_i(A\rtimes_r\Gamma,B\rtimes_r\Gamma),\qquad i=0,1.
 \]
-Prove product compatibility and identify
-$\mathbb C\rtimes_r\Gamma\cong C_r^*(\Gamma)$.
-The integrated $A\rtimes_r\Gamma$ action on descended cycles, descent
-through KK equivalence and homotopy, and the tensor comparisons proving
-product compatibility remain to be constructed.
+The representative formula uses the completed coefficient-extension module,
+the actual integrated reduced source action and $F\otimes1$. Prove
+compatibility with all four existing native Kasparov products in the common
+carrier universe stated above, and identify
+$\mathbb C\rtimes_r\Gamma\cong C_r^*(\Gamma)$ by the actual scalar
+regular-module unitary.
 \end{definition}
+
 
 \section{Cutoff projections}
 \begin{proposition}\label{prop:proper-cocompact-cutoff}
@@ -248,34 +381,164 @@ constructed reduced crossed product. Its independence follows from
 the explicit mixed-cutoff partial isometry in that completed algebra.
 \end{definition}
 
+
+\section{Naturality for actual coefficient and cutoff maps}
+
+\begin{proposition}\label{prop:descent-source-naturality}
+\uses{def:reduced-descent,prop:descent-quotient-homomorphism}
+\lean{BC4lean.KKTheory.KasparovDescent.classHom_sourcePullback,BC4lean.KKTheory.reducedCrossedMap,BC4lean.KKTheory.reducedCrossedMap_comp}
+\leanok
+An actual equivariant coefficient star homomorphism induces the actual
+reduced crossed-product map. The constructed parity descent commutes with the
+existing native source-pullback homomorphism used in Chapter 6.
+\end{proposition}
+\begin{proof}
+\leanok
+Prove the finite coefficient-pushforward reduced norm bound and extend
+through concrete regular closures. On the actual same descent module, the two
+completed source representations agree, giving an identity-module whole-cycle
+isomorphism. The native homomorphism-cycle product bridge identifies its
+representatives with source precomposition. Passing through the genuine
+quotients proves naturality without assuming the desired compatibility.
+\end{proof}
+
+
+\begin{proposition}\label{prop:cutoff-crossed-naturality}
+\uses{def:cutoff-projection,prop:descent-source-naturality}
+\lean{BC4lean.ProperActions.Cutoff.cutoffK0_pieceRestriction,BC4lean.ProperActions.Cutoff.cutoffK0_properPullback}
+\leanok
+The actual cutoff $K_0$ class is natural under coefficient restrictions
+between cocompact pieces and under proper equivariant pullback, in the
+existing nonunital operator $K_0$ groups of the actual reduced crossed
+products.
+\end{proposition}
+\begin{proof}
+\leanok
+Properness preserves compact support of a pulled-back cutoff and
+equivariance preserves its normalized orbitwise sum. Compute the finite
+algebraic projection coefficients, pass through the actual reduced crossed
+homomorphism, and apply nonunital projection $K_0$ naturality. The mixed-cutoff
+partial isometry removes the particular normalized cutoff choice.
+\end{proof}
+
+
 \section{Assembly on a piece}
+
 \begin{definition}\label{def:assembly-piece}
 \uses{def:piece-k-homology,def:cutoff-projection,def:reduced-descent,prop:kasparov-product,prop:kk-k-theory,def:analytic-side}
-\notready
-Define
+\lean{BC4lean.Assembly.cutoffKKClass,BC4lean.Assembly.cutoffProductHom,BC4lean.Assembly.spaceAssemblyHom,BC4lean.Assembly.spaceAssemblyHom_independent,BC4lean.Assembly.pieceAssemblyHom,BC4lean.Assembly.pieceAssemblyHom_eq_of_cutoff,BC4lean.Assembly.pieceAssemblyEvenHom,BC4lean.Assembly.pieceAssemblyOddHom,BC4lean.Assembly.reducedScalarKKToAnalyticHom}
+\leanok
+For an actual closed cocompact piece $S$ of the indicated proper space,
+construct the additive homomorphism
 \[
- \mu_{X,i}(x)=[p_c]\otimes_{C_0(X)\rtimes_r\Gamma}j_r^\Gamma(x)
- \in K_i(C_r^*(\Gamma)).
+ \mu_{S,i}(x)=\chi_i\bigl([p_c]\otimes_{C_0(S)\rtimes_r\Gamma}j_r^\Gamma(x)\bigr)
+       \in K_i(C_r^*(\Gamma)),\qquad i=0,1.
 \]
+Here $c$ is an actual normalized cutoff on $S$. Its genuine nonunital
+operator $K_0$ class is viewed in scalar KK by the inverse established
+comparison. The map $\chi_i$ uses the established scalar KK-to-operator-K
+comparison and actual scalar crossed-product identification. The even and
+odd codomains are exactly the existing $\mathrm{ReducedK0}(\Gamma)$ and
+$\mathrm{ReducedK1}(\Gamma)$ groups. The homomorphism is independent of
+the choice of cutoff.
 \end{definition}
 
-\section{Compatibility and passage to the colimit}
-\begin{proposition}\label{prop:assembly-compatibility}
-\uses{def:assembly-piece,prop:topological-transition}
-\notready
-Prove that the piecewise homomorphisms commute with transition maps and
-are compatible with changes of auxiliary choices and universal proper model.
+
+\section{Transitions and the actual colimit}
+
+\begin{proposition}\label{prop:piece-assembly-transition}
+\uses{def:assembly-piece,prop:descent-source-naturality,prop:cutoff-crossed-naturality,prop:topological-transition}
+\lean{BC4lean.Assembly.pieceAssemblyHom_transition,BC4lean.Assembly.spaceAssemblyHom_independent,BC4lean.Assembly.pieceAssemblyHom_boundedMap}
+\leanok
+Actual piece assembly homomorphisms commute with the existing Chapter 6
+transitions and are independent of cutoff choice. They preserve assembly
+values under the actual bounded piece maps induced by ambient equivariant
+maps.
 \end{proposition}
+\begin{proof}
+\leanok
+Use descent naturality for the exact native source-pullback product
+defining the transition. Move the actual cutoff class through reduced
+coefficient restriction by cutoff naturality, and apply the existing native
+product functoriality. For a bounded piece map, Chapter 6 supplies the genuine
+proper restriction. Global properness of the ambient equivariant map is not
+assumed.
+\end{proof}
+
 
 \begin{definition}\label{def:assembly-map}
-\uses{prop:assembly-compatibility,def:topological-side,def:analytic-side}
-\notready
-The induced homomorphism is
+\uses{prop:piece-assembly-transition,def:topological-side,def:analytic-side}
+\lean{BC4lean.Assembly.assemblyHom,BC4lean.Assembly.assemblyHom_ofPiece,BC4lean.Assembly.assemblyHom_unique,BC4lean.Assembly.assemblyEvenHom,BC4lean.Assembly.assemblyOddHom,BC4lean.Assembly.reducedAssemblyHom,BC4lean.Assembly.reducedAssemblyEvenHom,BC4lean.Assembly.reducedAssemblyOddHom}
+\leanok
+Apply the actual Chapter 6 directed additive-group colimit to the concrete
+compatible piece family to construct
 \[
- \mu_{\Gamma,i}:K_i^\Gamma(\underline E\Gamma)
- \longrightarrow K_i(C_r^*(\Gamma)),\qquad i=0,1.
+ \mu_{X,i}:K_i^\Gamma(X)\longrightarrow K_i(C_r^*(\Gamma)),\qquad i=0,1.
 \]
+Its restriction along each actual piece inclusion is exactly $\mu_{S,i}$,
+and the colimit universal property determines it uniquely. On the actual
+universal proper telescope and established Chapter 6 canonical topological
+group obtain
+\[
+ \mu_{\Gamma,i}:K_i^\Gamma(\underline E\Gamma)\longrightarrow K_i(C_r^*(\Gamma)).
+\]
+Both parity endpoints have the established analytic reduced K-group
+codomains. No arbitrary compatible family or desired compatibility witness
+is an additional input to these constructions.
 \end{definition}
+
+
+\begin{proposition}\label{prop:assembly-cofinal-index}
+\uses{def:assembly-map,prop:piece-assembly-transition,def:topological-side}
+\lean{BC4lean.Assembly.indexedAssemblyHom,BC4lean.Assembly.indexedAssemblyHom_of,BC4lean.Assembly.assemblyHom_reindex,BC4lean.Assembly.assemblyHom_cofinalIndexEquiv,BC4lean.Assembly.indexedAssemblyHom_cofinalComparisonEquiv}
+\leanok
+Let $\varphi:J\to\mathcal C_\Gamma(X)$ be a monotone map from a nonempty
+directed preorder to the actual cocompact pieces. The restricted assembly is
+the colimit of the same actual piece family. If
+\[
+ \forall S\in\mathcal C_\Gamma(X)\ \exists j\in J,\quad S\leq\varphi(j),
+\]
+the established cofinal indexing equivalence preserves its assembly value.
+The comparison between two such genuinely cofinal systems does likewise.
+\end{proposition}
+\begin{proof}
+\leanok
+Evaluate the restricted colimit map on a piece representative. The actual
+Chapter 6 reindex map sends it to the same piece of the full diagram, so the
+piece formula proves the assembly equality. Identifying the colimits retains
+the essential upper-bound cofinality hypothesis. For two cofinal systems,
+compose the first equivalence with the inverse of the second and cancel by
+the actual additive-equivalence laws. Mere pointwise coverage of the ambient
+space cannot replace cofinality.
+\end{proof}
+
+
+\begin{proposition}\label{prop:assembly-compatibility}
+\uses{def:assembly-map,prop:piece-assembly-transition,prop:assembly-cofinal-index,prop:topological-transition}
+\lean{BC4lean.Assembly.pieceAssemblyHom_transition,BC4lean.Assembly.spaceAssemblyHom_independent,BC4lean.Assembly.pieceAssemblyHom_eq_of_cutoff,BC4lean.Assembly.pieceAssemblyHom_boundedMap,BC4lean.Assembly.assemblyHom_comp_pushforward,BC4lean.Assembly.assemblyHom_homotopyEquiv,BC4lean.Assembly.assemblyHom_universalModelEquiv,BC4lean.Assembly.assemblyHom_cofinalIndexEquiv,BC4lean.Assembly.indexedAssemblyHom_cofinalComparisonEquiv}
+\leanok
+The actual piece assembly homomorphisms commute with Chapter~6 transitions
+and bounded piece maps. They are independent of cutoff choice and compatible
+with the actual genuinely cofinal indexing equivalences. The resulting colimit
+assembly homomorphisms commute with actual ambient equivariant pushforwards,
+the established homotopy equivalences and genuine universal proper-model
+comparison.
+\end{proposition}
+\begin{proof}
+\leanok
+Piece transition and bounded-map compatibility use the actual native
+source-pullback naturality and cutoff projection naturality. Every colimit
+class has an actual piece representative, so the piece identities give
+pushforward and homotopy-equivalence compatibility. The explicit cofinal
+index comparisons retain their essential upper-bound hypotheses. Apply the
+established fixed-point CW uniqueness equivalence for universal proper
+models; no arbitrary model equivalence is assumed.
+\end{proof}
+
+
+
+This chapter concerns construction of the homomorphism. It does not prove
+injectivity, surjectivity, or the general Baum--Connes conjecture.
 
 Reference for this route: S.~Echterhoff, \emph{Bivariant KK-Theory and the
 Baum--Connes conjecture}, Section 4.2,
