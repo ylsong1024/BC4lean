@@ -17,12 +17,15 @@ on:
       - 'scripts/test_audit_chapter6.py'
       - 'scripts/check_project_imports.py'
       - 'scripts/*chapter7*.py'
+      - 'scripts/*chapter8*.py'
       - 'docs/audits/chapter5/**'
       - 'docs/audits/chapter6/**'
       - 'docs/audits/chapter7/**'
+      - 'docs/audits/chapter8/**'
       - 'docs/CHAPTER5_COMPLETION.md'
       - 'docs/CHAPTER6_*.md'
       - 'docs/CHAPTER7_*.md'
+      - 'docs/CHAPTER8_*.md'
       - '.github/workflows/blueprint-check.yml'
   workflow_dispatch:
 
@@ -41,15 +44,27 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
-      - name: Check Chapters 5 through 7 source links and proof-status safeguards
+      - name: Check retained and new source links and proof-status safeguards
         run: |
           python3 -B scripts/update_chapter5_finder.py --check
           python3 -B scripts/update_chapter6_finder.py --check
-          python3 -B scripts/update_chapter7_finder.py --check
           python3 -B scripts/test_audit_chapter7.py
           python3 -B scripts/test_chapter7_publication.py
           python3 -B scripts/test_chapter7_website.py
           python3 -B scripts/test_blueprint_status.py
+          python3 -B scripts/test_chapter7_retained.py
+          python3 -B scripts/test_audit_chapter8.py
+          python3 -B scripts/run_chapter8_publication_tests.py
+          python3 -B - <<'PYTHON'
+          import json
+          from pathlib import Path
+          import subprocess
+          import sys
+          record = json.loads(Path("docs/audits/chapter8/audit.json").read_text())
+          subprocess.run([sys.executable, "-B", "scripts/update_chapter8_finder.py",
+              "--root", str(Path.cwd()), "--source-revision", record["source_revision"],
+              "--provider-sha256", "dcc7a783f842e8196b71bd6e1499e00821e98214e8efbc81bc648ca41628d7d8", "--check"], check=True)
+          PYTHON
       - name: Install blueprint tools
         run: |
           sudo apt-get update
@@ -59,17 +74,26 @@ jobs:
       - name: Build blueprint HTML
         working-directory: blueprint/src
         run: '${{ github.workspace }}/.venv/bin/python build_web.py'
-      - name: Verify actual Chapter 7 rendered status and declaration links
+      - name: Verify actual retained Chapter 7 and Chapter 8 blueprint rendering
         run: |
-          python3 -B - <<'PY'
+          python3 -B - <<'PYTHON'
           import json
+          import os
           from pathlib import Path
+          import shutil
           import sys
+          import tempfile
           sys.path.insert(0, "scripts")
-          from check_chapter7_website import validate_rendered_chapter7
-          from update_chapter7_finder import load_audit
-          record = json.loads(Path("docs/audits/chapter7/audit.json").read_text())
-          evidence, _ = load_audit(record["source_revision"])
-          source = Path("blueprint/src/parts/07-assembly-map.tex").read_text()
-          print(validate_rendered_chapter7(Path("blueprint/web"), source, evidence))
-          PY
+          import chapter8_publication_core as core
+          from chapter8_publication_runtime import load_context
+          root = Path.cwd()
+          record = json.loads((root / "docs/audits/chapter8/audit.json").read_text())
+          with load_context(root, record["source_revision"], "dcc7a783f842e8196b71bd6e1499e00821e98214e8efbc81bc648ca41628d7d8") as ctx:
+              with ctx.retained.helpers.open() as helpers:
+                  print(helpers["check_chapter7_website"].validate_rendered_chapter7(
+                      root / "blueprint/web", (root / core.TEX7).read_text(), ctx.retained.audit))
+              with tempfile.TemporaryDirectory(dir=os.environ["RUNNER_TEMP"]) as folder:
+                  site = Path(folder)
+                  shutil.copytree(root / "blueprint/web", site / "blueprint")
+                  print(core.validate_rendered(site, (root / core.TEX8).read_text(), ctx))
+          PYTHON

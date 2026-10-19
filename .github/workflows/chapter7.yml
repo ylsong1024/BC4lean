@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   chapter7:
-    name: Chapter 7 proofs and honest milestone status
+    name: Retained Chapter 7 proofs and current full build
     runs-on: ubuntu-latest
     env:
       LEAN_NUM_THREADS: '1'
@@ -24,12 +24,13 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
-      - name: Check imports and audit safeguards
+      - name: Check imports and retained-audit safeguards
         run: |
           python3 -B scripts/check_project_imports.py
           python3 -B scripts/test_audit_chapter7.py
           python3 -B scripts/test_chapter7_publication.py
           python3 -B scripts/test_chapter7_website.py
+          python3 -B scripts/test_chapter7_retained.py
       - name: Install the pinned Lean toolchain and Mathlib cache
         uses: leanprover/lean-action@50fcf42d2e460296f1a34b402e990d1b24f8b596 # v1.6.0
         with:
@@ -39,14 +40,18 @@ jobs:
           lint: 'false'
           use-github-cache: 'false'
           use-mathlib-cache: 'true'
-      - name: Build the full aggregate with warnings as errors
+      - name: Build the full current aggregate with warnings as errors
         run: lake --wfail build BC4lean
-      - name: Audit all new declarations, types, and readiness markers
-        run: python3 -B scripts/audit_chapter7.py --require-complete --output "$RUNNER_TEMP/chapter7-audit/audit.json"
-      - name: Retain actual kernel audit evidence
+      - name: Verify immutable Chapter 7 evidence and current preservation
+        run: >-
+          python3 -B scripts/check_chapter7_retained.py
+          --root "$GITHUB_WORKSPACE"
+          --new-inventory docs/audits/chapter8/inventory.json
+          --output "$RUNNER_TEMP/chapter7-retained.json"
+      - name: Retain actual preservation evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: chapter7-milestone-audit
-          path: ${{ runner.temp }}/chapter7-audit/
+          name: chapter7-retained-verification
+          path: ${{ runner.temp }}/chapter7-retained.json
           if-no-files-found: warn

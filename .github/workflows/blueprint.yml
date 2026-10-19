@@ -18,12 +18,15 @@ on:
       - 'scripts/test_audit_chapter6.py'
       - 'scripts/check_project_imports.py'
       - 'scripts/*chapter7*.py'
+      - 'scripts/*chapter8*.py'
       - 'docs/audits/chapter5/**'
       - 'docs/audits/chapter6/**'
       - 'docs/audits/chapter7/**'
+      - 'docs/audits/chapter8/**'
       - 'docs/CHAPTER5_COMPLETION.md'
       - 'docs/CHAPTER6_*.md'
       - 'docs/CHAPTER7_*.md'
+      - 'docs/CHAPTER8_*.md'
       - '.github/workflows/blueprint.yml'
   workflow_dispatch:
 
@@ -43,15 +46,27 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - name: Check Chapters 5 through 7 source links and proof-status safeguards
+      - name: Check retained and new source links and proof-status safeguards
         run: |
           python3 -B scripts/update_chapter5_finder.py --check
           python3 -B scripts/update_chapter6_finder.py --check
-          python3 -B scripts/update_chapter7_finder.py --check
           python3 -B scripts/test_audit_chapter7.py
           python3 -B scripts/test_chapter7_publication.py
           python3 -B scripts/test_chapter7_website.py
           python3 -B scripts/test_blueprint_status.py
+          python3 -B scripts/test_chapter7_retained.py
+          python3 -B scripts/test_audit_chapter8.py
+          python3 -B scripts/run_chapter8_publication_tests.py
+          python3 -B - <<'PYTHON'
+          import json
+          from pathlib import Path
+          import subprocess
+          import sys
+          record = json.loads(Path("docs/audits/chapter8/audit.json").read_text())
+          subprocess.run([sys.executable, "-B", "scripts/update_chapter8_finder.py",
+              "--root", str(Path.cwd()), "--source-revision", record["source_revision"],
+              "--provider-sha256", "dcc7a783f842e8196b71bd6e1499e00821e98214e8efbc81bc648ca41628d7d8", "--check"], check=True)
+          PYTHON
       - uses: actions/configure-pages@v5
       - name: Install blueprint tools
         run: |
@@ -75,8 +90,20 @@ jobs:
           mkdir -p "$RUNNER_TEMP/pages/blueprint"
           cp -R blueprint/web/. "$RUNNER_TEMP/pages/blueprint/"
           touch "$RUNNER_TEMP/pages/.nojekyll"
-      - name: Verify assembled website and record deployed revision
-        run: python3 -B scripts/check_chapter7_website.py "$RUNNER_TEMP/pages" --revision "$GITHUB_SHA"
+      - name: Verify assembled retained and new milestones and record deployed revision
+        run: |
+          python3 -B - <<'PYTHON'
+          import json
+          import os
+          from pathlib import Path
+          import subprocess
+          import sys
+          record = json.loads(Path("docs/audits/chapter8/audit.json").read_text())
+          subprocess.run([sys.executable, "-B", "scripts/check_chapter8_website.py",
+              "--root", str(Path.cwd()), "--source-revision", record["source_revision"],
+              "--provider-sha256", "dcc7a783f842e8196b71bd6e1499e00821e98214e8efbc81bc648ca41628d7d8", "--revision", os.environ["GITHUB_SHA"],
+              str(Path(os.environ["RUNNER_TEMP"]) / "pages")], check=True)
+          PYTHON
       - uses: actions/upload-pages-artifact@v4
         with:
           path: ${{ runner.temp }}/pages

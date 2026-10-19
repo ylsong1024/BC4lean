@@ -4,7 +4,8 @@
 \section{The property for one group}
 \begin{definition}\label{def:baum-connes-property}
 \uses{def:assembly-map}
-\notready
+\lean{BC4lean.Assembly.BaumConnesProperty,BC4lean.Assembly.baumConnesProperty_iff_even_and_odd}
+\leanok
 Write $\mathrm{BC}(\Gamma)$ for the proposition that $\mu_{\Gamma,i}$
 is an isomorphism for both $i=0$ and $i=1$.
 \end{definition}
@@ -12,18 +13,222 @@ is an isomorphism for both $i=0$ and $i=1$.
 \section{The general conjecture}
 \begin{conjecture}\label{conj:baum-connes}
 \uses{def:baum-connes-property}
+\lean{BC4lean.Assembly.BaumConnesConjecture}
 \notready
 Every countable discrete group $\Gamma$ satisfies $\mathrm{BC}(\Gamma)$.
 \end{conjecture}
 
-This is a target statement, not an axiom or an available theorem.
-Its eventual Lean statement must use the actual constructed assembly map.
+The linked Lean declaration encodes this quantified proposition in each
+fixed Lean universe using the actual canonical reduced assembly maps.
+The proposition remains unproved; its definition supplies no witness and
+introduces no axiom asserting it.
 
 \section{Calibration examples and later specializations}
-Plan separate examples for the trivial group, finite groups, and $\mathbb Z$.
-Treat $\mathrm{SL}(3,\mathbb Z)$ as a later specialization of the general
-framework. For each example separately track constructions, K-group
-computations, identification of assembly, injectivity, and surjectivity.
+For the literal group $\mathrm{Unit}:\mathrm{Type}$, the proof below
+constructs an additive equivalence and identifies it with the actual canonical
+assembly map in each degree. For a general finite group, the result below
+reduces the actual assembly map to its one-point cutoff/product/descent
+formula; it does not assert bijectivity. Numerical $K$-group computations
+and further assembly isomorphisms for finite groups and $\mathbb Z$ remain
+later developments. Treat $\mathrm{SL}(3,\mathbb Z)$ as a later specialization;
+no result for it follows merely from the constructions here.
+
+
+\section{Constructions, comparisons, and the scope of the conjecture}
+The linked declaration \texttt{BaumConnesConjecture} encodes a proposition
+in each fixed Lean universe. Defining that proposition supplies no witness
+that it holds. The coefficient-free reduced conjecture above remains an
+unproved target; the lemmas below distinguish its exact logical meaning,
+comparison results, and a separate proof for the literal Unit group.
+
+\begin{proposition}\label{prop:baum-connes-model-invariance}
+\uses{def:baum-connes-property,prop:assembly-compatibility}
+\lean{BC4lean.Assembly.assemblyHom_injective_iff_homotopyEquiv,BC4lean.Assembly.assemblyHom_surjective_iff_homotopyEquiv,BC4lean.Assembly.assemblyHom_bijective_iff_homotopyEquiv,BC4lean.Assembly.modelAssemblyProperty_iff_baumConnesProperty}
+\leanok
+For the indicated proper locally compact Hausdorff second-countable spaces,
+an actual equivariant homotopy equivalence preserves injectivity,
+surjectivity and bijectivity of the constructed assembly map in each degree.
+For genuine universal proper CW models satisfying the subgroup fixed-point
+criterion, the two-degree property agrees with the property of the canonical
+geometric telescope. Universal-model comparison retains the common group
+and space universe required by the existing API; homotopy comparison permits
+an independent group universe.
+\end{proposition}
+\begin{proof}
+\leanok
+Use the constructed topological additive equivalence and the proved equality
+of actual assembly values under its comparison map. Transport each of
+injectivity and surjectivity through that equivalence. The universal-model
+comparison is supplied by the proved CW fixed-point uniqueness theorem.
+No assembly bijectivity hypothesis is introduced by the comparison theorem.
+\end{proof}
+
+\begin{proposition}\label{prop:baum-connes-cofinal-invariance}
+\uses{prop:baum-connes-model-invariance,prop:assembly-cofinal-index}
+\lean{BC4lean.Assembly.indexedAssemblyHom_injective_iff_cofinalIndex,BC4lean.Assembly.indexedAssemblyHom_surjective_iff_cofinalIndex,BC4lean.Assembly.indexedAssemblyHom_bijective_iff_cofinalIndex,BC4lean.Assembly.indexedAssemblyProperty_iff_cofinalComparison}
+\leanok
+Assembly injectivity, surjectivity and bijectivity are unchanged by a monotone
+restriction $\phi$ of the cocompact-piece indexing system satisfying the full
+cofinal condition $\forall S\,\exists j,\ S\subseteq\phi(j)$. The two-degree
+properties agree for any two such cofinal restrictions. Pointwise covering
+alone is not the cofinal hypothesis of this result.
+\end{proposition}
+\begin{proof}
+\leanok
+Use the actual cofinal colimit equivalence and the previously proved equality
+of assembly values under that equivalence. Compare two restrictions by their
+common full cocompact-piece system.
+\end{proof}
+
+\begin{proposition}\label{prop:assembly-piece-bijectivity-criteria}
+\uses{def:assembly-map,prop:piece-assembly-transition}
+\lean{BC4lean.Assembly.assemblyHom_surjective_iff_pieceImages,BC4lean.Assembly.assemblyHom_injective_iff_commonTransition,BC4lean.Assembly.assemblyHom_bijective_iff_pieceCriteria}
+\leanok
+The actual assembly map is surjective exactly when every analytic class is
+the actual assembly value of a class on some cocompact piece. It is injective
+exactly when any two piece classes with equal assembly values become equal
+after transition to one common larger cocompact piece. Its bijectivity is the
+conjunction of these two conditions. The equivalences assert neither
+condition for an arbitrary group.
+\end{proposition}
+\begin{proof}
+\leanok
+Every colimit class has an actual piece representative; assembly restricts
+to the genuine piece formula. Equality in this actual colimit is precisely
+equality after passage to one common larger piece. Apply these representative
+and equality characterizations in both directions.
+\end{proof}
+
+\begin{proposition}\label{prop:trivial-group-analytic-calibration}
+\uses{prop:reduced-group-cstar-trivial,def:operator-k0,def:operator-k1}
+\lean{BC4lean.Chapter8Examples.trivialAnalyticK0Equiv,BC4lean.Chapter8Examples.trivialAnalyticK1Equiv,BC4lean.Chapter8Examples.trivialAnalyticK0Equiv_projection,BC4lean.Chapter8Examples.trivialAnalyticK1Equiv_unitary}
+\leanok
+For a one-element group, the actual reduced group C$^*$-algebra scalar
+identification induces additive equivalences between its actual reduced
+$K_0$ and $K_1$ targets and the corresponding operator $K$-groups of
+$\mathbb C$. The maps retain the actual entrywise projection and unitary
+class formulae. This statement does not compute $K_0(\mathbb C)$ as
+$\mathbb Z$, compute $K_1(\mathbb C)$ as zero, or identify assembly.
+\end{proposition}
+\begin{proof}
+\leanok
+Apply the proved functorial equivalences for unital projection $K_0$ and
+stable-unitary $K_1$ to the actual scalar star-algebra equivalence, retaining
+the spectral orders used by the reduced analytic targets.
+\end{proof}
+
+\begin{proposition}\label{prop:compact-model-colimit-calibration}
+\uses{def:assembly-map,prop:piece-assembly-transition}
+\lean{BC4lean.Chapter8Examples.wholeCompactPiece,BC4lean.Chapter8Examples.terminalColimitEquiv,BC4lean.Chapter8Examples.compactSpaceGroupEquiv,BC4lean.Chapter8Examples.assemblyHom_eq_compactSpaceAssembly}
+\leanok
+On an indicated compact ambient space, the actual topological colimit is
+additively equivalent to the actual full equivariant KK group of the ambient
+space. On a proper such space, this equivalence identifies colimit assembly
+with the actual ambient-space cutoff/product/descent formula.
+\end{proposition}
+\begin{proof}
+\leanok
+The whole compact space is a closed invariant cocompact piece and is greatest
+in the piece order. Construct colimit evaluation by transitions into this
+piece and use its canonical inclusion for the inverse; prove both inverse
+laws. The actual all-space subtype is equivariantly homeomorphic to the
+ambient space. Its genuine proper maps induce mutually inverse native KK
+maps. Transition compatibility and actual proper assembly naturality give
+the assembly equality.
+\end{proof}
+
+\begin{proposition}\label{prop:finite-group-point-reduction}
+\uses{prop:compact-model-colimit-calibration,prop:assembly-compatibility}
+\lean{BC4lean.Chapter8Examples.FiniteGroupPoint,BC4lean.Chapter8Examples.finiteCanonicalGlobalFixedPoint,BC4lean.Chapter8Examples.finiteCanonicalPointHomotopyEquiv,BC4lean.Chapter8Examples.finiteTopologicalPointSpaceEquiv,BC4lean.Chapter8Examples.reducedAssemblyHom_finitePoint_formula}
+\leanok
+For a finite discrete group, a lifted one-point space in the group universe
+is an actual proper model. Its actual equivariant homotopy equivalence with
+the canonical telescope and the compact-model colimit equivalence reduce
+the canonical assembly value to the exact point cutoff/product/descent
+formula in both degrees. This is a reduction of assembly, not a proof of
+assembly bijectivity for every finite group.
+\end{proposition}
+\begin{proof}
+\leanok
+The canonical model's fixed-point criterion at the finite top subgroup
+supplies a genuine globally fixed point. It defines the map from the lifted
+point into the canonical model. The reverse map is constant; the point
+composite is the identity and the other composite is equivariantly homotopic
+to the identity by the actual CW mapping theorem. Apply the existing
+homotopy and assembly naturality theorems and the compact-model colimit
+calculation. For a nontrivial finite group, the point cutoff gives the
+averaging projection; it is not replaced by the algebra unit.
+\end{proof}
+
+\begin{proposition}\label{prop:scalar-unit-projection-identity}
+\uses{def:nonunital-projection-k0,prop:trivial-group-analytic-calibration}
+\lean{BC4lean.KKTheory.ScalarUnitProjection.unitRelativeCycleIso,BC4lean.KKTheory.ScalarUnitProjection.relativeMap_nonunitalUnitProjection,BC4lean.KKTheory.ScalarUnitProjection.scalarKKOperatorK0AddEquiv_identity}
+\leanok
+The genuine scalar KK-to-operator-$K_0$ comparison sends the native scalar
+identity class to the actual nonunital $K_0$ class of the unit projection.
+\end{proposition}
+\begin{proof}
+\leanok
+For the actual singleton unitization projection, the even support is the
+identity and the scalar-shadow odd support is zero. The explicit coordinate
+unitary identifies its whole relative-projection cycle with the standard
+identity cycle, including representation, action, grading and operator.
+The proved inverse comparison law then computes the actual index.
+\end{proof}
+
+\begin{proposition}\label{prop:unit-point-cutoff-hom-class}
+\uses{prop:scalar-unit-projection-identity,def:cutoff-projection}
+\lean{BC4lean.KKTheory.UnitPointCutoff.pointCZeroEquiv,BC4lean.KKTheory.UnitPointCutoff.reducedCutoffProjection_eq_scalarCoefficient,BC4lean.KKTheory.UnitPointCutoff.cutoffKKClass_eq_homClass}
+\leanok
+For the literal acting group $\mathrm{Unit}$ on an indicated compact
+one-point space, the actual cutoff projection is the actual scalar
+coefficient map evaluated at $1$. Its scalar KK lift is the native
+homomorphism class of that coefficient map.
+\end{proposition}
+\begin{proof}
+\leanok
+Unit-group normalization gives $c(x)^2=1$. Compute the actual algebraic
+projection as the identity-coordinate coefficient, integrate it into the
+concrete reduced crossed product, and use genuine projection and scalar-index
+naturality together with the scalar unit-projection identity. This argument
+uses the literal Unit group and does not identify nontrivial finite-group
+averaging with the unit.
+\end{proof}
+
+\begin{proposition}\label{prop:unit-scalar-descent-calibration}
+\uses{def:reduced-descent,prop:descent-source-naturality}
+\lean{BC4lean.KKTheory.UnitScalarDescent.evenCoefficientRestrictionIso,BC4lean.KKTheory.UnitScalarDescent.oddCoefficientRestrictionIso,BC4lean.KKTheory.UnitScalarDescent.evenClass_coefficientRestriction,BC4lean.KKTheory.UnitScalarDescent.oddClass_coefficientRestriction}
+\leanok
+For the literal Unit group and scalar source, pulling the actual descended
+class back along the genuine scalar coefficient inclusion gives the actual
+ordinary coefficient-extension class, separately in the even and odd pictures.
+\end{proposition}
+\begin{proof}
+\leanok
+The actual descended source representation restricted to the coefficient
+inclusion is the actual tensor of the original representation. The identity
+map on the completed coefficient-extension module intertwines every raw
+cycle datum. Use the actual raw whole-cycle isomorphisms and native source
+and coefficient representative theorems to pass to both full quotients.
+\end{proof}
+
+\begin{theorem}\label{thm:baum-connes-unit}
+\uses{def:baum-connes-property,prop:finite-group-point-reduction,prop:unit-point-cutoff-hom-class,prop:unit-scalar-descent-calibration}
+\lean{BC4lean.Chapter8Examples.unitAssemblyAddEquiv,BC4lean.Chapter8Examples.reducedAssemblyHom_unit_eq,BC4lean.Chapter8Examples.baumConnesProperty_unit}
+\leanok
+The actual coefficient-free reduced assembly map for the literal one-element
+group $\mathrm{Unit}:\mathrm{Type}$ is an isomorphism in both degrees.
+\end{theorem}
+\begin{proof}
+\leanok
+Use the constructed canonical-to-point equivalence, the actual point source
+pullback equivalence, the genuine Unit cutoff and descent identifications,
+and the separately constructed even and odd scalar-to-analytic equivalences.
+Prove that their composite equals Chapter~7's actual canonical assembly map.
+Its explicit additive equivalence then supplies injectivity and surjectivity.
+No assembly-bijectivity premise occurs. Transport to arbitrary subsingleton
+groups would require an additional group-isomorphism invariance construction.
+\end{proof}
 
 \section{Research and formalization status}
 Keep established mathematics, completed Lean work, and open mathematical
@@ -35,3 +240,12 @@ topological $K$-homology colimit and proves cofinal indexing and universal
 proper-model independence under its stated hypotheses. Chapter~7 constructs the coefficient-free reduced assembly homomorphisms
 in both degrees for countable discrete groups under its stated hypotheses;
 a proof of the general conjecture remains a later milestone.
+
+The verified Chapter~8 milestone consists of the exact property and conjecture
+definitions, the proved model and cofinal-index comparison theorems, exact
+piecewise bijectivity criteria, the geometric and analytic calibrations,
+and the genuine assembly isomorphism for the literal Unit group. The general
+conjecture remains unproved, so the chapter is a verified milestone rather
+than a completed proof of all its targets. No numerical scalar $K$-group
+calculation, nontrivial finite-group assembly isomorphism, $\mathbb Z$ case,
+or $\mathrm{SL}(3,\mathbb Z)$ result is asserted by this milestone.

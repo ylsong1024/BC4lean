@@ -1,0 +1,54 @@
+name: Verify Chapter 8 milestones
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  chapter8:
+    name: Chapter 8 actual assembly results and pending general conjecture
+    runs-on: ubuntu-latest
+    env:
+      LEAN_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+      - name: Check source, audit and publication safeguards
+        run: |
+          python3 -B scripts/check_project_imports.py
+          python3 -B scripts/test_chapter7_retained.py
+          python3 -B scripts/test_audit_chapter8.py
+          python3 -B scripts/run_chapter8_publication_tests.py
+      - name: Install the pinned Lean toolchain and Mathlib cache
+        uses: leanprover/lean-action@50fcf42d2e460296f1a34b402e990d1b24f8b596 # v1.6.0
+        with:
+          auto-config: 'false'
+          build: 'false'
+          test: 'false'
+          lint: 'false'
+          use-github-cache: 'false'
+          use-mathlib-cache: 'true'
+      - name: Build the full aggregate with warnings as errors
+        run: lake --wfail build BC4lean
+      - name: Audit genuine Chapter 8 results and the open boundary
+        run: >-
+          python3 -B scripts/audit_chapter8.py --require-milestone
+          --output "$RUNNER_TEMP/chapter8-audit/audit.json"
+      - name: Retain actual native audit evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chapter8-milestone-audit
+          path: ${{ runner.temp }}/chapter8-audit/
+          if-no-files-found: warn

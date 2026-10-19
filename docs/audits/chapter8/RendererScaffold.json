@@ -1,0 +1,70 @@
+{
+  "schema": "chapter8.graph.renderer-scaffold.source-only.v1",
+  "status": "source_only_reference_not_Q8_publication_evidence",
+  "observed_source_pages": [
+    {
+      "observed_path": "/tmp/chapter7-evidence/live-site-e1afa3d693e0/site/blueprint/dep_graph_document.html",
+      "sha256": "a797aa15e6d1d7539671b6a6dadc937b6bc681c7747d85b4c400b8859a5584cd",
+      "observed_publication_revision": "e1afa3d693e0a95cd568f517578d109995d80442"
+    },
+    {
+      "observed_path": "/tmp/chapter7-evidence/live-site-e1afa3d693e0/site/blueprint/dep_graph_chapter_7.html",
+      "sha256": "3046745bb5a3334dd3b205f541dabdff1dc9a43bf8df6eae5d0bece050aedf7f",
+      "observed_publication_revision": "e1afa3d693e0a95cd568f517578d109995d80442"
+    }
+  ],
+  "scripts": [
+    {
+      "attributes": {
+        "type": "text/x-mathjax-config"
+      },
+      "body": "\n  \n    MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\\\(','\\\\)']]}});\n  \n  ",
+      "sha256": "e36df53f33539e76279451036778912ee60700932e28caf9c4d2d11867a6b790"
+    },
+    {
+      "attributes": {
+        "type": "text/javascript",
+        "src": "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
+      },
+      "body": "  ",
+      "sha256": "6c179f21e6f62b629055d8ab40f454ed02e48b68563913473b857d3638e23b28"
+    },
+    {
+      "attributes": {
+        "src": "js/jquery.min.js",
+        "type": "text/javascript"
+      },
+      "body": "",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "attributes": {
+        "src": "js/d3.min.js"
+      },
+      "body": "",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "attributes": {
+        "src": "js/hpcc.min.js"
+      },
+      "body": "",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "attributes": {
+        "src": "js/d3-graphviz.js"
+      },
+      "body": "",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "attributes": {
+        "type": "text/javascript"
+      },
+      "prefix": "\nconst graphContainer = d3.select(\"#graph\");\nconst width = graphContainer.node().clientWidth;\nconst height = graphContainer.node().clientHeight;\n\n\ngraphContainer.graphviz({useWorker: true})\n    .width(width)\n    .height(height)\n    .fit(true)\n    .renderDot(`",
+      "suffix": "`)\n    .on(\"end\", interactive);\n\nlatexLabelEscaper = function(label) {\n  return label.replace(/\\./g, '\\\\.').replace(/:/g, '\\\\:')\n}\n\nclickNode = function() {\n  $(\"#statements div\").hide()\n  var node_id = $('text', this).text();\n  $('.thm').hide();\n  $('#'+latexLabelEscaper(node_id)).show().children().show();\n}\nfunction interactive() {\n    $(\"span#legend_title\").on(\"click\", function () {\n           $(this).siblings('dl').toggle();\n        })\n\n    d3.selectAll('.node')\n        .attr('pointer-events', 'fill')\n        .on('click', function () {\n           var title = d3.select(this).selectAll('title').text().trim();\n           $('#statements > div').hide()\n           $('.thm').hide();\n           $('#'+latexLabelEscaper(title)+'_modal').show().children().show().children().show();\n           $('#statements').show()\n        });\n\n    d3.selectAll('.dep-closebtn').on('click', function() {\n        var modal =\n            d3.select(this).node().parentNode.parentNode.parentNode ;\n        d3.select(modal).style('display', 'none');\n    });\n}\n\n",
+      "scaffold_sha256": "10a2d4332df4aab2a59dbb40bc02be016fc7c45e358d5954beeb4c76c7f952d3"
+    }
+  ]
+}
