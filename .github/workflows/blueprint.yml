@@ -104,7 +104,7 @@ jobs:
               "--provider-sha256", "dcc7a783f842e8196b71bd6e1499e00821e98214e8efbc81bc648ca41628d7d8", "--revision", os.environ["GITHUB_SHA"],
               str(Path(os.environ["RUNNER_TEMP"]) / "pages")], check=True)
           PYTHON
-      - uses: actions/upload-pages-artifact@v4
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: ${{ runner.temp }}/pages
 
