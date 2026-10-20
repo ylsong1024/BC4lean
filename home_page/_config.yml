@@ -18,7 +18,7 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
-title: Baum-Connes Conjecture
+title: Lean formalization for Baum-Connes conjecture
 #email: your-email@example.com
 description: An ongoing open source project to formalize Baum-Connes conjecture
 baseurl: "" # the subpath of your site, e.g. /blog

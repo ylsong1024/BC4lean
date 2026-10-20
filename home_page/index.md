@@ -1,6 +1,6 @@
 ---
 usemathjax: true
-title: BC4lean
+title: Lean formalization for Baum-Connes conjecture
 ---
 
 ## Verification status
