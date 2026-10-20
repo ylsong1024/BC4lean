@@ -67,7 +67,7 @@ jobs:
               "--root", str(Path.cwd()), "--source-revision", record["source_revision"],
               "--provider-sha256", "dcc7a783f842e8196b71bd6e1499e00821e98214e8efbc81bc648ca41628d7d8", "--check"], check=True)
           PYTHON
-      - uses: actions/configure-pages@v5
+      - uses: actions/configure-pages@v6
       - name: Install blueprint tools
         run: |
           sudo apt-get update
